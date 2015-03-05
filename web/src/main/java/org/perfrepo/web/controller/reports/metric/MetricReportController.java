@@ -151,7 +151,7 @@ public class MetricReportController extends BaseController {
 		if (reportId == null) {
 			return FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/reports/metric";
 		} else {
-			return FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/reports/metric/saved/" + reportId;
+			return FacesContext.getCurrentInstance().getExternalContext().getRequestContextPath() + "/reports/metric/" + reportId;
 		}
 	}
 
