@@ -261,7 +261,8 @@
                             title: title,
                             vAxis: {title: 'Test'},
                             hAxis: {title: '% Regression', format: '#,##'},
-                            legend: { position: "none" }
+                            legend: { position: "none" },
+                            chartArea: {left:300}
                         };
                         var chart = new google.visualization.BarChart(document.getElementById(div));
                         chart.draw(data, options);

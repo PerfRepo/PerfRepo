@@ -809,10 +809,6 @@ public class TestGroupReportController extends BaseController {
 	}
 
 	public int getChartWidth() {
-		if (getMetrics().size() * getComparison().size() > 3) {
-			//two charts in row (450px)
-			return 450;
-		}
 		//one chart in row (900px)
 		return 900;
 	}
