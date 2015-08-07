@@ -231,6 +231,7 @@
                <archive>
                   <manifestEntries>
                      <Dependencies>org.jboss.resteasy.resteasy-jaxb-provider export services</Dependencies>
+                     <Implementation-Version>${project.version}</Implementation-Version>
                   </manifestEntries>
                </archive>
                <webResources>
