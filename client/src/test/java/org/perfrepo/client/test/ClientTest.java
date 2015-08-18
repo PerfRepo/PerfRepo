@@ -114,7 +114,6 @@ public class ClientTest {
 		assertEquals(test2.getId(), id);
 		assertEquals(test2.getUid(), test.getUid());
 		assertEquals(test2.getTestExecutions(), null);
-		assertMetricListEquals(test2.getSortedMetrics(), test.getSortedMetrics());
 
 		client.deleteTest(id);
 	}
@@ -132,7 +131,6 @@ public class ClientTest {
 		assertEquals(test2.getId(), id);
 		assertEquals(test2.getUid(), test.getUid());
 		assertEquals(test2.getTestExecutions(), null);
-		assertMetricListEquals(test2.getSortedMetrics(), test.getSortedMetrics());
 
 		client.deleteTest(id);
 	}
@@ -353,16 +351,13 @@ public class ClientTest {
 		assertEquals(actual.getValues(), expected.getValues());
 	}
 
-	private static void assertMetricListEquals(List<Metric> actual, List<Metric> expected) {
+	private static void assertMetricListEquals(Collection<Metric> actual, Collection<Metric> expected) {
 		assertEquals(actual == null, expected == null);
-		if (actual == null)
+		if (actual == null) {
 			return;
-		assertEquals(actual.size(), expected.size());
-		Iterator<Metric> allActual = actual.iterator();
-		Iterator<Metric> allExpected = actual.iterator();
-		while (allExpected.hasNext()) {
-			assertEquals(allActual.hasNext(), true);
-			assertMetricEquals(allActual.next(), allExpected.next());
 		}
+
+		assertEquals(expected.size(), actual.size());
+		expected.stream().forEach(expectedMetric -> actual.stream().anyMatch(actualMetric -> expectedMetric.getName().equals(actualMetric.getName())));
 	}
 }
