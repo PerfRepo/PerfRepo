@@ -91,7 +91,7 @@ public class BoxplotReportServiceBean {
     * @return
     */
    public Long update(Long reportId, String name, List<Chart> charts, List<Permission> permissions) {
-      Report report = reportService.getFullReport(reportId);
+      Report report = reportService.getFullReport(new Report(reportId));
       report.setName(name);
       report.setType(BOXPLOT_REPORT_TYPE);
       report.setPermissions(permissions);
@@ -110,7 +110,7 @@ public class BoxplotReportServiceBean {
     * @return
     */
    public Map<String, List<Chart>> load(Long reportId) {
-      Report report = reportService.getFullReport(reportId);
+      Report report = reportService.getFullReport(new Report(reportId));
       if(report == null) {
          throw new IllegalArgumentException("Report with ID=" + reportId + " doesn't exist");
       }

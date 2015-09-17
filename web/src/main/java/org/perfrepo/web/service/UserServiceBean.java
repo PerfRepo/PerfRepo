@@ -18,27 +18,8 @@
  */
 package org.perfrepo.web.service;
 
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import org.apache.commons.codec.binary.Base64;
+
 import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.UserProperty;
@@ -51,6 +32,27 @@ import org.perfrepo.web.dao.TestDAO;
 import org.perfrepo.web.dao.UserDAO;
 import org.perfrepo.web.dao.UserPropertyDAO;
 import org.perfrepo.web.service.exceptions.ServiceException;
+
+import javax.annotation.Resource;
+import javax.ejb.SessionContext;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Named
 @Stateless
@@ -219,7 +221,8 @@ public class UserServiceBean implements UserService {
 	@Override
 	public List<String> getLoggedUserGroupNames() {
 		List<String> names = new ArrayList<String>();
-		Collection<Group> gs = getLoggedUser().getGroups();
+		User user = getLoggedUser();
+		Collection<Group> gs = user != null ? getLoggedUser().getGroups() : Collections.emptyList();
 		for (Group group : gs) {
 			names.add(group.getName());
 		}
@@ -256,11 +259,13 @@ public class UserServiceBean implements UserService {
 
 	@Override
 	public boolean isUserInGroup(Long userId, Long groupId) {
-		User user = getUser(userId);
-		if (user != null && user.getGroups() != null) {
-			for (Group group : user.getGroups()) {
-				if (groupId.equals(group.getId())) {
-					return true;
+		if (userId != null) {
+			User user = getUser(userId);
+			if (user != null && user.getGroups() != null) {
+				for (Group group : user.getGroups()) {
+					if (groupId.equals(group.getId())) {
+						return true;
+					}
 				}
 			}
 		}

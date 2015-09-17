@@ -246,81 +246,90 @@ public class TestGroupReportController extends BaseController {
 
 	@PostConstruct
 	private void readConfiguration() {
-		String reportIdParam = getRequestParam("reportId");
-		reportId = reportIdParam != null ? Long.parseLong(reportIdParam) : null;
-		if (reportId != null) {
-			userAuthorized = authorizationService.isUserAuthorizedFor(AccessType.WRITE, new Report(reportId));
-			Report report = reportService.getFullReport(new Report(reportId));
-			if (report != null) {
-				reportName = report.getName();
-				Map<String, ReportProperty> properties = report.getProperties();
-				if (properties != null && !properties.isEmpty()) {
-					//ids
-					if (properties.get("testIds") != null) {
-						String idsProperty = properties.get("testIds").getValue();
-						if (idsProperty != null) {
-							for (String item : idsProperty.split(", ")) {
-								testIds.add(Long.valueOf(item));
+		try {
+			String reportIdParam = getRequestParam("reportId");
+			reportId = reportIdParam != null ? Long.parseLong(reportIdParam) : null;
+			if (reportId != null) {
+				userAuthorized = authorizationService.isUserAuthorizedFor(AccessType.WRITE, new Report(reportId));
+				Report report = reportService.getFullReport(new Report(reportId));
+				if (report != null) {
+					reportName = report.getName();
+					Map<String, ReportProperty> properties = report.getProperties();
+					if (properties != null && !properties.isEmpty()) {
+						//ids
+						if (properties.get("testIds") != null) {
+							String idsProperty = properties.get("testIds").getValue();
+							if (idsProperty != null) {
+								for (String item : idsProperty.split(", ")) {
+									testIds.add(Long.valueOf(item));
+								}
 							}
 						}
-					}
-					//tests
-					String testsProperty = properties.get("tests").getValue();
-					tests = new ArrayList<String>();
-					if (testsProperty != null) {
-						tests = Lists.newArrayList(testsProperty.split(", "));
-					}
-					//tags
-					int i = 1;
-					tags = new ArrayList<String>();
-					tagAlias = new HashMap<String, String>();
-					String tag = properties.containsKey("tag." + i) ? properties.get("tag." + i).getValue() : null;
-					while (tag != null) {
-						tags.add(tag);
-						String ta = properties.containsKey("tag." + i + ".alias") ? properties.get(
-								"tag." + i + ".alias").getValue() : null;
-						if (ta != null) {
-							tagAlias.put(tag, ta);
+						//tests
+						String testsProperty = properties.get("tests").getValue();
+						tests = new ArrayList<String>();
+						if (testsProperty != null) {
+							tests = Lists.newArrayList(testsProperty.split(", "));
 						}
-						i++;
-						tag = properties.containsKey("tag." + i) ? properties.get("tag." + i).getValue() : null;
-					}
-					//comparison
-					i = 1;
-					comparison = new HashMap<String, List<String>>();
-					String compare = properties.containsKey("compare." + i + ".1") ? properties.get(
-							"compare." + i + ".1").getValue() : null;
-					while (compare != null) {
-						String c1 = properties.containsKey("compare." + i + ".1") ? properties.get(
+						//tags
+						int i = 1;
+						tags = new ArrayList<String>();
+						tagAlias = new HashMap<String, String>();
+						String tag = properties.containsKey("tag." + i) ? properties.get("tag." + i).getValue() : null;
+						while (tag != null) {
+							tags.add(tag);
+							String ta = properties.containsKey("tag." + i + ".alias") ? properties.get(
+									"tag." + i + ".alias").getValue() : null;
+							if (ta != null) {
+								tagAlias.put(tag, ta);
+							}
+							i++;
+							tag = properties.containsKey("tag." + i) ? properties.get("tag." + i).getValue() : null;
+						}
+						//comparison
+						i = 1;
+						comparison = new HashMap<String, List<String>>();
+						String compare = properties.containsKey("compare." + i + ".1") ? properties.get(
 								"compare." + i + ".1").getValue() : null;
-						String c2 = properties.containsKey("compare." + i + ".2") ? properties.get(
-								"compare." + i + ".2").getValue() : null;
-						String alias = properties.containsKey("compare." + i + ".alias") ? properties.get(
-								"compare." + i + ".alias").getValue() : null;
-						comparison.put(alias, Lists.newArrayList(c1, c2));
-						i++;
-						compare = properties.containsKey("compare." + i + ".1") ? properties.get("compare." + i + ".1")
-								.getValue() : null;
-					}
-					String metricsProperty = properties.containsKey("metrics") ? properties.get("metrics").getValue()
-							: null;
-					if (metricsProperty != null) {
-						selectedMetrics.addAll(Lists.newArrayList(metricsProperty.split(", ")));
-					}
-					// threshold
-					String thresholdProperty = properties.containsKey("configuration.threshold") ? properties.get("configuration.threshold").getValue() : null;
-					if (thresholdProperty != null) {
-						semiNegativeThreshold = Double.valueOf(thresholdProperty);
-					} else {
-						semiNegativeThreshold = -5.0;
+						while (compare != null) {
+							String c1 = properties.containsKey("compare." + i + ".1") ? properties.get(
+									"compare." + i + ".1").getValue() : null;
+							String c2 = properties.containsKey("compare." + i + ".2") ? properties.get(
+									"compare." + i + ".2").getValue() : null;
+							String alias = properties.containsKey("compare." + i + ".alias") ? properties.get(
+									"compare." + i + ".alias").getValue() : null;
+							comparison.put(alias, Lists.newArrayList(c1, c2));
+							i++;
+							compare = properties.containsKey("compare." + i + ".1") ? properties.get("compare." + i + ".1")
+									.getValue() : null;
+						}
+						String metricsProperty = properties.containsKey("metrics") ? properties.get("metrics").getValue()
+								: null;
+						if (metricsProperty != null) {
+							selectedMetrics.addAll(Lists.newArrayList(metricsProperty.split(", ")));
+						}
+						// threshold
+						String thresholdProperty = properties.containsKey("configuration.threshold") ? properties.get("configuration.threshold").getValue() : null;
+						if (thresholdProperty != null) {
+							semiNegativeThreshold = Double.valueOf(thresholdProperty);
+						} else {
+							semiNegativeThreshold = -5.0;
+						}
 					}
 				}
+			} else if (teComparator.isAnyToCompare()) {
+				testIds.addAll(teComparator.getExecIds());
 			}
-		} else if (teComparator.isAnyToCompare()) {
-			testIds.addAll(teComparator.getExecIds());
+			newReportName = reportName;
+			processTestExecutions();
+		} catch (Exception e) {
+			if (e.getCause() instanceof SecurityException) {
+				//addMessage(ERROR, "page.report.permissionDenied");
+				redirectWithMessage("/reports", ERROR, "page.report.permissionDenied");
+			} else {
+				redirectWithMessage("/reports", ERROR, "page.report.error");
+			}
 		}
-		newReportName = reportName;
-		processTestExecutions();
 	}
 
 	public void saveReport() {
@@ -355,7 +364,7 @@ public class TestGroupReportController extends BaseController {
 		}
 		if (idsProperty.length() > 0) {
 			ReportUtils.createOrUpdateReportPropertyInMap(properties, "testIds",
-				idsProperty.substring(0, idsProperty.length() - 2), report);
+					idsProperty.substring(0, idsProperty.length() - 2), report);
 		}
 
 		//tests
@@ -365,7 +374,7 @@ public class TestGroupReportController extends BaseController {
 		}
 		if (testsProperty.length() > 0) {
 			ReportUtils.createOrUpdateReportPropertyInMap(properties, "tests",
-				testsProperty.substring(0, testsProperty.length() - 2), report);
+					testsProperty.substring(0, testsProperty.length() - 2), report);
 		}
 
 		//tags
@@ -408,7 +417,7 @@ public class TestGroupReportController extends BaseController {
 
 		if (metricsProperty.length() > 0) {
 			ReportUtils.createOrUpdateReportPropertyInMap(properties, "metrics",
-				metricsProperty.substring(0, metricsProperty.length() - 2), report);
+					metricsProperty.substring(0, metricsProperty.length() - 2), report);
 		}
 		ReportUtils.createOrUpdateReportPropertyInMap(properties, "configuration.threshold", String.valueOf(semiNegativeThreshold), report);
 		report.setProperties(properties);
@@ -819,7 +828,8 @@ public class TestGroupReportController extends BaseController {
 		if (comparison != null && !comparison.isEmpty() && comparison.containsKey(compareKey)) {
 			List<ChartRow> chartData = new ArrayList<ChartRow>();
 			List<String> tests = Lists.newArrayList(data.rowKeySet());
-			Collections.sort(tests);;
+			Collections.sort(tests);
+			;
 			for (String test : tests) {
 				ChartRow row = new ChartRow();
 				row.setTest(test);

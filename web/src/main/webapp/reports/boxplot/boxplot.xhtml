@@ -13,8 +13,6 @@
    </ui:define>
    <ui:define name="metadata">
       <f:metadata>
-         <f:event type="preRenderView" listener="#{boxplotReportBean.init()}"/>
-         <f:viewAction action="#{boxplotReportBean.load()}" />
          <f:viewAction action="#{boxplotReportBean.computeCharts()}" />
       </f:metadata>
    </ui:define>

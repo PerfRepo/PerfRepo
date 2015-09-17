@@ -25,6 +25,7 @@ import org.perfrepo.model.auth.AccessType;
 import org.perfrepo.model.auth.Permission;
 import org.perfrepo.model.auth.SecuredEntity;
 import org.perfrepo.model.report.Report;
+import org.perfrepo.model.user.User;
 import org.perfrepo.web.dao.PermissionDAO;
 import org.perfrepo.web.dao.TestDAO;
 import org.perfrepo.web.service.UserService;
@@ -66,7 +67,7 @@ public class AuthorizationServiceBean implements AuthorizationService {
 						return true;
 					} else if (permission.getUserId() != null && permission.getLevel().equals(AccessLevel.USER)) {
 						//USER permission, the permission userId should be same as user, who require the access
-						if (userId.equals(permission.getUserId())) {
+						if (userId != null && userId.equals(permission.getUserId())) {
 							return true;
 						}
 					} else if (permission.getGroupId() != null && permission.getLevel().equals(AccessLevel.GROUP)) {
@@ -120,6 +121,7 @@ public class AuthorizationServiceBean implements AuthorizationService {
 
 	@Override
 	public boolean isUserAuthorizedFor(AccessType accessType, Entity<?> entity) {
-		return isUserAuthorizedFor(userService.getLoggedUser().getId(), accessType, entity);
+		User user = userService.getLoggedUser();
+		return isUserAuthorizedFor(user != null ? user.getId() : null, accessType, entity);
 	}
 }

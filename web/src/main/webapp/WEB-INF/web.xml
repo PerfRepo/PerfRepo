@@ -125,6 +125,15 @@
 			<url-pattern>/rest/*</url-pattern>
 		</web-resource-collection>
 	</security-constraint>
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Public Report</web-resource-name>
+			<description>Reports with public access</description>
+			<url-pattern>/reports/metric/*</url-pattern>
+			<url-pattern>/reports/testGroupReport/*</url-pattern>
+			<url-pattern>/reports/boxplot/*</url-pattern>
+		</web-resource-collection>
+	</security-constraint>
 	<login-config>
 		<auth-method>FORM</auth-method>
 		<form-login-config>

@@ -65,7 +65,9 @@ public class UserSession implements Serializable {
 	}
 
 	public void refresh() {
-		user = userService.getFullUser(userService.getLoggedUser().getId());
+		if (userService.getLoggedUser() != null) {
+			user = userService.getFullUser(userService.getLoggedUser().getId());
+		}
 	}
 
 	/**

@@ -118,6 +118,7 @@ public class MetricReportController extends BaseController {
 
 	@PostConstruct
 	protected void init() {
+		reloadSessionMessages();
 		if (selectionTests == null) {
 			selectionTests = testService.getAllTests();
 			Collections.sort(selectionTests, new Comparator<Test>() {
@@ -144,13 +145,6 @@ public class MetricReportController extends BaseController {
 			r.add(s.getChartName());
 		}
 		return r;
-	}
-
-	/**
-	 * called on preRenderView
-	 */
-	public void preRender() {
-		reloadSessionMessages();
 	}
 
 	public void previewReport() {
@@ -351,8 +345,11 @@ public class MetricReportController extends BaseController {
 
 			updateReport();
 		} catch (Exception e) {
-			log.error("problem with saved report", e);
-			addMessage(ERROR, "page.metricreport.savedReportProblem");
+			if (e.getCause() instanceof SecurityException) {
+				redirectWithMessage("/reports", ERROR, "page.report.permissionDenied");
+			} else {
+				redirectWithMessage("/reports", ERROR, "page.metricreport.savedReportProblem");
+			}
 		}
 	}
 

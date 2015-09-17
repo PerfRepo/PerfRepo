@@ -65,8 +65,10 @@ public class BoxplotReportController extends BaseController {
       reloadSessionMessages();
    }
 
+
    @PostConstruct
    public void preloadReportWhenEditing() {
+	  reloadSessionMessages();
       if(getReportId() != null) {
          load();
       }
@@ -97,12 +99,17 @@ public class BoxplotReportController extends BaseController {
       Map<String, List<Chart>> loadedReport = null;
       try {
          loadedReport = reportService.load(reportId);
+         name = loadedReport.keySet().stream().findFirst().get();
+         charts = loadedReport.get(name);
       } catch (IllegalArgumentException ex) {
-         redirectWithMessage("/reports", ERROR, ex.getMessage());
+          redirectWithMessage("/reports", ERROR, "page.report.error");
+      } catch (Exception e) {
+          if (e.getCause() instanceof SecurityException) {
+              redirectWithMessage("/reports", ERROR, "page.report.permissionDenied");
+          } else {
+              redirectWithMessage("/reports", ERROR, "page.report.erro");
+          }
       }
-
-      name = loadedReport.keySet().stream().findFirst().get();
-      charts = loadedReport.get(name);
    }
 
    public void computeCharts() {

@@ -177,17 +177,6 @@ public class ReportServiceBean implements ReportService {
 		return result;
 	}
 
-   @Override
-   @Secured(accessType = AccessType.READ)
-   public Report getFullReport(Long reportId) {
-      Report report = reportDAO.get(reportId);
-      if(report == null) {
-         return null;
-      }
-
-      return getFullReport(report);
-   }
-
 	@Override
 	public MetricReportTO.Response computeMetricReport(MetricReportTO.Request request) {
 		MetricReportTO.Response response = new MetricReportTO.Response();

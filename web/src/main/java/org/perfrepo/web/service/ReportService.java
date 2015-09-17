@@ -92,13 +92,6 @@ public interface ReportService {
 	 */
 	public Report getFullReport(Report report);
 
-   /**
-    * Get report with all properties.
-    *
-    * @param reportId Report id
-    * @return Report
-    */
-   public Report getFullReport(Long reportId);
 
 	/**
 	 * Returns all permission to report. If the permissions are not assigned, returns default permission.

@@ -70,7 +70,7 @@ public class ReportREST {
 	@Path("/id/{reportId}")
 	@Logged
 	public Response get(@PathParam("reportId") Long reportId) {
-		return Response.ok(reportService.getFullReport(reportId)).build();
+		return Response.ok(reportService.getFullReport(new Report(reportId))).build();
 	}
 
    @POST
