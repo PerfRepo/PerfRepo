@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.perfrepo</groupId>
 	<artifactId>perfrepo-parent</artifactId>
-	<version>1.4-SNAPSHOT</version>
+	<version>1.4</version>
 	<packaging>pom</packaging>
 	<name>Performance Results Repository - Parent</name>
 	<description>Performance Results Repository Application</description>
@@ -26,6 +26,7 @@
 		<commons.beanutils.version>1.9.2</commons.beanutils.version>
 		<commons.codec.version>1.9</commons.codec.version>
 		<guava.version>18.0</guava.version>
+		<maven.checkstyle.plugin.version>2.16</maven.checkstyle.plugin.version>
 		<maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -166,7 +167,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>2.16</version>
+				<version>${maven.checkstyle.plugin.version}</version>
 				<executions>
 					<execution>
 						<id>validate</id>

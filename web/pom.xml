@@ -5,7 +5,7 @@
    <parent>
       <groupId>org.perfrepo</groupId>
       <artifactId>perfrepo-parent</artifactId>
-      <version>1.4-SNAPSHOT</version>
+      <version>1.4</version>
    </parent>
 
    <artifactId>perfrepo-web</artifactId>
@@ -17,7 +17,7 @@
       <dependency>
          <groupId>org.perfrepo</groupId>
          <artifactId>perfrepo-model</artifactId>
-         <version>1.4-SNAPSHOT</version>
+         <version>${project.parent.version}</version>
       </dependency>
 
       <dependency>
