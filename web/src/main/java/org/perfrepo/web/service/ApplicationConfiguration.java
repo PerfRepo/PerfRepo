@@ -16,6 +16,7 @@ public class ApplicationConfiguration {
    private static final String CONFIGURATION_FILE = "app_config.properties";
 
    private String url;
+   private String version;
 
    @PostConstruct
    public void init() {
@@ -28,9 +29,19 @@ public class ApplicationConfiguration {
       }
 
       url = properties.getProperty("application.url");
+      version = properties.getProperty("project.version");
    }
 
    public String getUrl() {
       return url;
+   }
+
+   /**
+    * Returns current version of PerfRepo extracted from pom.xml
+    *
+    * @return
+    */
+   public String getPerfRepoVersion() {
+      return version;
    }
 }

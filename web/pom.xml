@@ -13,6 +13,10 @@
    <name>Performance Results Repository - Web</name>
    <description/>
 
+   <properties>
+      <application.url>http://www.example.com</application.url>
+   </properties>
+
    <dependencies>
       <dependency>
          <groupId>org.perfrepo</groupId>
@@ -298,17 +302,11 @@
          </plugin>
 
       </plugins>
+
       <resources>
          <resource>
             <directory>src/main/resources/</directory>
-            <filtering>false</filtering>
-         </resource>
-         <resource>
-            <directory>src/main/resources/</directory>
             <filtering>true</filtering>
-            <includes>
-               <include>META-INF/persistence.xml</include>
-            </includes>
          </resource>
       </resources>
    </build>

@@ -14,22 +14,25 @@
  */
 package org.perfrepo.web.controller;
 
+import org.perfrepo.web.service.ApplicationConfiguration;
 import org.perfrepo.web.viewscope.ViewScoped;
 
-import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.IOException;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 /**
  * Backing bean home screen.
  *
  * @author Michal Linhard (mlinhard@redhat.com)
+ * @author Jiri Holusa (jholusa@redhat.com)
  */
 @Named
 @ViewScoped
 public class HomeController extends BaseController {
+
+   @Inject
+   private ApplicationConfiguration applicationConfiguration;
 
    /**
     * called on preRenderView
@@ -44,11 +47,6 @@ public class HomeController extends BaseController {
     * @return
     */
    public String getPerfRepoVersion() throws IOException {
-      String version = new Manifest(FacesContext.getCurrentInstance().getExternalContext()
-                                        .getResourceAsStream("/META-INF/MANIFEST.MF"))
-          .getMainAttributes()
-          .get(Attributes.Name.IMPLEMENTATION_VERSION).toString();
-
-      return version;
+      return applicationConfiguration.getPerfRepoVersion();
    }
 }

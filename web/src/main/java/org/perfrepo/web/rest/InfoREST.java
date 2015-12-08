@@ -14,26 +14,29 @@
  */
 package org.perfrepo.web.rest;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+import org.perfrepo.web.rest.logging.Logged;
+import org.perfrepo.web.service.ApplicationConfiguration;
 
-@ApplicationPath("/rest")
-public class PerfRepoRESTApplication extends Application {
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-   private Set<Class<?>> classes = new HashSet<Class<?>>();
+@Path("/info")
+@RequestScoped
+public class InfoREST {
 
-   public PerfRepoRESTApplication() {
-      classes.add(MetricREST.class);
-      classes.add(TestExecutionREST.class);
-      classes.add(TestREST.class);
-      classes.add(ReportREST.class);
-      classes.add(InfoREST.class);
-   }
+   @Inject
+   private ApplicationConfiguration applicationConfiguration;
 
-   @Override
-   public Set<Class<?>> getClasses() {
-      return classes;
+   @GET
+   @Produces(MediaType.TEXT_PLAIN)
+   @Path("/version")
+   @Logged
+   public Response get() {
+      return Response.ok(applicationConfiguration.getPerfRepoVersion()).build();
    }
 }

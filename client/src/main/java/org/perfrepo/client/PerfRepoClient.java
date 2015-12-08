@@ -36,10 +36,12 @@ import org.perfrepo.model.TestExecution;
 import org.perfrepo.model.report.Report;
 
 import javax.xml.bind.JAXB;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 
 /**
  * Performance Repository REST API Client.
@@ -553,5 +555,13 @@ public class PerfRepoClient {
          EntityUtils.consume(resp.getEntity());
          return false;
       }
+   }
+
+   public String getServerVersion() throws Exception {
+      HttpGet get = createBasicGet("info/version");
+      HttpResponse resp = httpClient.execute(get);
+      BufferedReader reader = new BufferedReader(new InputStreamReader(resp.getEntity().getContent()));
+
+      return reader.readLine();
    }
 }
