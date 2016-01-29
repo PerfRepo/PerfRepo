@@ -4,7 +4,6 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:rich="http://richfaces.org/rich"
-      xmlns:r="http://richfaces.org"
       xmlns:a4j="http://richfaces.org/a4j">
 <h:body>
    <ui:composition template="/layout/template.xhtml">
@@ -21,7 +20,7 @@
                   <h:outputLabel class="control-label" for="testName">#{strings['page.testSearch.prop.testname']}</h:outputLabel>
 
                   <div class="controls">
-                     <h:inputText type="text" class="input-xlarge" id="testName"
+                     <h:inputText  class="input-xlarge" id="testName"
                                   value="#{searchCriteriaSession.testSearchCriteria.name}"
                                   valueChangeListener="#{testSearchController.criteriaChanged}" />
 							<a href="#"><i id="testName-info" class="icon-info"/></a>
@@ -65,11 +64,13 @@
 
                   <div class="controls">
                      <div class="btn-group">
-                        <a4j:commandLink styleClass="btn #{userSession.getGroupFilter() == 'MY_GROUPS' ? 'active' : '' }" render="@form :searchResult" alt="Search My Groups Only" title="Search My Groups Only" action="#{testSearchController.setGroupFilter('MY_GROUPS')}">
+                        <a4j:commandLink styleClass="btn #{userSession.getGroupFilter() == 'MY_GROUPS' ? 'active' : '' }" 
+                                         render="@form :searchResult" action="#{testSearchController.setGroupFilter('MY_GROUPS')}">
                            <i class="icon-group" /> Search My Groups Only
                         </a4j:commandLink>
 
-			               <a4j:commandLink styleClass="btn #{userSession.getGroupFilter() == 'ALL_GROUPS' ? 'active' : '' }" render="@form :searchResult" alt="Search All Groups" title="Search All Groups" action="#{testSearchController.setGroupFilter('ALL_GROUPS')}">
+			               <a4j:commandLink styleClass="btn #{userSession.getGroupFilter() == 'ALL_GROUPS' ? 'active' : '' }" 
+                                            render="@form :searchResult" action="#{testSearchController.setGroupFilter('ALL_GROUPS')}">
                            <i class="icon-asterisk" /> Search All Groups
                         </a4j:commandLink>
                      </div>
@@ -88,7 +89,7 @@
 
                <a4j:commandButton action="#{testSearchController.search}"
                                   value="#{strings['page.testSearch.buSearch']}" styleClass="btn btn-primary"
-                                  alt="Search Test Execution" title="Search Test Execution"
+                                  
                                   render="searchResult">
                </a4j:commandButton>
             </div>
@@ -116,7 +117,7 @@
                <thead class="rf-dt-thd">
                   <tr class="rf-dt-shdr">
                      <th class="rf-dt-shdr-c">
-                        <r:commandLink value="Name" render="@form :searchResult :messagesPanel"
+                        <a4j:commandLink value="Name" render="@form :searchResult :messagesPanel"
                                        action="#{testSearchController.orderBy('name')}"/>
 
                         <i class="icon-arrow-up" style="display: #{searchCriteriaSession.testSearchCriteria.orderBy == 'NAME_ASC' ? 'inline' : 'none'}"/>
@@ -124,7 +125,7 @@
                      </th>
 
                      <th class="rf-dt-shdr-c">
-                        <r:commandLink value="Test UID" render="@form :searchResult :messagesPanel"
+                        <a4j:commandLink value="Test UID" render="@form :searchResult :messagesPanel"
                                        action="#{testSearchController.orderBy('uid')}"/>
 
                         <i class="icon-arrow-up" style="display: #{searchCriteriaSession.testSearchCriteria.orderBy == 'UID_ASC' ? 'inline' : 'none'}"/>
@@ -132,7 +133,7 @@
                      </th>
 
                      <th class="rf-dt-shdr-c">
-                        <r:commandLink value="Group" render="@form :searchResult :messagesPanel"
+                        <a4j:commandLink value="Group" render="@form :searchResult :messagesPanel"
                                        action="#{testSearchController.orderBy('groupId')}"/>
 
                         <i class="icon-arrow-up" style="display: #{searchCriteriaSession.testSearchCriteria.orderBy == 'GROUP_ID_ASC' ? 'inline' : 'none'}"/>
@@ -164,7 +165,7 @@
                            <a4j:commandLink styleClass="btn btn-small #{authorizationServiceBean.isUserAuthorizedFor('WRITE', item) ? 'btn-primary' : 'btn-secondary'}"
                                             disabled="#{not authorizationServiceBean.isUserAuthorizedFor('WRITE', item)}"
                                             action="#{testSearchController.delete}"
-                                            alt="#{strings.delete}" title="#{strings.delete}"
+                                            
                                             render="@form :messagesPanel"
                                             onclick="if (!confirm('Are you sure you want to delete the test (#{item.name})?') ) { return false;}; return true;">
                               <f:param name="idToDelete" value="#{item.id}"/>

@@ -10,8 +10,7 @@
     <h:form id="compareForm" class="form-horizontal well-small">
         <rich:focus id="compareFocus"/>
         <fieldset>
-            <a4j:commandLink onclick="document.getElementById('compareForm:info').style.display='block'"
-                             alt="Information" title="Information"><i class="icon-info"/></a4j:commandLink>
+            <a4j:commandLink onclick="document.getElementById('compareForm:info').style.display='block'"/>
             <h:panelGroup id="info" layout="block" styleClass="alert alert-info" style="display:none;width:380px;overflow:auto;">
                 <p>If you want to compare results of the test executions, you need to add the comparison by selecting the baselines.</p>
             </h:panelGroup>
@@ -45,7 +44,7 @@
                                                                styleClass="btn btn-success btn-small"
                                                                disabled="#{!testGroupReportController.userAuthorized || testGroupReportController.baseline1 == null || testGroupReportController.baseline2 == null}"
                                                                action="#{testGroupReportController.addComparison()}"
-                                                               value="Add Comparison" alt="Add Comparison"
+                                                               value="Add Comparison" 
                                                                title="Add Comparison"
                                                                render="@form :compareForm"/>
             </div>
@@ -70,7 +69,7 @@
 	                        <td style="text-align: left; vertical-align: middle"><a4j:commandLink
 	                                action="#{testGroupReportController.removeComparison(label)}"
 	                                render="@form :compareForm" disabled="#{!testGroupReportController.userAuthorized}"
-	                                alt="Delete Comparison" title="Delete Comparison"><i
+	                                ><i
 	                                class="icon-remove"/></a4j:commandLink></td>
 	                    </tr>
 	                </ui:repeat>
@@ -79,17 +78,16 @@
             </h:panelGroup><br/>
             <div style="text-align:right">
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
-                                   action="#{testGroupReportController.storeComparison()}" value="OK" alt="OK"
+                                   action="#{testGroupReportController.storeComparison()}" value="OK" 
                                    title="OK"
                                    oncomplete="#{rich:component('comparePopup')}.hide()"
                                    render="@form :testGroupReport :testGroupReportTable chart"/>
                 <a4j:commandButton styleClass="btn btn-primary btn-small" render="@form"
                                    action="#{testGroupReportController.clearComparisonCopy()}"
                                    oncomplete="#{rich:component('comparePopup')}.hide()" value="#{strings.cancel}"
-                                   alt="#{strings.cancel}" title="#{strings.cancel}"/>
+                                   />
             </div>
         </fieldset>
-        <rich:hotKey key="enter" handler="#{testGroupReportController.addComparison()}"/>
         <rich:hotKey key="Esc">
             <rich:componentControl target="comparePopup" operation="hide"/>
         </rich:hotKey>

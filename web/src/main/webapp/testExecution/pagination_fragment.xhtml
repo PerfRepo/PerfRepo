@@ -1,30 +1,31 @@
 <ui:composition
         xmlns="http://www.w3.org/1999/xhtml"
-        xmlns:r="http://richfaces.org"
+        xmlns:a4j="http://richfaces.org/a4j"
+        xmlns:rich="http://richfaces.org/rich"
         xmlns:ui="http://java.sun.com/jsf/facelets">
    <div class="pagination pagination-right">
       <ul>
          <ui:fragment rendered="#{testExecutionSearchController.resultsPageNumber gt 1}">
             <li>
-               <r:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(1)}" title="First page">
+               <a4j:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(1)}" title="First page">
                   1
-               </r:commandLink>
+               </a4j:commandLink>
             </li>
          </ui:fragment>
 
          <ui:fragment rendered="#{testExecutionSearchController.resultsPageNumber gt 3}">
             <li>
-               <r:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(testExecutionSearchController.resultsPageNumber - 2)}" title="Two pages back">
+               <a4j:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(testExecutionSearchController.resultsPageNumber - 2)}" title="Two pages back">
                   ...
-               </r:commandLink>
+               </a4j:commandLink>
             </li>
          </ui:fragment>
 
          <ui:fragment rendered="#{testExecutionSearchController.resultsPageNumber gt 2}">
             <li>
-               <r:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(testExecutionSearchController.resultsPageNumber - 1)}" title="Previous page">
+               <a4j:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(testExecutionSearchController.resultsPageNumber - 1)}" title="Previous page">
                   #{testExecutionSearchController.resultsPageNumber-1}
-               </r:commandLink>
+               </a4j:commandLink>
             </li>
          </ui:fragment>
 
@@ -34,25 +35,25 @@
 
          <ui:fragment rendered="#{testExecutionSearchController.resultsPageNumber lt testExecutionSearchController.totalNumberOfResultsPages - 1}">
             <li>
-               <r:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(testExecutionSearchController.resultsPageNumber + 1)}" title="Next page">
+               <a4j:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(testExecutionSearchController.resultsPageNumber + 1)}" title="Next page">
                   #{testExecutionSearchController.resultsPageNumber+1}
-               </r:commandLink>
+               </a4j:commandLink>
             </li>
          </ui:fragment>
 
          <ui:fragment rendered="#{testExecutionSearchController.resultsPageNumber lt testExecutionSearchController.totalNumberOfResultsPages - 2}">
             <li>
-               <r:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(testExecutionSearchController.resultsPageNumber + 2)}" title="Two pages forward">
+               <a4j:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(testExecutionSearchController.resultsPageNumber + 2)}" title="Two pages forward">
                   ...
-               </r:commandLink>
+               </a4j:commandLink>
             </li>
          </ui:fragment>
 
          <ui:fragment rendered="#{testExecutionSearchController.resultsPageNumber lt testExecutionSearchController.totalNumberOfResultsPages}">
             <li>
-               <r:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(testExecutionSearchController.totalNumberOfResultsPages)}" title="Last page">
+               <a4j:commandLink render=":searchResult" action="#{testExecutionSearchController.changeResultsPageNumber(testExecutionSearchController.totalNumberOfResultsPages)}" title="Last page">
                   #{testExecutionSearchController.totalNumberOfResultsPages}
-               </r:commandLink>
+               </a4j:commandLink>
             </li>
          </ui:fragment>
       </ul>

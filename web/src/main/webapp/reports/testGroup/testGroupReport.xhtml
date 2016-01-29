@@ -32,7 +32,7 @@
 					<h:outputText value="#{testGroupReportController.reportName}" rendered="#{testGroupReportController.reportName != null}"/>
 					<span style="font-size:14px;">
 						<a4j:commandLink styleClass="text-success" rendered="#{testGroupReportController.reportId != null}"
-							disabled="#{!testGroupReportController.userAuthorized}" oncomplete="#{rich:component('namePopup')}.show();" alt="Update Report Name"
+							disabled="#{!testGroupReportController.userAuthorized}" oncomplete="#{rich:component('namePopup')}.show();"
 							title="Update Report Name">
 							<i class="icon-pencil"/></a4j:commandLink>
 					</span>
@@ -44,12 +44,12 @@
 						<a4j:commandLink styleClass="text-success"
                                          action="#{testGroupReportController.setCloning(false)}"
                                          rendered="#{testGroupReportController.reportId == null}"
-                                         oncomplete="#{rich:component('clonePopup')}.show();" alt="Save New Report"
+                                         oncomplete="#{rich:component('clonePopup')}.show();"
                                          title="Save New Report"><i class="icon-copy"/>Save Report</a4j:commandLink>
 						<a4j:commandLink styleClass="text-success"
                                          action="#{testGroupReportController.setCloning(true)}"
                                          rendered="#{testGroupReportController.reportId != null}"
-                                         oncomplete="#{rich:component('clonePopup')}.show();" alt="Clone Report"
+                                         oncomplete="#{rich:component('clonePopup')}.show();"
                                          title="Clone Report" disabled="#{!testGroupReportController.userAuthorized}"><i
                                 class="icon-copy"/>Clone Report</a4j:commandLink>
 					</span>
@@ -57,33 +57,33 @@
                                                                                  rendered="#{testGroupReportController.reportId != null}"
                                                                                  render=":messagesPanel"
                                                                                  action="#{testGroupReportController.saveReport()}"
-                                                                                 alt="Save Report" title="Save Report"
+                                                                                 title="Save Report"
                                                                                  disabled="#{!testGroupReportController.userAuthorized}"><i
                             class="icon-save"/>Save</a4j:commandLink></span>
                 </div>
                 <div id="control" style="text-align: right;line-height: 30px;">
                     <span style="margin:5px;"><a4j:commandLink render=":testsPopup :testForm"
                                                                oncomplete="#{rich:component('testsPopup')}.show();"
-                                                               alt="Tests" title="Tests"><i
+                                                               title="Tests"><i
                             class="icon-list"/>Tests</a4j:commandLink></span>
                     <span style="margin:5px;"><a4j:commandLink render=":tagsPopup :tagsForm"
                                                                oncomplete="#{rich:component('tagsPopup')}.show();"
-                                                               alt="Tags" title="Tags"
+                                                               title="Tags"
                                                                disabled="#{testGroupReportController.tests.isEmpty()}"><i
                             class="icon-tags"/>Tags</a4j:commandLink></span>
                     <span style="margin:5px;"><a4j:commandLink render=":comparePopup :compareForm"
                                                                oncomplete="#{rich:component('comparePopup')}.show();"
                                                                disabled="#{testGroupReportController.tests.isEmpty() || testGroupReportController.tags.isEmpty()}"
-                                                               alt="Compare" title="Compare"><i class="icon-exchange"/>Compare</a4j:commandLink></span>
+                                                               title="Compare"><i class="icon-exchange"/>Compare</a4j:commandLink></span>
                     <span style="margin:5px;"><a4j:commandLink render=":metricsPopup :metricForm"
                                                                oncomplete="#{rich:component(':metricsPopup')}.show();"
                                                                disabled="#{testGroupReportController.tests.isEmpty()}"
-                                                               alt="Metric" title="Metric"><i
+                                                               title="Metric"><i
                             class="icon-list"/>Filter Metrics</a4j:commandLink></span>
                     <span style="margin:5px;"><a4j:commandLink render=":configurationPopup :configurationForm"
                                                                oncomplete="#{rich:component(':configurationPopup')}.show();"
                                                                disabled="#{testGroupReportController.tests.isEmpty()}"
-                                                               alt="Configuration" title="Configuration"><i
+                                                               title="Configuration"><i
                             class="icon-wrench"/>Configuration</a4j:commandLink></span>
                 </div>
 
@@ -122,7 +122,6 @@
                                     <a4j:commandLink disabled="#{!testGroupReportController.userAuthorized}"
                                                      action="#{testGroupReportController.removeTestExecutionFromReport(te)}"
                                                      render="@form :testGroupReport :testGroupReportTable chart"
-                                                     alt="Remove Test Execution from report"
                                                      title="Remove Test Execution from report"><i class="icon-remove"/></a4j:commandLink>
                                 </td>
                             </tr>
@@ -147,8 +146,7 @@
                             <th style="text-align: center; vertical-align: middle">Test Execution name</th>
                             <th style="text-align: center; vertical-align: middle">Test Execution tags</th>
                             <th style="text-align: center; vertical-align: middle">Test Execution date</th>
-                            <th><a4j:commandLink alt="Add all test executions to report comparison"
-                                                 title="Add all test executions to report comparison"
+                            <th><a4j:commandLink title="Add all test executions to report comparison"
                                                  action="#{testGroupReportController.addAllMissingTestExecutions()}"
                                                  render="testGroupReport :testGroupReportTable chart"><i
                                     class="icon-plus-sign"/></a4j:commandLink></th>
@@ -169,7 +167,6 @@
                                     <a4j:commandLink disabled="#{!testGroupReportController.userAuthorized}"
                                                      action="#{testGroupReportController.addMissingTestExecution(te)}"
                                                      render="@form :testGroupReport :testGroupReportTable chart"
-                                                     alt="Add Test Execution to report"
                                                      title="Add Test Execution to report"><i
                                             class="icon-plus"/></a4j:commandLink>
                                 </td>

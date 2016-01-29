@@ -4,7 +4,6 @@
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:a4j="http://richfaces.org/a4j"
       xmlns:ui="http://java.sun.com/jsf/facelets"
-      xmlns:r="http://richfaces.org"
       xmlns:rich="http://richfaces.org/rich">
 <h:body>
    <ui:composition template="/layout/template.xhtml">
@@ -21,14 +20,14 @@
                   <h:outputLabel class="control-label" for="testName">Test Name</h:outputLabel>
 
                   <div class="controls">
-                     <h:inputText type="text" class="input-xlarge" id="testName"
+                     <h:inputText  class="input-xlarge" id="testName"
                                   value="#{searchCriteriaSession.executionSearchCriteria.testName}"
                                   valueChangeListener="#{testExecutionSearchController.criteriaChanged}" />
                      <a href="#"><i id="testName-info" class="icon-info"/></a>
 
-                     <r:tooltip target="testName-info" followMouse="false" direction="topRight">
+                     <rich:tooltip target="testName-info" followMouse="false" direction="topRight">
                         <div style="width:200px;">#{strings['page.search.asteriskTooltip']}</div>
-                     </r:tooltip>
+                     </rich:tooltip>
                   </div>
                </div>
 
@@ -42,9 +41,9 @@
                                         valueChangeListener="#{testExecutionSearchController.criteriaChanged}" />
                      <a href="#"><i id="testUID-info" class="icon-info"/></a>
 
-                     <r:tooltip target="testUID-info" followMouse="false" direction="topRight">
+                     <rich:tooltip target="testUID-info" followMouse="false" direction="topRight">
                         <div style="width:200px;">#{strings['page.search.asteriskTooltip']}</div>
-                     </r:tooltip>
+                     </rich:tooltip>
                   </div>
                </div>
 
@@ -52,7 +51,7 @@
                   <h:outputLabel class="control-label" for="testStartedFrom">Test executed after</h:outputLabel>
 
                   <div class="controls">
-                     <r:calendar value="#{searchCriteriaSession.executionSearchCriteria.startedFrom}"
+                     <rich:calendar value="#{searchCriteriaSession.executionSearchCriteria.startedFrom}"
                                  styleClass="input-xlarge"
                                  datePattern="yyyy-MM-dd HH:mm" id="testStartedFrom"
                                  valueChangeListener="#{testExecutionSearchController.criteriaChanged}" />
@@ -63,7 +62,7 @@
                   <h:outputLabel class="control-label" for="testStartedTo">Test executed before</h:outputLabel>
 
                   <div class="controls">
-                     <r:calendar value="#{searchCriteriaSession.executionSearchCriteria.startedTo}"
+                     <rich:calendar value="#{searchCriteriaSession.executionSearchCriteria.startedTo}"
                                  styleClass="input-xlarge"
                                  datePattern="yyyy-MM-dd HH:mm" id="testStartedTo"
                                  valueChangeListener="#{testExecutionSearchController.criteriaChanged}" />
@@ -82,9 +81,9 @@
                                         valueChangeListener="#{testExecutionSearchController.criteriaChanged}" />
                      <a href="#"><i id="tags-info" class="icon-info"/></a>
 
-                     <r:tooltip target="tags-info" followMouse="false" direction="topRight">
+                     <rich:tooltip target="tags-info" followMouse="false" direction="topRight">
                         <div style="width:200px;">#{strings['page.search.tags']}</div>
-                     </r:tooltip>
+                     </rich:tooltip>
                   </div>
                </div>
                <h:panelGroup rendered="#{searchCriteriaSession.executionSearchCriteria.parameters.isEmpty()}">
@@ -92,12 +91,12 @@
                      <h:outputLabel class="control-label">Parameters</h:outputLabel>
 
                      <div class="controls">
-                        <r:commandLink styleClass="btn btn-primary btn-small" render="@form"
-                                       alt="Add parameter criteria"
+                        <a4j:commandLink styleClass="btn btn-primary btn-small" render="@form"
+                                       
                                        title="Add parameter criteria"
                                        action="#{testExecutionSearchController.addParameterCriteria}">
                            <i class="icon-plus"></i>
-                        </r:commandLink>
+                        </a4j:commandLink>
                      </div>
                   </div>
                </h:panelGroup>
@@ -123,17 +122,17 @@
                            </h:column>
                            <h:column>
                               <f:facet name="header">
-                                 <r:commandLink styleClass="btn btn-primary btn-small" render="@form"
-                                                alt="Add parameter criteria" title="Add parameter criteria"
+                                 <a4j:commandLink styleClass="btn btn-primary btn-small" render="@form"
+                                                
                                                 action="#{testExecutionSearchController.addParameterCriteria}">
                                     <i class="icon-plus"></i>
-                                 </r:commandLink>
+                                 </a4j:commandLink>
                               </f:facet>
-                              <r:commandLink styleClass="btn btn-primary btn-small" render="@form" alt="Remove"
+                              <a4j:commandLink styleClass="btn btn-primary btn-small" render="@form" 
                                              title="Remove"
                                              action="#{testExecutionSearchController.removeParameterCriteria(item)}">
                                  <i class="icon-trash"></i>
-                              </r:commandLink>
+                              </a4j:commandLink>
                            </h:column>
                         </h:dataTable>
                      </div>
@@ -145,17 +144,17 @@
 
                   <div class="controls">
                      <div class="btn-group">
-                        <r:commandLink styleClass="btn #{userSession.getGroupFilter() == 'MY_GROUPS' ? 'active' : '' }"
-                                       render="@form :searchResult" alt="Search My Groups Only" title="Search My Groups Only"
+                        <a4j:commandLink styleClass="btn #{userSession.getGroupFilter() == 'MY_GROUPS' ? 'active' : '' }"
+                                       render="@form :searchResult" 
                                        action="#{testExecutionSearchController.setGroupFilter('MY_GROUPS')}">
                            <i class="icon-group"/> Search My Groups Only
-                        </r:commandLink>
+                        </a4j:commandLink>
 
-                        <r:commandLink styleClass="btn #{userSession.getGroupFilter() == 'ALL_GROUPS' ? 'active' : '' }"
-                                       render="@form :searchResult" alt="Search All Groups" title="Search All Groups"
+                        <a4j:commandLink styleClass="btn #{userSession.getGroupFilter() == 'ALL_GROUPS' ? 'active' : '' }"
+                                       render="@form :searchResult" 
                                        action="#{testExecutionSearchController.setGroupFilter('ALL_GROUPS')}">
                            <i class="icon-asterisk"/> Search All Groups
-                        </r:commandLink>
+                        </a4j:commandLink>
                      </div>
                   </div>
 
@@ -163,32 +162,32 @@
             </fieldset>
 
             <div class="form-actions">
-               <r:status>
+               <a4j:status>
                   <f:facet name="start">
                      <h:graphicImage value="/resources/images/ajax_active.gif"/>
                   </f:facet>
-               </r:status>
+               </a4j:status>
 
                <h:outputText value="&#160;&#160;&#160;"/>
 
-               <r:commandButton action="#{searchCriteriaSession.clearExecutionSearchCriteria}" value="Reset"
-                                styleClass="btn btn-secondary" alt="Reset" title="Reset" render="@form"/>
+               <a4j:commandButton action="#{searchCriteriaSession.clearExecutionSearchCriteria}" value="Reset"
+                                styleClass="btn btn-secondary" render="@form"/>
 
-               <r:commandButton action="#{testExecutionSearchController.search}" value="Search"
+               <a4j:commandButton action="#{testExecutionSearchController.search}" value="Search"
                                 styleClass="btn btn-primary"
-                                alt="Search Test Execution" title="Search Test Execution"
+                                
                                 render="@form :searchResult :messagesPanel :deleteFoundTestExecutionsButton">
                   <f:param name="testExecutionSearchTO" value="#{searchCriteriaSession.executionSearchCriteria}"/>
-               </r:commandButton>
+               </a4j:commandButton>
             </div>
          </h:form>
 
          <h:form id="massOperationForm">
-            <r:commandLink action="#{testExecutionSearchController.toggleShowMassOperations}" render="@form"
-                           styleClass="btn btn-primary btn-small" alt="Mass operations" title="Mass operations">
+            <a4j:commandLink action="#{testExecutionSearchController.toggleShowMassOperations}" render="@form"
+                           styleClass="btn btn-primary btn-small" >
                <i class="icon-cogs"></i> #{testExecutionSearchController.showMassOperations ? "Hide" : "Show" } mass
                operations
-            </r:commandLink>
+            </a4j:commandLink>
 
             <h:panelGroup id="showMassOperationsPanel" rendered="#{testExecutionSearchController.showMassOperations}">
                <div id="massOperations">
@@ -201,31 +200,31 @@
                                               value="#{testExecutionSearchController.massOperationAddTags}"/>
                         </td>
                         <td>
-                           <r:commandLink action="#{testExecutionSearchController.addTagsToFoundTestExecutions()}"
+                           <a4j:commandLink action="#{testExecutionSearchController.addTagsToFoundTestExecutions()}"
                                           render="@form :searchResult :messagesPanel"
                                           styleClass="btn btn-primary btn-small"
-                                          alt="Add tags to result"
+                                          
                                           style="width: 172px;"
                                           title="Add tags to result">
                               <i class="icon-plus"></i> Add tags to result
-                           </r:commandLink>
+                           </a4j:commandLink>
                         </td>
                         <td class="secondColumn">
-                           <r:commandLink action="#{testExecutionSearchController.addAllCurrentResultsToComparison()}"
+                           <a4j:commandLink action="#{testExecutionSearchController.addAllCurrentResultsToComparison()}"
                                           render="compareMenuItem :messagesPanel"
                                           styleClass="btn btn-primary btn-small"
-                                          alt="Add all current results"
+                                          
                                           style="width: 288px;"
                                           title="Add all current results">
                               <i class="icon-copy"></i> Add all current results to comparison
-                           </r:commandLink>
+                           </a4j:commandLink>
                         </td>
                         <td rowspan="2" class="statusColumn">
-                           <r:status>
+                           <a4j:status>
                               <f:facet name="start">
                                  <h:graphicImage value="/resources/images/ajax_active.gif"/>
                               </f:facet>
-                           </r:status>
+                           </a4j:status>
                         </td>
                      </tr>
 
@@ -237,26 +236,26 @@
                                               value="#{testExecutionSearchController.massOperationDeleteTags}"/>
                         </td>
                         <td>
-                           <r:commandLink action="#{testExecutionSearchController.deleteTagsFromFoundTestExecutions()}"
+                           <a4j:commandLink action="#{testExecutionSearchController.deleteTagsFromFoundTestExecutions()}"
                                           render="@form :searchResult :messagesPanel"
                                           styleClass="btn btn-primary btn-small"
-                                          alt="Delete tags from result"
+                                          
                                           style="width: 172px;"
                                           title="Delete tags from result"
                                           onclick="if(!window.confirm('Are you sure?')){return false}">
                               <i class="icon-trash"></i> Delete tags from result
-                           </r:commandLink>
+                           </a4j:commandLink>
                         </td>
                         <td class="secondColumn">
-                           <r:commandLink action="#{testExecutionSearchController.deleteFoundTestExecutions}"
+                           <a4j:commandLink action="#{testExecutionSearchController.deleteFoundTestExecutions}"
                                           onclick="if(window.prompt('If you really want to delete all #{testExecutionSearchController.resultSize} test executions,\n please type the number into input box below.\n\n') != #{testExecutionSearchController.resultSize}){return false}"
                                           render="@form :searchResult :messagesPanel"
                                           id="deleteFoundTestExecutionsButton"
                                           styleClass="btn btn-danger btn-small"
                                           style="width: 288px;"
-                                          alt="Delete found test executions" title="Delete found test executions">
+                                          >
                               <i class="icon-trash"></i> Delete found test executions
-                           </r:commandLink>
+                           </a4j:commandLink>
                         </td>
                      </tr>
                   </table>
@@ -280,7 +279,7 @@
                <thead class="rf-dt-thd">
                   <tr class="rf-dt-shdr">
                      <th class="rf-dt-shdr-c">
-                        <r:commandLink value="Name" render="@form :searchResult :messagesPanel"
+                        <a4j:commandLink value="Name" render="@form :searchResult :messagesPanel"
                                        action="#{testExecutionSearchController.orderBy('name')}"/>
 
                         <i class="icon-arrow-up" style="display: #{searchCriteriaSession.executionSearchCriteria.orderBy == 'NAME_ASC' ? 'inline' : 'none'}"/>
@@ -288,7 +287,7 @@
                      </th>
 
                      <th class="rf-dt-shdr-c">
-                        <r:commandLink value="Time" render="@form :searchResult :messagesPanel"
+                        <a4j:commandLink value="Time" render="@form :searchResult :messagesPanel"
                                        action="#{testExecutionSearchController.orderBy('started')}"/>
 
                         <i class="icon-arrow-up" style="display: #{searchCriteriaSession.executionSearchCriteria.orderBy == 'DATE_ASC' ? 'inline' : 'none'}"/>
@@ -334,32 +333,32 @@
 
                         <td class="rf-dt-c" align="center">
                            <div class="btn-group">
-                              <r:commandLink styleClass="btn btn-small #{authorizationServiceBean.isUserAuthorizedFor('WRITE', item) ? 'btn-primary' : 'btn-secondary'}"
+                              <a4j:commandLink styleClass="btn btn-small #{authorizationServiceBean.isUserAuthorizedFor('WRITE', item) ? 'btn-primary' : 'btn-secondary'}"
                                              disabled="#{not authorizationServiceBean.isUserAuthorizedFor('WRITE', item)}"
-                                             action="#{testExecutionSearchController.delete}" alt="#{strings.delete}"
+                                             action="#{testExecutionSearchController.delete}" 
                                              title="#{strings.delete}"
                                              render="@form :criteriaForm :messagesPanel"
                                              onclick="if (!confirm('Are you sure you want to delete the test execution (#{item.name})?') ) { return false;}; return true;">
                                  <f:param name="idToDelete" value="#{item.id}"/>
                                  <i class="icon-trash"></i>
-                              </r:commandLink>
-                              <r:commandLink styleClass="btn btn-primary btn-small" render=":compareMenuItem"
-                                             lt="Add to comparison" title="Add to comparison"
+                              </a4j:commandLink>
+                              <a4j:commandLink styleClass="btn btn-primary btn-small" render=":compareMenuItem"
+                                             title="Add to comparison"
                                              action="#{teComparatorSession.add(item.id)}">
                                  <i class="icon-plus"></i>
-                              </r:commandLink>
+                              </a4j:commandLink>
                            </div>
                         </td>
                      </tr>
 
-                     <r:tooltip target="name-#{item.id}" followMouse="false" direction="topLeft">
+                     <rich:tooltip target="name-#{item.id}" followMouse="false" direction="topLeft">
                         <span>
                            <b>ID:</b> #{item.id}<br/> <b>Test name:</b>
                            <a href="#{request.contextPath}/test/#{item.test.id}">#{item.test.name}</a>
                            <br/> <b>Comment:</b> <br/>
                            <h:outputText value="#{item.comment}" escape="false"/>
                         </span>
-                     </r:tooltip>
+                     </rich:tooltip>
 
                   </ui:repeat>
                </tbody>

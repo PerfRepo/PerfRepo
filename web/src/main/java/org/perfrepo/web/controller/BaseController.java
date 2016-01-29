@@ -16,18 +16,20 @@ package org.perfrepo.web.controller;
 
 import org.perfrepo.web.service.exceptions.ServiceException;
 import org.perfrepo.web.util.MessageUtils;
-import org.richfaces.model.SortOrder;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.richfaces.component.SortOrder;
 
 /**
  * Base class for controllers.

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:r="http://richfaces.org" xmlns:rich="http://richfaces.org/rich">
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:rich="http://richfaces.org/rich" xmlns:a4j="http://richfaces.org/a4j">
 <h:body>
 <f:metadata>
     <f:viewParam name="createForTest" value="#{testExecutionController.createForTest}"/>
@@ -12,7 +12,7 @@
 <ui:define name="content">
 <ui:include src="/testExecution/param_edit.xhtml"/>
 <ui:include src="/testExecution/favparam_edit.xhtml"/>
-<ui:include src="/testExecution/value_edit.xhtml"/>
+<ui:include src="/testExecution/value_edit.xhtml"/> <!--THIS SHIT FUCKS IT UP!!!!-->
 <ui:include src="/testExecution/upload_attachment.xhtml"/>
 <h:form id="detailsForm">
     <div style=" overflow: hidden;">
@@ -50,89 +50,89 @@
         <h:outputLabel class="detail-label">Tags</h:outputLabel>
 
         <div class="detail-value">
-            <r:repeat value="#{testExecutionController.testExecution.sortedTags}" varStatus="status" var="item">
+            <a4j:repeat value="#{testExecutionController.testExecution.sortedTags}" iterationStatusVar="status" var="item">
                 <span class="badge badge-success">#{item}</span>
-            </r:repeat>
+            </a4j:repeat>
         </div>
         <h:outputLabel class="detail-label">Comment</h:outputLabel>
 
         <div class="detail-value">
             <h:outputText value="#{testExecutionController.displayedComment}" escape="false"/>
         </div>
-        <r:repeat value="#{testExecutionController.favoriteParameters}" varStatus="status" var="item">
+        <a4j:repeat value="#{testExecutionController.favoriteParameters}" iterationStatusVar="status" var="item">
             <h:outputLabel class="detail-label fav-param-label">
-                <r:commandLink render="dialogFavParamEdit"
+                <a4j:commandLink render="dialogFavParamEdit"
                                action="#{testExecutionController.setEditedFavoriteParameter(item.parameterName)}"
                                oncomplete="#{rich:component('dialogFavParamEdit')}.show();" value="#{item.label}"
-                               alt="Edit favorite parameter" title="Edit favorite parameter"/>
+                               />
             </h:outputLabel>
 
             <div class="detail-value">
                 <h:outputText value="#{testExecutionController.displayValueFavParam(item.parameterName)}"
                               escape="false"/>
             </div>
-        </r:repeat>
+        </a4j:repeat>
     </fieldset>
 </h:form>
 <h:form id="tabForm">
-    <r:tabPanel switchType="client">
-        <r:tab header="Values" id="tabValues">
+    <rich:tabPanel switchType="client">
+        <rich:tab header="Values" id="tabValues">
             <h:form id="valueForm">
-                <r:dataTable id="primaryValueTable" value="#{testExecutionController.values}" var="item"
+                <rich:dataTable id="primaryValueTable" value="#{testExecutionController.values}" var="item"
                              columnClasses="n,numvalcolumn"
                              styleClass="table table-bordered table-striped table-hover">
-                    <r:column sortable="true" sortOrder="#{testExecutionController.sortsOrders['metric_name']}"
+                    <rich:column sortOrder="#{testExecutionController.sortsOrders['metric_name']}"
                               sortBy="#{item.metricName}">
                         <f:facet name="header">
-                            <r:commandLink value="#{entityStrings.Value_metric}" render="primaryValueTable"
+                            <a4j:commandLink value="#{entityStrings.Value_metric}" render="primaryValueTable"
                                            action="#{testExecutionController.sort()}">
                                 <f:param name="sortProperty" value="metric_name"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </f:facet>
                         <h:outputText value="#{item.metricName}"/>
-                    </r:column>
-                    <r:column>
+                    </rich:column>
+                    <rich:column>
                         <f:facet name="header">Value
                         </f:facet>
                         <h:outputText value="#{item.formattedSimpleValue}" rendered="#{!item.isMultiValue()}"/>
-                        <r:commandLink value="Multi-value" render="@form :tabValues :valueForm :multiValue :valueChart"
+                        <a4j:commandLink value="Multi-value" render="@form :tabValues :valueForm :multiValue :valueChart"
                                        action="#{testExecutionController.showMultiValue(item.metricName)}"
                                        rendered="#{item.isMultiValue()}"/>
-                    </r:column>
+                    </rich:column>
                     <h:column headerClass="button-header">
                         <f:facet name="header">
-                            <r:commandLink render="dialogValueEdit"
+                            <a4j:commandLink render="dialogValueEdit"
                                            action="#{testExecutionController.createEditedValue}"
                                            oncomplete="#{rich:component('dialogValueEdit')}.show();" value=" "
-                                           alt="New value" title="New value">
+                                           >
                                 <i class="icon-plus"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </f:facet>
                         <h:panelGroup rendered="#{item.entity != null}">
                             <div class="btn-group">
-                                <r:commandLink styleClass="btn btn-primary btn-small" render="dialogValueEdit"
+                                <a4j:commandLink styleClass="btn btn-primary btn-small" render="dialogValueEdit"
                                                action="#{testExecutionController.setEditedValue(item.entity)}"
                                                oncomplete="#{rich:component('dialogValueEdit')}.show();" value=" "
-                                               alt="#{strings.edit}" title="#{strings.edit}">
+                                               title="#{strings.edit}">
                                     <i class="icon-edit"/>
-                                </r:commandLink>
-                                <r:commandLink styleClass="btn btn-primary btn-small" value=" " alt="#{strings.delete}"
+                                </a4j:commandLink>
+                                <a4j:commandLink styleClass="btn btn-primary btn-small" value=" "
                                                title="#{strings.delete}"
                                                onclick="if (!confirm('Are you sure you want to delete value for metric #{item.metricName} ?') ) { return false;}; return true;"
                                                action="#{testExecutionController.deleteValue(item.entity)}"
                                                render="@form :tabForm:tabValues :messagesPanel">
                                     <i class="icon-remove"/>
-                                </r:commandLink>
+                                </a4j:commandLink>
                             </div>
                         </h:panelGroup>
                     </h:column>
-                </r:dataTable>
+                </rich:dataTable>
                 <h:panelGroup id="multiValue" rendered="#{testExecutionController.selectedMultiValueList != null}">
                     <h2>Shown multi-value: #{testExecutionController.selectedMultiValue.metricName}</h2>
 
                     <p>
                         <h:selectOneMenu value="#{testExecutionController.selectedMultiValueParamSelection}">
-                            <f:selectItems styleClass="input-text"
+                            <f:selectItems
                                            value="#{testExecutionController.selectedMultiValueParamSelectionList}"
                                            var="item" itemLabel="#{item}"
                                            itemValue="#{item}"/>
@@ -142,23 +142,23 @@
 
                         <h:outputText value="&#160;&#160;&#160;"/>
 
-                        <r:commandLink value="Show in table" render="@form"
+                        <a4j:commandLink value="Show in table" render="@form"
                                        action="#{testExecutionController.setShowMultiValueTable(true)}"
                                        rendered="#{!testExecutionController.showMultiValueTable}"/>
-                        <r:commandLink value="Show in chart" render="@form"
+                        <a4j:commandLink value="Show in chart" render="@form"
                                        action="#{testExecutionController.setShowMultiValueTable(false)}"
                                        rendered="#{testExecutionController.showMultiValueTable}"/>
                     </p>
 
                     <p>
                         <h:panelGroup rendered="#{!testExecutionController.showMultiValueTable}">
-                            <r:chart>
-                                <r:repeat value="#{testExecutionController.multiValueChart}" var="seriesItem">
-                                    <r:series label="#{seriesItem.name}" data="#{seriesItem.data}" type="line"/>
-                                </r:repeat>
-                                <r:xaxis label="#{testExecutionController.selectedMultiValueParamSelection}"/>
-                                <r:yaxis label="Metric value"/>
-                            </r:chart>
+                            <rich:chart>
+                                <a4j:repeat value="#{testExecutionController.multiValueChart}" var="seriesItem">
+                                    <rich:chartSeries label="#{seriesItem.name}" data="#{seriesItem.data}" type="line"/>
+                                </a4j:repeat>
+                                <rich:chartXAxis label="#{testExecutionController.selectedMultiValueParamSelection}"/>
+                                <rich:chartYAxis label="Metric value"/>
+                            </rich:chart>
                         </h:panelGroup>
                     </p>
 
@@ -178,151 +178,151 @@
                             <f:facet name="header"></f:facet>
 
                             <div class="btn-group">
-                                <r:commandLink render="dialogValueEdit"
+                                <a4j:commandLink render="dialogValueEdit"
                                                action="#{testExecutionController.setEditedValue(item.entity)}"
                                                oncomplete="#{rich:component('dialogValueEdit')}.show();" value=" "
-                                               alt="#{strings.edit}" title="#{strings.edit}">
+                                               title="#{strings.edit}">
                                     <i class="icon-edit"/>
-                                </r:commandLink>
-                                <r:commandLink styleClass="btn btn-primary btn-small" value=" " alt="#{strings.delete}"
+                                </a4j:commandLink>
+                                <a4j:commandLink styleClass="btn btn-primary btn-small" value=" "
                                                title="#{strings.delete}"
                                                onclick="if (!confirm('Are you sure you want to delete value for metric #{item.entity.metricName} ?') ) { return false;}; return true;"
                                                action="#{testExecutionController.deleteValue(item.entity)}"
                                                render="@form :tabForm:tabValues :messagesPanel">
                                     <i class="icon-remove"/>
-                                </r:commandLink>
+                                </a4j:commandLink>
                             </div>
                         </h:column>
                     </h:dataTable>
                 </h:panelGroup>
             </h:form>
 
-        </r:tab>
-        <r:tab header="Parameters" id="tabParameters">
+        </rich:tab>
+        <rich:tab header="Parameters" id="tabParameters">
             <h:form id="testExecutionParameterList">
-                <r:dataTable id="testExecutionParameterTable" value="#{testExecutionController.testExecutionParameters}"
+                <rich:dataTable id="testExecutionParameterTable" value="#{testExecutionController.testExecutionParameters}"
                              var="item"
                              styleClass="table table-bordered table-striped table-hover smallpad"
                              columnClasses="paramname,n,n">
-                    <r:column sortable="true" sortOrder="#{testExecutionController.sortsOrders['name']}"
+                    <rich:column sortOrder="#{testExecutionController.sortsOrders['name']}"
                               sortBy="#{item.name}">
                         <f:facet name="header">
-                            <r:commandLink value="#{entityStrings.TestExecutionParameter_name}"
+                            <a4j:commandLink value="#{entityStrings.TestExecutionParameter_name}"
                                            render="testExecutionParameterTable"
                                            action="#{testExecutionController.sort()}">
                                 <f:param name="sortProperty" value="name"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </f:facet>
                         <h:outputText value="#{item.name}"/>
-                    </r:column>
-                    <r:column sortable="true" sortOrder="#{testExecutionController.sortsOrders['value']}"
+                    </rich:column>
+                    <rich:column sortOrder="#{testExecutionController.sortsOrders['value']}"
                               sortBy="#{item.value}">
                         <f:facet name="header">
-                            <r:commandLink value="#{entityStrings.TestExecutionParameter_value}"
+                            <a4j:commandLink value="#{entityStrings.TestExecutionParameter_value}"
                                            render="testExecutionParameterTable"
                                            action="#{testExecutionController.sort()}">
                                 <f:param name="sortProperty" value="value"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </f:facet>
                         <h:outputText value="#{testExecutionController.displayValueTable(item)}" escape="false"/>
-                    </r:column>
+                    </rich:column>
                     <h:column headerClass="button-header">
                         <f:facet name="header">
-                            <r:commandLink render="dialogParamEdit"
+                            <a4j:commandLink render="dialogParamEdit"
                                            action="#{testExecutionController.createEditedParameter}"
                                            oncomplete="#{rich:component('dialogParamEdit')}.show();" value=" "
-                                           alt="New parameter" title="New parameter">
+                                           title="New parameter">
                                 <i class="icon-plus"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </f:facet>
 
                         <div class="btn-group">
-                            <r:commandLink styleClass="btn btn-primary btn-small" render="dialogFavParamEdit"
+                            <a4j:commandLink styleClass="btn btn-primary btn-small" render="dialogFavParamEdit"
                                            action="#{testExecutionController.setEditedFavoriteParameter(item.name)}"
                                            oncomplete="#{rich:component('dialogFavParamEdit')}.show();" value=" "
-                                           alt="Add to favorites" title="Add to favorites"
+                                           title="Add to favorites"
                                            rendered="#{!testExecutionController.isFavorite(item.name)}">
                                 <i class="icon-star-empty"/>
-                            </r:commandLink>
-                            <r:commandLink styleClass="btn btn-primary btn-small"
+                            </a4j:commandLink>
+                            <a4j:commandLink styleClass="btn btn-primary btn-small"
                                            render="@form :messagesPanel :detailsForm"
                                            action="#{testExecutionController.removeFromFavorites(item.name)}" value=" "
-                                           alt="Remove from favorites" title="Remove from favorites"
+                                           title="Remove from favorites"
                                            rendered="#{testExecutionController.isFavorite(item.name)}">
                                 <i class="icon-star"/>
-                            </r:commandLink>
-                            <r:commandLink styleClass="btn btn-primary btn-small" render="dialogParamEdit"
+                            </a4j:commandLink>
+                            <a4j:commandLink styleClass="btn btn-primary btn-small" render="dialogParamEdit"
                                            action="#{testExecutionController.setEditedParameter(item)}"
                                            oncomplete="#{rich:component('dialogParamEdit')}.show();" value=" "
-                                           alt="#{strings.edit}" title="#{strings.edit}">
+                                           title="#{strings.edit}">
                                 <i class="icon-edit"/>
-                            </r:commandLink>
-                            <r:commandLink styleClass="btn btn-primary btn-small" value=" " alt="#{strings.delete}"
+                            </a4j:commandLink>
+                            <a4j:commandLink styleClass="btn btn-primary btn-small" value=" "
                                            title="#{strings.delete}"
                                            onclick="if (!confirm('Are you sure you want to delete test execution parameter (#{item.name})?') ) { return false;}; return true;"
                                            action="#{testExecutionController.deleteParameter(item)}"
                                            render="testExecutionParameterList :messagesPanel">
                                 <i class="icon-remove"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </div>
                     </h:column>
-                </r:dataTable>
+                </rich:dataTable>
             </h:form>
-        </r:tab>
-        <r:tab header="Attachments" id="tabAttachments">
+        </rich:tab>
+        <rich:tab header="Attachments" id="tabAttachments">
             <h:form id="attachmentList">
-                <r:dataTable id="attachmentTable" styleClass="table table-bordered table-striped table-hover"
+                <rich:dataTable id="attachmentTable" styleClass="table table-bordered table-striped table-hover"
                              rowClasses="table-row"
                              columnClasses="common-column,common-column,common-column,button-column"
                              headerClass="table-header" footerClass="table-footer"
-                             value="#{testExecutionController.attachments}" var="item" cellspacing="0" cellpadding="0">
-                    <r:column sortable="true" sortOrder="#{testExecutionController.sortsOrders['attachment_filename']}"
+                             value="#{testExecutionController.attachments}" var="item" >
+                    <rich:column sortOrder="#{testExecutionController.sortsOrders['attachment_filename']}"
                               sortBy="#{item.filename}">
                         <f:facet name="header">
-                            <r:commandLink value="#{entityStrings.TestExecutionAttachment_filename}"
+                            <a4j:commandLink value="#{entityStrings.TestExecutionAttachment_filename}"
                                            render="attachmentTable" action="#{testExecutionController.sort()}">
                                 <f:param name="sortProperty" value="attachment_name"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </f:facet>
                         <h:outputLink value="#{testExecutionController.getDownloadLink(item)}">
                             <h:outputText value="#{item.filename}"/>
                         </h:outputLink>
-                    </r:column>
+                    </rich:column>
 
-                    <r:column sortable="true" sortOrder="#{testExecutionController.sortsOrders['attachment_mimetype']}"
+                    <rich:column sortOrder="#{testExecutionController.sortsOrders['attachment_mimetype']}"
                               sortBy="#{item.mimetype}">
                         <f:facet name="header">
-                            <r:commandLink value="#{entityStrings.TestExecutionAttachment_mimetype}"
+                            <a4j:commandLink value="#{entityStrings.TestExecutionAttachment_mimetype}"
                                            render="attachmentTable" action="#{testExecutionController.sort()}">
                                 <f:param name="sortProperty" value="resultValue"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </f:facet>
                         <h:outputText value="#{item.mimetype}"/>
-                    </r:column>
+                    </rich:column>
 
                     <h:column headerClass="button-header">
                         <f:facet name="header">
-                            <r:commandLink render="dialogUploadAttachment"
+                            <a4j:commandLink render="dialogUploadAttachment"
                                            oncomplete="#{rich:component('dialogUploadAttachment')}.show();"
-                                           value=" " alt="Upload attachment" title="Upload attachment">
+                                           value=" " title="Upload attachment">
                                 <i class="icon-plus"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </f:facet>
 
                         <div class="btn-group">
-                            <r:commandLink styleClass="btn btn-primary btn-small" value=" " alt="#{strings.delete}"
+                            <a4j:commandLink styleClass="btn btn-primary btn-small" value=" "
                                            title="#{strings.delete}"
                                            onclick="if (!confirm('Are you sure you want to delete the attachment (#{item.filename})?') ) { return false;}; return true;"
                                            action="#{testExecutionController.deleteAttachment(item)}"
                                            render="attachmentList :messagesPanel">
                                 <i class="icon-remove"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </div>
                     </h:column>
-                </r:dataTable>
+                </rich:dataTable>
             </h:form>
-        </r:tab>
-    </r:tabPanel>
+        </rich:tab>
+    </rich:tabPanel>
 
 </h:form>
 

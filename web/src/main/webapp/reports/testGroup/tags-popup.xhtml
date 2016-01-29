@@ -9,7 +9,7 @@
     <h:form id="tagsForm" class="form-horizontal well-small">
         <rich:focus id="tagfocus"/>
         <fieldset>
-            <a4j:commandLink onclick="document.getElementById('tagsForm:info').style.display='block'" alt="Information"
+            <a4j:commandLink onclick="document.getElementById('tagsForm:info').style.display='block'" 
                              title="Information"><i class="icon-info"/></a4j:commandLink>
             <h:panelGroup id="info" layout="block" styleClass="alert alert-info" style="display:none;width:300px;overflow:auto;">
                 <p>The tags are used to search test executions for selected tests. You can enter the tag or combination of tags (tag separated by space) to find test execution which will be compared in the report.</p>
@@ -23,7 +23,7 @@
                                value="#{testGroupReportController.currentTag}"
                                disabled="#{!testGroupReportController.userAuthorized}"/>
             <a4j:commandButton styleClass="btn btn-success btn-small" action="#{testGroupReportController.addTag()}"
-                               value="Add Tag" alt="Add Tag" title="Add Tag"
+                               value="Add Tag" 
                                render="@form :tagsForm :values :tagsAdded"
                                disabled="#{!testGroupReportController.userAuthorized}"/>
 
@@ -57,11 +57,11 @@
 	                                <span class="badge badge-success">#{tagLocal}</span>
 	                            </ui:repeat>
 	                        </td>
-	                        <td><rich:inplaceInput layout="block" value="#{testGroupReportController.tagAliasCopy[tag]}"
+	                        <td><rich:inplaceInput value="#{testGroupReportController.tagAliasCopy[tag]}"
 	                                               id="tagInplace#{status.index}"/></td>
 	                        <td style="text-align: left; vertical-align: middle"><a4j:commandLink
 	                                action="#{testGroupReportController.removeTag(tag)}" render="@form :tagsForm"
-	                                alt="Delete Tag" title="Delete Tag"
+	                                
 	                                disabled="#{!testGroupReportController.userAuthorized}"><i
 	                                class="icon-remove"/></a4j:commandLink></td>
 	                    </tr>
@@ -71,16 +71,15 @@
             </h:panelGroup>
             <div style="text-align:right">
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
-                                   action="#{testGroupReportController.storeTags()}" value="OK" alt="OK" title="OK"
+                                   action="#{testGroupReportController.storeTags()}" value="OK" 
                                    oncomplete="#{rich:component('tagsPopup')}.hide()"
                                    render="@form :testGroupReport :testGroupReportTable chart"/>
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
                                    action="#{testGroupReportController.clearTagsCopy()}"
                                    oncomplete="#{rich:component('tagsPopup')}.hide()" value="#{strings.cancel}"
-                                   alt="#{strings.cancel}" title="#{strings.cancel}"/>
+                                   />
             </div>
         </fieldset>
-        <rich:hotKey key="enter" handler="#{testGroupReportController.addTag()}"/>
         <rich:hotKey key="Esc">
             <rich:componentControl target="tagsPopup" operation="hide"/>
         </rich:hotKey>

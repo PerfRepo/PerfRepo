@@ -44,13 +44,11 @@ import org.perfrepo.web.util.ReportUtils;
 import org.perfrepo.web.util.TagUtils;
 import org.perfrepo.web.util.ViewUtils;
 import org.perfrepo.web.viewscope.ViewScoped;
-import org.richfaces.ui.output.chart.ChartDataModel.ChartType;
-import org.richfaces.ui.output.chart.NumberChartDataModel;
-import org.richfaces.ui.output.chart.PlotClickEvent;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -59,6 +57,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import org.richfaces.model.ChartDataModel.ChartType;
+import org.richfaces.model.NumberChartDataModel;
+import org.richfaces.model.PlotClickEvent;
 
 /**
  * Shows development of metric based on a specific test execution parameter.

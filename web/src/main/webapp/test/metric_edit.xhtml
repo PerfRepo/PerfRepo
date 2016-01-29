@@ -1,4 +1,4 @@
-<rich:popupPanel id="dialogMetricEdit" modal="true" autosized="true" resizeable="false"
+<rich:popupPanel id="dialogMetricEdit" modal="true" autosized="true" resizeable="false" domElementAttachment="form"
                  xmlns="http://www.w3.org/1999/xhtml"
                  xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
                  xmlns:a4j="http://richfaces.org/a4j"
@@ -39,7 +39,7 @@
 
                 <div class="controls">
                     <rich:editor id="metricDescriprion" value="#{testController.metricDetails.metric.description}"
-                                 toolbar="basic"
+                                 toolbar="basic" oninit="#{rich:component('dialogMetricEdit')}.resizeListener()"
                                  validatorMessage="#{entityStrings.Metric_description}: Value is required">
                     </rich:editor>
                 </div>
@@ -49,15 +49,15 @@
                                    action="#{testController.metricDetails.unsetMetric}"
                                    render="@form :editMetricMessagesPanel"
                                    oncomplete="#{rich:component('dialogMetricEdit')}.hide()" value="#{strings.cancel}"
-                                   alt="#{strings.cancel}" title="#{strings.cancel}"/>
+                                   />
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
                                    action="#{testController.metricDetails.updateMetric}"
                                    render="@form :metricList :editMetricMessagesPanel"
                                    oncomplete="if (#{facesContext.maximumSeverity==null}) #{rich:component('dialogMetricEdit')}.hide()"
-                                   value="#{strings.save}" alt="#{strings.save}" title="#{strings.save}"/>
+                                   value="#{strings.save}" />
             </div>
             <rich:hotKey key="Esc">
-                <rich:componentControl target="dialogMetricAdd" operation="hide"/>
+                <rich:componentControl target="dialogMetricEdit" operation="hide"/>
             </rich:hotKey>
         </fieldset>
     </h:form>

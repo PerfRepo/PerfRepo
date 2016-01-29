@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:r="http://richfaces.org"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
         >
 <h:body>
     <f:metadata>
@@ -47,9 +47,9 @@
                 <h:outputLabel class="detail-label">Assigned groups</h:outputLabel>
 
                 <div class="detail-value">
-                    <r:repeat value="#{userProfileController.user.groups}" var="group">
+                    <ui:repeat value="#{userProfileController.user.groups}" var="group">
                         <h:outputText value="#{group.name}"/><br/>
-                    </r:repeat>
+                    </ui:repeat>
                 </div>
             </fieldset>
         </ui:define>

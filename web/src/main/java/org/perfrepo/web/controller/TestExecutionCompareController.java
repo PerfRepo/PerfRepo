@@ -17,17 +17,19 @@ package org.perfrepo.web.controller;
 import org.perfrepo.model.TestExecution;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.session.TEComparatorSession;
-import org.richfaces.model.SortOrder;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.richfaces.component.SortOrder;
 
 /**
  * @author pdrozd

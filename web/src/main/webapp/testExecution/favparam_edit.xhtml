@@ -21,14 +21,14 @@
                 <h:inputText styleClass="input-text" value="#{testExecutionController.editedFavoriteParameter.label}"/>
             </div>
             <a4j:commandButton oncomplete="#{rich:component('dialogFavParamEdit')}.hide()" value="#{strings.cancel}"
-                               alt="#{strings.cancel}" title="#{strings.cancel}"
+                               
                                render="@form" action="#{testExecutionController.unsetEditedFavoriteParameter()}"/>
             <a4j:commandButton action="#{testExecutionController.saveEditedFavoriteParameter()}" value="#{strings.save}"
-                               alt="#{strings.save}" title="#{strings.save}"
+                               
                                oncomplete="#{rich:component('dialogFavParamEdit')}.hide()"
                                render="@form :tabForm:testExecutionParameterList :messagesPanel :detailsForm"/>
             <a4j:commandButton action="#{testExecutionController.unsetEditedParameterAndRemove()}"
-                               value="Remove from favorites" alt="Remove from favorites"
+                               value="Remove from favorites" 
                                title="Remove from favorites" oncomplete="#{rich:component('dialogFavParamEdit')}.hide()"
                                render="@form :tabForm:testExecutionParameterList :messagesPanel :detailsForm"
                                rendered="#{testExecutionController.isFavorite(testExecutionController.editedFavoriteParameter.parameterName)}"/>

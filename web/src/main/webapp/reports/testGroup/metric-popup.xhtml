@@ -9,8 +9,7 @@
     <h:form id="metricForm" class="form-horizontal well-small">
         <rich:focus id="focus"/>
         <fieldset>
-            <a4j:commandLink onclick="document.getElementById('metricForm:info').style.display='block'"
-                             alt="Information" title="Information"><i class="icon-info"/></a4j:commandLink>
+            <a4j:commandLink onclick="document.getElementById('metricForm:info').style.display='block'"/>
             <h:panelGroup id="info" layout="block" styleClass="alert alert-info" style="display:none;width:300px;overflow:auto;">
                 <p>The default behavior of the report is to compare all metrics defined for all tests. You can filter metrics by deselecting the metric's checkbox</p>
             </h:panelGroup>
@@ -31,12 +30,12 @@
 
             <div style="text-align:right">
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
-                                   action="#{testGroupReportController.storeMetrics()}" value="OK" alt="OK" title="OK"
+                                   action="#{testGroupReportController.storeMetrics()}" value="OK" 
                                    oncomplete="#{rich:component('metricsPopup')}.hide()"
                                    render="@form :testGroupReport :testGroupReportTable chart"/>
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
                                    oncomplete="#{rich:component('metricsPopup')}.hide()" value="#{strings.cancel}"
-                                   alt="#{strings.cancel}" title="#{strings.cancel}"/>
+                                   />
             </div>
         </fieldset>
         <rich:hotKey key="Esc">

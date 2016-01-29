@@ -2,14 +2,13 @@
      xmlns:ui="http://java.sun.com/jsf/facelets"
      xmlns:a4j="http://richfaces.org/a4j"
      xmlns:rich="http://richfaces.org/rich"
-     xmlns:r="http://richfaces.org"
         >
 
     <div style="text-align: right">
-        <r:commandLink action="#{reportPermissionController.togglePanel()}" alt="Permission settings"
+        <a4j:commandLink action="#{reportPermissionController.togglePanel()}"
                        title="Permission settings"
                        render="@form">
-            <i class="icon-key"/>Permission settings</r:commandLink>
+            <i class="icon-key"/>Permission settings</a4j:commandLink>
     </div>
     <rich:panel id="reportAccessRights" rendered="#{reportPermissionController.panelShown}" style="text-align:right;">
         <h:outputText style="font-style:italic;"
@@ -25,7 +24,7 @@
                 <th style="text-align: center; vertical-align: middle"><a4j:commandLink
                         oncomplete="#{rich:component('reportPermissionsAddPopup')}.show();"
                         render=":reportPermissionsAddPopup :reportPermissionsAddForm"
-                        alt="Add permission" title="Add permission" disabled="#{!reportPermissionController.userAuthorized}">
+                        title="Add permission" disabled="#{!reportPermissionController.userAuthorized}">
                     <i class="icon-plus"/>
                 </a4j:commandLink></th>
             </tr>
@@ -37,8 +36,7 @@
                     <td>#{p.level}</td>
                     <td>#{reportPermissionController.getPermissionUser(p)}</td>
                     <td>#{reportPermissionController.getPermissionGroup(p)}</td>
-                    <td style="text-align: center"><a4j:commandLink alt="Remove"
-                                                                    title="Remove" render=":reportAccessRights"
+                    <td style="text-align: center"><a4j:commandLink title="Remove" render=":reportAccessRights"
                                                                     action="#{reportPermissionController.removePermissionOld(p)}" disabled="#{!reportPermissionController.userAuthorized}">
                         <i class="icon-remove"/>
                     </a4j:commandLink></td>

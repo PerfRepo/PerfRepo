@@ -28,9 +28,9 @@
             <tr>
                 <td class="table-footer" colspan="2"><a4j:commandButton
                         oncomplete="#{rich:component('testExecutionParameterEditPopup')}.hide()"
-                        value="#{strings.cancel}" alt="#{strings.cancel}" title="#{strings.cancel}"/> <a4j:commandButton
+                        value="#{strings.cancel}" /> <a4j:commandButton
                         action="#{testExecutionController.updateTestExecutionParameter}" value="#{strings.save}"
-                        alt="#{strings.save}" title="#{strings.save}"
+                        
                         render=":testExecutionParameterEditPopupForm :testExecutionParameterList"
                         oncomplete="#{rich:component('testExecutionParameterEditPopup')}.hide()"/></td>
             </tr>

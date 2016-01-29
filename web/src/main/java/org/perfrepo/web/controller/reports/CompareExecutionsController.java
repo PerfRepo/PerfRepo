@@ -28,13 +28,11 @@ import org.perfrepo.web.util.MultiValue;
 import org.perfrepo.web.util.MultiValue.ParamInfo;
 import org.perfrepo.web.util.MultiValue.ValueInfo;
 import org.perfrepo.web.viewscope.ViewScoped;
-import org.richfaces.ui.output.chart.ChartDataModel;
-import org.richfaces.ui.output.chart.ChartDataModel.ChartType;
-import org.richfaces.ui.output.chart.NumberChartDataModel;
 
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,6 +42,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+
+import org.richfaces.model.ChartDataModel;
+import org.richfaces.model.ChartDataModel.ChartType;
+import org.richfaces.model.NumberChartDataModel;
 
 /**
  * Simple comparison of test execution values.

@@ -18,7 +18,7 @@
                 <rich:extendedDataTable id="table" value="#{testExecutionCompareController.testExecutions}" var="te"
                                         style="width:805px"
                                         columnClasses="common-column,common-column,common-column,common-column,button-column">
-                    <rich:column sortable="true" sortOrder="#{testExecutionCompareController.sortsOrders['id']}"
+                    <rich:column sortOrder="#{testExecutionCompareController.sortsOrders['id']}"
                                  sortBy="#{te.id}" width="100px">
                         <f:facet name="header">
                             <a4j:commandLink value="Id" render="table"
@@ -30,7 +30,7 @@
                         <h:outputText value="#{te.id}"/>
                     </rich:column>
 
-                    <rich:column sortable="true" sortOrder="#{testExecutionCompareController.sortsOrders['name']}"
+                    <rich:column sortOrder="#{testExecutionCompareController.sortsOrders['name']}"
                                  sortBy="#{te.name}" width="200px">
                         <f:facet name="header">
                             <a4j:commandLink value="Name" render="table"
@@ -42,7 +42,7 @@
                         <h:outputText value="#{te.name}"/>
                     </rich:column>
 
-                    <rich:column sortable="true" sortOrder="#{testExecutionCompareController.sortsOrders['testName']}"
+                    <rich:column sortOrder="#{testExecutionCompareController.sortsOrders['testName']}"
                                  sortBy="#{te.test.name}" width="200px">
                         <f:facet name="header">
                             <a4j:commandLink value="Test Name" render="table"
@@ -54,7 +54,7 @@
                         <h:outputText value="#{te.test.name}"/>
                     </rich:column>
 
-                    <rich:column sortable="true" sortOrder="#{testExecutionCompareController.sortsOrders['started']}"
+                    <rich:column sortOrder="#{testExecutionCompareController.sortsOrders['started']}"
                                  sortBy="#{te.started}" width="200px">
                         <f:facet name="header">
                             <a4j:commandLink value="Test Execution Date" render="table"

@@ -11,7 +11,7 @@
             <a4j:ajax event="uploadcomplete" render="@form :tabForm:attachmentList :messagesPanel"/>
         </rich:fileUpload>
         <f:facet name="controls">
-            <a4j:commandButton value="Done" alt="Done" title="Done"
+            <a4j:commandButton value="Done" 
                                oncomplete="#{rich:component('dialogUploadAttachment')}.hide()"/>
         </f:facet>
     </rich:popupPanel>

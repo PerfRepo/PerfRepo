@@ -2,19 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
       xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:rich="http://richfaces.org/rich"
       xmlns:a4j="http://richfaces.org/a4j"
-      xmlns:jsflot="http://www.jsflot.org/taglib/jsflot">
+      >
+    <!--xmlns:jsflot="http://www.jsflot.org/taglib/jsflot" -> not a clue what this is for? probably collides with RF-->
 <h:body>
     <f:metadata>
         <f:event type="preRenderComponent" listener="#{compareParametersController.preRender}"/>
     </f:metadata>
     <ui:composition template="/layout/template.xhtml">
         <ui:define name="head">
-            <jsflot:resources/>
+            <!--<jsflot:resources/> collides with RF-->
         </ui:define>
         <ui:define name="title">Compare execution parameters</ui:define>
         <ui:define name="compareClean">
             <li>
-                <a4j:commandLink value=" " alt="Clean comparison selection" title="Clean comparison selection"
+                <a4j:commandLink value=" " title="Clean comparison selection"
                                  action="#{teComparatorSession.clear()}"
                                  render=":teTable :paramtable compareMenuItem :messagesPanel">
                     <i class="icon-trash"></i>
@@ -38,7 +39,7 @@
                 <rich:dataTable id="teTable" value="#{compareParametersController.testExecutions}" var="te"
                                 styleClass="tetable">
 
-                    <rich:column sortable="true" sortOrder="#{compareParametersController.sortsOrders['id']}"
+                    <rich:column sortOrder="#{compareParametersController.sortsOrders['id']}"
                                  sortBy="#{te.id}" width="100px">
                         <f:facet name="header">
                             <a4j:commandLink value="Id" render="teTable" action="#{compareParametersController.sort()}">
@@ -49,7 +50,7 @@
                         <h:outputText value="#{te.id}"/>
                     </rich:column>
 
-                    <rich:column sortable="true" sortOrder="#{compareParametersController.sortsOrders['name']}"
+                    <rich:column sortOrder="#{compareParametersController.sortsOrders['name']}"
                                  sortBy="#{te.name}" width="200px">
                         <f:facet name="header">
                             <a4j:commandLink value="Name" render="teTable"
@@ -61,7 +62,7 @@
                         <a href="#{request.contextPath}/exec/#{te.id}"><h:outputText value="#{te.name}"/></a>
                     </rich:column>
 
-                    <rich:column sortable="true" sortOrder="#{compareParametersController.sortsOrders['started']}"
+                    <rich:column sortOrder="#{compareParametersController.sortsOrders['started']}"
                                  sortBy="#{te.started}" width="200px">
                         <f:facet name="header">
                             <a4j:commandLink value="Test Execution Date" render="teTable"
@@ -82,7 +83,6 @@
                         <f:facet name="header"></f:facet>
                         <h:commandLink styleClass="btn btn-primary btn-small"
                                        action="#{compareExecutionsController.removeFromComparison(te.id)}"
-                                       alt="Remove from comparison"
                                        title="Remove from comparison">
                             <i class="icon-trash"></i>
                         </h:commandLink>

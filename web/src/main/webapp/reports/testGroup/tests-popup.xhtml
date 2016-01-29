@@ -9,7 +9,7 @@
     <h:form id="testForm" class="form-horizontal well-small">
         <rich:focus id="focus"/>
         <fieldset>
-            <a4j:commandLink onclick="document.getElementById('testForm:info').style.display='block'" alt="Information"
+            <a4j:commandLink onclick="document.getElementById('testForm:info').style.display='block'" 
                              title="Information"><i class="icon-info"/></a4j:commandLink>
             <h:panelGroup id="info" layout="block" styleClass="alert alert-info" style="display:none;width:300px;overflow:auto;">
                 <p>The report requires the definition of tests for which is report generated. The tests can be added by entering test uid.</p>
@@ -26,7 +26,7 @@
                                value="#{testGroupReportController.currentTest}"
                                disabled="#{!testGroupReportController.userAuthorized}"/>
             <a4j:commandButton styleClass="btn btn-success btn-small" action="#{testGroupReportController.addTest()}"
-                               value="Add Test" alt="Add Test" title="Add Test"
+                               value="Add Test" 
                                render="@form :testForm :values"
                                disabled="#{!testGroupReportController.userAuthorized}"/>
             <br/><br/>
@@ -43,10 +43,11 @@
 	                <ui:repeat value="#{testGroupReportController.testsCopy}" var="test">
 	                    <tr>
 	                        <td style="text-align: left; vertical-align: middle">#{test}</td>
-	                        <td style="text-align: left; vertical-align: middle"><a4j:commandLink
+	                        <td style="text-align: left; vertical-align: middle">
+                                <a4j:commandLink
 	                                disabled="#{!testGroupReportController.userAuthorized}"
-	                                action="#{testGroupReportController.removeTest(test)}" render="@form :testForm"
-	                                alt="Delete Test" title="Delete Test"><i class="icon-remove"/></a4j:commandLink></td>
+	                                action="#{testGroupReportController.removeTest(test)}" render="@form :testForm"/>
+                            </td>
 	                    </tr>
 	                </ui:repeat>
 	                </tbody>
@@ -54,16 +55,15 @@
             </h:panelGroup><br/>
             <div style="text-align:right">
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
-                                   action="#{testGroupReportController.storeTests()}" value="OK" alt="OK" title="OK"
+                                   action="#{testGroupReportController.storeTests()}" value="OK" 
                                    oncomplete="#{rich:component('testsPopup')}.hide()"
                                    render="@form :testGroupReport :testGroupReportTable :testPopupMessagesPanel chart"/>
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
                                    action="#{testGroupReportController.clearTestsCopy()}"
                                    oncomplete="#{rich:component('testsPopup')}.hide()" value="#{strings.cancel}"
-                                   alt="#{strings.cancel}" title="#{strings.cancel}"/>
+                                   />
             </div>
         </fieldset>
-        <rich:hotKey key="enter" handler="#{testGroupReportController.addTest()}"/>
         <rich:hotKey key="Esc">
             <rich:componentControl target="testsPopup" operation="hide"/>
         </rich:hotKey>

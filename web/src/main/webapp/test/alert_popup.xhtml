@@ -70,13 +70,13 @@
                                   action="#{testController.alertDetails.unset}"
                                   oncomplete="#{rich:component('dialogAlert')}.hide()"
                                   value="#{strings.cancel}"
-                                  alt="#{strings.cancel}" title="#{strings.cancel}"/>
+                                  />
                <a4j:commandButton styleClass="btn btn-primary btn-small"
                                 action="#{testController.processAlert}"
                                 render=":dialogAlertMessagesPanel :alertList"
                                 oncomplete="if (#{facesContext.maximumSeverity==null}) #{rich:component('dialogAlert')}.hide()"
                                 value="Submit"
-                                alt="Submit"
+                                
                                 title="Submit"/>
            </div>
        </fieldset>

@@ -21,13 +21,13 @@
 
             <div style="text-align:right">
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
-                                   value="OK" alt="OK" title="OK"
+                                   value="OK" 
                                    action="#{testGroupReportController.storeConfiguration()}"
                                    oncomplete="#{rich:component('configurationPopup')}.hide()"
                                    render="@form :testGroupReport :testGroupReportTable :chart"/>
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
                                    oncomplete="#{rich:component('configurationPopup')}.hide()" value="#{strings.cancel}"
-                                   alt="#{strings.cancel}" title="#{strings.cancel}" type="reset"/>
+                                   />
             </div>
         </fieldset>
         <rich:hotKey key="Esc">

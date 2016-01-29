@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:r="http://richfaces.org" xmlns:a4j="http://richfaces.org/a4j">
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:a4j="http://richfaces.org/a4j">
 <h:body>
     <f:metadata>
         <f:event type="preRenderView" listener="#{reportList.preRender}"/>
@@ -57,22 +57,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <r:repeat value="#{reportList.savedReports}" var="reportItem">
+                    <a4j:repeat value="#{reportList.savedReports}" var="reportItem">
                         <tr>
                             <td>
                                 <a href="#{request.contextPath}/reports/#{reportItem.type.toLowerCase()}/#{reportItem.id}">#{reportItem.name}</a>
                             </td>
                             <td><h:outputText value="#{reportItem.type}"/></td>
                             <td style="text-align: center">
-                                <r:commandLink action="#{reportList.remove(reportItem)}"
-                                               alt="Remove" title="Remove"
+                                <a4j:commandLink action="#{reportList.remove(reportItem)}"
+                                               title="Remove"
                                                render=":formSavedReports :messagesPanel"
                                                onclick="return confirm('Are you sure you want to delete the report (#{reportItem.name})?');">
                                 <i class="icon-remove"/>
-                            </r:commandLink>
+                            </a4j:commandLink>
                             </td>
                         </tr>
-                    </r:repeat>
+                    </a4j:repeat>
                     </tbody>
                 </table>
             </h:form>

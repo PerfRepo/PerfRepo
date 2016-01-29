@@ -45,7 +45,7 @@
 		<jsf.version>2.2.8</jsf.version>
 		<maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<richfaces.version>4.5.0.Alpha2</richfaces.version>
+		<richfaces.version>4.5.13.Final</richfaces.version>
 		<urlrewritefilter.version>4.0.3</urlrewritefilter.version>
 	</properties>
 	<modules>

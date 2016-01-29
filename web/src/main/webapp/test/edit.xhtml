@@ -53,10 +53,10 @@
                     <a class="btn btn-primary"
                        href="#{testController.test.id != null ? '#{request.contextPath}/test/'.concat(testController.test.id) : '/test/search'}">#{strings.cancel}</a>
                     <h:commandButton styleClass="btn btn-primary" action="#{testController.update}"
-                                     value="#{strings.save}" alt="#{strings.save}" title="#{strings.save}"
+                                     value="#{strings.save}" 
                                      rendered="#{!testController.createMode}"/>
                     <h:commandButton styleClass="btn btn-primary" action="#{testController.create}"
-                                     value="#{strings['page.test.buCreate']}" alt="#{strings['page.test.buCreate']}"
+                                     value="#{strings['page.test.buCreate']}" 
                                      title="#{strings['page.test.buCreate']}" rendered="#{testController.createMode}"/>
                 </div>
             </h:form>

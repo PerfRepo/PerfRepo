@@ -15,7 +15,7 @@
                               rendered="#{testExecutionController.editedValue.id != null}"/>
                 <h:selectOneMenu value="#{testExecutionController.editedValueMetricSelectionId}"
                                  rendered="#{testExecutionController.editedValue.id == null}">
-                    <f:selectItems styleClass="input-text" value="#{testExecutionController.test.metrics}" var="item"
+                    <f:selectItems value="#{testExecutionController.test.metrics}" var="item"
                                    itemLabel="#{item.name}" itemValue="#{item.id}"/>
                 </h:selectOneMenu>
             </div>
@@ -38,7 +38,7 @@
                     </h:column>
                     <h:column>
                         <f:facet name="header">
-                            <a4j:commandLink styleClass="btn btn-primary btn-small" value=" " alt="Add parameter"
+                            <a4j:commandLink styleClass="btn btn-primary btn-small" value=" "
                                              title="Add parameter"
                                              action="#{testExecutionController.addEditedValueParameter()}"
                                              render="@form :messagesPanel"
@@ -46,7 +46,7 @@
                                 <i class="icon-plus"/>
                             </a4j:commandLink>
                         </f:facet>
-                        <a4j:commandLink styleClass="btn btn-primary btn-small" value=" " alt="#{strings.delete}"
+                        <a4j:commandLink styleClass="btn btn-primary btn-small" value=" "
                                          title="#{strings.delete}"
                                          action="#{testExecutionController.removeEditedValueParameter(item)}"
                                          render="@form :messagesPanel">
@@ -60,17 +60,17 @@
                 <h:panelGroup rendered="#{!testExecutionController.editedValue.hasParameters()}">
                     <a4j:commandButton styleClass="btn btn-primary btn-small"
                                        action="#{testExecutionController.addEditedValueParameter()}"
-                                       value="Add parameter" alt="Add parameter" title="Add parameter"
+                                       value="Add parameter" title="Add parameter"
                                        render="@form :messagesPanel"
                                        oncomplete="#{rich:component('dialogValueEdit')}.show()"/>
                 </h:panelGroup>
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
                                    oncomplete="#{rich:component('dialogValueEdit')}.hide()" value="#{strings.cancel}"
-                                   alt="#{strings.cancel}" title="#{strings.cancel}"
+                                    title="#{strings.cancel}"
                                    render="@form" action="#{testExecutionController.unsetEditedValue()}"/>
                 <a4j:commandButton styleClass="btn btn-primary btn-small"
                                    action="#{testExecutionController.updateEditedValue()}" value="#{strings.save}"
-                                   alt="#{strings.save}" title="#{strings.save}"
+                                    title="#{strings.save}"
                                    oncomplete="#{rich:component('dialogValueEdit')}.hide()"
                                    render="@form :tabForm:tabValues :tabForm:valueForm :messagesPanel"/>
             </div>

@@ -5,33 +5,33 @@
       xmlns:newf="http://xmlns.jcp.org/jsf/core"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:a4j="http://richfaces.org/a4j"
-      xmlns:r="http://richfaces.org"
       xmlns:rich="http://richfaces.org/rich">
+    
 
    <h2>
       Creating charts
-      <r:commandLink styleClass="btn btn-primary btn-small" action="#{boxplotReportBean.addChart}"
-                     alt="Add chart" title="Add chart"
+      <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{boxplotReportBean.addChart}"
+                     
                      render=":wizardPanel :messagesPanel">
          <i class="icon-plus"></i>
-      </r:commandLink>
+      </a4j:commandLink>
    </h2>
 
    <h:outputText rendered="#{empty boxplotReportBean.charts}"
                  value='There are currently no charts. Add some with the "+" button above.' />
 
-   <r:repeat value="#{boxplotReportBean.charts}" var="chart" >
+   <a4j:repeat value="#{boxplotReportBean.charts}" var="chart" >
       <div class="boxplotReportChart">
          <table>
             <tr>
                <th>Chart name</th>
                <td>
                   <h:inputText value="#{chart.name}" />
-                  <r:commandLink styleClass="btn btn-primary btn-small"
-                                 action="#{boxplotReportBean.removeChart(chart)}" alt="Remove" title="Remove"
+                  <a4j:commandLink styleClass="btn btn-primary btn-small"
+                                 action="#{boxplotReportBean.removeChart(chart)}" 
                                  render=":wizardPanel :messagesPanel">
                      <i class="icon-minus"></i>
-                  </r:commandLink>
+                  </a4j:commandLink>
                </td>
             </tr>
             <tr>
@@ -84,7 +84,7 @@
 
          <hr />
       </div>
-   </r:repeat>
+   </a4j:repeat>
 
    <div id="wizardControls">
       <a4j:commandButton

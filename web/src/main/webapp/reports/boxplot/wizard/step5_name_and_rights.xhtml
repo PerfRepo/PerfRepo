@@ -3,8 +3,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:a4j="http://richfaces.org/a4j"
-                xmlns:rich="http://richfaces.org/rich"
-                xmlns:r="http://richfaces.org">
+                xmlns:rich="http://richfaces.org/rich">
 
    <f:metadata>
       <f:event type="preRenderView" listener="#{reportPermissionController.initDefaultPermissions}"/>
@@ -33,11 +32,11 @@
 
    <h3>
       Permissions
-      <r:commandLink styleClass="btn btn-primary btn-small" action="#{reportPermissionController.addPermission}"
-                     alt="Add permission" title="Add permission"
+      <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{reportPermissionController.addPermission}"
+                     
                      render=":wizardPanel :messagesPanel">
          <i class="icon-plus"></i>
-      </r:commandLink>
+      </a4j:commandLink>
    </h3>
 
    <h:outputText rendered="#{empty reportPermissionController.permissions}"
@@ -81,11 +80,11 @@
 
       <h:column headerClass="width7Percent">
          <f:facet name="header"></f:facet>
-         <r:commandLink styleClass="btn btn-primary btn-small"
-                        action="#{reportPermissionController.removePermission(permission)}" alt="Remove" title="Remove"
+         <a4j:commandLink styleClass="btn btn-primary btn-small"
+                        action="#{reportPermissionController.removePermission(permission)}" 
                         render=":wizardPanel :messagesPanel">
             <i class="icon-minus"></i>
-         </r:commandLink>
+         </a4j:commandLink>
       </h:column>
    </h:dataTable>
 
@@ -94,9 +93,9 @@
          <rich:toggleControl targetItem="@prev" event="click" />
       </a4j:commandButton>
 
-      <r:commandLink styleClass="btn btn-primary btn-large buttonNext" render=":wizardPanel"
+      <a4j:commandLink styleClass="btn btn-primary btn-large buttonNext" render=":wizardPanel"
             action="#{boxplotReportBean.save()}">
          <i class="icon-save"></i> Finish &amp; Save
-      </r:commandLink>
+      </a4j:commandLink>
    </div>
 </ui:composition>

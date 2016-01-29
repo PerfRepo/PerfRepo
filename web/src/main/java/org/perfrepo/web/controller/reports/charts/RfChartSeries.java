@@ -14,7 +14,8 @@
  */
 package org.perfrepo.web.controller.reports.charts;
 
-import org.richfaces.ui.output.chart.ChartDataModel;
+import org.richfaces.model.ChartDataModel;
+
 
 /**
  * Simple series of RichFaces chart.

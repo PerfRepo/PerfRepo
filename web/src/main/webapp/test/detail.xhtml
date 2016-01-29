@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich"
-	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:r="http://richfaces.org">
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:body>
 	<f:metadata>
 		<f:viewParam name="testId" value="#{testController.testId}" />
@@ -27,17 +27,17 @@
                         <span style="margin:5px;"><a4j:commandLink styleClass="text-success" action="#{testController.listTestExecutions()}" execute="@this"><i class="icon-list"/> List test executions</a4j:commandLink></span>
 
                         <span style="margin:5px;">
-                            <r:commandLink styleClass="text-success" render="@form" action="#{testController.addSubscriber()}" value=" " alt="Subscribe" title="Subscribe to the email notifications about failing alerters"
+                            <a4j:commandLink styleClass="text-success" render="@form" action="#{testController.addSubscriber()}" value=" " title="Subscribe to the email notifications about failing alerters"
                                            rendered="#{!testController.isSubscribed()}">
                                 <i class="icon-bell-alt" title="Subscribe" /> Subscribe for alerts
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </span>
 
                         <span style="margin:5px;">
-                            <r:commandLink styleClass="text-success" render="@form" action="#{testController.removeSubscriber()}" value=" " alt="Unsubscribe" title="Unsubscribe from email notifications"
+                            <a4j:commandLink styleClass="text-success" render="@form" action="#{testController.removeSubscriber()}" value=" " title="Unsubscribe from email notifications"
                                            rendered="#{testController.isSubscribed()}">
                                 <i class="icon-bell" title="Unsubscribe" /> Unsubscribe from alerts
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </span>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
 							<th style="text-align: center; vertical-align: middle">
 								<a4j:commandLink render=":dialogMetricAddAssignForm :dialogMetricAddCreateForm"
 									action="#{testController.metricDetails.setEmptyMetric}" oncomplete="#{rich:component('dialogMetricAdd')}.show();"
-									alt="#{strings['page.test.buAddMetric']}" title="#{strings['page.test.buAddMetric']}">
+									 title="#{strings['page.test.buAddMetric']}">
 									<i class="icon-plus"></i>
 								</a4j:commandLink>
 							</th>
@@ -83,13 +83,13 @@
 								<td><h:outputText value="#{metric.description}" escape="false" /></td>
 								<td>
 									<div class="btn-group">
-										<a4j:commandLink styleClass="btn btn-primary btn-small" alt="#{strings.delete}" title="#{strings.delete}"
+										<a4j:commandLink styleClass="btn btn-primary btn-small" title="#{strings.delete}"
 									        onclick="if (!confirm('Are you sure you want to delete metric (#{metric.name})?') ) { return false;}; return true;"
 									        action="#{testController.metricDetails.deleteMetric(metric)}" render="metricList :messagesPanel">
 									        <i class="icon-trash"></i>
 										</a4j:commandLink>
 								        <a4j:commandLink styleClass="btn btn-primary btn-small" render=":dialogMetricEdit :dialogMetricEditForm" action="#{testController.metricDetails.setMetricForUpdate(metric)}"
-									        oncomplete="#{rich:component('dialogMetricEdit')}.show();" value=" " alt="#{strings.edit}" title="#{strings.edit}">
+									        oncomplete="#{rich:component('dialogMetricEdit')}.show();" value=" " title="#{strings.edit}">
 									        <i class="icon-edit"></i>
 										</a4j:commandLink>
 									</div>
@@ -111,7 +111,7 @@
                   <th style="text-align: center; vertical-align: middle">
                      <a4j:commandLink render=":dialogAlertForm"
                                       action="#{testController.metricDetails.setEmptyMetric}" oncomplete="#{rich:component('dialogAlert')}.show();"
-                                      alt="Create new alert" title="Create new alert">
+                                      title="Create new alert">
                         <i class="icon-plus"></i>
                      </a4j:commandLink>
                   </th>
@@ -124,13 +124,13 @@
                      <td><h:outputText value="#{alert.description}" escape="false" /></td>
                      <td>
                         <div class="btn-group">
-                           <a4j:commandLink styleClass="btn btn-primary btn-small" alt="#{strings.delete}" title="#{strings.delete}"
+                           <a4j:commandLink styleClass="btn btn-primary btn-small" title="#{strings.delete}"
                                             onclick="if (!confirm('Are you sure you want to delete alert (#{alert.name})?') ) { return false;}; return true;"
                                             action="#{testController.deleteAlert(alert)}" render="alertList :messagesPanel">
                               <i class="icon-trash"></i>
                            </a4j:commandLink>
                            <a4j:commandLink styleClass="btn btn-primary btn-small" render=":dialogAlert" action="#{testController.alertDetails.setAlertForUpdate(alert)}"
-                                            oncomplete="#{rich:component('dialogAlert')}.show();" value=" " alt="#{strings.edit}" title="#{strings.edit}">
+                                            oncomplete="#{rich:component('dialogAlert')}.show();" value=" " title="#{strings.edit}">
                               <i class="icon-edit"></i>
                            </a4j:commandLink>
                         </div>

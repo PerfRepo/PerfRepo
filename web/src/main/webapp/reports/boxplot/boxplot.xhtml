@@ -3,8 +3,7 @@
                 xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://xmlns.jcp.org/jsf/core"
                 xmlns:a4j="http://richfaces.org/a4j"
-                xmlns:rich="http://richfaces.org/rich"
-                xmlns:r="http://richfaces.org">
+                xmlns:rich="http://richfaces.org/rich">
 
    <ui:define name="title">#{boxplotReportBean.name}</ui:define>
    <ui:define name="customJavascript">
@@ -35,7 +34,7 @@
       <h2>#{boxplotReportBean.name}</h2>
 
       <div class="boxplotView">
-         <r:repeat value="#{boxplotReportBean.charts}" var="chart" rowKeyVar="chartIndex">
+         <a4j:repeat value="#{boxplotReportBean.charts}" var="chart" rowKeyVar="chartIndex">
             <h4>#{chart.name}</h4>
 
             <canvas id='chartCanvas#{chartIndex}' width="938" height="500"></canvas>
@@ -47,29 +46,29 @@
                   var seriesValues = new Array();
                   var baselinesValues = new Array();
 
-                  <r:repeat value="#{chart.seriesList}" var="series" rowKeyVar="seriesIndex">
+                  <a4j:repeat value="#{chart.seriesList}" var="series" rowKeyVar="seriesIndex">
                      yArrayVars.push("#{series.name}");
 
-                     <r:repeat value="#{series.dataPoints}" var="dataPoint">
+                     <a4j:repeat value="#{series.dataPoints}" var="dataPoint">
 
-                        <r:repeat value="#{dataPoint.values}" var="value" rowKeyVar="valueIndex">
+                        <a4j:repeat value="#{dataPoint.values}" var="value" rowKeyVar="valueIndex">
                            xArrayData.push("#{dataPoint.label}");
 
                            if(typeof seriesValues[#{seriesIndex}] == 'undefined') {
                               seriesValues[#{seriesIndex}] = new Array();
                            }
                            seriesValues[#{seriesIndex}].push("#{value}");
-                        </r:repeat>
-                     </r:repeat>
-                  </r:repeat>
+                        </a4j:repeat>
+                     </a4j:repeat>
+                  </a4j:repeat>
 
-                  <r:repeat value="#{chart.baselines}" var="baseline">
+                  <a4j:repeat value="#{chart.baselines}" var="baseline">
                      var newBaseline = new Object();
                      newBaseline.label = "#{baseline.name}";
                      newBaseline.value = #{baseline.resultValue};
 
                      baselinesValues.push(newBaseline);
-                  </r:repeat>
+                  </a4j:repeat>
 
                   var chart = new CanvasXpress("chartCanvas#{chartIndex}",
                      {
@@ -114,7 +113,7 @@
             <br clear="all" />
             <hr />
 
-         </r:repeat>
+         </a4j:repeat>
       </div>
 
    </ui:define>

@@ -22,12 +22,10 @@
 							<span style="padding-right:5px"><i class="icon-cog"/></span>
 							<span style="padding-right:5px"><a4j:commandLink render="@form :result"
                                                                              oncomplete="#{parametrizedTestExecutionController.transferBestValues()}"
-                                                                             alt="Transfer Best Values"
                                                                              title="Transfer Best Values"><i
                                     class="icon-exchange"/></a4j:commandLink></span>
 							<span style="padding-right:5px"><a4j:commandLink render="dialogFavParamEdit"
                                                                              oncomplete="#{rich:component('dialogSearchTEs')}.show();"
-                                                                             alt="Add Test Executions to compare"
                                                                              title="Add Test Executions to compare"><i
                                     class="icon-plus"/></a4j:commandLink></span>
 						</span>
@@ -74,7 +72,7 @@
                                     <ui:repeat value="#{parametrizedTestExecutionController.getTags(job)}" var="item">
                                         <span class="badge badge-success">#{item}</span>
                                     </ui:repeat>
-                                    <rich:contextMenu id="menu-#{job}" attachTo="#{job}" mode="ajax" showEvent="click">
+                                    <rich:contextMenu id="menu-#{job}" attached="true" target="#{job}" mode="ajax" showEvent="click">
                                         <rich:menuItem id="menuItem1-#{job}" label="Compare" mode="ajax"
                                                        oncomplete="#{parametrizedTestExecutionController.setCompareJobId(job)}"
                                                        render="@form :result"/>

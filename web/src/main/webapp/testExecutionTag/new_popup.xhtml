@@ -21,9 +21,9 @@
                 <td class="table-footer" colspan="2">
                     <a4j:commandButton styleClass="button-left-arrow"
                                        oncomplete="#{rich:component('testExecutionTagNewPopup')}.hide()" value=" "
-                                       alt="#{strings.back}" title="#{strings.back}"/>
+                                       />
                     <a4j:commandButton styleClass="button-check" action="#{testExecutionController.addTestExecutionTag}"
-                                       value=" " alt="#{strings.save}" title="#{strings.save}"
+                                       value=" " 
                                        render=":testExecutionTagNewPopupForm :testExecutionTagList"
                                        oncomplete="#{rich:component('testExecutionTagNewPopup')}.hide()"/>
                 </td>

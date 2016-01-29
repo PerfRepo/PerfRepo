@@ -13,19 +13,19 @@
                 <h:outputLabel class="control-label" for="tags">Tags</h:outputLabel>
 
                 <div class="controls">
-                    <h:inputText type="text" class="input-xlarge" id="tags"
+                    <h:inputText class="input-xlarge" id="tags"
                                  value="#{parametrizedTestExecutionController.search.tags}"/>
                 </div>
             </div>
         </fieldset>
         <div style="text-align:right;padding-right:20px">
             <a4j:commandButton action="#{parametrizedTestExecutionController.searchTEs()}" value="Search"
-                               styleClass="btn-small btn-primary" alt="Search Test Execution"
+                               styleClass="btn-small btn-primary"
                                title="Search Test Execution" render="@form :searchResult :messagesPanel">
                 <f:param name="testExecutionSearchTO" value="#{parametrizedTestExecutionController.search}"/>
             </a4j:commandButton>
             <a4j:commandButton oncomplete="#{rich:component('dialogSearchTEs')}.hide()"
-                               styleClass="btn-small btn-primary" value="#{strings.cancel}" alt="#{strings.cancel}"
+                               styleClass="btn-small btn-primary" value="#{strings.cancel}"
                                title="#{strings.cancel}"/>
         </div>
     </h:form>
@@ -65,12 +65,12 @@
         <div style="text-align:right;padding-right:20px">
             <a4j:commandButton oncomplete="#{rich:component('dialogSearchTEs')}.hide()"
                                action="#{parametrizedTestExecutionController.addCompareTestExecutions()}" value="Add"
-                               styleClass="btn-small btn-primary" alt="Add Test Executions to comparison"
+                               styleClass="btn-small btn-primary"
                                title="Add Test Executions to comparison" render="@form :result">
                 <f:param name="testExecutionSearchTO" value="#{parametrizedTestExecutionController.search}"/>
             </a4j:commandButton>
             <a4j:commandButton oncomplete="#{rich:component('dialogSearchTEs')}.hide()"
-                               styleClass="btn-small btn-primary" value="#{strings.cancel}" alt="#{strings.cancel}"
+                               styleClass="btn-small btn-primary" value="#{strings.cancel}"
                                title="#{strings.cancel}"/>
         </div>
     </h:form>

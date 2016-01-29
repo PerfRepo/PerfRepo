@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:r="http://richfaces.org" xmlns:rich="http://richfaces.org/rich">
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:rich="http://richfaces.org/rich" xmlns:a4j="http://richfaces.org/a4j">
 <h:body>
 <ui:composition template="/layout/template.xhtml">
 <ui:define name="customJavascript">
@@ -13,25 +13,25 @@
 
 <h:form id="formReportConfig">
     <h1>#{metricReportBean.reportName}</h1>
-    <r:commandLink styleClass="btn btn-primary btn-small" action="#{metricReportBean.showConfig}"
-                   alt="Show configuration" title="Show configuration"
+    <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{metricReportBean.showConfig}"
+                   
                    render=":formReportConfig :messagesPanel" rendered="#{!metricReportBean.configVisible}">
         <i class="icon-cogs"></i> Show configuration
-    </r:commandLink>
+    </a4j:commandLink>
     <h:panelGroup rendered="#{metricReportBean.configVisible}">
         <h2>
             Report configuration
-            <r:commandLink action="#{metricReportBean.hideConfig}" alt="Hide configuration" title="Hide configuration"
+            <a4j:commandLink action="#{metricReportBean.hideConfig}" 
                            render=":formReportConfig :messagesPanel">
                 <i class="icon-check-minus"></i>
-            </r:commandLink>
+            </a4j:commandLink>
         </h2>
         <ui:include src="/reports/report-permission-panel.xhtml"/>
         <table>
             <tr>
                 <td><h:outputText value="Report name"/></td>
                 <td><h:inputText value="#{metricReportBean.reportName}">
-                    <r:ajax render=":formReportConfig titleGroup :messagesPanel"/>
+                    <a4j:ajax render=":formReportConfig titleGroup :messagesPanel"/>
                 </h:inputText>
                 </td>
             </tr>
@@ -46,7 +46,7 @@
             <h:column>
                 <f:facet name="header">Name</f:facet>
                 <h:inputText value="#{chartItem.chartName}">
-                    <r:ajax render=":formReportConfig :messagesPanel" listener="#{chartItem.editedName}"/>
+                    <a4j:ajax render=":formReportConfig :messagesPanel" listener="#{chartItem.editedName}"/>
                 </h:inputText>
             </h:column>
             <h:column>
@@ -54,23 +54,23 @@
                 <h:selectOneMenu value="#{chartItem.selectedTestId}">
                     <f:selectItems value="#{metricReportBean.selectionTests}" var="testItem"
                                    itemLabel="#{testItem.name}" itemValue="#{testItem.id}"/>
-                    <r:ajax render=":formReportConfig :messagesPanel" listener="#{chartItem.selectedTest}"/>
+                    <a4j:ajax render=":formReportConfig :messagesPanel" listener="#{chartItem.selectedTest}"/>
                 </h:selectOneMenu>
             </h:column>
             <h:column>
                 <f:facet name="header"></f:facet>
-                <r:commandLink styleClass="btn btn-primary btn-small"
-                               action="#{metricReportBean.removeChart(chartItem)}" alt="Remove" title="Remove"
+                <a4j:commandLink styleClass="btn btn-primary btn-small"
+                               action="#{metricReportBean.removeChart(chartItem)}" 
                                render=":formReportConfig :messagesPanel">
                     <i class="icon-minus"></i>
-                </r:commandLink>
+                </a4j:commandLink>
             </h:column>
         </h:dataTable>
-        <r:commandLink styleClass="btn btn-primary btn-small" action="#{metricReportBean.addChart}"
-                       onclick="metricHistoryClear()" alt="Add chart" title="Add chart"
+        <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{metricReportBean.addChart}"
+                       onclick="metricHistoryClear()" 
                        render=":formReportConfig :messagesPanel">
             <i class="icon-plus"></i> Add chart
-        </r:commandLink>
+        </a4j:commandLink>
 
         <h3>Series</h3>
         <h:dataTable id="tableSeries" styleClass="table table-bordered table-striped editableEntryTable"
@@ -80,7 +80,7 @@
                 <h:selectOneMenu value="#{seriesItem.chart}">
                     <f:selectItems value="#{metricReportBean.chartNames}" var="chartItem" itemLabel="#{chartItem}"
                                    itemValue="#{chartItem}"/>
-                    <r:ajax render=":formReportConfig :messagesPanel"/>
+                    <a4j:ajax render=":formReportConfig :messagesPanel"/>
                 </h:selectOneMenu>
             </h:column>
             <h:column>
@@ -100,18 +100,18 @@
             </h:column>
             <h:column>
                 <f:facet name="header"></f:facet>
-                <r:commandLink styleClass="btn btn-primary btn-small"
-                               action="#{metricReportBean.removeSeries(seriesItem)}" alt="Remove" title="Remove"
+                <a4j:commandLink styleClass="btn btn-primary btn-small"
+                               action="#{metricReportBean.removeSeries(seriesItem)}" 
                                render=":formReportConfig :messagesPanel">
                     <i class="icon-minus"></i>
-                </r:commandLink>
+                </a4j:commandLink>
             </h:column>
         </h:dataTable>
-        <r:commandLink styleClass="btn btn-primary btn-small" action="#{metricReportBean.addSeries}"
-                       onclick="metricHistoryClear()" alt="Add series" title="Add series"
+        <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{metricReportBean.addSeries}"
+                       onclick="metricHistoryClear()" 
                        render=":formReportConfig :messagesPanel">
             <i class="icon-plus"></i> Add series
-        </r:commandLink>
+        </a4j:commandLink>
 
         <h:panelGroup rendered="#{!metricReportBean.baselineSpecs.isEmpty()}">
             <h3>Baselines</h3>
@@ -123,7 +123,7 @@
                     <h:selectOneMenu value="#{baselinesItem.chart}">
                         <f:selectItems value="#{metricReportBean.chartNames}" var="chartItem" itemLabel="#{chartItem}"
                                        itemValue="#{chartItem}"/>
-                        <r:ajax render=":formReportConfig :messagesPanel"/>
+                        <a4j:ajax render=":formReportConfig :messagesPanel"/>
                     </h:selectOneMenu>
                 </h:column>
                 <h:column>
@@ -145,34 +145,34 @@
                 </h:column>
                 <h:column>
                     <f:facet name="header"></f:facet>
-                    <r:commandLink styleClass="btn btn-primary btn-small"
-                                   action="#{metricReportBean.removeBaseline(baselinesItem)}" alt="Remove"
+                    <a4j:commandLink styleClass="btn btn-primary btn-small"
+                                   action="#{metricReportBean.removeBaseline(baselinesItem)}" 
                                    title="Remove"
                                    render=":formReportConfig :messagesPanel">
                         <i class="icon-minus"></i>
-                    </r:commandLink>
+                    </a4j:commandLink>
                 </h:column>
             </h:dataTable>
         </h:panelGroup>
 
-        <r:commandLink styleClass="btn btn-primary btn-small" action="#{metricReportBean.addBaseline}"
-                       onclick="metricHistoryClear()" alt="Add baseline" title="Add baseline"
+        <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{metricReportBean.addBaseline}"
+                       onclick="metricHistoryClear()" 
                        render=":formReportConfig :messagesPanel">
             <i class="icon-plus"></i> Add baseline
-        </r:commandLink>
+        </a4j:commandLink>
 
         <br/><br/>
         <hr/>
         <br/>
-        <r:commandLink styleClass="btn btn-primary btn-large" action="#{metricReportBean.save}" alt="Save" title="Save"
+        <a4j:commandLink styleClass="btn btn-primary btn-large" action="#{metricReportBean.save}" 
                        render=":messagesPanel">
             <i class="icon-save"></i> Save
-        </r:commandLink>
-        <r:commandLink styleClass="btn btn-primary btn-small" action="#{metricReportBean.previewReport}" alt="Preview"
+        </a4j:commandLink>
+        <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{metricReportBean.previewReport}" 
                        title="Preview"
                        render=":formReportConfig :formChart :messagesPanel">
             Preview
-        </r:commandLink>
+        </a4j:commandLink>
 
         <br/><br/>
         <hr/>
@@ -180,24 +180,24 @@
     </h:panelGroup>
 </h:form>
 <h:form id="formChart">
-    <r:repeat value="#{metricReportBean.chartSpecs}" var="chartItem" rowKeyVar="chartIndex" id="repeat">
+    <a4j:repeat value="#{metricReportBean.chartSpecs}" var="chartItem" rowKeyVar="chartIndex" id="repeat">
         <h2 id="chart#{chartIndex + 1}">
             <h:outputText value="#{chartItem.chartName}"/>
         </h2>
 
-        <r:chart title="#{chartItem.chartName}" plotClickListener="#{chartItem.chartActionListener}"
+        <rich:chart title="#{chartItem.chartName}" plotClickListener="#{chartItem.chartActionListener}"
                  onplotclick="metricHistoryPointClick(event)">
-            <r:repeat value="#{chartItem.chartSeries}" var="seriesItem">
-                <r:series label="#{seriesItem.name}" data="#{seriesItem.chartModel}" type="line"/>
-            </r:repeat>
-            <r:repeat value="#{chartItem.chartBaselines}" var="baselineItem">
-                <r:series label="#{baselineItem.name}" data="#{baselineItem.chartModel}" type="line"/>
-            </r:repeat>
-            <r:ajax event="plotclick" render=":formChart :messagesPanel" oncomplete="metricHistoryRefresh()"/>
-            <r:xaxis label="Test execution"/>
-            <r:yaxis label="Metric value" min="0"/>
-            <r:legend position="nw"/>
-        </r:chart>
+            <a4j:repeat value="#{chartItem.chartSeries}" var="seriesItem">
+                <rich:chartSeries label="#{seriesItem.name}" data="#{seriesItem.chartModel}" type="line"/>
+            </a4j:repeat>
+            <a4j:repeat value="#{chartItem.chartBaselines}" var="baselineItem">
+                <rich:chartSeries label="#{baselineItem.name}" data="#{baselineItem.chartModel}" type="line"/>
+            </a4j:repeat>
+            <a4j:ajax event="plotclick" render=":formChart :messagesPanel" oncomplete="metricHistoryRefresh()"/>
+            <rich:chartXAxis label="Test execution"/>
+            <rich:chartYAxis label="Metric value" min="0"/>
+            <rich:chartLegend position="nw"/>
+        </rich:chart>
 
         <h:panelGrid rendered="#{chartItem.renderDetails}">
 
@@ -255,21 +255,21 @@
                 <table>
                     <tr>
                         <td>
-                            <r:commandLink styleClass="btn btn-primary btn-small"
+                            <a4j:commandLink styleClass="btn btn-primary btn-small"
                                            onclick="metricHistoryPermanentlyHighlight()"
                                            oncomplete="metricHistoryRefresh()"
                                            action="#{teComparatorSession.add(metricReportBean.pointDetails.execId)}"
-                                           alt="Add execution to comparison" title="Add execution to comparison"
+                                           
                                            render=":formReportConfig :formChart :headerForm:compareMenuItem :messagesPanel">
                                 <i class="icon-plus"></i> Add to comparison
-                            </r:commandLink>
+                            </a4j:commandLink>
 
-                            <r:commandLink styleClass="btn btn-primary btn-small"
+                            <a4j:commandLink styleClass="btn btn-primary btn-small"
                                            action="#{metricReportBean.setPointDetails(metricReportBean.pointDetails)}"
                                            oncomplete="#{rich:component('dialogCommentEdit')}.show();"
-                                           alt="Edit comment" title="Edit comment" render=":dialogCommentEdit">
+                                           title="Edit comment" render=":dialogCommentEdit">
                                 <i class="icon-edit"></i> Edit comment
-                            </r:commandLink>
+                            </a4j:commandLink>
                         </td>
                     </tr>
                 </table>
@@ -277,7 +277,7 @@
 
 
         </h:panelGrid>
-    </r:repeat>
+    </a4j:repeat>
 </h:form>
 </ui:define>
 </ui:composition>
