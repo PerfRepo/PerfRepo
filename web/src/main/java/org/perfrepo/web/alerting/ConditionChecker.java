@@ -19,6 +19,8 @@ import org.perfrepo.model.Metric;
 
 import java.util.Map;
 
+import org.perfrepo.model.TestExecution;
+
 /**
  * API for checking of condition for alerting.
  *
@@ -30,13 +32,21 @@ public interface ConditionChecker {
     * Checks the condition for alerting
     *
     * @param condition specification of condition in String in our custom DSL that should hold
-    * @param currentResult result of the test execution that is currently being processed, e.g. against which the
+    * @param currentResult the test execution object that is currently being processed, e.g. against which the
     *                      condition should hold. This value will replace the "result" variable in condition!
     * @param metric metric that the condition is linked to
     * @return true if condition still hold | false if condition is broken
     */
-   public boolean checkCondition(String condition, double currentResult, Metric metric);
+   public boolean checkCondition(String condition, TestExecution currentResult, Metric metric);
 
+   /**
+    * Check the condition syntax only. Invokes a grammar tree parser which detects errors.
+    * When an error is found, exception is thrown.
+    * @param condition String version of condition in our custom DSL that should hold true
+    * @param metric Metric linked to the condition
+    */
+   public void checkConditionSyntax(String condition, Metric metric);
+   
    /**
     * Retrieves a map of variables used in the condition (as a key) with the values assigned to them (as a value).
     *
