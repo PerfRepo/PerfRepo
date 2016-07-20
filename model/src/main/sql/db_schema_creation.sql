@@ -186,27 +186,12 @@ ALTER TABLE public.test_execution_tag OWNER TO perfrepo;
 --
 
 CREATE TABLE test_metric (
-    id bigint NOT NULL,
     metric_id bigint NOT NULL,
     test_id bigint NOT NULL
 );
 
 
 ALTER TABLE public.test_metric OWNER TO perfrepo;
-
---
--- Name: test_metric_sequence; Type: SEQUENCE; Schema: public; Owner: perfrepo
---
-
-CREATE SEQUENCE test_metric_sequence
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.test_metric_sequence OWNER TO perfrepo;
 
 --
 -- Name: test_sequence; Type: SEQUENCE; Schema: public; Owner: perfrepo
@@ -509,7 +494,7 @@ ALTER TABLE ONLY test_execution_attachment
 --
 
 ALTER TABLE ONLY test_metric
-    ADD CONSTRAINT fke696c5fd3f0c1115 FOREIGN KEY (test_id) REFERENCES test(id);
+    ADD CONSTRAINT fke696c5fd3f0c1115 FOREIGN KEY (test_id) REFERENCES test(id) ON DELETE CASCADE;
 
 
 --
@@ -517,7 +502,7 @@ ALTER TABLE ONLY test_metric
 --
 
 ALTER TABLE ONLY test_metric
-    ADD CONSTRAINT fke696c5fdc4825995 FOREIGN KEY (metric_id) REFERENCES metric(id);
+    ADD CONSTRAINT fke696c5fdc4825995 FOREIGN KEY (metric_id) REFERENCES metric(id) ON DELETE CASCADE;
 
 
 --
@@ -525,7 +510,7 @@ ALTER TABLE ONLY test_metric
 --
 
 ALTER TABLE ONLY test_execution_tag
-    ADD CONSTRAINT fkf95a5d06e904537f FOREIGN KEY (tag_id) REFERENCES tag(id);
+    ADD CONSTRAINT fkf95a5d06e904537f FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE;
 
 
 --
@@ -533,7 +518,7 @@ ALTER TABLE ONLY test_execution_tag
 --
 
 ALTER TABLE ONLY test_execution_tag
-    ADD CONSTRAINT fkf95a5d06fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id);
+    ADD CONSTRAINT fkf95a5d06fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id) ON DELETE CASCADE;
 
 
 --
@@ -726,9 +711,9 @@ ALTER TABLE public.user_group OWNER TO perfrepo;
 ALTER TABLE ONLY public.user_group
 ADD CONSTRAINT user_group_pkey PRIMARY KEY (user_id, group_id);
 ALTER TABLE ONLY public.user_group
-ADD CONSTRAINT user_group_group_fkey FOREIGN KEY (group_id) REFERENCES "group"(id);
+ADD CONSTRAINT user_group_group_fkey FOREIGN KEY (group_id) REFERENCES "group"(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.user_group
-ADD CONSTRAINT user_group_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id);
+ADD CONSTRAINT user_group_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
 
 --
 -- Name: permission; Type: TABLE; Schema: public; Owner: perfrepo; Tablespace:
@@ -779,10 +764,10 @@ ALTER TABLE ONLY public.test_subscriber
     ADD CONSTRAINT test_subscriber_pkey PRIMARY KEY (test_id, user_id);
 
 ALTER TABLE ONLY public.test_subscriber
-    ADD CONSTRAINT test_subscriber_test_fkey FOREIGN KEY (test_id) REFERENCES test(id);
+    ADD CONSTRAINT test_subscriber_test_fkey FOREIGN KEY (test_id) REFERENCES test(id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY public.test_subscriber
-    ADD CONSTRAINT test_subscriber_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id);
+    ADD CONSTRAINT test_subscriber_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
 
 CREATE INDEX test_subscriber_test ON test_subscriber(test_id);
 CREATE INDEX test_subscriber_user ON test_subscriber(user_id);

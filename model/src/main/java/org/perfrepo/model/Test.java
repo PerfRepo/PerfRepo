@@ -138,6 +138,7 @@ public class Test implements Entity<Test> {
       this.subscribers = testSubscribers;
    }
 
+   @XmlTransient
    public Collection<Alert> getAlerts() {
       return alerts;
    }

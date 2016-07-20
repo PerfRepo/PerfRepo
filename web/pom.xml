@@ -160,16 +160,6 @@
          <groupId>org.jboss.resteasy</groupId>
          <artifactId>resteasy-jaxb-provider</artifactId>
          <scope>provided</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>com.sun.xml.bind</groupId>
-               <artifactId>jaxb-impl</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>com.sun.xml.stream</groupId>
-               <artifactId>sjsxp</artifactId>
-            </exclusion>
-         </exclusions>
       </dependency>
 
       <dependency>

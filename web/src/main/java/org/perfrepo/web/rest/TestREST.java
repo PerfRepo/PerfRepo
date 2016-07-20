@@ -80,6 +80,7 @@ public class TestREST {
    @POST
    @Path("/create")
    @Consumes(MediaType.TEXT_XML)
+   @Produces(MediaType.TEXT_PLAIN)
    @Logged
    public Response create(Test test, @Context UriInfo uriInfo) throws Exception {
       Long id = testService.createTest(test).getId();
@@ -98,6 +99,7 @@ public class TestREST {
    @POST
    @Path("/id/{testId}/addMetric")
    @Consumes(MediaType.TEXT_XML)
+   @Produces(MediaType.TEXT_PLAIN)
    @Logged
    public Response addMetric(@PathParam("testId") Long testId, Metric metric, @Context UriInfo uriInfo) throws Exception {
       Test test = new Test();

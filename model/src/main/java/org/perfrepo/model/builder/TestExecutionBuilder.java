@@ -130,6 +130,7 @@ public class TestExecutionBuilder {
          testExecution.setTags(tags);
       }
       Tag newTag = new Tag();
+      newTag.setName(tag);
       tags.add(newTag);
 
       return newTag;

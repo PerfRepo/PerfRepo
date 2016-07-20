@@ -23,6 +23,7 @@ import org.perfrepo.web.util.TagUtils;
 import javax.inject.Inject;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -84,12 +85,8 @@ public class TestExecutionDAOTest {
    @Before
    public void init() throws Exception {
       userTransaction.begin();
-      tests = new Test[]{testDAO.create(createTest("testuser1", "uid1")),
-                         testDAO.create(createTest("testuser1", "uid2"))};
 
-      metrics = new Metric[]{metricDAO.create(createMetric("metric1")),
-                             metricDAO.create(createMetric("metric2"))};
-
+      createTestsAndMetrics();
 
       testExecutions = new TestExecution[]{testExecutionDAO.create(createTestExecution("test execution 1", createStartDate(-8), tests[0])),
                                            testExecutionDAO.create(createTestExecution("test execution 2", createStartDate(-6), tests[0])),
@@ -477,13 +474,25 @@ public class TestExecutionDAOTest {
     * ------------ Helper methods for creation of test environment ------------
     */
 
+   private void createTestsAndMetrics() {
+      metrics = new Metric[] { metricDAO.create(createMetric("metric1")),
+                               metricDAO.create(createMetric("metric2")) };
+
+      Test test1 = createTest("testuser1", "uid1");
+      test1.setMetrics(Arrays.asList(metrics[0]));
+      Test test2 = createTest("testuser1", "uid2");
+      test2.setMetrics(Arrays.asList(metrics[0]));
+
+      tests = new Test[]{ testDAO.create(test1),
+                          testDAO.create(test2) };
+   }
+
    private Test createTest(String groupId, String uid) {
       return Test.builder()
           .name("test1")
           .groupId(groupId)
           .uid(uid)
           .description("this is a test test")
-          .metric("metric1", MetricComparator.HB, "this is a test metric 1")
           .build();
    }
 

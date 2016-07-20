@@ -110,6 +110,7 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
       return id == null ? null : String.valueOf(id);
    }
 
+   @XmlTransient
    public Collection<Alert> getAlerts() {
       return alerts;
    }
@@ -167,8 +168,7 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
       return this.getName().compareTo(o.getName());
    }
 
-   @XmlElementWrapper(name = "tests")
-   @XmlElement(name = "test")
+   @XmlTransient
    public Collection<Test> getTests() {
       return tests;
    }

@@ -12,25 +12,25 @@ metricHistoryClear();
 
 function metricHistoryRefresh() {
     for (var i = 0; i < highlightedPointsCounter; i++) {
-        var chart = $(document.getElementById(highlightedPointsChart[i])).chart('getPlotObject');
+        var chart = RichFaces.component(highlightedPointsChart[i]);
 
         if (typeof(chart.highlight) === "function") {
             chart.highlight(highlightedPointsSeries[i], highlightedPointsX[i]);
         }
     }
 
-    var chart = $(document.getElementById(previousHighlightedPointChart)).chart('getPlotObject');
+    var chart = RichFaces.component(previousHighlightedPointChart);
     if (typeof(chart.highlight) === "function") {
         chart.highlight(previousHighlightedPointSeries, previousHighlightedPointX);
     }
 }
 
 function metricHistoryPointClick(e) {
-    var currentChartName = e.currentTarget.name + 'Chart';
-    var chart = $(document.getElementById(currentChartName)).chart('getPlotObject');
+    var currentChartName = e.currentTarget.id.substr(0, e.currentTarget.id.length - 5); // remove 'Chart' from the end
+    var chart = RichFaces.component(currentChartName);
 
     if (!previousAdded && previousHighlightedPointChart != null) {
-        var previousChart = $(document.getElementById(previousHighlightedPointChart)).chart('getPlotObject');
+        var previousChart = RichFaces.component(previousHighlightedPointChart);
         if (typeof(previousChart.unhighlight) === "function") {
             previousChart.unhighlight(previousHighlightedPointSeries, previousHighlightedPointX);
         }

@@ -86,6 +86,8 @@ public class TestServiceBean implements TestService {
       // The test referred by test execution has to be an existing test
       Test test = testDAO.get(testExecution.getTest().getId());
       testExecution.setTest(test);
+      Collection<Tag> detachedTags = testExecution.getTags();
+      testExecution.setTags(new HashSet<>());
       TestExecution storedTestExecution = testExecutionDAO.create(testExecution);
       // execution params
       if (testExecution.getParameters() != null && testExecution.getParameters().size() > 0) {
@@ -95,8 +97,8 @@ public class TestServiceBean implements TestService {
          }
       }
       // tags
-      if (testExecution.getTags() != null && testExecution.getTags().size() > 0) {
-         for (Tag teg : testExecution.getTags()) {
+      if (detachedTags != null && detachedTags.size() > 0) {
+         for (Tag teg : detachedTags) {
             Tag tag = tagDAO.findByName(teg.getName());
             if (tag == null) {
                tag = tagDAO.create(teg);
@@ -107,7 +109,9 @@ public class TestServiceBean implements TestService {
                tag.setTestExecutions(new ArrayList<>());
             }
 
+            storedTestExecution.getTags().add(tag);
             tag.getTestExecutions().add(storedTestExecution);
+
          }
       }
       // values
@@ -131,6 +135,8 @@ public class TestServiceBean implements TestService {
             }
          }
       }
+
+      storedTestExecution = testExecutionDAO.update(storedTestExecution);
 
       TestExecution clone = cloneAndFetch(storedTestExecution, true, true, true, true, true);
       log.debug("Created new test execution " + clone.getId());
@@ -224,10 +230,12 @@ public class TestServiceBean implements TestService {
       if (testDAO.findByUid(test.getUid()) != null) {
          throw new ServiceException("serviceException.testUidExists", test.getUid());
       }
+      Collection<Metric> metrics = test.getMetrics();
+      test.setMetrics(null);
       Test createdTest = testDAO.create(test);
       //store metrics
-      if (test.getMetrics() != null) {
-         for (Metric metric: test.getMetrics()) {
+      if (metrics != null) {
+         for (Metric metric: metrics) {
             addMetric(test, metric);
          }
       }

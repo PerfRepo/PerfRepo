@@ -72,6 +72,7 @@ public class ReportREST {
    @POST
    @Path("/create")
    @Consumes(MediaType.TEXT_XML)
+   @Produces(MediaType.TEXT_PLAIN)
    @Logged
    public Response create(Report report, @Context UriInfo uriInfo) throws Exception {
       String username = report.getUsername();
@@ -90,6 +91,7 @@ public class ReportREST {
 
    @POST
    @Path("/update/{reportId}")
+   @Produces(MediaType.TEXT_PLAIN)
    @Logged
    public Response update(Report report, @Context UriInfo uriInfo) throws Exception {
       String username = report.getUsername();

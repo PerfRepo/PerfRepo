@@ -31,12 +31,9 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
 import java.lang.reflect.Method;
 import java.util.Collection;
 
@@ -76,6 +73,7 @@ public class TestExecutionREST {
    @POST()
    @Path("/create")
    @Consumes(MediaType.TEXT_XML)
+   @Produces(MediaType.TEXT_PLAIN)
    @Logged
    public Response create(TestExecution testExecution, @Context UriInfo uriInfo) throws Exception {
       Test test = null;
@@ -86,11 +84,13 @@ public class TestExecutionREST {
       }
       testExecution.setTest(test);
       Long id = testService.createTestExecution(testExecution).getId();
+      //return Response.ok(new GenericEntity<Long>(2222L){}).build();
       return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionREST.class).path(GET_TEST_EXECUTION_METHOD).build(id)).entity(id).build();
    }
 
    @POST
    @Path("/update/{testExecutionId}")
+   @Produces(MediaType.TEXT_PLAIN)
    @Logged
    public Response update(TestExecution testExecution, @Context UriInfo uriInfo) throws Exception {
       Test test = null;
@@ -109,6 +109,7 @@ public class TestExecutionREST {
    @POST()
    @Path("/addValue")
    @Consumes(MediaType.TEXT_XML)
+   @Produces(MediaType.TEXT_PLAIN)
    @Logged
    public Response addValue(TestExecution te, @Context UriInfo uriInfo) throws Exception {
       Collection<Value> values = te.getValues();
@@ -131,6 +132,7 @@ public class TestExecutionREST {
 
    @POST()
    @Path("/{testExecutionId}/addAttachment")
+   @Produces(MediaType.TEXT_PLAIN)
    @Logged
    public Response addAttachment(@PathParam("testExecutionId") Long testExecutionId, @HeaderParam("Content-type") String mimeType,
                                  @HeaderParam("filename") String fileName, byte[] requestBody, @Context UriInfo uriInfo) throws Exception {

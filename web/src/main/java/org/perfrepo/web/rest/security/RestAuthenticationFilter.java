@@ -53,7 +53,9 @@ public class RestAuthenticationFilter implements Filter {
          username = loginPassword.substring(0, loginPassword.indexOf(":"));
          password = loginPassword.substring(loginPassword.indexOf(":") + 1);
          try {
-            req.login(username, password);
+            if (req.getUserPrincipal() == null) {
+               req.login(username, password);
+            }
             chain.doFilter(request, response);
          } catch (Exception ex) {
             throw new org.perfrepo.web.security.SecurityException("securityException.wrongCredentials", ex);
