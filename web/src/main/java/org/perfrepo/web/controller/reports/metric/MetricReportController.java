@@ -553,6 +553,10 @@ public class MetricReportController extends BaseController {
        * @param event
        */
       public void chartActionListener(PlotClickEvent event) {
+         if (event.getSeriesIndex() < 0 || event.getPointIndex() < 0) {
+            return;
+         }
+
          for (ChartSpec c : chartSpecs) {
             c.renderDetails = false;
          }

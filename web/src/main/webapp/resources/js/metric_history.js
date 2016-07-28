@@ -26,6 +26,10 @@ function metricHistoryRefresh() {
 }
 
 function metricHistoryPointClick(e) {
+    if (e.data.x < 0 || e.data.seriesIndex < 0 || e.data.seriesIndex == null) {
+        return;
+    }
+
     var currentChartName = e.currentTarget.id.substr(0, e.currentTarget.id.length - 5); // remove 'Chart' from the end
     var chart = RichFaces.component(currentChartName);
 
