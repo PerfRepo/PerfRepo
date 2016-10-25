@@ -237,6 +237,32 @@ public class ReportServiceBean implements ReportService {
       saveReportPermissions(report, oldPermissions);
    }
 
+   @Override
+   public void updatePermission(Permission permission) throws ServiceException {
+      if (permission.getReportId() == null) {
+         throw new ServiceException("serviceException.reportIdNotSet");
+      }
+
+      Report report = reportDAO.get(permission.getReportId());
+      List<Permission> oldPermissions = permissionDAO.getByReport(report.getId());
+      oldPermissions.stream().filter(oldPermission -> oldPermission.getLevel().equals(permission.getLevel()))
+              .forEach(oldPermission -> oldPermission.setAccessType(permission.getAccessType())
+      );
+      saveReportPermissions(report, oldPermissions);
+   }
+
+   @Override
+   public void deletePermission(Permission permission) throws ServiceException {
+      if (permission.getReportId() == null) {
+         throw new ServiceException("serviceException.reportIdNotSet");
+      }
+
+      Report report = reportDAO.get(permission.getReportId());
+      List<Permission> oldPermissions = permissionDAO.getByReport(report.getId());
+      oldPermissions.remove(permission);
+      saveReportPermissions(report, oldPermissions);
+   }
+
    /**
     * Stores permissions to report
     *

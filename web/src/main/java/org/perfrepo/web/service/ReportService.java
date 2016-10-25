@@ -103,4 +103,18 @@ public interface ReportService {
      * @param permission
      */
    public void addPermission(Permission permission) throws ServiceException;
+
+   /**
+    * Updates permission to provided report.
+    *
+    * @param permission
+    */
+   public void updatePermission(Permission permission) throws ServiceException;
+
+   /**
+    * Deletes permission from provided report.
+    *
+    * @param permission
+    */
+   public void deletePermission(Permission permission) throws ServiceException;
 }

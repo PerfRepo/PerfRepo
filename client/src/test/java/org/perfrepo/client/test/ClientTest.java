@@ -27,6 +27,9 @@ import org.junit.runner.RunWith;
 import org.perfrepo.client.PerfRepoClient;
 import org.perfrepo.model.*;
 import org.perfrepo.model.Test;
+import org.perfrepo.model.auth.AccessLevel;
+import org.perfrepo.model.auth.AccessType;
+import org.perfrepo.model.auth.Permission;
 import org.perfrepo.model.builder.TestExecutionBuilder;
 import org.perfrepo.model.report.Report;
 import org.perfrepo.model.report.ReportProperty;
@@ -322,6 +325,40 @@ public class ClientTest {
       assertEquals("value", retrievedUpdatedReport.getProperties().get("key").getValue());
       assertEquals("newKey", retrievedUpdatedReport.getProperties().get("newKey").getName());
       assertEquals("newValue", retrievedUpdatedReport.getProperties().get("newKey").getValue());
+
+      client.deleteReport(reportId);
+   }
+
+   @org.junit.Test
+   public void testReportPermissions() throws Exception {
+      Report report = createReport();
+      Long reportId = client.createReport(report);
+
+      assertNotNull(reportId);
+      Report retrievedReport = client.getReport(reportId);
+
+      // default permissions are just group permission
+      assertEquals(1, retrievedReport.getPermissions().size());
+      Assert.assertEquals(AccessLevel.GROUP, retrievedReport.getPermissions().stream().findFirst().get().getLevel());
+      Assert.assertEquals(AccessType.WRITE, retrievedReport.getPermissions().stream().findFirst().get().getAccessType());
+
+      // add permission
+      Permission newPermission = new Permission();
+      newPermission.setReportId(retrievedReport.getId());
+      newPermission.setLevel(AccessLevel.PUBLIC);
+      newPermission.setAccessType(AccessType.READ);
+      client.addReportPermission(newPermission);
+
+      retrievedReport = client.getReport(reportId);
+      assertTrue(retrievedReport.getPermissions().stream()
+              .anyMatch(permission -> permission.getLevel().equals(AccessLevel.PUBLIC)
+                      && permission.getAccessType().equals(AccessType.READ)));
+
+      // delete permission
+      client.deleteReportPermission(newPermission);
+
+      retrievedReport = client.getReport(reportId);
+      assertTrue(retrievedReport.getPermissions().stream().noneMatch(permission -> permission.getLevel().equals(AccessLevel.PUBLIC)));
 
       client.deleteReport(reportId);
    }

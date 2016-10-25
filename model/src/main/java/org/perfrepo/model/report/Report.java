@@ -139,7 +139,8 @@ public class Report implements Entity<Report>, Comparable<Report> {
       this.properties = properties;
    }
 
-   @XmlTransient
+   @XmlElementWrapper(name = "permissions")
+   @XmlElement(name = "permission")
    public Collection<Permission> getPermissions() {
       return permissions;
    }

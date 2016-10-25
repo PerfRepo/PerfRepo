@@ -663,6 +663,48 @@ public class PerfRepoClient {
       return true;
    }
 
+   public boolean updateReportPermission(Permission permission) throws Exception {
+      if (permission == null || permission.getReportId() == null) {
+         throw new IllegalArgumentException("Permission or its report ID cannot be null.");
+      }
+
+      HttpPost post = createBasicPost("report/id/" + permission.getReportId() + "/updatePermission");
+      setPostEntity(post, permission);
+      HttpResponse resp = httpClient.execute(post);
+      if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+         logHttpError("Error while updating permission", post, resp);
+         EntityUtils.consume(resp.getEntity());
+         return false;
+      }
+      Header[] locations = resp.getHeaders(HttpHeaders.LOCATION);
+      if (locations != null && locations.length > 0) {
+         log.debug("Updated permission at: " + locations[0].getValue());
+      }
+      EntityUtils.consume(resp.getEntity());
+      return true;
+   }
+
+   public boolean deleteReportPermission(Permission permission) throws Exception {
+      if (permission == null || permission.getReportId() == null) {
+         throw new IllegalArgumentException("Permission or its report ID cannot be null.");
+      }
+
+      HttpPost post = createBasicPost("report/id/" + permission.getReportId() + "/deletePermission");
+      setPostEntity(post, permission);
+      HttpResponse resp = httpClient.execute(post);
+      if (resp.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+         logHttpError("Error while deleting permission", post, resp);
+         EntityUtils.consume(resp.getEntity());
+         return false;
+      }
+      Header[] locations = resp.getHeaders(HttpHeaders.LOCATION);
+      if (locations != null && locations.length > 0) {
+         log.debug("Deleted permission at: " + locations[0].getValue());
+      }
+      EntityUtils.consume(resp.getEntity());
+      return true;
+   }
+
    public String getServerVersion() throws Exception {
       HttpGet get = createBasicGet("info/version");
       HttpResponse resp = httpClient.execute(get);

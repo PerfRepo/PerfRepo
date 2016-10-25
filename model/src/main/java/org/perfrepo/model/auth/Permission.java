@@ -130,52 +130,26 @@ public class Permission implements Entity<Permission>, Comparable<Permission> {
    }
 
    @Override
-   public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((accessType == null) ? 0 : accessType.hashCode());
-      result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((level == null) ? 0 : level.hashCode());
-      result = prime * result + ((report == null) ? 0 : report.hashCode());
-      result = prime * result + ((userId == null) ? 0 : userId.hashCode());
-      return result;
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (o == null || getClass() != o.getClass()) return false;
+
+      Permission that = (Permission) o;
+
+      if (accessType != that.accessType) return false;
+      if (level != that.level) return false;
+      if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
+      return userId != null ? userId.equals(that.userId) : that.userId == null;
+
    }
 
    @Override
-   public boolean equals(Object obj) {
-      if (this == obj)
-         return true;
-      if (obj == null)
-         return false;
-      if (getClass() != obj.getClass())
-         return false;
-      Permission other = (Permission) obj;
-      if (accessType != other.accessType)
-         return false;
-      if (groupId == null) {
-         if (other.groupId != null)
-            return false;
-      } else if (!groupId.equals(other.groupId))
-         return false;
-      if (id == null) {
-         if (other.id != null)
-            return false;
-      } else if (!id.equals(other.id))
-         return false;
-      if (level != other.level)
-         return false;
-      if (report == null) {
-         if (other.report != null)
-            return false;
-      } else if (!report.equals(other.report))
-         return false;
-      if (userId == null) {
-         if (other.userId != null)
-            return false;
-      } else if (!userId.equals(other.userId))
-         return false;
-      return true;
+   public int hashCode() {
+      int result = accessType != null ? accessType.hashCode() : 0;
+      result = 31 * result + (level != null ? level.hashCode() : 0);
+      result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
+      result = 31 * result + (userId != null ? userId.hashCode() : 0);
+      return result;
    }
 
    @Override

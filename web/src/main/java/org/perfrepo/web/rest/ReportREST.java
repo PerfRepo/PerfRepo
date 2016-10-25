@@ -129,4 +129,26 @@ public class ReportREST {
 
       return Response.ok().build();
    }
+
+   @POST
+   @Path("/id/{reportId}/updatePermission")
+   @Consumes(MediaType.TEXT_XML)
+   @Produces(MediaType.TEXT_PLAIN)
+   @Logged
+   public Response updatePermission(Permission permission, @Context UriInfo uriInfo) throws ServiceException {
+      reportService.updatePermission(permission);
+
+      return Response.ok().build();
+   }
+
+   @POST
+   @Path("/id/{reportId}/deletePermission")
+   @Consumes(MediaType.TEXT_XML)
+   @Produces(MediaType.TEXT_PLAIN)
+   @Logged
+   public Response deletePermission(Permission permission, @Context UriInfo uriInfo) throws ServiceException {
+      reportService.deletePermission(permission);
+
+      return Response.ok().build();
+   }
 }
