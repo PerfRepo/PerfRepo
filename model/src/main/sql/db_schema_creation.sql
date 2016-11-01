@@ -526,7 +526,7 @@ ALTER TABLE ONLY test_execution_tag
 --
 
 ALTER TABLE ONLY value_parameter
-    ADD CONSTRAINT fkfd9de65b92d882df FOREIGN KEY (value_id) REFERENCES value(id);
+    ADD CONSTRAINT fkfd9de65b92d882df FOREIGN KEY (value_id) REFERENCES value(id) ON DELETE CASCADE;
 
 
 --
@@ -534,7 +534,7 @@ ALTER TABLE ONLY value_parameter
 --
 
 ALTER TABLE ONLY user_property
-    ADD CONSTRAINT user_property_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id);
+    ADD CONSTRAINT user_property_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
 
 
 --

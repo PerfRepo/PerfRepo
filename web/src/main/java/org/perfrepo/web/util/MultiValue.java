@@ -92,9 +92,14 @@ public class MultiValue {
    public static boolean isMultivalue(TestExecution testExecution) throws IllegalStateException {
       Map<String, List<Value>> valuesByMetric = getValuesByMetric(testExecution);
 
-      boolean isMultivalue = valuesByMetric.values().stream().anyMatch(list -> list.size() > 1);
-      if (isMultivalue) { //do validation of values parametrization
-         for (List<Value> values: valuesByMetric.values()) {
+      // metrics that are multivalue
+      List<String> multiValueMetrics = valuesByMetric.keySet().stream()
+              .filter(key -> valuesByMetric.get(key).size() > 1)
+              .collect(Collectors.toList());
+
+      if (!multiValueMetrics.isEmpty()) { // if there's any multivalue metric, validate only them
+         for (String metric: multiValueMetrics) {
+            List<Value> values = valuesByMetric.get(metric);
             boolean areAllValuesParametrized = values.stream().allMatch(Value::hasParameters);
             if (!areAllValuesParametrized) {
                throw new IllegalStateException("Test execution contains multiple values for one metric, hence it should be multivalue."

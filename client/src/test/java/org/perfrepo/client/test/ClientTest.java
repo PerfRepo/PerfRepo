@@ -149,7 +149,7 @@ public class ClientTest {
       assertEquals(tags.size(), 2);
       assertEquals(tags.get(0), "tag1");
       assertEquals(tags.get(1), "tag2");
-      assertEquals(testExecution2.getValues().size(), 2);
+      assertEquals(testExecution2.getValues().size(), 4);
       assertEquals((double) getFirstValueHavingMetricAndParameter(testExecution2, "metric1", null, null), 12.0);
       assertEquals((double) getFirstValueHavingMetricAndParameter(testExecution2, "metric2", null, null), 8.0);
 
@@ -530,7 +530,9 @@ public class ClientTest {
           .name(name)
           .started(started)
           .value("metric1", 12.0d)
-          .value("metric2", 8.0d);
+          .value("metric2", 8.0d)
+          .value("multimetric", 20.0d, "client", "1")
+          .value("multimetric", 40.0d, "client", "2");
 
       for (int i = 0; i < paramNames.size(); i++) {
          builder.parameter(paramNames.get(i), paramValues.get(i));
