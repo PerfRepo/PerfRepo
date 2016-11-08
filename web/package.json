@@ -17,6 +17,5 @@
     "gulp-usemin": "^0.3.25"
   },
   "dependencies": {
-    "patternfly": "^3.13.0"
   }
 }

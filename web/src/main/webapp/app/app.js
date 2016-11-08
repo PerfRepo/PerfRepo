@@ -11,6 +11,8 @@
             'org.perfrepo.report'
         ])
 
+        .constant('API_URL', 'api')
+
         .config(function($stateProvider, $urlRouterProvider) {
             $urlRouterProvider.otherwise('/login');
 

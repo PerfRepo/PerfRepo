@@ -8,17 +8,27 @@
 
     angular.module('org.perfrepo.test',
         [
-            'ui.router'
+            'ngResource',
+            'ui.router',
+
+            'org.perfrepo.test.create'
         ])
 
         .controller('TestController', TestController)
 
         .config(function($stateProvider) {
-            $stateProvider.state('app.test', {
-                url: 'test',
-                templateUrl: 'app/test/test.html',
-                controller: 'TestController',
-                controllerAs: 'test'
+            $stateProvider
+                .state('app.test', {
+                    url: 'test',
+                    templateUrl: 'app/test/test.html',
+                    controller: 'TestController',
+                    controllerAs: 'test'})
+
+                .state('app.test-create', {
+                    url: 'test/create',
+                    templateUrl: 'app/test/create/create-test.html',
+                    controller: 'CreateTestController',
+                    controllerAs: 'vm'
             });
         });
 
