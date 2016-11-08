@@ -1,0 +1,24 @@
+{
+  "name": "PerfRepo",
+  "description": "PerfRepo",
+  "main": "index.js",
+  "authors": [
+    "Jiří Grunwald"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/grunwjir/PerfRepo",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/main/webapp/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.8",
+    "angular-patternfly": "^3.13.0",
+    "angular-ui-router": "^0.3.2"
+  }
+}
