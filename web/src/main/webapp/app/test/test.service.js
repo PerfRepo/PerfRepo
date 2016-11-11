@@ -1,4 +1,5 @@
 (function() {
+    'use strict';
 
     var Test = function($resource, API_URL) {
 
@@ -8,6 +9,9 @@
             {
                 'query': {
                     method: 'GET', isArray: false
+                },
+                'update': {
+                    method: 'PUT', isArray: false
                 }
             });
     };
@@ -20,6 +24,10 @@
 
         this.save = function(test) {
             return Test.save(test).$promise;
+        };
+
+        this.update = function(test) {
+            return Test.update(test).$promise;
         };
 
         this.delete = function(test) {

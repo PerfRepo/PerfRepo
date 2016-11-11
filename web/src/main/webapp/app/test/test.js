@@ -11,7 +11,8 @@
             'ngResource',
             'ui.router',
 
-            'org.perfrepo.test.create'
+            'org.perfrepo.test.create',
+            'org.perfrepo.test.edit'
         ])
 
         .controller('TestController', TestController)
@@ -28,8 +29,27 @@
                     url: 'test/create',
                     templateUrl: 'app/test/create/create-test.html',
                     controller: 'CreateTestController',
-                    controllerAs: 'vm'
-            });
+                    controllerAs: 'vm',
+                    resolve: {
+                        userGroups: function(userGroupService) {
+                            return userGroupService.getUserGroups();
+                        }
+                    }})
+
+                .state('app.test-edit', {
+                    url: 'test/edit/:id',
+                    templateUrl: 'app/test/edit/edit-test.html',
+                    controller: 'EditTestController',
+                    controllerAs: 'vm',
+                    resolve: {
+                        test: function(testService, $stateParams) {
+                            return testService.getById($stateParams.id)
+                        },
+                        userGroups: function(userGroupService) {
+                            return userGroupService.getUserGroups();
+                        }
+                    }
+                });
         });
 
 })();

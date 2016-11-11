@@ -1,4 +1,6 @@
 (function() {
+    'use strict';
+
     var testFormController = function() {
 
         this.save = function(form) {
@@ -12,10 +14,12 @@
 
     angular.module('org.perfrepo.test.form',
         [
-            'ui.bootstrap'
+            'ui.bootstrap',
+            'angularTrix'
         ])
         .component('testForm', {
             bindings: {
+                userGroups: '=',
                 test: '=',
                 onSave: '&'
             },

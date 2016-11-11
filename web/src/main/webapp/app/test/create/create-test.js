@@ -1,14 +1,19 @@
 (function() {
+    'use strict';
 
-    var CreateTestController = function($state, testService) {
+    var CreateTestController = function($state, testService, userGroups) {
 
-        this.test = {groupId : "perfrepouser"};
+        this.test = {};
+        this.userGroups = userGroups;
+
+        if(this.userGroups != undefined && this.userGroups.length > 0) {
+            this.test.groupId = this.userGroups[0];
+        }
 
         this.save = function(test) {
             testService.save(test)
                 .then(function () {
                     $state.go('app.test');
-                    console.log("TEST CREATED");
                 });
         };
     };

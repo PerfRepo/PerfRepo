@@ -20,6 +20,8 @@
     "angular": "^1.5.8",
     "angular-patternfly": "^3.13.0",
     "angular-ui-router": "^0.3.2",
-    "angular-resource": "^1.5.8"
+    "angular-resource": "^1.5.8",
+    "angular-trix": "^1.0.2",
+    "trix": "^0.9.9"
   }
 }
