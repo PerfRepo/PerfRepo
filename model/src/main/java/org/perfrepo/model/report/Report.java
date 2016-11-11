@@ -16,19 +16,13 @@ package org.perfrepo.model.report;
 
 import org.perfrepo.model.Entity;
 import org.perfrepo.model.auth.EntityType;
-import org.perfrepo.model.auth.Permission;
 import org.perfrepo.model.auth.SecuredEntity;
 import org.perfrepo.model.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import java.util.Collection;
+import javax.xml.bind.annotation.*;
 import java.util.Map;
 
 /**
@@ -70,17 +64,14 @@ public class Report implements Entity<Report>, Comparable<Report> {
    @Size(max = 255)
    private String type;
 
-   @ManyToOne(optional = false, cascade = CascadeType.MERGE)
+   @ManyToOne
    @JoinColumn(name = "user_id", referencedColumnName = "id")
    @NotNull
    private User user;
 
-   @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true)
+   @OneToMany(mappedBy = "report")
    @MapKey(name = "name")
    private Map<String, ReportProperty> properties;
-
-   @OneToMany(mappedBy = "report")
-   private Collection<Permission> permissions;
 
    @Transient
    private String username;
@@ -139,16 +130,6 @@ public class Report implements Entity<Report>, Comparable<Report> {
       this.properties = properties;
    }
 
-   @XmlElementWrapper(name = "permissions")
-   @XmlElement(name = "permission")
-   public Collection<Permission> getPermissions() {
-      return permissions;
-   }
-
-   public void setPermissions(Collection<Permission> permissions) {
-      this.permissions = permissions;
-   }
-
    @XmlAttribute(name = "user")
    public String getUsername() {
       return username;
@@ -159,59 +140,38 @@ public class Report implements Entity<Report>, Comparable<Report> {
    }
 
    @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Report)) return false;
+
+      Report report = (Report) o;
+
+      if (getName() != null ? !getName().equals(report.getName()) : report.getName() != null) return false;
+      if (getType() != null ? !getType().equals(report.getType()) : report.getType() != null) return false;
+      if (getUser() != null ? !getUser().equals(report.getUser()) : report.getUser() != null) return false;
+      return getProperties() != null ? getProperties().equals(report.getProperties()) : report.getProperties() == null;
+   }
+
+   @Override
    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((name == null) ? 0 : name.hashCode());
-      result = prime * result + ((type == null) ? 0 : type.hashCode());
-      result = prime * result + ((user == null) ? 0 : user.hashCode());
+      int result = getName() != null ? getName().hashCode() : 0;
+      result = 31 * result + (getType() != null ? getType().hashCode() : 0);
+      result = 31 * result + (getUser() != null ? getUser().hashCode() : 0);
+      result = 31 * result + (getProperties() != null ? getProperties().hashCode() : 0);
       return result;
-   }
-
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj)
-         return true;
-      if (obj == null)
-         return false;
-      if (getClass() != obj.getClass())
-         return false;
-      Report other = (Report) obj;
-      if (id == null) {
-         if (other.id != null)
-            return false;
-      } else if (!id.equals(other.id))
-         return false;
-      if (name == null) {
-         if (other.name != null)
-            return false;
-      } else if (!name.equals(other.name))
-         return false;
-      if (type == null) {
-         if (other.type != null)
-            return false;
-      } else if (!type.equals(other.type))
-         return false;
-      if (user == null) {
-         if (other.user != null)
-            return false;
-      } else if (!user.equals(other.user))
-         return false;
-      return true;
-   }
-
-   @Override
-   public Report clone() {
-      try {
-         return (Report) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
    }
 
    @Override
    public int compareTo(Report o) {
       return this.getName().compareTo(o.getName());
+   }
+
+   @Override
+   public String toString() {
+      return "Report{" +
+              "id=" + id +
+              ", name='" + name + '\'' +
+              ", type='" + type + '\'' +
+              '}';
    }
 }

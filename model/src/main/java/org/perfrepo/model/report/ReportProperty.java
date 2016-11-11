@@ -16,14 +16,7 @@ package org.perfrepo.model.report;
 
 import org.perfrepo.model.Entity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -98,11 +91,31 @@ public class ReportProperty implements Entity<ReportProperty>, Comparable<Report
    }
 
    @Override
-   public ReportProperty clone() {
-      try {
-         return (ReportProperty) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof ReportProperty)) return false;
+
+      ReportProperty that = (ReportProperty) o;
+
+      if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
+      if (getValue() != null ? !getValue().equals(that.getValue()) : that.getValue() != null) return false;
+      return getReport() != null ? getReport().equals(that.getReport()) : that.getReport() == null;
+   }
+
+   @Override
+   public int hashCode() {
+      int result = getName() != null ? getName().hashCode() : 0;
+      result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
+      result = 31 * result + (getReport() != null ? getReport().hashCode() : 0);
+      return result;
+   }
+
+   @Override
+   public String toString() {
+      return "ReportProperty{" +
+              "value='" + value + '\'' +
+              ", name='" + name + '\'' +
+              ", id=" + id +
+              '}';
    }
 }

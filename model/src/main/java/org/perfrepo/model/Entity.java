@@ -22,17 +22,11 @@ import java.io.Serializable;
  * {@link Cloneable} with clone method.
  *
  * @author Michal Linhard (mlinhard@redhat.com)
+ *
  */
-public interface Entity<T> extends Cloneable, Serializable {
+public interface Entity<T> extends Serializable {
    /**
     * @return Entity ID.
     */
    Long getId();
-
-   /**
-    * Create shallow copy of entity.
-    *
-    * @return The copy
-    */
-   T clone();
 }

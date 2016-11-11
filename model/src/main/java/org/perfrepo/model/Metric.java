@@ -20,7 +20,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.*;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents a test metric.
@@ -36,7 +37,7 @@ import java.util.Collection;
     @NamedQuery(name = Metric.FIND_BY_GROUPID, query = "SELECT DISTINCT m from Metric m inner join m.tests t WHERE t.groupId= :groupId ORDER BY m.name"),
 })
 @XmlRootElement(name = "metric")
-//@SecuredEntity(type = EntityType.TEST) TODO: 
+//@SecuredEntity(type = EntityType.TEST) TODO: figure it out correctly
 public class Metric implements Entity<Metric>, Comparable<Metric> {
 
    private static final long serialVersionUID = -5234628391341278215L;
@@ -60,14 +61,8 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
    @Size(max = 2047)
    private String name;
 
-   @OneToMany(mappedBy = "metric")
-   private Collection<Value> values;
-
    @ManyToMany(mappedBy = "metrics")
-   private Collection<Test> tests;
-
-   @OneToMany(mappedBy = "metric")
-   private Collection<Alert> alerts;
+   private Set<Test> tests = new HashSet<>();
 
    @Column(name = "description")
    @Size(max = 10239)
@@ -75,15 +70,6 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
 
    public Metric() {
       super();
-   }
-
-   @Override
-   public Metric clone() {
-      try {
-         return (Metric) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
    }
 
    public Metric(String name, MetricComparator comparator, String description) {
@@ -108,15 +94,6 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
       return id == null ? null : String.valueOf(id);
    }
 
-   @XmlTransient
-   public Collection<Alert> getAlerts() {
-      return alerts;
-   }
-
-   public void setAlerts(Collection<Alert> alerts) {
-      this.alerts = alerts;
-   }
-
    public void setStringId(String id) {
       this.id = Long.valueOf(id);
    }
@@ -139,15 +116,6 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
       return this.name;
    }
 
-   public void setValues(Collection<Value> values) {
-      this.values = values;
-   }
-
-   @XmlTransient
-   public Collection<Value> getValues() {
-      return this.values;
-   }
-
    @XmlElement(name = "description")
    public String getDescription() {
       return description;
@@ -157,8 +125,27 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
       this.description = description;
    }
 
-   public void setTests(Collection<Test> tests) {
+   public Set<Test> getTests() {
+      return tests;
+   }
+
+   public void setTests(Set<Test> tests) {
       this.tests = tests;
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Metric)) return false;
+
+      Metric metric = (Metric) o;
+
+      return getName() != null ? getName().equals(metric.getName()) : metric.getName() == null;
+   }
+
+   @Override
+   public int hashCode() {
+      return getName() != null ? getName().hashCode() : 0;
    }
 
    @Override
@@ -166,12 +153,17 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
       return this.getName().compareTo(o.getName());
    }
 
-   @XmlTransient
-   public Collection<Test> getTests() {
-      return tests;
-   }
-
    public static MetricBuilder builder() {
       return new MetricBuilder(null, new Metric());
+   }
+
+   @Override
+   public String toString() {
+      return "Metric{" +
+              "name='" + name + '\'' +
+              ", id=" + id +
+              ", comparator=" + comparator +
+              ", description='" + description + '\'' +
+              '}';
    }
 }

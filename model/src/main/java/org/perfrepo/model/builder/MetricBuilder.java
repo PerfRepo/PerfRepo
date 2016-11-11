@@ -58,6 +58,6 @@ public class MetricBuilder {
       if (parentBuilder != null) {
          throw new IllegalStateException("This metric can't be built as standalone object, call MetricBuilder.test()");
       }
-      return metric.clone();
+      return metric;
    }
 }

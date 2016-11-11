@@ -23,9 +23,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -57,16 +55,13 @@ public class Test implements Entity<Test> {
    @Size(max = 2047)
    private String name;
 
-   @OneToMany(mappedBy = "test")
-   private Collection<TestExecution> testExecutions;
-
    @ManyToMany(fetch = FetchType.LAZY)
    @JoinTable(
            name = "test_metric",
            joinColumns = {@JoinColumn(name = "test_id", nullable = false, updatable = false)},
            inverseJoinColumns = {@JoinColumn(name = "metric_id", nullable = false, updatable = false)}
    )
-   private Collection<Metric> metrics;
+   private Set<Metric> metrics = new HashSet<>();
 
    @ManyToMany(fetch = FetchType.LAZY)
    @JoinTable(
@@ -74,12 +69,9 @@ public class Test implements Entity<Test> {
        joinColumns = {@JoinColumn(name = "test_id", nullable = false, updatable = false)},
        inverseJoinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)}
    )
-   private Collection<User> subscribers;
+   private Set<User> subscribers = new HashSet<>();
 
-   @OneToMany(mappedBy = "test")
-   private Collection<Alert> alerts;
-
-   @Column(name = "uid")
+   @Column(name = "uid", unique = true)
    @NotNull(message = "{page.test.uidRequired}")
    @Size(max = 2047)
    private String uid;
@@ -121,41 +113,15 @@ public class Test implements Entity<Test> {
       return this.name;
    }
 
-   public void setTestExecutions(Collection<TestExecution> testExecutions) {
-      this.testExecutions = testExecutions;
-   }
-
-   @XmlTransient
-   public Collection<TestExecution> getTestExecutions() {
-      return this.testExecutions;
-   }
-
    @XmlTransient
    public Collection<User> getSubscribers() {
       return subscribers;
    }
 
-   public void setSubscribers(Collection<User> testSubscribers) {
-      this.subscribers = testSubscribers;
-   }
-
-   @XmlTransient
-   public Collection<Alert> getAlerts() {
-      return alerts;
-   }
-
-   public void setAlerts(Collection<Alert> alerts) {
-      this.alerts = alerts;
-   }
-
    @XmlElementWrapper(name = "metrics")
    @XmlElement(name = "metric")
-   public Collection<Metric> getMetrics() {
+   public Set<Metric> getMetrics() {
       return metrics;
-   }
-
-   public void setMetrics(Collection<Metric> metrics) {
-      this.metrics = metrics;
    }
 
    public void setUid(String uid) {
@@ -185,6 +151,14 @@ public class Test implements Entity<Test> {
       this.description = description;
    }
 
+   public void setMetrics(Set<Metric> metrics) {
+      this.metrics = metrics;
+   }
+
+   public void setSubscribers(Set<User> subscribers) {
+      this.subscribers = subscribers;
+   }
+
    @XmlTransient
    public List<Metric> getSortedMetrics() {
       Collection<Metric> tags = getMetrics();
@@ -195,65 +169,23 @@ public class Test implements Entity<Test> {
       return tags.stream().sorted(((o1, o2) -> o1.compareTo(o2))).collect(Collectors.toList());
    }
 
-   public static TestBuilder builder() {
-      return new TestBuilder();
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Test)) return false;
+
+      Test test = (Test) o;
+
+      return getUid() != null ? getUid().equals(test.getUid()) : test.getUid() == null;
    }
 
    @Override
    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((description == null) ? 0 : description.hashCode());
-      result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((name == null) ? 0 : name.hashCode());
-      result = prime * result + ((uid == null) ? 0 : uid.hashCode());
-      return result;
+      return getUid() != null ? getUid().hashCode() : 0;
    }
 
-   @Override
-   public boolean equals(Object obj) {
-      if (this == obj)
-         return true;
-      if (obj == null)
-         return false;
-      if (getClass() != obj.getClass())
-         return false;
-      Test other = (Test) obj;
-      if (description == null) {
-         if (other.description != null)
-            return false;
-      } else if (!description.equals(other.description))
-         return false;
-      if (groupId == null) {
-         if (other.groupId != null)
-            return false;
-      } else if (!groupId.equals(other.groupId))
-         return false;
-      if (id == null) {
-         if (other.id != null)
-            return false;
-      } else if (!id.equals(other.id))
-         return false;
-      if (name == null) {
-         if (other.name != null)
-            return false;
-      } else if (!name.equals(other.name))
-         return false;
-      if (uid == null) {
-         if (other.uid != null)
-            return false;
-      } else if (!uid.equals(other.uid))
-         return false;
-      return true;
+   public static TestBuilder builder() {
+      return new TestBuilder();
    }
 
-   @Override
-   public Test clone() {
-      try {
-         return (Test) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
-   }
 }

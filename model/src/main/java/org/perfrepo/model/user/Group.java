@@ -16,15 +16,9 @@ package org.perfrepo.model.user;
 
 import org.perfrepo.model.Entity;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
-import java.util.Collection;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @javax.persistence.Entity
 @Table(name = "\"group\"")
@@ -37,11 +31,11 @@ public class Group implements Entity<Group>, Comparable<Group> {
    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GROUP_ID_GENERATOR")
    private Long id;
 
-   @Column(name = "name")
+   @Column(name = "name", unique = true)
    private String name;
 
    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
-   private Collection<User> users;
+   private Set<User> users = new HashSet<>();
 
    public Long getId() {
       return id;
@@ -59,12 +53,28 @@ public class Group implements Entity<Group>, Comparable<Group> {
       this.name = name;
    }
 
-   public Collection<User> getUsers() {
+   public Set<User> getUsers() {
       return users;
    }
 
-   public void setUsers(Collection<User> users) {
+   public void setUsers(Set<User> users) {
       this.users = users;
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Group)) return false;
+
+      Group group = (Group) o;
+
+      return getName() != null ? getName().equals(group.getName()) : group.getName() == null;
+
+   }
+
+   @Override
+   public int hashCode() {
+      return getName() != null ? getName().hashCode() : 0;
    }
 
    @Override
@@ -73,11 +83,10 @@ public class Group implements Entity<Group>, Comparable<Group> {
    }
 
    @Override
-   public Group clone() {
-      try {
-         return (Group) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
+   public String toString() {
+      return "Group{" +
+              "id=" + id +
+              ", name='" + name + '\'' +
+              '}';
    }
 }

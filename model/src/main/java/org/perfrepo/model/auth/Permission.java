@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @javax.persistence.Entity
 @Table(name = "permission")
 @XmlRootElement(name = "report-permission")
-public class Permission implements Entity<Permission>, Comparable<Permission> {
+public class Permission implements Entity<Permission> {
 
    private static final long serialVersionUID = 5637370080321126750L;
 
@@ -52,7 +52,7 @@ public class Permission implements Entity<Permission>, Comparable<Permission> {
    @Transient
    private Long reportId; //used for REST API
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(fetch = FetchType.LAZY, optional = false)
    @JoinColumn(name = "report_id", referencedColumnName = "id")
    private Report report;
 
@@ -124,40 +124,36 @@ public class Permission implements Entity<Permission>, Comparable<Permission> {
    }
 
    @Override
-   public int compareTo(Permission o) {
-      // TODO Auto-generated method stub
-      return 0;
-   }
-
-   @Override
    public boolean equals(Object o) {
       if (this == o) return true;
-      if (o == null || getClass() != o.getClass()) return false;
+      if (!(o instanceof Permission)) return false;
 
       Permission that = (Permission) o;
 
-      if (accessType != that.accessType) return false;
-      if (level != that.level) return false;
-      if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
-      return userId != null ? userId.equals(that.userId) : that.userId == null;
-
+      if (getAccessType() != that.getAccessType()) return false;
+      if (getLevel() != that.getLevel()) return false;
+      if (getGroupId() != null ? !getGroupId().equals(that.getGroupId()) : that.getGroupId() != null) return false;
+      return getUserId() != null ? getUserId().equals(that.getUserId()) : that.getUserId() == null;
    }
 
    @Override
    public int hashCode() {
-      int result = accessType != null ? accessType.hashCode() : 0;
-      result = 31 * result + (level != null ? level.hashCode() : 0);
-      result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
-      result = 31 * result + (userId != null ? userId.hashCode() : 0);
+      int result = getAccessType() != null ? getAccessType().hashCode() : 0;
+      result = 31 * result + (getLevel() != null ? getLevel().hashCode() : 0);
+      result = 31 * result + (getGroupId() != null ? getGroupId().hashCode() : 0);
+      result = 31 * result + (getUserId() != null ? getUserId().hashCode() : 0);
       return result;
    }
 
    @Override
-   public Permission clone() {
-      try {
-         return (Permission) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
+   public String toString() {
+      return "Permission{" +
+              "accessType=" + accessType +
+              ", groupId=" + groupId +
+              ", id=" + id +
+              ", level=" + level +
+              ", reportId=" + reportId +
+              ", userId=" + userId +
+              '}';
    }
 }

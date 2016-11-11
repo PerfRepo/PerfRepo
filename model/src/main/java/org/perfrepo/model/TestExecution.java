@@ -21,19 +21,8 @@ import org.perfrepo.model.builder.TestExecutionBuilder;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.xml.bind.annotation.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -63,12 +52,9 @@ public class TestExecution implements Entity<TestExecution> {
    @Size(max = 2047)
    private String name;
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "test_id", referencedColumnName = "id")
    private Test test;
-
-   @OneToMany(mappedBy = "testExecution")
-   private Collection<TestExecutionParameter> parameters;
 
    @ManyToMany(fetch = FetchType.LAZY)
    @JoinTable(
@@ -76,13 +62,7 @@ public class TestExecution implements Entity<TestExecution> {
            joinColumns = {@JoinColumn(name = "test_execution_id", nullable = false, updatable = false)},
            inverseJoinColumns = {@JoinColumn(name = "tag_id", nullable = false, updatable = false)}
    )
-   private Collection<Tag> tags;
-
-   @OneToMany(mappedBy = "testExecution")
-   private Collection<Value> values;
-
-   @OneToMany(mappedBy = "testExecution")
-   private Collection<TestExecutionAttachment> attachments;
+   private Set<Tag> tags = new HashSet<>();
 
    @NotNull(message = "{page.testExecution.startedRequired}")
    @Column(name = "started")
@@ -91,6 +71,10 @@ public class TestExecution implements Entity<TestExecution> {
    @Column(name = "comment")
    @Size(max = 10239)
    private String comment;
+
+   @OneToMany(fetch = FetchType.LAZY)
+   @MapKey(name = "name")
+   private Map<String, TestExecutionParameter> parameters;
 
    @XmlTransient
    public Long getId() {
@@ -124,11 +108,6 @@ public class TestExecution implements Entity<TestExecution> {
       this.test = test;
    }
 
-   /**
-    * this atttribute is {@link XmlTransient} because we don't want to return {@link Test}, which
-    * would need to include {@link Metric} objects. The test is determined from xml attribute testId
-    * which is supplied by {@link TestExecution#getTestId()} method.
-    */
    @XmlTransient
    public Test getTest() {
       return this.test;
@@ -158,34 +137,10 @@ public class TestExecution implements Entity<TestExecution> {
       test.setUid(uid);
    }
 
-   public void setParameters(Collection<TestExecutionParameter> testExecutionParameters) {
-      this.parameters = testExecutionParameters;
-   }
-
-   @XmlElementWrapper(name = "parameters")
-   @XmlElement(name = "parameter")
-   public Collection<TestExecutionParameter> getParameters() {
-      return this.parameters;
-   }
-
-   public void setTags(Collection<Tag> tags) {
-      this.tags = tags;
-   }
-
    @XmlElementWrapper(name = "tags")
    @XmlElement(name = "tag")
-   public Collection<Tag> getTags() {
+   public Set<Tag> getTags() {
       return this.tags;
-   }
-
-   public void setValues(Collection<Value> values) {
-      this.values = values;
-   }
-
-   @XmlElementWrapper(name = "values")
-   @XmlElement(name = "value")
-   public Collection<Value> getValues() {
-      return this.values;
    }
 
    @XmlAttribute(name = "started")
@@ -197,13 +152,20 @@ public class TestExecution implements Entity<TestExecution> {
       this.started = started;
    }
 
-   @XmlTransient
-   public Collection<TestExecutionAttachment> getAttachments() {
-      return attachments;
+   public Map<String, TestExecutionParameter> getParameters() {
+      return parameters;
    }
 
-   public void setAttachments(Collection<TestExecutionAttachment> attachments) {
-      this.attachments = attachments;
+   public void setParameters(Map<String, TestExecutionParameter> parameters) {
+      this.parameters = parameters;
+   }
+
+   public String getComment() {
+      return comment;
+   }
+
+   public void setComment(String comment) {
+      this.comment = comment;
    }
 
    @XmlTransient
@@ -216,111 +178,33 @@ public class TestExecution implements Entity<TestExecution> {
       return tags.stream().sorted(((o1, o2) -> o1.compareTo(o2))).collect(Collectors.toList());
    }
 
-   @XmlTransient
-   public List<TestExecutionParameter> getSortedParameters() {
-      if (parameters == null || parameters.isEmpty()) {
-         return new ArrayList<TestExecutionParameter>(0);
-      } else {
-         List<TestExecutionParameter> result = new ArrayList<TestExecutionParameter>(parameters);
-         Collections.sort(result);
-         return result;
-      }
-   }
-
-   @XmlTransient
-   public Map<String, String> getParametersAsMap() {
-      if (parameters == null || parameters.isEmpty()) {
-         return new HashMap<String, String>(0);
-      } else {
-         Map<String, String> r = new HashMap<String, String>();
-         for (TestExecutionParameter p : parameters) {
-            r.put(p.getName(), p.getValue());
-         }
-         return r;
-      }
-   }
-
-   @Deprecated
-   //should be moved to util class
-   public TestExecutionParameter findParameter(String name) {
-      if (parameters == null || parameters.isEmpty()) {
-         return null;
-      }
-      for (TestExecutionParameter param : parameters) {
-         if (name.equals(param.getName())) {
-            return param;
-         }
-      }
-      return null;
-   }
-
    public static TestExecutionBuilder builder() {
       return new TestExecutionBuilder();
    }
 
    @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof TestExecution)) return false;
+
+      TestExecution that = (TestExecution) o;
+
+      return getId() != null ? getId().equals(that.getId()) : that.getId() == null;
+   }
+
+   @Override
    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((comment == null) ? 0 : comment.hashCode());
-      result = prime * result + ((id == null) ? 0 : id.hashCode());
-      result = prime * result + ((name == null) ? 0 : name.hashCode());
-      result = prime * result + ((started == null) ? 0 : started.hashCode());
-      result = prime * result + ((test == null) ? 0 : test.hashCode());
-      return result;
+      return getId() != null ? getId().hashCode() : 0;
    }
 
    @Override
-   public boolean equals(Object obj) {
-      if (this == obj)
-         return true;
-      if (obj == null)
-         return false;
-      if (getClass() != obj.getClass())
-         return false;
-      TestExecution other = (TestExecution) obj;
-      if (comment == null) {
-         if (other.comment != null)
-            return false;
-      } else if (!comment.equals(other.comment))
-         return false;
-      if (id == null) {
-         if (other.id != null)
-            return false;
-      } else if (!id.equals(other.id))
-         return false;
-      if (name == null) {
-         if (other.name != null)
-            return false;
-      } else if (!name.equals(other.name))
-         return false;
-      if (started == null) {
-         if (other.started != null)
-            return false;
-      } else if (!started.equals(other.started))
-         return false;
-      if (test == null) {
-         if (other.test != null)
-            return false;
-      } else if (!test.equals(other.test))
-         return false;
-      return true;
-   }
-
-   @Override
-   public TestExecution clone() {
-      try {
-         return (TestExecution) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
-   }
-
-   public String getComment() {
-      return comment;
-   }
-
-   public void setComment(String comment) {
-      this.comment = comment;
+   public String toString() {
+      return "TestExecution{" +
+              "id=" + id +
+              ", name='" + name + '\'' +
+              ", comment='" + comment + '\'' +
+              ", started=" + started +
+              ", tags=" + tags +
+              '}';
    }
 }

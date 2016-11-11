@@ -71,7 +71,7 @@ public class ValueParameter implements Entity<ValueParameter>, Comparable<ValueP
    @Size(max = 255)
    private String paramValue;
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "value_id", referencedColumnName = "id")
    private Value value;
 
@@ -122,16 +122,34 @@ public class ValueParameter implements Entity<ValueParameter>, Comparable<ValueP
    }
 
    @Override
-   public ValueParameter clone() {
-      try {
-         return (ValueParameter) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
+   public int compareTo(ValueParameter o) {
+      return name.compareTo(o.name);
    }
 
    @Override
-   public int compareTo(ValueParameter o) {
-      return name.compareTo(o.name);
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof ValueParameter)) return false;
+
+      ValueParameter that = (ValueParameter) o;
+
+      if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
+      return getParamValue() != null ? getParamValue().equals(that.getParamValue()) : that.getParamValue() == null;
+   }
+
+   @Override
+   public int hashCode() {
+      int result = getName() != null ? getName().hashCode() : 0;
+      result = 31 * result + (getParamValue() != null ? getParamValue().hashCode() : 0);
+      return result;
+   }
+
+   @Override
+   public String toString() {
+      return "ValueParameter{" +
+              "id=" + id +
+              ", name='" + name + '\'' +
+              ", paramValue='" + paramValue + '\'' +
+              '}';
    }
 }

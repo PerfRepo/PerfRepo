@@ -51,12 +51,12 @@ public class FavoriteParameter implements Entity<FavoriteParameter> {
    @Size(max = 2047)
    private String parameterName;
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "user_id", referencedColumnName = "id")
    @NotNull
    private User user;
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "test_id", referencedColumnName = "id")
    @NotNull
    private Test test;
@@ -102,12 +102,18 @@ public class FavoriteParameter implements Entity<FavoriteParameter> {
    }
 
    @Override
-   public FavoriteParameter clone() {
-      try {
-         return (FavoriteParameter) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof FavoriteParameter)) return false;
+
+      FavoriteParameter that = (FavoriteParameter) o;
+
+      return getParameterName() != null ? getParameterName().equals(that.getParameterName()) : that.getParameterName() == null;
+   }
+
+   @Override
+   public int hashCode() {
+      return getParameterName() != null ? getParameterName().hashCode() : 0;
    }
 
    @Override
@@ -116,7 +122,6 @@ public class FavoriteParameter implements Entity<FavoriteParameter> {
           + "id=" + id
           + ", label='" + label + '\''
           + ", parameterName='" + parameterName + '\''
-          + ", user=" + user
           + '}';
    }
 }

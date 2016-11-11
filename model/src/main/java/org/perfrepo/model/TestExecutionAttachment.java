@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import java.util.Arrays;
 
 /**
  * A binary file that can be attached to test execution.
@@ -80,7 +81,7 @@ public class TestExecutionAttachment implements Entity<TestExecutionAttachment> 
    @Size(max = 255)
    private String mimetype;
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "test_execution_id", referencedColumnName = "id")
    private TestExecution testExecution;
 
@@ -145,11 +146,31 @@ public class TestExecutionAttachment implements Entity<TestExecutionAttachment> 
    }
 
    @Override
-   public TestExecutionAttachment clone() {
-      try {
-         return (TestExecutionAttachment) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof TestExecutionAttachment)) return false;
+
+      TestExecutionAttachment that = (TestExecutionAttachment) o;
+
+      if (getFilename() != null ? !getFilename().equals(that.getFilename()) : that.getFilename() != null) return false;
+      if (getMimetype() != null ? !getMimetype().equals(that.getMimetype()) : that.getMimetype() != null) return false;
+      return Arrays.equals(getContent(), that.getContent());
+   }
+
+   @Override
+   public int hashCode() {
+      int result = getFilename() != null ? getFilename().hashCode() : 0;
+      result = 31 * result + (getMimetype() != null ? getMimetype().hashCode() : 0);
+      result = 31 * result + Arrays.hashCode(getContent());
+      return result;
+   }
+
+   @Override
+   public String toString() {
+      return "TestExecutionAttachment{" +
+              "filename='" + filename + '\'' +
+              ", id=" + id +
+              ", mimetype='" + mimetype + '\'' +
+              '}';
    }
 }

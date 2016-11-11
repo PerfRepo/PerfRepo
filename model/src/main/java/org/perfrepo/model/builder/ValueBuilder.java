@@ -20,6 +20,7 @@ import org.perfrepo.model.ValueParameter;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -38,12 +39,8 @@ public class ValueBuilder {
    }
 
    private ValueParameter addParameter(ValueParameter param) {
-      Collection<ValueParameter> parameters = value.getParameters();
-      if (parameters == null) {
-         parameters = new HashSet<ValueParameter>();
-         value.setParameters((Set<ValueParameter>) parameters);
-      }
-      parameters.add(param);
+      Map<String, ValueParameter> parameters = value.getParameters();
+      parameters.put(param.getName(), param);
       return param;
    }
 

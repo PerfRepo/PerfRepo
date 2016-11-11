@@ -20,6 +20,7 @@ import org.perfrepo.model.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 /**
  * {@link Test} builder.
@@ -86,7 +87,7 @@ public class TestBuilder {
     * @return the {@link Test}
     */
    public Test build() {
-      return test.clone();
+      return test;
    }
 
    /**
@@ -132,15 +133,8 @@ public class TestBuilder {
    }
 
    private Metric addMetric(Metric metric) {
-      Collection<Metric> metrics = test.getMetrics();
-      if (metrics == null) {
-         test.setMetrics(new ArrayList<>());
-      }
-
-      Collection<Test> tests = metric.getTests();
-      if (tests == null) {
-         metric.setTests(new ArrayList<>());
-      }
+      Set<Metric> metrics = test.getMetrics();
+      Set<Test> tests = metric.getTests();
 
       metric.getTests().add(test);
       test.getMetrics().add(metric);

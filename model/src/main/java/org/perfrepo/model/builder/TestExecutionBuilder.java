@@ -16,9 +16,7 @@ package org.perfrepo.model.builder;
 
 import org.perfrepo.model.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
 
 /**
  * {@link TestExecution} builder.
@@ -80,16 +78,12 @@ public class TestExecutionBuilder {
    }
 
    private TestExecutionParameter addParameter(TestExecutionParameter param) {
-      Collection<TestExecutionParameter> parameters = testExecution.getParameters();
-      if (parameters == null) {
-         parameters = new ArrayList<TestExecutionParameter>();
-         testExecution.setParameters(parameters);
-      }
+      Map<String, TestExecutionParameter> parameters = testExecution.getParameters();
       TestExecutionParameter existingParameter = findParameter(param.getName());
       if (existingParameter != null) {
          existingParameter.setValue(param.getValue());
       } else {
-         parameters.add(param);
+         parameters.put(param.getName(), param);
       }
       return param;
    }
@@ -98,12 +92,8 @@ public class TestExecutionBuilder {
       if (testExecution == null || testExecution.getParameters() == null || name == null) {
          return null;
       }
-      for (TestExecutionParameter param : testExecution.getParameters()) {
-         if (name.equals(param.getName())) {
-            return param;
-         }
-      }
-      return null;
+
+      return testExecution.getParameters().get(name);
    }
 
    private TestExecutionParameter addParameter(String name, String value) {
@@ -124,11 +114,8 @@ public class TestExecutionBuilder {
    }
 
    private Tag addTag(String tag) {
-      Collection<Tag> tags = testExecution.getTags();
-      if (tags == null) {
-         tags = new ArrayList<>();
-         testExecution.setTags(tags);
-      }
+      Set<Tag> tags = testExecution.getTags();
+
       Tag newTag = new Tag();
       newTag.setName(tag);
       tags.add(newTag);
@@ -148,12 +135,14 @@ public class TestExecutionBuilder {
    }
 
    private Value addValue(Value value) {
-      Collection<Value> values = testExecution.getValues();
+      /*Set<Value> values = testExecution.getValues();
       if (values == null) {
          values = new ArrayList<Value>();
          testExecution.setValues(values);
       }
       values.add(value);
+      */
+      //TODO: fix this
       return value;
    }
 
@@ -231,6 +220,6 @@ public class TestExecutionBuilder {
     * @return the {@link TestExecution}
     */
    public TestExecution build() {
-      return testExecution.clone();
+      return testExecution;
    }
 }

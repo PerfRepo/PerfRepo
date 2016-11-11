@@ -3,7 +3,8 @@ package org.perfrepo.model;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents alert condition defined on test
@@ -15,7 +16,7 @@ import java.util.Collection;
 @NamedQueries({
     @NamedQuery(name = Alert.GET_BY_TEST_AND_METRIC, query = "SELECT distinct alert from Alert alert join alert.test test join alert.metric metric where test.id = :testId and metric.id = :metricId")
 })
-public class Alert implements Entity<Alert> {
+public class Alert implements Entity<Alert>, Comparable<Alert> {
 
    public static final String GET_BY_TEST_AND_METRIC = "Alert.getByTestAndMetric";
 
@@ -41,7 +42,7 @@ public class Alert implements Entity<Alert> {
    @Column(name = "links")
    private String links;
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "metric_id", referencedColumnName = "id")
    @NotNull(message = "{page.alert.metricRequired}")
    private Metric metric;
@@ -52,9 +53,9 @@ public class Alert implements Entity<Alert> {
        joinColumns = {@JoinColumn(name = "alert_id", nullable = false, updatable = false)},
        inverseJoinColumns = {@JoinColumn(name = "tag_id", nullable = false, updatable = false)}
    )
-   private Collection<Tag> tags;
+   private Set<Tag> tags = new HashSet<>();
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "test_id", referencedColumnName = "id")
    @NotNull
    private Test test;
@@ -115,29 +116,44 @@ public class Alert implements Entity<Alert> {
       this.metric = metric;
    }
 
-   public Collection<Tag> getTags() {
+   public Set<Tag> getTags() {
       return tags;
    }
 
-   public void setTags(Collection<Tag> tags) {
+   public void setTags(Set<Tag> tags) {
       this.tags = tags;
    }
 
    @Override
-   public Alert clone() {
-      try {
-         return (Alert) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Alert)) return false;
+
+      Alert alert = (Alert) o;
+
+      if (getName() != null ? !getName().equals(alert.getName()) : alert.getName() != null) return false;
+      return getCondition() != null ? getCondition().equals(alert.getCondition()) : alert.getCondition() == null;
+   }
+
+   @Override
+   public int hashCode() {
+      int result = getName() != null ? getName().hashCode() : 0;
+      result = 31 * result + (getCondition() != null ? getCondition().hashCode() : 0);
+      return result;
+   }
+
+   @Override
+   public int compareTo(Alert o) {
+      return this.name.compareTo(o.name);
    }
 
    @Override
    public String toString() {
-      return "Alert{"
-          + "id=" + id
-          + ", condition='" + condition + '\''
-          + ", metric=" + metric
-          + '}';
+      return "Alert{" +
+              "condition='" + condition + '\'' +
+              ", id=" + id +
+              ", links='" + links + '\'' +
+              ", name='" + name + '\'' +
+              '}';
    }
 }

@@ -16,14 +16,15 @@ package org.perfrepo.model.user;
 
 import org.hibernate.validator.constraints.Email;
 import org.perfrepo.model.Entity;
-import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.UserProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @javax.persistence.Entity
 @Table(name = "\"user\"")
@@ -41,7 +42,7 @@ public class User implements Entity<User>, Comparable<User> {
    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_ID_GENERATOR")
    private Long id;
 
-   @Column(name = "username")
+   @Column(name = "username", unique = true)
    @NotNull
    @Size(max = 2047)
    private String username;
@@ -67,22 +68,20 @@ public class User implements Entity<User>, Comparable<User> {
    @Size(max = 2047)
    private String email;
 
-   @OneToMany(mappedBy = "user")
-   private Collection<UserProperty> properties;
-
-   @OneToMany(mappedBy = "user")
-   private Collection<FavoriteParameter> favoriteParameters;
-
-   @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @ManyToMany(fetch = FetchType.LAZY)
    @JoinTable(
        name = "user_group",
        joinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)},
        inverseJoinColumns = {@JoinColumn(name = "group_id", nullable = false, updatable = false)}
    )
-   private Collection<Group> groups;
+   private Set<Group> groups = new HashSet<>();
 
    @ManyToMany(mappedBy = "subscribers")
-   private Collection<Test> subscribedTests;
+   private Set<Test> subscribedTests = new HashSet<>();
+
+   @OneToMany(fetch = FetchType.LAZY)
+   @MapKey(name = "name")
+   private Map<String, UserProperty> properties;
 
    public Long getId() {
       return id;
@@ -132,36 +131,43 @@ public class User implements Entity<User>, Comparable<User> {
       this.email = email;
    }
 
-   public Collection<UserProperty> getProperties() {
-      return properties;
-   }
-
-   public void setProperties(Collection<UserProperty> properties) {
-      this.properties = properties;
-   }
-
-   public Collection<FavoriteParameter> getFavoriteParameters() {
-      return favoriteParameters;
-   }
-
-   public void setFavoriteParameters(Collection<FavoriteParameter> favoriteParameters) {
-      this.favoriteParameters = favoriteParameters;
-   }
-
-   public Collection<Group> getGroups() {
+   public Set<Group> getGroups() {
       return groups;
    }
 
-   public void setGroups(Collection<Group> groups) {
+   public void setGroups(Set<Group> groups) {
       this.groups = groups;
    }
 
-   public Collection<Test> getSubscribedTests() {
+   public Map<String, UserProperty> getProperties() {
+      return properties;
+   }
+
+   public void setProperties(Map<String, UserProperty> properties) {
+      this.properties = properties;
+   }
+
+   public Set<Test> getSubscribedTests() {
       return subscribedTests;
    }
 
-   public void setSubscribedTests(Collection<Test> subscribedTests) {
+   public void setSubscribedTests(Set<Test> subscribedTests) {
       this.subscribedTests = subscribedTests;
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof User)) return false;
+
+      User user = (User) o;
+
+      return getUsername() != null ? getUsername().equals(user.getUsername()) : user.getUsername() == null;
+   }
+
+   @Override
+   public int hashCode() {
+      return getUsername() != null ? getUsername().hashCode() : 0;
    }
 
    @Override
@@ -170,11 +176,14 @@ public class User implements Entity<User>, Comparable<User> {
    }
 
    @Override
-   public User clone() {
-      try {
-         return (User) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
+   public String toString() {
+      return "User{" +
+              "email='" + email + '\'' +
+              ", firstName='" + firstName + '\'' +
+              ", id=" + id +
+              ", lastName='" + lastName + '\'' +
+              ", password='" + password + '\'' +
+              ", username='" + username + '\'' +
+              '}';
    }
 }

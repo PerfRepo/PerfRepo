@@ -19,7 +19,6 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlID;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.Collection;
 
 @javax.persistence.Entity
 @Table(name = "tag")
@@ -37,9 +36,6 @@ public class Tag implements Entity<Tag>, Comparable<Tag> {
 
    @Column(name = "name")
    private String name;
-
-   @ManyToMany(mappedBy = "tags")
-   private Collection<TestExecution> testExecutions;
 
    @XmlTransient
    public Long getId() {
@@ -69,15 +65,6 @@ public class Tag implements Entity<Tag>, Comparable<Tag> {
       return this.name;
    }
 
-   public void setTestExecutions(Collection<TestExecution> testExecutions) {
-      this.testExecutions = testExecutions;
-   }
-
-   @XmlTransient
-   public Collection<TestExecution> getTestExecutions() {
-      return testExecutions;
-   }
-
    @Override
    public int compareTo(Tag o) {
       if (o == null) {
@@ -92,11 +79,25 @@ public class Tag implements Entity<Tag>, Comparable<Tag> {
    }
 
    @Override
-   public Tag clone() {
-      try {
-         return (Tag) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Tag)) return false;
+
+      Tag tag = (Tag) o;
+
+      return getName() != null ? getName().equals(tag.getName()) : tag.getName() == null;
+   }
+
+   @Override
+   public int hashCode() {
+      return getName() != null ? getName().hashCode() : 0;
+   }
+
+   @Override
+   public String toString() {
+      return "Tag{" +
+              "id=" + id +
+              ", name='" + name + '\'' +
+              '}';
    }
 }

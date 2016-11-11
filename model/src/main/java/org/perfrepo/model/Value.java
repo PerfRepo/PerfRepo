@@ -16,15 +16,13 @@ package org.perfrepo.model;
 
 import org.perfrepo.model.auth.EntityType;
 import org.perfrepo.model.auth.SecuredEntity;
-import org.perfrepo.model.util.EntityUtils;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Represents one value measured in a {@link TestExecution}.
@@ -48,19 +46,20 @@ public class Value implements Entity<Value> {
    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "VALUE_ID_GENERATOR")
    private Long id;
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "metric_id", referencedColumnName = "id")
    private Metric metric;
 
    @Column(name = "result_value")
    private Double resultValue;
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "test_execution_id", referencedColumnName = "id")
    private TestExecution testExecution;
 
-   @OneToMany(mappedBy = "value")
-   private Collection<ValueParameter> parameters;
+   @OneToMany
+   @MapKey(name = "name")
+   private Map<String, ValueParameter> parameters = new HashMap<>();
 
    @XmlTransient
    public Long getId() {
@@ -98,14 +97,12 @@ public class Value implements Entity<Value> {
       return this.testExecution;
    }
 
-   public void setParameters(Collection<ValueParameter> valueParameters) {
-      this.parameters = valueParameters;
+   public Map<String, ValueParameter> getParameters() {
+      return parameters;
    }
 
-   @XmlElementWrapper(name = "parameters")
-   @XmlElement(name = "parameter")
-   public Collection<ValueParameter> getParameters() {
-      return this.parameters;
+   public void setParameters(Map<String, ValueParameter> parameters) {
+      this.parameters = parameters;
    }
 
    @XmlAttribute(name = "metricName")
@@ -132,27 +129,32 @@ public class Value implements Entity<Value> {
       metric.setComparator(metricComparator);
    }
 
-   @Override
-   public Value clone() {
-      try {
-         return (Value) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
-   }
-
-   public Value cloneWithParameters() {
-      Value cloneValue = clone();
-      cloneValue.setParameters(EntityUtils.clone(cloneValue.getParameters()));
-      if (cloneValue.getParameters() != null) {
-         for (ValueParameter pClone : cloneValue.getParameters()) {
-            pClone.setValue(cloneValue);
-         }
-      }
-      return cloneValue;
-   }
-
    public boolean hasParameters() {
       return parameters != null && !parameters.isEmpty();
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof Value)) return false;
+
+      Value value = (Value) o;
+
+      return getId() != null ? getId().equals(value.getId()) : value.getId() == null;
+   }
+
+   @Override
+   public int hashCode() {
+      return getId() != null ? getId().hashCode() : 0;
+   }
+
+   @Override
+   public String toString() {
+      return "Value{" +
+              "id=" + id +
+              ", metric=" + metric +
+              ", resultValue=" + resultValue +
+              ", parameters=" + parameters +
+              '}';
    }
 }

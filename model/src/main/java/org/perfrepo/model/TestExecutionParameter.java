@@ -50,7 +50,7 @@ public class TestExecutionParameter implements Entity<TestExecutionParameter>, C
    @Size(max = 2047)
    private String name;
 
-   @ManyToOne(optional = false, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "test_execution_id", referencedColumnName = "id")
    private TestExecution testExecution;
 
@@ -111,11 +111,29 @@ public class TestExecutionParameter implements Entity<TestExecutionParameter>, C
    }
 
    @Override
-   public TestExecutionParameter clone() {
-      try {
-         return (TestExecutionParameter) super.clone();
-      } catch (CloneNotSupportedException e) {
-         throw new RuntimeException(e);
-      }
+   public boolean equals(Object o) {
+      if (this == o) return true;
+      if (!(o instanceof TestExecutionParameter)) return false;
+
+      TestExecutionParameter parameter = (TestExecutionParameter) o;
+
+      if (getName() != null ? !getName().equals(parameter.getName()) : parameter.getName() != null) return false;
+      return getValue() != null ? getValue().equals(parameter.getValue()) : parameter.getValue() == null;
+   }
+
+   @Override
+   public int hashCode() {
+      int result = getName() != null ? getName().hashCode() : 0;
+      result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
+      return result;
+   }
+
+   @Override
+   public String toString() {
+      return "TestExecutionParameter{" +
+              "id=" + id +
+              ", name='" + name + '\'' +
+              ", value='" + value + '\'' +
+              '}';
    }
 }
