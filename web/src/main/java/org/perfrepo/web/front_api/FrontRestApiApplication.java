@@ -13,6 +13,7 @@ public class FrontRestApiApplication extends Application {
    public FrontRestApiApplication() {
       classes.add(TestFrontRestApi.class);
       classes.add(MetricFrontRestApi.class);
+      classes.add(UserFrontRestApi.class);
    }
 
    @Override
