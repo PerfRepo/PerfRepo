@@ -16,7 +16,11 @@
             });
     };
 
-    var TestService = function($http, Test) {
+    var TestService = function($http, Test, API_URL) {
+
+        this.search = function(searchParams){
+            return $http.get(API_URL + '/tests', {params: searchParams});
+        }
 
         this.getById = function(id) {
             return Test.get({id: id}).$promise;

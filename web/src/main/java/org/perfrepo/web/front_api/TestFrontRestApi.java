@@ -48,14 +48,14 @@ public class TestFrontRestApi {
    public Response search(@QueryParam("name") String name,
                           @QueryParam("uid") String uid,
                           @QueryParam("orderBy") String orderBy,
-                          @QueryParam("groupId") Long groupId,
+                          @QueryParam("group") String group,
                           @QueryParam("groupFilter") String groupFilter,
                           @QueryParam("limit") Integer limit,
                           @QueryParam("offset") Integer offset) {
       TestSearchTO searchTO = new TestSearchTO();
       searchTO.setName(name);
       searchTO.setUid(uid);
-      searchTO.setGroupId("perfrepouser"); // TODO searchTO.setGroupId(Objects.toString(groupId, null));
+      searchTO.setGroupId(group);
       searchTO.setOrderBy(OrderBy.valueOf(orderBy));  // TODO Illegal argument exception
       searchTO.setGroupFilter(GroupFilter.valueOf(groupFilter)); // TODO Illegal argument exception
       searchTO.setLimitFrom(offset);

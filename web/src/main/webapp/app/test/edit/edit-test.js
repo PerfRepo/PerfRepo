@@ -1,10 +1,11 @@
 (function() {
     'use strict';
 
-    var EditTestController = function($state, testService, test, userGroups) {
+    var EditTestController = function($state, testService, test, userGroups, metrics) {
 
         this.test = test;
         this.userGroups = userGroups;
+        this.metrics = metrics;
 
         this.update = function(test) {
             testService.update(test)

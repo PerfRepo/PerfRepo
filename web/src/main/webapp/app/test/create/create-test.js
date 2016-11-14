@@ -1,11 +1,11 @@
 (function() {
     'use strict';
 
-    var CreateTestController = function($state, testService, userGroups) {
+    var CreateTestController = function($state, testService, userGroups, metrics) {
 
         this.test = {};
         this.userGroups = userGroups;
-
+        this.metrics = metrics;
         if(this.userGroups != undefined && this.userGroups.length > 0) {
             this.test.groupId = this.userGroups[0];
         }

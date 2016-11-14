@@ -15,9 +15,18 @@
             </div>
 
             <div class="form-group">
-                <label class="col-sm-2 control-label" for="testGroupId">Group:</label>
+                <label class="col-sm-2 control-label" for="testGroup">Group:</label>
                 <div class="col-sm-10">
-                    <select ng-model="vm.test.groupId" id="testGroupId" ng-options="name for name in vm.userGroups" class="form-control"></select>
+                    <select combo-box ng-model="vm.test.group" id="testGroup" ng-options="name for name in vm.userGroups" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="testMetrics">Metrics:</label>
+                <div class="col-sm-10">
+                    <select select-picker ng-model="vm.test.metrics" id="testMetrics"class="form-control" multiple>
+                        <option ng-repeat="metric in vm.metrics" value="{{metric.id}}">{{metric.name}}</option>
+                    </select>
                 </div>
             </div>
 

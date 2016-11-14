@@ -1,7 +1,7 @@
 (function() {
     'use strict';
 
-    var testFormController = function() {
+    var FormTestController = function() {
 
         this.save = function(form) {
             if (form.$invalid) {
@@ -17,14 +17,16 @@
             'ui.bootstrap',
             'angularTrix'
         ])
+
         .component('testForm', {
             bindings: {
+                metrics: '=',
                 userGroups: '=',
                 test: '=',
                 onSave: '&'
             },
 
-            controller: testFormController,
+            controller: FormTestController,
             controllerAs: 'vm',
             templateUrl: 'app/test/form/form-test.html'
         });

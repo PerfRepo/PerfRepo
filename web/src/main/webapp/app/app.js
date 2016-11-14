@@ -5,6 +5,7 @@
         [
             'ui.router',
 
+            'org.perfrepo.common',
             'org.perfrepo.dashboard',
             'org.perfrepo.test',
             'org.perfrepo.testExecution',

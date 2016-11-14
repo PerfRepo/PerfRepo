@@ -11,6 +11,7 @@
             'ngResource',
             'ui.router',
 
+            'org.perfrepo.test.search',
             'org.perfrepo.test.create',
             'org.perfrepo.test.edit'
         ])
@@ -33,8 +34,18 @@
                     resolve: {
                         userGroups: function(userGroupService) {
                             return userGroupService.getUserGroups();
+                        },
+                        metrics: function (metricService) {
+                            return metricService.getAll();
                         }
                     }})
+
+                .state('app.test-search', {
+                    url: 'test/search',
+                    templateUrl: 'app/test/search/search-test.html',
+                    controller: 'SearchTestController',
+                    controllerAs: 'vm'
+                })
 
                 .state('app.test-edit', {
                     url: 'test/edit/:id',
@@ -47,6 +58,9 @@
                         },
                         userGroups: function(userGroupService) {
                             return userGroupService.getUserGroups();
+                        },
+                        metrics: function (metricService) {
+                            return metricService.getAll();
                         }
                     }
                 });
