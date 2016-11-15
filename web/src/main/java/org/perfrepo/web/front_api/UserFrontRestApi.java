@@ -1,6 +1,8 @@
 package org.perfrepo.web.front_api;
 
-import org.perfrepo.web.service.UserService;
+import org.perfrepo.web.dto.UserGroupDto;
+import org.perfrepo.web.front_api.storage.Storage;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -15,13 +17,13 @@ import java.util.List;
 public class UserFrontRestApi {
 
     @Inject
-    private UserService userService;
+    private Storage storage;
 
     @GET
-    @Path("/user-group-names")
-    public Response userGroupNames() {
-        List<String> userGroupNames =  userService.getLoggedUserGroupNames();
-
-        return Response.ok(userGroupNames).build();
+    @Path("/groups")
+    public Response getAllGroups() {
+        List<UserGroupDto> userGroups = storage.userGroup().getAll();
+        return Response.ok(userGroups).build();
     }
+
 }

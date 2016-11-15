@@ -19,7 +19,7 @@ public class TestModelMapper implements AbstractModelMapper<Test, TestDto> {
         dto.setId(entityObject.getId());
         dto.setName(entityObject.getName());
         dto.setUid(entityObject.getUid());
-        dto.setGroupId(entityObject.getGroupId());
+        //dto.setGroupId(entityObject.getGroupId());
         dto.setDescription(entityObject.getDescription());
         dto.setMetrics(metricModelMapper.convertToDtoList(entityObject.getMetrics()));
 
@@ -36,7 +36,7 @@ public class TestModelMapper implements AbstractModelMapper<Test, TestDto> {
         entity.setId(dtoObject.getId());
         entity.setName(dtoObject.getName());
         entity.setUid(dtoObject.getUid());
-        entity.setGroupId(dtoObject.getGroupId());
+        //entity.setGroupId(dtoObject.getGroupId());
         entity.setDescription(dtoObject.getDescription());
         entity.setMetrics(metricModelMapper.convertToEntityList(dtoObject.getMetrics()));
         return entity;

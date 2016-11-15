@@ -19,9 +19,9 @@ public class TestDto {
     @Size(max = 10239)
     private String description;
 
-    @NotNull(message = "{page.test.groupRequired}")
-    @Size(max = 255)
-    private String groupId;
+    //TODO name (string) or id (long)
+    //@NotNull(message = "{page.test.groupRequired}")
+    private Long groupId;
 
     private Collection<MetricDto> metrics;
 
@@ -57,11 +57,11 @@ public class TestDto {
         this.description = description;
     }
 
-    public String getGroupId() {
+    public Long getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(String groupId) {
+    public void setGroupId(Long groupId) {
         this.groupId = groupId;
     }
 

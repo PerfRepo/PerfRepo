@@ -1,15 +1,14 @@
 package org.perfrepo.web.front_api;
 
-import org.perfrepo.model.Test;
 import org.perfrepo.model.to.OrderBy;
-import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.to.TestSearchTO;
 import org.perfrepo.model.userproperty.GroupFilter;
 import org.perfrepo.web.dto.TestDto;
+import org.perfrepo.web.front_api.storage.Storage;
+import org.perfrepo.web.front_api.storage.TestStorage;
 import org.perfrepo.web.front_api.validation.TestUidUnique;
-import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.service.exceptions.ServiceException;
-import org.perfrepo.web.service.model_mapper.TestModelMapper;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -17,7 +16,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Collection;
 
 @Path("/tests")
 @RequestScoped
@@ -26,22 +24,18 @@ import java.util.Collection;
 public class TestFrontRestApi {
 
    @Inject
-   private TestService testService;
-
-   @Inject
-   private TestModelMapper testModelMapper;
+   private Storage storage;
 
    @GET
    @Path("/{id}")
    public Response get(@PathParam("id") Long testId) {
-      Test test = testService.getFullTest(testId);
+      TestDto test = storage.test().getById(testId);
 
       if(test == null) {
          throw new NotFoundException("Test not found");
       }
 
-      TestDto testDto = testModelMapper.convertToDto(test);
-      return Response.ok(testDto).build();
+      return Response.ok(test).build();
    }
 
    @GET
@@ -52,6 +46,7 @@ public class TestFrontRestApi {
                           @QueryParam("groupFilter") String groupFilter,
                           @QueryParam("limit") Integer limit,
                           @QueryParam("offset") Integer offset) {
+
       TestSearchTO searchTO = new TestSearchTO();
       searchTO.setName(name);
       searchTO.setUid(uid);
@@ -61,31 +56,32 @@ public class TestFrontRestApi {
       searchTO.setLimitFrom(offset);
       searchTO.setLimitHowMany(limit);
 
-      SearchResultWrapper<Test> tests = testService.searchTest(searchTO);
-      Collection<TestDto> result =  testModelMapper.convertToDtoList(tests.getResult());
-      //TODO add X-Pagination-Count, X-Pagination-Page, X-Pagination-Limit
-      return Response.status(Response.Status.OK).entity(result).build();
+      TestStorage.TestSearchResult result = storage.test().search(searchTO);
+
+      return Response
+              .status(Response.Status.OK)
+              .header("X-Pagination-Total-Count", result.getTotalCount())
+              .header("X-Pagination-Current-Page", result.getCurrentPage())
+              .header("X-Pagination-Page-Count", result.getPageCount())
+              .header("X-Pagination-Per-Page", result.getPerPage())
+              .entity(result.getTests()).build();
    }
 
    @GET
    @Path("/uid/{uid}")
    public Response getByUid(@PathParam("uid") String testUid) {
-      Test test = testService.getTestByUID(testUid);
+      TestDto test = storage.test().getByUid(testUid);
 
       if(test == null) {
          throw new NotFoundException("Test not found");
       }
-      // TODO this doesn't work, metrics are lazy initialized, solution? new service method with "full" test
-      // TODO or change session context?
-      TestDto testDto = testModelMapper.convertToDto(test);
-      return Response.ok(testDto).build();
+
+      return Response.ok(test).build();
    }
 
    @POST
-   public Response create(@Valid @TestUidUnique TestDto testDto) throws ServiceException {
-      Test test = testModelMapper.convertToEntity(testDto);
-
-      Test createdTest = testService.createTest(test);
+   public Response create(@Valid @TestUidUnique TestDto testDto) {
+      TestDto createdTest = storage.test().create(testDto);
 
       URI uri = URI.create("/tests/" + createdTest.getId());
       return Response.created(uri).build();
@@ -93,31 +89,26 @@ public class TestFrontRestApi {
 
    @PUT
    @Path("/{id}")
-   public Response update(@Valid TestDto testDto) throws ServiceException {
-      Test test = testModelMapper.convertToEntity(testDto);
-      Test originalTest = testService.getTest(test.getId());
+   public Response update(@Valid TestDto testDto) {
+      TestDto updatedTest = storage.test().update(testDto);
 
-      if(originalTest == null){
+      if(updatedTest == null) {
          throw new NotFoundException("Test not found");
       }
 
-      testService.updateTest(test);
       return Response.noContent().build();
    }
 
    @DELETE
    @Path("/{id}")
    public Response delete(@PathParam("id") Long testId) throws ServiceException {
-      Test test = testService.getTest(testId);
+      boolean deleted = storage.test().delete(testId);
 
-      if(test == null){
+      if(!deleted) {
          throw new NotFoundException("Test not found");
       }
 
-      testService.removeTest(test);
       return Response.noContent().build();
    }
-
-
 
 }
