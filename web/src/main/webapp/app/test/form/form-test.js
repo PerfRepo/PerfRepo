@@ -10,6 +10,10 @@
 
             this.onSave({test: this.test});
         };
+
+        this.addMetricModal = function() {
+            console.log("add metric");
+        }
     };
 
     angular.module('org.perfrepo.test.form',

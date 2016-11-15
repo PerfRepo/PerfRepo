@@ -6,9 +6,9 @@
         this.test = {};
         this.userGroups = userGroups;
         this.metrics = metrics;
-        if(this.userGroups != undefined && this.userGroups.length > 0) {
-            this.test.groupId = this.userGroups[0];
-        }
+        //if(this.userGroups != undefined && this.userGroups.length > 0) {
+        //    this.test.groupId = this.userGroups[0].id; //TODO
+        //}
 
         this.save = function(test) {
             testService.save(test)

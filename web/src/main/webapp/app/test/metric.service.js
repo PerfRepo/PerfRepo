@@ -15,8 +15,24 @@
 
     var MetricService = function(Metric, API_URL) {
 
+        this.getById = function(id) {
+            return Metric.get({id: id}).$promise;
+        };
+
         this.getAll = function() {
             return Metric.query().$promise;
+        };
+
+        this.save = function(metric) {
+            return Metric.save(metric).$promise;
+        };
+
+        this.update = function(metric) {
+            return Metric.update(metric).$promise;
+        };
+
+        this.delete = function(metric) {
+            return Metric.delete(metric).$promise;
         };
     };
 
