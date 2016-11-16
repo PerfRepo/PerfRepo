@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:body>
+	<f:metadata>
+		<f:viewParam name="testId" value="#{testController.testId}" />
+		<f:event type="preRenderView" listener="#{testController.preRender}" />
+	</f:metadata>
+	<ui:composition template="/layout/template.xhtml">
+		<ui:define name="title">#{testController.test.name} | #{strings['page.test.title.details']}</ui:define>
+		<ui:define name="content">
+			<c:set target="#{testController}" property="editMode" value="#{false}" />
+			<c:set target="#{testController}" property="createMode" value="#{false}" />
+			<ui:include src="/test/metric_add.xhtml" />
+			<ui:include src="/test/metric_edit.xhtml" />
+			<ui:include src="/test/alert_popup.xhtml" />
+            <h:form id="detailsForm">
+                <div style=" overflow: hidden;">
+                    <div id="control" style="text-align:right;float: left;opacity: 0.3;overflow: hidden;height:60px;">
+                        <h2 class="text-success">Test Detail</h2>
+                    </div>
+
+                    <div id="control" style="test-align: right; float: right;line-height: 40px; margin: 10px 0; height:40px;">
+                        <span style="margin:5px;"><a class="text-success" href="#{request.contextPath}/test/#{testController.testId}/edit"><i class="icon-edit" title="#{strings.edit}" /> Edit</a></span>
+                        <span style="margin:5px;"><a class="text-success" href="#{request.contextPath}/test/#{testController.testId}/newExec" title="Create new test execution"><i class="icon-plus"/> Create Test Execution</a></span>
+                        <span style="margin:5px;"><a4j:commandLink styleClass="text-success" action="#{testController.listTestExecutions()}" execute="@this"><i class="icon-list"/> List test executions</a4j:commandLink></span>
+
+                        <span style="margin:5px;">
+                            <a4j:commandLink styleClass="text-success" render="@form" action="#{testController.addSubscriber()}" value=" " title="Subscribe to the email notifications about failing alerters"
+                                           rendered="#{!testController.isSubscribed()}">
+                                <i class="icon-bell-alt" title="Subscribe" /> Subscribe for alerts
+                            </a4j:commandLink>
+                        </span>
+
+                        <span style="margin:5px;">
+                            <a4j:commandLink styleClass="text-success" render="@form" action="#{testController.removeSubscriber()}" value=" " title="Unsubscribe from email notifications"
+                                           rendered="#{testController.isSubscribed()}">
+                                <i class="icon-bell" title="Unsubscribe" /> Unsubscribe from alerts
+                            </a4j:commandLink>
+                        </span>
+                    </div>
+                </div>
+                <hr/>
+                <fieldset>
+                    <h1>#{testController.test.name}</h1>
+                    <h:outputLabel class="detail-label">ID</h:outputLabel>
+                    <div class="detail-value">#{testController.test.id}</div>
+
+                    <h:outputLabel class="detail-label">#{entityStrings.Test_uid}</h:outputLabel>
+                    <div class="detail-value">#{testController.test.uid}</div>
+
+                    <h:outputLabel class="detail-label">#{entityStrings.Test_groupid}</h:outputLabel>
+                    <div class="detail-value">#{testController.test.groupId}</div>
+
+                    <h:outputLabel class="detail-label">Description</h:outputLabel>
+                    <div class="detail-value">
+                        <h:outputText value="#{testController.test.description}" escape="false" />
+                    </div>
+                </fieldset>
+            </h:form>
+			<br/><br/>
+			<h5>Metrics</h5>
+			<h:form id="metricList">
+			   <table id="metricTable" class="table table-bordered smallpad">
+					<thead>
+						<tr>
+							<th style="text-align: center; vertical-align: middle">Metric name</th>
+							<th style="text-align: center; vertical-align: middle">Description</th>
+							<th style="text-align: center; vertical-align: middle">
+								<a4j:commandLink render=":dialogMetricAddAssignForm :dialogMetricAddCreateForm"
+									action="#{testController.metricDetails.setEmptyMetric}" oncomplete="#{rich:component('dialogMetricAdd')}.show();"
+									 title="#{strings['page.test.buAddMetric']}">
+									<i class="icon-plus"></i>
+								</a4j:commandLink>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<ui:repeat value="#{testController.metricsList}" var="metric">
+							<tr>
+								<td>#{metric.name}</td>
+								<td><h:outputText value="#{metric.description}" escape="false" /></td>
+								<td style="text-align: center; vertical-align: middle">
+									<div class="btn-group">
+										<a4j:commandLink styleClass="btn btn-primary btn-small" title="#{strings.delete}"
+									        onclick="if (!confirm('Are you sure you want to delete metric (#{metric.name})?') ) { return false;}; return true;"
+									        action="#{testController.metricDetails.deleteMetric(metric, testController.test)}" render="metricList :messagesPanel">
+									        <i class="icon-trash"></i>
+										</a4j:commandLink>
+								        <a4j:commandLink styleClass="btn btn-primary btn-small" render=":dialogMetricEdit :dialogMetricEditForm" action="#{testController.metricDetails.setMetricForUpdate(metric)}"
+									        oncomplete="#{rich:component('dialogMetricEdit')}.show();" value=" " title="#{strings.edit}">
+									        <i class="icon-edit"></i>
+										</a4j:commandLink>
+									</div>
+								</td>
+							</tr>
+						</ui:repeat>
+					</tbody>
+				</table>
+			</h:form>
+
+         <br/><br/>
+         <h5>Alerts</h5>
+         <h:form id="alertList">
+            <table id="alertTable" class="table table-bordered smallpad">
+               <thead>
+               <tr>
+                  <th style="text-align: center; vertical-align: middle">Alert name</th>
+                  <th style="text-align: center; vertical-align: middle">Description</th>
+                  <th style="text-align: center; vertical-align: middle">
+                     <a4j:commandLink render=":dialogAlertForm"
+                                      action="#{testController.metricDetails.setEmptyMetric}" oncomplete="#{rich:component('dialogAlert')}.show();"
+                                      title="Create new alert">
+                        <i class="icon-plus"></i>
+                     </a4j:commandLink>
+                  </th>
+               </tr>
+               </thead>
+               <tbody>
+               <ui:repeat value="#{testController.alertsList}" var="alert">
+                  <tr>
+                     <td>#{alert.name}</td>
+                     <td><h:outputText value="#{alert.description}" escape="false" /></td>
+                     <td style="text-align: center; vertical-align: middle">
+                        <div class="btn-group">
+                           <a4j:commandLink styleClass="btn btn-primary btn-small" title="#{strings.delete}"
+                                            onclick="if (!confirm('Are you sure you want to delete alert (#{alert.name})?') ) { return false;}; return true;"
+                                            action="#{testController.deleteAlert(alert)}" render="alertList :messagesPanel">
+                              <i class="icon-trash"></i>
+                           </a4j:commandLink>
+                           <a4j:commandLink styleClass="btn btn-primary btn-small" render=":dialogAlert" action="#{testController.alertUpdateDetails.setAlert(alert)}"
+                                            oncomplete="#{rich:component('dialogAlert')}.show();" value=" " title="#{strings.edit}">
+                              <i class="icon-edit"></i>
+                           </a4j:commandLink>
+                        </div>
+                     </td>
+                  </tr>
+               </ui:repeat>
+               </tbody>
+            </table>
+         </h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

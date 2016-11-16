@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:body>
+    <f:metadata>
+        <f:viewParam name="alertId" value="#{testController.alertId}"/>
+        <f:event type="preRenderView" listener="#{testController.getAlert}"/>
+    </f:metadata>
+   <ui:composition template="/layout/template.xhtml">
+      <ui:define name="title">#{strings['page.index.title']}</ui:define>
+      <ui:define name="content">
+         <div style=" overflow: hidden;">
+            <div id="control" style="text-align:right;float: left;opacity: 0.3;overflow: hidden;height:60px;">
+               <h2 class="text-success">Alert detail</h2>
+            </div>
+         </div>
+         <hr/>
+         <fieldset>
+            <h1>#{testController.alertDetail.name}</h1>
+
+            <h:outputLabel class="detail-label">Condition</h:outputLabel>
+            <div class="detail-value">#{testController.alertDetail.condition}</div>
+
+            <h:outputLabel class="detail-label">Metric</h:outputLabel>
+            <div class="detail-value">#{testController.alertDetail.metric.name}</div>
+
+            <h:outputLabel class="detail-label">Tags</h:outputLabel>
+            <div class="detail-value">
+               <ui:repeat value="#{testController.alertDetail.tags}" varStatus="status" var="item">
+                  <span class="badge badge-success">#{item.name}</span>
+               </ui:repeat>
+            </div>
+
+            <br style="clear: both" />
+
+            <h:outputLabel class="detail-label">Links</h:outputLabel>
+            <div class="detail-value">
+               <ui:repeat value="#{testController.alertLinks}" varStatus="status" var="item">
+                  <a href="#{item}">#{item}</a>
+               </ui:repeat>
+            </div>
+
+            <h:outputLabel class="detail-label">Description</h:outputLabel>
+            <div class="detail-value">
+               <h:outputText value="#{testController.alertDetail.description}" escape="false" />
+            </div>
+         </fieldset>
+      </ui:define>
+   </ui:composition>
+</h:body>
+</html>

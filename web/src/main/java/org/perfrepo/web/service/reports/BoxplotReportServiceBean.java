@@ -15,13 +15,10 @@ import org.perfrepo.web.dao.TestDAO;
 import org.perfrepo.web.dao.TestExecutionDAO;
 import org.perfrepo.web.service.ReportService;
 import org.perfrepo.web.service.UserService;
+import org.perfrepo.web.session.UserSession;
 import org.perfrepo.web.util.ReportUtils;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import javax.ejb.*;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +53,9 @@ public class BoxplotReportServiceBean {
    @Inject
    private ReportService reportService;
 
+   @Inject
+   private UserSession userSession;
+
    /**
     * Creates new boxplot report
     *
@@ -67,9 +67,10 @@ public class BoxplotReportServiceBean {
       Report report = new Report();
       report.setName(name);
       report.setType(BOXPLOT_REPORT_TYPE);
-      report.setPermissions(permissions);
+      //TODO: solve this
+      //report.setPermissions(permissions);
 
-      User user = userService.getLoggedUser();
+      User user = userSession.getLoggedUser();
       report.setUser(user);
 
       Map<String, ReportProperty> properties = storeTOIntoReportProperties(charts, report);
@@ -92,7 +93,8 @@ public class BoxplotReportServiceBean {
       Report report = reportService.getFullReport(new Report(reportId));
       report.setName(name);
       report.setType(BOXPLOT_REPORT_TYPE);
-      report.setPermissions(permissions);
+      //TODO: solve this
+      //report.setPermissions(permissions);
 
       Map<String, ReportProperty> properties = storeTOIntoReportProperties(charts, report);
       report.setProperties(properties);

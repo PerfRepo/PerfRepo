@@ -14,12 +14,7 @@
  */
 package org.perfrepo.web.service;
 
-import org.perfrepo.model.Metric;
-import org.perfrepo.model.Test;
-import org.perfrepo.model.TestExecution;
-import org.perfrepo.model.TestExecutionAttachment;
-import org.perfrepo.model.TestExecutionParameter;
-import org.perfrepo.model.Value;
+import org.perfrepo.model.*;
 import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.to.TestExecutionSearchTO;
 import org.perfrepo.model.to.TestSearchTO;

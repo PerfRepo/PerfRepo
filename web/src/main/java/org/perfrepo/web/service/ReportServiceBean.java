@@ -27,6 +27,7 @@ import org.perfrepo.model.user.User;
 import org.perfrepo.web.dao.*;
 import org.perfrepo.web.security.Secured;
 import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.session.UserSession;
 
 import javax.ejb.*;
 import javax.inject.Inject;
@@ -65,14 +66,17 @@ public class ReportServiceBean implements ReportService {
    @Inject
    private ReportPropertyDAO reportPropertyDAO;
 
+   @Inject
+   private UserSession userSession;
+
    @Override
    public List<Report> getAllUsersReports() {
-      return getAllReports(userService.getLoggedUser().getUsername());
+      return getAllReports(userSession.getLoggedUser().getUsername());
    }
 
    @Override
    public List<Report> getAllReports() {
-      User user = userService.getLoggedUser();
+      User user = userSession.getLoggedUser();
       List<Long> groupIds = new ArrayList<Long>();
       for (Group group : user.getGroups()) {
          groupIds.add(group.getId());
@@ -82,7 +86,7 @@ public class ReportServiceBean implements ReportService {
 
    @Override
    public List<Report> getAllGroupReports() {
-      User user = userService.getLoggedUser();
+      User user = userSession.getLoggedUser();
       List<Long> groupIds = new ArrayList<Long>();
       for (Group group : user.getGroups()) {
          groupIds.add(group.getId());
@@ -100,20 +104,23 @@ public class ReportServiceBean implements ReportService {
 
    @Override
    public Collection<Permission> getReportPermissions(Report report) {
+      //TODO: solve this
+      /*
       if (report != null && report.getId() != null) {
          return permissionDAO.getByReport(report.getId());
       } else if (report == null || report.getPermissions() == null || report.getPermissions().size() == 0) {
          return getDefaultPermission();
       } else if (report.getId() == null && report.getPermissions() != null && report.getPermissions().size() != 0) {
          return report.getPermissions();
-      }
+      }*/
       return getDefaultPermission();
    }
 
    @Override
    public Report createReport(Report report) {
       Report r = reportDAO.create(report);
-      saveReportPermissions(r, report.getPermissions());
+      //TODO: solve this
+      //saveReportPermissions(r, report.getPermissions());
       return r;
    }
 
@@ -124,9 +131,10 @@ public class ReportServiceBean implements ReportService {
       // somebody is able to read report
       // somebody is able to write report
       // the updater is able to write report
-      saveReportPermissions(report, report.getPermissions());
+      //TODO: solve this
+      //saveReportPermissions(report, report.getPermissions());
       updateReportProperties(report, report.getProperties());
-      return reportDAO.update(report);
+      return reportDAO.merge(report);
    }
 
    @Override
@@ -140,16 +148,17 @@ public class ReportServiceBean implements ReportService {
       Map<String, ReportProperty> clonedReportProperties = new HashMap<String, ReportProperty>();
 
       for (String propertyKey : freshReport.getProperties().keySet()) {
-         clonedReportProperties.put(propertyKey, freshReport.getProperties().get(propertyKey).clone());
+         clonedReportProperties.put(propertyKey, freshReport.getProperties().get(propertyKey));
       }
       List<Permission> clonedPermission = new ArrayList<Permission>();
+      //TODO: solve this
+      /*
       for (Permission perm : freshReport.getPermissions()) {
-         clonedPermission.add(perm.clone());
-      }
+         clonedPermission.add(perm);
+      }*/
 
-      Report result = freshReport.clone();
+      Report result = freshReport;
       result.setProperties(clonedReportProperties);
-      result.setPermissions(clonedPermission);
       return result;
    }
 
@@ -168,7 +177,7 @@ public class ReportServiceBean implements ReportService {
                response.setSelectionTests(testDAO.getAll());
                continue;
             } else {
-               freshTest = freshTest.clone();
+               freshTest = freshTest;
                chartResponse.setSelectedTest(freshTest);
                if (chartRequest.getSeries() == null || chartRequest.getSeries().isEmpty()) {
                   continue;
@@ -187,8 +196,6 @@ public class ReportServiceBean implements ReportService {
                      chartResponse.setSelectionMetrics(new ArrayList<>(freshTest.getMetrics()));
                      continue;
                   }
-                  metric = metric.clone();
-                  metric.setValues(null);
                   seriesResponse.setSelectedMetric(metric);
                   List<MetricReportTO.DataPoint> datapoints = testExecutionDAO.searchValues(freshTest.getId(), seriesRequest.getMetricName(),
                                                                                             seriesRequest.getTags(), request.getLimitSize());
@@ -213,8 +220,6 @@ public class ReportServiceBean implements ReportService {
                      chartResponse.setSelectionMetrics(new ArrayList<>(freshTest.getMetrics()));
                      continue;
                   }
-                  metric = metric.clone();
-                  metric.setValues(null);
                   baselineResponse.setSelectedMetric(metric);
                   baselineResponse.setExecId(baselineRequest.getExecId());
                   baselineResponse.setValue(testExecutionDAO.getValueForMetric(baselineRequest.getExecId(), baselineRequest.getMetricName()));
@@ -358,7 +363,7 @@ public class ReportServiceBean implements ReportService {
       Permission write = new Permission();
       write.setAccessType(AccessType.WRITE);
       write.setLevel(AccessLevel.GROUP);
-      User user = userService.getLoggedUser();
+      User user = userSession.getLoggedUser();
       if (user.getGroups() != null && user.getGroups().size() > 0) {
          write.setGroupId(user.getGroups().iterator().next().getId());
       } else {

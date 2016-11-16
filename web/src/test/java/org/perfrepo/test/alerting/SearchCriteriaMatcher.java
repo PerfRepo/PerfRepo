@@ -1,10 +1,10 @@
 package org.perfrepo.test.alerting;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.mockito.ArgumentMatcher;
 import org.perfrepo.model.to.TestExecutionSearchTO;
+
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Helper class. When mocking objects with Mockito, Mockito by default uses Object.equals method to distinguish which method to

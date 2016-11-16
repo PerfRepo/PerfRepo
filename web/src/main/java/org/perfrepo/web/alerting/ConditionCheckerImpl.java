@@ -8,36 +8,22 @@ import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.perfrepo.model.Metric;
 import org.perfrepo.model.TestExecution;
-import org.perfrepo.model.Value;
+import org.perfrepo.model.builder.TestExecutionBuilder;
 import org.perfrepo.model.to.TestExecutionSearchTO;
 import org.perfrepo.web.dao.TestExecutionDAO;
 import org.perfrepo.web.service.UserService;
+import org.perfrepo.web.util.MultiValue;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import javax.ejb.*;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.perfrepo.model.builder.TestExecutionBuilder;
-import org.perfrepo.web.util.MultiValue;
+import java.util.*;
 
 /**
  * Implementation of @link{ConditionChecker}
@@ -467,11 +453,13 @@ public class ConditionCheckerImpl implements ConditionChecker {
      * @return
      */
     private Double getValueFromMetric(TestExecution testExecution) {
+        //TODO: solve this
+        /*
         for (Value value : testExecution.getValues()) {
             if (value.getMetricName().equals(metric.getName())) {
                 return value.getResultValue();
             }
-        }
+        }*/
 
         return null;
     }

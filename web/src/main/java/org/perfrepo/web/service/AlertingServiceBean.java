@@ -1,22 +1,13 @@
 package org.perfrepo.web.service;
 
-import org.perfrepo.model.Alert;
-import org.perfrepo.model.Metric;
-import org.perfrepo.model.Tag;
-import org.perfrepo.model.Test;
-import org.perfrepo.model.TestExecution;
-import org.perfrepo.model.Value;
+import org.perfrepo.model.*;
 import org.perfrepo.web.alerting.ConditionChecker;
 import org.perfrepo.web.dao.AlertDAO;
 import org.perfrepo.web.dao.MetricDAO;
 import org.perfrepo.web.dao.TagDAO;
 import org.perfrepo.web.dao.TestDAO;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import javax.ejb.*;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
@@ -58,12 +49,6 @@ public class AlertingServiceBean implements AlertingService {
       Alert alert = alertDAO.get(id);
       Collection<Tag> tags = alert.getTags();
 
-      List<Tag> clonedTags = new ArrayList<>();
-      for (Tag tag : tags) {
-         clonedTags.add(tag.clone());
-      }
-      alert.setTags(clonedTags);
-
       return alert;
    }
 
@@ -76,7 +61,7 @@ public class AlertingServiceBean implements AlertingService {
    @Override
    public Alert updateAlert(Alert alert) {
       makeManaged(alert);
-      return alertDAO.update(alert);
+      return alertDAO.merge(alert);
    }
 
    @Override
@@ -88,9 +73,12 @@ public class AlertingServiceBean implements AlertingService {
    @Override
    public List<Alert> getAlertsList(Test test) {
       List<Alert> alertsList = new ArrayList<>();
+      //TODO: solve this
+      /*
       if (test != null) {
          alertsList.addAll(test.getAlerts());
       }
+      */
       Collections.sort(alertsList, ((o1, o2) -> o1.getName().compareTo(o2.getName())));
 
       return alertsList;
@@ -99,7 +87,9 @@ public class AlertingServiceBean implements AlertingService {
    @Override
    public void processAlerts(TestExecution testExecution) {
       Test test = testExecution.getTest();
-      Collection<Value> values = testExecution.getValues();
+      //TODO: solve this
+      //Collection<Value> values = testExecution.getValues();
+      Collection<Value> values = null;
 
       if (values == null || values.isEmpty()) {
          return;
@@ -147,7 +137,7 @@ public class AlertingServiceBean implements AlertingService {
       Metric metric = metricDAO.get(alert.getMetric().getId());
       alert.setMetric(metric);
 
-      List<Tag> tags = new ArrayList<>();
+      Set<Tag> tags = new HashSet<>();
       if (alert.getTags() != null) {
          for (Tag tag : alert.getTags()) {
             Tag managedTag = tagDAO.findByName(tag.getName());

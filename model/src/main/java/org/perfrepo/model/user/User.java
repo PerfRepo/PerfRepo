@@ -17,13 +17,11 @@ package org.perfrepo.model.user;
 import org.hibernate.validator.constraints.Email;
 import org.perfrepo.model.Entity;
 import org.perfrepo.model.Test;
-import org.perfrepo.model.UserProperty;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @javax.persistence.Entity
@@ -42,7 +40,7 @@ public class User implements Entity<User>, Comparable<User> {
    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_ID_GENERATOR")
    private Long id;
 
-   @Column(name = "username", unique = true)
+   @Column(name = "username", unique = true, updatable = false)
    @NotNull
    @Size(max = 2047)
    private String username;
@@ -78,10 +76,6 @@ public class User implements Entity<User>, Comparable<User> {
 
    @ManyToMany(mappedBy = "subscribers")
    private Set<Test> subscribedTests = new HashSet<>();
-
-   @OneToMany(fetch = FetchType.LAZY)
-   @MapKey(name = "name")
-   private Map<String, UserProperty> properties;
 
    public Long getId() {
       return id;
@@ -137,14 +131,6 @@ public class User implements Entity<User>, Comparable<User> {
 
    public void setGroups(Set<Group> groups) {
       this.groups = groups;
-   }
-
-   public Map<String, UserProperty> getProperties() {
-      return properties;
-   }
-
-   public void setProperties(Map<String, UserProperty> properties) {
-      this.properties = properties;
    }
 
    public Set<Test> getSubscribedTests() {

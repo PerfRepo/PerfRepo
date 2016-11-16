@@ -22,11 +22,10 @@ import org.perfrepo.model.to.TestExecutionSearchTO.ParamCriteria;
 import org.perfrepo.model.to.TestSearchTO;
 import org.perfrepo.model.user.User;
 import org.perfrepo.model.userproperty.GroupFilter;
-import org.perfrepo.model.util.EntityUtils;
-import org.perfrepo.model.util.EntityUtils.UpdateSet;
 import org.perfrepo.web.dao.*;
 import org.perfrepo.web.security.Secured;
 import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.session.UserSession;
 import org.perfrepo.web.util.MultiValue;
 
 import javax.ejb.*;
@@ -81,6 +80,9 @@ public class TestServiceBean implements TestService {
    @Inject
    private AlertingService alertingService;
 
+   @Inject
+   private UserSession userSession;
+
    @Override
    @Secured
    public TestExecution createTestExecution(TestExecution testExecution) throws ServiceException {
@@ -94,9 +96,10 @@ public class TestServiceBean implements TestService {
       TestExecution storedTestExecution = testExecutionDAO.create(testExecution);
       // execution params
       if (testExecution.getParameters() != null && testExecution.getParameters().size() > 0) {
-         for (TestExecutionParameter param : testExecution.getParameters()) {
-            param.setTestExecution(storedTestExecution);
-            testExecutionParameterDAO.create(param);
+         for (String paramKey : testExecution.getParameters().keySet()) {
+            TestExecutionParameter parameter = testExecution.getParameters().get(paramKey);
+            parameter.setTestExecution(storedTestExecution);
+            testExecutionParameterDAO.create(parameter);
          }
       }
       // tags
@@ -107,17 +110,12 @@ public class TestServiceBean implements TestService {
                tag = tagDAO.create(teg);
             }
 
-            Collection<TestExecution> tagTestExecutions = tag.getTestExecutions();
-            if (tagTestExecutions == null) {
-               tag.setTestExecutions(new ArrayList<>());
-            }
-
             storedTestExecution.getTags().add(tag);
-            tag.getTestExecutions().add(storedTestExecution);
-
          }
       }
       // values
+      //TODO: solve this
+      /*
       if (testExecution.getValues() != null && !testExecution.getValues().isEmpty()) {
          for (Value value : testExecution.getValues()) {
             value.setTestExecution(storedTestExecution);
@@ -137,11 +135,11 @@ public class TestServiceBean implements TestService {
                }
             }
          }
-      }
+      }*/
 
-      storedTestExecution = testExecutionDAO.update(storedTestExecution);
+      storedTestExecution = testExecutionDAO.merge(storedTestExecution);
 
-      TestExecution clone = cloneAndFetch(storedTestExecution, true, true, true, true, true);
+      TestExecution clone = storedTestExecution;
       log.debug("Created new test execution " + clone.getId());
 
       alertingService.processAlerts(clone);
@@ -228,7 +226,7 @@ public class TestServiceBean implements TestService {
    @Override
    public Test createTest(Test test) throws ServiceException {
       if (!userService.isLoggedUserInGroup(test.getGroupId())) {
-         throw new org.perfrepo.web.security.SecurityException("securityException.userNotInGroup.createTest", userService.getLoggedUser().getUsername(), test.getGroupId());
+         throw new org.perfrepo.web.security.SecurityException("securityException.userNotInGroup.createTest", userSession.getLoggedUser().getUsername(), test.getGroupId());
       }
       if (testDAO.findByUid(test.getUid()) != null) {
          throw new ServiceException("serviceException.testUidExists", test.getUid());
@@ -251,7 +249,6 @@ public class TestServiceBean implements TestService {
       if (test == null) {
          return null;
       }
-      test = test.clone();
       // TODO: return by named query, with optimized fetching
       Collection<Metric> metrics = test.getMetrics();
       if (metrics != null) {
@@ -259,31 +256,37 @@ public class TestServiceBean implements TestService {
          for (Metric metric: metrics) {
             clonedMetrics.add(metric);
          }
-         test.setMetrics(clonedMetrics);
+         //TODO: solve this
+         //test.setMetrics(clonedMetrics);
       }
 
       Collection<User> subscribers = test.getSubscribers();
       if (subscribers != null) {
          List<User> subscribersClone = new ArrayList<>();
-         for (User subscriber : subscribers) {
-            subscribersClone.add(subscriber.clone());
-         }
-         test.setSubscribers(subscribersClone);
+         //TODO: solve this
+         //for (User subscriber : subscribers) {
+         //   subscribersClone.add(subscriber.clone());
+         //}
+         //test.setSubscribers(subscribersClone);
       }
 
-      Collection<Alert> alerts = test.getAlerts();
+      //TODO: solve this
+      //Collection<Alert> alerts = test.getAlerts();
+      Collection<Alert> alerts = null;
       if (alerts != null) {
          List<Alert> alertsClone = new ArrayList<>();
          for (Alert alert : alerts) {
             List<Tag> tagsClone = new ArrayList<>();
             for (Tag tag : alert.getTags()) {
-               tagsClone.add(tag.clone());
+               tagsClone.add(tag);
             }
-            Alert alertClone = alert.clone();
-            alertClone.setTags(tagsClone);
+            Alert alertClone = alert;
+            //TODO: solve this
+            //alertClone.setTags(tagsClone);
             alertsClone.add(alertClone);
          }
-         test.setAlerts(alertsClone);
+         //TODO: solve this
+         //test.setAlerts(alertsClone);
       }
 
       return test;
@@ -302,20 +305,23 @@ public class TestServiceBean implements TestService {
    @Secured
    @Override
    public Test updateTest(Test test) {
-      return testDAO.update(test);
+      return testDAO.merge(test);
    }
 
    @Override
    @Secured
    public void removeTest(Test test) throws ServiceException {
       Test freshTest = testDAO.get(test.getId());
+
+      //TODO: solve this
+      /*
       try {
          for (TestExecution testExecution : freshTest.getTestExecutions()) {
             removeTestExecution(testExecution);
          }
       } catch (ServiceException ex) {
          throw new ServiceException("serviceException.removeTest.cannotRemoveAllTestExecutions", ex);
-      }
+      }*/
 
       testDAO.remove(freshTest);
    }
@@ -327,47 +333,50 @@ public class TestServiceBean implements TestService {
       if (freshTestExecution == null) {
          throw new ServiceException("serviceException.testExecutionNotFound", testExecution.getName());
       }
+      //TODO: solve this
+      /*
       for (TestExecutionParameter testExecutionParameter : freshTestExecution.getParameters()) {
          testExecutionParameterDAO.remove(testExecutionParameter);
-      }
+      }*/
+      //TODO: solve this
+      /*
       for (Value value : freshTestExecution.getValues()) {
          for (ValueParameter valueParameter : value.getParameters()) {
             valueParameterDAO.remove(valueParameter);
          }
          valueDAO.remove(value);
-      }
+      }*/
 
+      //TODO: solve this
+      /*
       Iterator<TestExecutionAttachment> allTestExecutionAttachments = freshTestExecution.getAttachments().iterator();
       while (allTestExecutionAttachments.hasNext()) {
          testExecutionAttachmentDAO.remove(allTestExecutionAttachments.next());
          allTestExecutionAttachments.remove();
       }
+      */
       testExecutionDAO.remove(freshTestExecution);
    }
 
    @Override
    public List<Metric> getAvailableMetrics(Test test) {
       Test t = testDAO.get(test.getId());
-      return EntityUtils.removeAllById(metricDAO.getMetricByGroup(t.getGroupId()), t.getMetrics());
+
+      //TODO: solve this
+      //return EntityUtils.removeAllById(metricDAO.getMetricByGroup(t.getGroupId()), t.getMetrics());
+      return null;
    }
 
    @Override
    @Secured
    public Metric addMetric(Test test, Metric metric) throws ServiceException {
       Test freshTest = testDAO.get(test.getId());
-      if (freshTest.getMetrics() == null) {
-         freshTest.setMetrics(new ArrayList<>());
-      }
 
       if (metric.getId() != null) {
          // associating an existing metric with the test
          Metric freshMetric = metricDAO.get(metric.getId());
          if (freshMetric == null) {
             throw new ServiceException("serviceException.metricNotFound", metric.getName().toString());
-         }
-
-         if (freshMetric.getTests() == null) {
-            freshMetric.setTests(new ArrayList<>());
          }
 
          for (Test testForMetric : freshMetric.getTests()) {
@@ -382,8 +391,8 @@ public class TestServiceBean implements TestService {
          freshMetric.getTests().add(freshTest);
          freshTest.getMetrics().add(freshMetric);
 
-         freshMetric = metricDAO.update(freshMetric);
-         testDAO.update(freshTest);
+         freshMetric = metricDAO.merge(freshMetric);
+         testDAO.merge(freshTest);
 
          return freshMetric;
       } else {
@@ -406,11 +415,12 @@ public class TestServiceBean implements TestService {
             }
          }
 
-         metric.setTests(Arrays.asList(freshTest));
+         //TODO: solve this
+         //metric.setTests(Arrays.asList(freshTest));
          Metric freshMetric = metricDAO.create(metric);
 
          freshTest.getMetrics().add(freshMetric);
-         testDAO.update(freshTest);
+         testDAO.merge(freshTest);
 
          return freshMetric;
       }
@@ -419,7 +429,7 @@ public class TestServiceBean implements TestService {
    @Override
    @Secured
    public Metric updateMetric(Metric metric) throws ServiceException {
-      return metricDAO.update(metric);
+      return metricDAO.merge(metric);
    }
 
    @Override
@@ -443,8 +453,8 @@ public class TestServiceBean implements TestService {
       freshMetric.getTests().remove(freshTest);
       freshTest.getMetrics().remove(freshMetric);
 
-      metricDAO.update(freshMetric);
-      testDAO.update(freshTest);
+      metricDAO.merge(freshMetric);
+      testDAO.merge(freshTest);
 
       if (freshMetric.getTests() == null || freshMetric.getTests().isEmpty()) {
          metricDAO.remove(freshMetric);
@@ -457,11 +467,11 @@ public class TestServiceBean implements TestService {
       if (metric == null) {
          return null;
       }
-      metric = metric.clone();
 
       if (metric.getTests() != null) {
          List<Test> clonedTests = metric.getTests().stream().collect(Collectors.toList());
-         metric.setTests(clonedTests);
+         //TODO: solve this
+         //metric.setTests(clonedTests);
       }
 
       return metric;
@@ -469,7 +479,7 @@ public class TestServiceBean implements TestService {
 
    @Override
    public TestExecution getFullTestExecution(Long id) {
-      return cloneAndFetch(testExecutionDAO.get(id), true, true, true, true, true);
+      return testExecutionDAO.get(id);
    }
 
    @Override
@@ -501,15 +511,15 @@ public class TestServiceBean implements TestService {
       freshTestExecution.setStarted(updatedTestExecution.getStarted());
       freshTestExecution.setComment(updatedTestExecution.getComment());
 
-      testExecutionDAO.update(freshTestExecution);
+      testExecutionDAO.merge(freshTestExecution);
 
       updateTags(freshTestExecution, updatedTestExecution);
       updateValues(freshTestExecution, updatedTestExecution);
       updateParameters(freshTestExecution, updatedTestExecution);
 
-      testExecutionDAO.update(freshTestExecution);
+      testExecutionDAO.merge(freshTestExecution);
 
-      TestExecution execClone = cloneAndFetch(freshTestExecution, true, true, true, true, true);
+      TestExecution execClone = freshTestExecution;
       return execClone;
    }
 
@@ -524,7 +534,7 @@ public class TestServiceBean implements TestService {
          throw new ServiceException("serviceException.parameterExists", tep.getName());
       }
 
-      return testExecutionParameterDAO.update(tep);
+      return testExecutionParameterDAO.merge(tep);
    }
 
    @Override
@@ -534,8 +544,8 @@ public class TestServiceBean implements TestService {
          return null;
       }
 
-      TestExecutionParameter pclone = p.clone();
-      pclone.setTestExecution(p.getTestExecution().clone());
+      TestExecutionParameter pclone = p;
+      pclone.setTestExecution(p.getTestExecution());
 
       return pclone;
    }
@@ -586,16 +596,19 @@ public class TestServiceBean implements TestService {
          }
       }
       Value freshValue = valueDAO.create(value);
-      Value freshValueClone = freshValue.clone();
+      Value freshValueClone = freshValue;
       List<ValueParameter> newParams = new ArrayList<ValueParameter>();
+      //TODO: solve this
+      /*
       if (value.hasParameters()) {
          for (ValueParameter valueParameter : value.getParameters()) {
             valueParameter.setValue(freshValue);
             newParams.add(valueParameterDAO.create(valueParameter).clone());
             newParams.get(newParams.size() - 1).setValue(freshValueClone);
          }
-      }
-      freshValueClone.setParameters(newParams.isEmpty() ? null : newParams);
+      }*/
+      //TODO: solve this
+      //freshValueClone.setParameters(newParams.isEmpty() ? null : newParams);
       return freshValueClone;
    }
 
@@ -610,9 +623,11 @@ public class TestServiceBean implements TestService {
       if (oldValue == null) {
          throw new ServiceException("serviceException.valueNotFound");
       }
-      Value freshValue = valueDAO.update(value);
-      Value freshValueClone = freshValue.clone();
-      freshValueClone.setMetric(freshValue.getMetric().clone());
+      Value freshValue = valueDAO.merge(value);
+      Value freshValueClone = freshValue;
+      freshValueClone.setMetric(freshValue.getMetric());
+      //TODO: solve this
+      /*
       freshValueClone.getMetric().setValues(null);
       UpdateSet<ValueParameter> updateSet = EntityUtils.updateSet(oldValue.getParameters(), value.getParameters());
       if (!updateSet.removed.isEmpty()) {
@@ -625,13 +640,14 @@ public class TestServiceBean implements TestService {
          newParams.get(newParams.size() - 1).setValue(freshValueClone);
       }
       for (ValueParameter vp : updateSet.toUpdate) {
-         newParams.add(valueParameterDAO.update(vp).clone());
+         newParams.add(valueParameterDAO.merge(vp).clone());
          newParams.get(newParams.size() - 1).setValue(freshValueClone);
       }
       for (ValueParameter vp : updateSet.toRemove) {
          valueParameterDAO.remove(vp);
       }
       freshValueClone.setParameters(newParams.isEmpty() ? null : newParams);
+      */
       return freshValueClone;
    }
 
@@ -643,9 +659,11 @@ public class TestServiceBean implements TestService {
          throw new ServiceException("serviceException.removeValue.testExecutionNotFound", value.getTestExecution().getName());
       }
       Value v = valueDAO.get(value.getId());
+      //TODO: solve this
+      /*
       for (ValueParameter vp : v.getParameters()) {
          valueParameterDAO.remove(vp);
-      }
+      }*/
       valueDAO.remove(v);
    }
 
@@ -722,17 +740,11 @@ public class TestServiceBean implements TestService {
                   tag = tagDAO.create(newTag);
                }
 
-               Collection<TestExecution> tagTestExecutions = tag.getTestExecutions();
-               if (tagTestExecutions == null) {
-                  tag.setTestExecutions(new ArrayList<>());
-               }
-
-               tag.getTestExecutions().add(testExecution);
                testExecution.getTags().add(tag);
             }
          }
 
-         testExecutionDAO.update(testExecution);
+         testExecutionDAO.merge(testExecution);
       }
    }
 
@@ -750,7 +762,7 @@ public class TestServiceBean implements TestService {
             }
          }
 
-         testExecutionDAO.update(testExecution);
+         testExecutionDAO.merge(testExecution);
       }
    }
 
@@ -770,7 +782,7 @@ public class TestServiceBean implements TestService {
       }
 
       testSubscribers.add(freshUser);
-      testDAO.update(freshTest);
+      testDAO.merge(freshTest);
    }
 
    @Override
@@ -784,8 +796,9 @@ public class TestServiceBean implements TestService {
          }
       }
 
-      test.setSubscribers(testSubscribers);
-      testDAO.update(test);
+      //TODO: solve this
+      //test.setSubscribers(testSubscribers);
+      testDAO.merge(test);
    }
 
    @Override
@@ -799,41 +812,6 @@ public class TestServiceBean implements TestService {
       }
 
       return false;
-   }
-
-   private TestExecution cloneAndFetch(TestExecution exec, boolean fetchTest, boolean fetchParameters,
-                                       boolean fetchTags, boolean fetchValues,
-                                       boolean fetchAttachments) {
-      if (exec == null) {
-         return null;
-      }
-      TestExecution clone = exec.clone();
-      if (fetchTest) {
-         TestExecutionDAO.fetchTest(clone);
-      } else {
-         clone.setTest(null);
-      }
-      if (fetchParameters) {
-         TestExecutionDAO.fetchParameters(clone);
-      } else {
-         clone.setParameters(null);
-      }
-      if (fetchTags) {
-         TestExecutionDAO.fetchTags(clone);
-      } else {
-         clone.setTags(null);
-      }
-      if (fetchValues) {
-         TestExecutionDAO.fetchValues(clone);
-      } else {
-         clone.setValues(null);
-      }
-      if (fetchAttachments) {
-         TestExecutionDAO.fetchAttachments(clone);
-      } else {
-         clone.setAttachments(null);
-      }
-      return clone;
    }
 
    /**
@@ -859,13 +837,15 @@ public class TestServiceBean implements TestService {
     * @throws ServiceException
     */
    private void updateValues(TestExecution freshTestExecution, TestExecution updatedTestExecution) throws ServiceException {
+      //TODO: solve this
+      /*
       freshTestExecution.getValues().stream().forEach(valueDAO::remove);
       freshTestExecution.setValues(new ArrayList<>());
 
       for (Value value: updatedTestExecution.getValues()) {
          value.setTestExecution(freshTestExecution);
          addValue(value);
-      }
+      }*/
    }
 
    /**
@@ -876,6 +856,8 @@ public class TestServiceBean implements TestService {
     * @throws ServiceException
     */
    private void updateParameters(TestExecution freshTestExecution, TestExecution updatedTestExecution) throws ServiceException {
+      //TODO: solve this
+      /*
       freshTestExecution.getParameters().stream().forEach(testExecutionParameterDAO::remove);
       freshTestExecution.setParameters(new ArrayList<>());
 
@@ -883,6 +865,7 @@ public class TestServiceBean implements TestService {
          parameter.setTestExecution(freshTestExecution);
          updateParameter(parameter);
       }
+      */
    }
 
    /**
@@ -893,8 +876,6 @@ public class TestServiceBean implements TestService {
     * @throws ServiceException
     */
    private void updateTags(TestExecution freshTestExecution, TestExecution updatedTestExecution) {
-      freshTestExecution.setTags(new ArrayList<>());
-
       for (Tag tag : updatedTestExecution.getTags()) {
          Tag tagEntity = tagDAO.findByName(tag.getName());
          if (tagEntity == null) {
@@ -903,12 +884,6 @@ public class TestServiceBean implements TestService {
             tagEntity = tagDAO.create(newTag);
          }
 
-         Collection<TestExecution> tagTestExecutions = tagEntity.getTestExecutions();
-         if (tagTestExecutions == null) {
-            tagEntity.setTestExecutions(new ArrayList<>());
-         }
-
-         tagEntity.getTestExecutions().add(freshTestExecution);
          freshTestExecution.getTags().add(tagEntity);
       }
    }

@@ -18,8 +18,6 @@ import org.perfrepo.model.Metric;
 import org.perfrepo.model.MetricComparator;
 import org.perfrepo.model.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Set;
 
 /**

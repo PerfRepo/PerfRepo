@@ -1,0 +1,97 @@
+<ui:composition
+        xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:ui="http://java.sun.com/jsf/facelets"
+        xmlns:h="http://java.sun.com/jsf/html"
+        xmlns:f="http://java.sun.com/jsf/core"
+        xmlns:a4j="http://richfaces.org/a4j"
+        xmlns:rich="http://richfaces.org/rich">
+    
+
+   <h2>
+      Creating charts
+      <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{boxplotReportBean.addChart}"
+                     
+                     render=":wizardPanel :messagesPanel">
+         <i class="icon-plus"></i>
+      </a4j:commandLink>
+   </h2>
+
+   <h:outputText rendered="#{empty boxplotReportBean.charts}"
+                 value='There are currently no charts. Add some with the "+" button above.' />
+
+   <a4j:repeat value="#{boxplotReportBean.charts}" var="chart" >
+      <div class="boxplotReportChart">
+         <table>
+            <tr>
+               <th>Chart name</th>
+               <td>
+                  <h:inputText value="#{chart.name}" />
+                  <a4j:commandLink styleClass="btn btn-primary btn-small"
+                                 action="#{boxplotReportBean.removeChart(chart)}" 
+                                 render=":wizardPanel :messagesPanel">
+                     <i class="icon-minus"></i>
+                  </a4j:commandLink>
+               </td>
+            </tr>
+            <tr>
+               <th>Test associated with the chart</th>
+               <td>
+                  <h:selectOneMenu value="#{chart.testId}">
+                     <f:selectItems value="#{boxplotReportBean.getTestsForSelection()}" var="test"
+                                    itemLabel="#{test.name}" itemValue="#{test.id}"/>
+                  </h:selectOneMenu>
+               </td>
+            </tr>
+            <tr>
+               <th>X-axis labels</th>
+               <td>
+                  <h:selectOneRadio value="#{chart.xAxisLabel}">
+                     <f:selectItem itemValue="#{'DATE'}" itemLabel="date" />
+                     <f:selectItem itemValue="#{'PARAMETER'}" itemLabel="parameter" />
+                     <f:ajax event="click" render="labelParameterValue" />
+                  </h:selectOneRadio>
+
+                  <h:inputText value="#{chart.xAxisLabelParameter}"
+                               disabled="#{chart.xAxisLabel != 'PARAMETER'}"
+                               id="labelParameterValue"
+                               styleClass="parameterValue #{chart.xAxisLabel != 'PARAMETER' ? 'hidden' : ''}" />
+               </td>
+               <td>
+                  <h:message for="labelParameterValue" style="color: red; font-weight: bold" />
+               </td>
+            </tr>
+            <tr>
+               <th>X-axis sort</th>
+               <td>
+                  <h:selectOneRadio value="#{chart.xAxisSort}">
+                     <f:selectItem itemValue="#{'DATE'}" itemLabel="date" />
+                     <f:selectItem itemValue="#{'PARAMETER'}" itemLabel="parameter" />
+                     <f:selectItem itemValue="#{'VERSION'}" itemLabel="version" />
+                     <f:ajax event="click" render="sortParameterValue" />
+                  </h:selectOneRadio>
+
+                  <h:inputText value="#{chart.xAxisSortParameter}"
+                               disabled="#{chart.xAxisSort != 'PARAMETER' and chart.xAxisSort != 'VERSION'}"
+                               id="sortParameterValue"
+                               styleClass="parameterValue #{(chart.xAxisSort != 'PARAMETER' and chart.xAxisSort != 'VERSION') ? 'hidden' : ''}" />
+               </td>
+               <td>
+                  <h:message for="sortParameterValue" style="color: red; font-weight: bold" />
+               </td>
+            </tr>
+         </table>
+
+         <hr />
+      </div>
+   </a4j:repeat>
+
+   <div id="wizardControls">
+      <a4j:commandButton
+            styleClass="btn btn-primary btn-large buttonNext #{empty boxplotReportBean.charts ? 'disabled' : ''}"
+            disabled="#{empty boxplotReportBean.charts}"
+            render=":control"
+            value="Next">
+         <rich:toggleControl targetItem="@next" event="click" />
+      </a4j:commandButton>
+   </div>
+</ui:composition>

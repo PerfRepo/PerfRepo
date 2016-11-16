@@ -72,7 +72,7 @@ public class TestExecution implements Entity<TestExecution> {
    @Size(max = 10239)
    private String comment;
 
-   @OneToMany(fetch = FetchType.LAZY)
+   @OneToMany(mappedBy = "testExecution")
    @MapKey(name = "name")
    private Map<String, TestExecutionParameter> parameters;
 
@@ -141,6 +141,10 @@ public class TestExecution implements Entity<TestExecution> {
    @XmlElement(name = "tag")
    public Set<Tag> getTags() {
       return this.tags;
+   }
+
+   public void setTags(Set<Tag> tags) {
+      this.tags = tags;
    }
 
    @XmlAttribute(name = "started")

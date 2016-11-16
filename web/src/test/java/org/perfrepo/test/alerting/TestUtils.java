@@ -1,16 +1,12 @@
 package org.perfrepo.test.alerting;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
 import org.perfrepo.model.Metric;
 import org.perfrepo.model.TestExecution;
 import org.perfrepo.model.Value;
 import org.perfrepo.model.builder.TestExecutionBuilder;
 import org.perfrepo.model.to.TestExecutionSearchTO;
+
+import java.util.*;
 
 /**
  * Provides some utility functionality for tests. Namely allows to create dummy TestExecution instances for mock tests
@@ -33,7 +29,8 @@ public class TestUtils {
         values.add(value);
 
         TestExecution te = new TestExecution();
-        te.setValues(values);
+        //TODO: solve this
+        //te.setValues(values);
 
         return te;
     }

@@ -25,13 +25,7 @@ import org.perfrepo.web.service.exceptions.ServiceException;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -78,7 +72,7 @@ public class ReportDeprecatedREST {
    @Logged
    public Response create(Report report, @Context UriInfo uriInfo) throws Exception {
       String username = report.getUsername();
-      User user = userService.getFullUser(username);
+      User user = userService.getUser(username);
       report.setUser(user);
 
       if (report.getProperties() != null) {
@@ -97,7 +91,7 @@ public class ReportDeprecatedREST {
    @Logged
    public Response update(Report report, @Context UriInfo uriInfo) throws Exception {
       String username = report.getUsername();
-      User user = userService.getFullUser(username);
+      User user = userService.getUser(username);
       report.setUser(user);
 
       if (report.getProperties() != null) {

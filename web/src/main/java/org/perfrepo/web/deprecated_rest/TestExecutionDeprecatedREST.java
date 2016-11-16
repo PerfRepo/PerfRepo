@@ -129,7 +129,9 @@ public class TestExecutionDeprecatedREST {
    @Produces(MediaType.TEXT_PLAIN)
    @Logged
    public Response addValue(TestExecution te, @Context UriInfo uriInfo) throws Exception {
-      Collection<Value> values = te.getValues();
+      //TODO: solve this
+      //Collection<Value> values = te.getValues();
+      Collection<Value> values = null;
       Value value = values.iterator().next();
       value.setTestExecution(te);
       Value result = testService.addValue(value);

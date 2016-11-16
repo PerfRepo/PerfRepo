@@ -9,11 +9,7 @@ import org.perfrepo.web.alerting.ConditionCheckerImpl;
 import org.perfrepo.web.dao.TestExecutionDAO;
 import org.perfrepo.web.service.UserService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;

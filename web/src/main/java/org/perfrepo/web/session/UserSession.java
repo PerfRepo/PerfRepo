@@ -14,7 +14,6 @@
  */
 package org.perfrepo.web.session;
 
-import org.perfrepo.model.UserProperty;
 import org.perfrepo.model.user.User;
 import org.perfrepo.model.userproperty.GroupFilter;
 import org.perfrepo.model.userproperty.ReportFilter;
@@ -22,10 +21,14 @@ import org.perfrepo.web.service.UserService;
 import org.perfrepo.web.service.exceptions.ServiceException;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import javax.ejb.SessionContext;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
+import java.security.Principal;
+import java.util.Map;
 
 /**
  * Holds information about user.
@@ -51,7 +54,11 @@ public class UserSession implements Serializable {
    @Inject
    private UserService userService;
 
+   @Resource
+   private SessionContext sessionContext;
+
    private User user;
+   private Map<String, String> userProperties;
 
    @PostConstruct
    public void init() {
@@ -59,8 +66,9 @@ public class UserSession implements Serializable {
    }
 
    public void refresh() {
-      if (userService.getLoggedUser() != null) {
-         user = userService.getFullUser(userService.getLoggedUser().getId());
+      if (getLoggedUser() != null) {
+         user = userService.getUser(getLoggedUser().getId());
+         userProperties = userService.getUserProperties(user);
       }
    }
 
@@ -86,11 +94,11 @@ public class UserSession implements Serializable {
     * @return
     */
    public GroupFilter getGroupFilter() {
-      UserProperty groupFilter = findUserParameter(USER_PARAM_GROUP_FILTER);
+      String groupFilter = findUserParameter(USER_PARAM_GROUP_FILTER);
       if (groupFilter == null) {
          return GroupFilter.MY_GROUPS;
       } else {
-         return GroupFilter.valueOf(groupFilter.getValue());
+         return GroupFilter.valueOf(groupFilter);
       }
    }
 
@@ -100,7 +108,8 @@ public class UserSession implements Serializable {
     * @throws ServiceException
     */
    public void setGroupFilter(GroupFilter filter) {
-      userService.addUserProperty(USER_PARAM_GROUP_FILTER, filter.name());
+      //TODO: solve this
+      //userService.addUserProperty(USER_PARAM_GROUP_FILTER, filter.name());
       refresh();
    }
 
@@ -109,11 +118,11 @@ public class UserSession implements Serializable {
     * @return
     */
    public ReportFilter getReportFilter() {
-      UserProperty reportFilter = findUserParameter(USER_PARAM_REPORT_FILTER);
+      String reportFilter = findUserParameter(USER_PARAM_REPORT_FILTER);
       if (reportFilter == null) {
          return ReportFilter.TEAM;
       } else {
-         return ReportFilter.valueOf(reportFilter.getValue());
+         return ReportFilter.valueOf(reportFilter);
       }
    }
 
@@ -123,12 +132,13 @@ public class UserSession implements Serializable {
     * @throws ServiceException
     */
    public void setReportFilter(ReportFilter filter) {
-      userService.addUserProperty(USER_PARAM_REPORT_FILTER, filter.name());
+      //TODO: solve this
+      //userService.addUserProperty(USER_PARAM_REPORT_FILTER, filter.name());
       refresh();
    }
 
    /**
-    * Set user property {@value #USER_PARAM_GROUP_FILTER} to {@link GroupFilter.ALL_GROUPS}
+    * Set user property {@value #USER_PARAM_GROUP_FILTER} to {@link GroupFilter#ALL_GROUPS}
     * @throws ServiceException
     */
    public void setAllGroupFilter() throws ServiceException {
@@ -136,7 +146,7 @@ public class UserSession implements Serializable {
    }
 
    /**
-    * Set user property {@value #USER_PARAM_GROUP_FILTER} to {@link GroupFilter.MY_GROUPS}
+    * Set user property {@value #USER_PARAM_GROUP_FILTER} to {@link GroupFilter#MY_GROUPS}
     * @throws ServiceException
     */
    public void setMyGroupFilter() throws ServiceException {
@@ -148,12 +158,16 @@ public class UserSession implements Serializable {
     * @param name
     * @return
     */
-   public UserProperty findUserParameter(String name) {
-      for (UserProperty up : user.getProperties()) {
-         if (name.equals(up.getName())) {
-            return up;
-         }
+   public String findUserParameter(String name) {
+      return userProperties.get(name);
+   }
+
+   public User getLoggedUser() {
+      Principal principal = sessionContext.getCallerPrincipal();
+      User user = null;
+      if (principal != null) {
+         user = userService.getUser(principal.getName());
       }
-      return null;
+      return user;
    }
 }

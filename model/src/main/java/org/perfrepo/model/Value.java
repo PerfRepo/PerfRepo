@@ -57,7 +57,7 @@ public class Value implements Entity<Value> {
    @JoinColumn(name = "test_execution_id", referencedColumnName = "id")
    private TestExecution testExecution;
 
-   @OneToMany
+   @OneToMany(mappedBy = "value")
    @MapKey(name = "name")
    private Map<String, ValueParameter> parameters = new HashMap<>();
 

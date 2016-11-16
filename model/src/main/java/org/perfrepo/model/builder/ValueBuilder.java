@@ -18,10 +18,7 @@ import org.perfrepo.model.Metric;
 import org.perfrepo.model.Value;
 import org.perfrepo.model.ValueParameter;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * {@link Value} builder

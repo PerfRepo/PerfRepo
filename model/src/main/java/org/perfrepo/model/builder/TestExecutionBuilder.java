@@ -16,7 +16,9 @@ package org.perfrepo.model.builder;
 
 import org.perfrepo.model.*;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * {@link TestExecution} builder.

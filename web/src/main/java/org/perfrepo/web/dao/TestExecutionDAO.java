@@ -19,7 +19,6 @@ import org.perfrepo.model.*;
 import org.perfrepo.model.to.*;
 import org.perfrepo.model.to.TestExecutionSearchTO.ParamCriteria;
 import org.perfrepo.model.userproperty.GroupFilter;
-import org.perfrepo.model.util.EntityUtils;
 import org.perfrepo.web.util.TagUtils;
 
 import javax.inject.Inject;
@@ -100,11 +99,9 @@ public class TestExecutionDAO extends DAO<TestExecution, Long> {
       }
 
       List<TestExecution> result = query.getResultList();
-      List<TestExecution> clonedResult = EntityUtils.clone(result);
-      filterResultByParameters(clonedResult, search);
-      orderResultsByParameters(clonedResult, search);
+      orderResultsByParameters(result, search);
 
-      return new SearchResultWrapper<>(clonedResult, lastQueryResultsCount);
+      return new SearchResultWrapper<>(result, lastQueryResultsCount);
    }
 
    /**
@@ -168,15 +165,7 @@ public class TestExecutionDAO extends DAO<TestExecution, Long> {
 
       List<TestExecution> result = query.getResultList();
 
-      List<TestExecution> resultClone = EntityUtils.clone(result);
-      for (TestExecution exec : resultClone) {
-         TestExecutionDAO.fetchTest(exec);
-         TestExecutionDAO.fetchParameters(exec);
-         TestExecutionDAO.fetchTags(exec);
-         TestExecutionDAO.fetchValues(exec);
-      }
-
-      return resultClone;
+      return result;
    }
 
    /**
@@ -525,63 +514,6 @@ public class TestExecutionDAO extends DAO<TestExecution, Long> {
    }
 
    /**
-    * After search of test executions with various properties, now we want to filter them
-    * according to test execution parameters. This method does the filtering.
-    * TODO: change the description, it's not true! This method does something else, find out what exactly and document it
-    *
-    * @param result
-    * @param search
-    */
-   private void filterResultByParameters(List<TestExecution> result, TestExecutionSearchTO search) {
-      List<String> displayedParams = null;
-      //go through the entered test parameters
-      //if the parameter doesn't have the value, add % as the value,
-      //i.e. check if the test execution has this parameter
-      if (search.getParameters() != null && !search.getParameters().isEmpty()) {
-         displayedParams = new ArrayList<String>(search.getParameters().size());
-         for (ParamCriteria pc : search.getParameters()) {
-            if (pc.isDisplayed()) {
-               displayedParams.add(pc.getName());
-            }
-            if (pc.getValue() == null || "".equals(pc.getValue().trim())) {
-               pc.setValue("%");
-            }
-         }
-      }
-
-      List<Long> execIds = EntityUtils.extractIds(result);
-      if (displayedParams != null && !displayedParams.isEmpty() && !execIds.isEmpty()) {
-         List<TestExecutionParameter> allParams = testExecutionParameterDAO.find(execIds, displayedParams);
-         Map<Long, List<TestExecutionParameter>> paramsByExecId = new HashMap<Long, List<TestExecutionParameter>>();
-
-         for (TestExecutionParameter param : allParams) {
-            List<TestExecutionParameter> paramListForExec = paramsByExecId.get(param.getTestExecution().getId());
-            if (paramListForExec == null) {
-               paramListForExec = new ArrayList<TestExecutionParameter>(displayedParams.size());
-               paramsByExecId.put(param.getTestExecution().getId(), paramListForExec);
-            }
-
-            paramListForExec.add(param);
-         }
-
-         for (TestExecution exec : result) {
-            List<TestExecutionParameter> paramListForExec = paramsByExecId.get(exec.getId());
-            exec.setParameters(paramListForExec == null ? Collections.<TestExecutionParameter>emptyList() : paramListForExec);
-            exec.setTags(EntityUtils.clone(exec.getTags()));
-         }
-      } else {
-         for (TestExecution exec : result) {
-            if (exec.getTags() == null) {
-               continue;
-            }
-
-            exec.setParameters(Collections.<TestExecutionParameter>emptyList());
-            exec.setTags(EntityUtils.clone(exec.getTags()));
-         }
-      }
-   }
-
-   /**
     * Performs ordering on test executions by values of specified parameter.
     *
     * @param testExecutions
@@ -598,17 +530,16 @@ public class TestExecutionDAO extends DAO<TestExecution, Long> {
       List<Long> executionIds = testExecutions.stream().map(TestExecution::getId).collect(Collectors.toList());
       List<TestExecutionParameter> parameters = testExecutionParameterDAO.find(executionIds, Arrays.asList(search.getOrderByParameter()));
       Map<Long, List<TestExecutionParameter>> parametersByExecution = parameters.stream().collect(Collectors.groupingBy(parameter -> parameter.getTestExecution().getId()));
-      testExecutions.stream().forEach(execution -> execution.setParameters(parametersByExecution.get(execution.getId())));
 
       Collections.sort(testExecutions,
                        (o1, o2) -> {
-                          String o1paramValue = o1.getParametersAsMap().get(search.getOrderByParameter());
+                          String o1paramValue = o1.getParameters().get(search.getOrderByParameter()).getValue();
                           int orderCoefficient = search.getOrderBy() == OrderBy.PARAMETER_ASC || search.getOrderBy() == OrderBy.VERSION_ASC ? 1 : -1;
                           if (o1paramValue == null) {
                              return orderCoefficient * 1;
                           }
 
-                          return orderCoefficient * performCompare(o1paramValue, o2.getParametersAsMap().get(search.getOrderByParameter()), search);
+                          return orderCoefficient * performCompare(o1paramValue, o2.getParameters().get(search.getOrderByParameter()).getValue(), search);
                        });
    }
 
@@ -759,65 +690,5 @@ public class TestExecutionDAO extends DAO<TestExecution, Long> {
             outputIncluded.add(value);
          }
       }
-   }
-
-   /**
-    * Fetch test via JPA relationship.
-    *
-    * @param exec
-    * @return
-    */
-   public static TestExecution fetchTest(TestExecution exec) {
-      exec.setTest(exec.getTest().clone());
-      exec.getTest().setTestExecutions(null);
-      return exec;
-   }
-
-   /**
-    * Fetch tags via JPA relationships.
-    *
-    * @param testExecution
-    * @return TestExecution with fetched tags
-    */
-   public static TestExecution fetchTags(TestExecution testExecution) {
-      testExecution.setTags(EntityUtils.clone(testExecution.getTags()));
-      return testExecution;
-   }
-
-   /**
-    * Fetch parameters via JPA relationships.
-    *
-    * @param testExecution
-    * @return TestExecution with fetched parameters
-    */
-   public static TestExecution fetchParameters(TestExecution testExecution) {
-      testExecution.setParameters(EntityUtils.clone(testExecution.getParameters()));
-      return testExecution;
-   }
-
-   /**
-    * Fetch attachments via JPA relationships.
-    *
-    * @param testExecution
-    * @return TestExecution with fetched attachments
-    */
-   public static TestExecution fetchAttachments(TestExecution testExecution) {
-      testExecution.setAttachments(EntityUtils.clone(testExecution.getAttachments()));
-      return testExecution;
-   }
-
-   /**
-    * Fetch values with parameters via JPA relationships.
-    *
-    * @param testExecution
-    * @return TestExecution with fetched values
-    */
-   public static TestExecution fetchValues(TestExecution testExecution) {
-      List<Value> cloneValues = new ArrayList<>();
-      if (testExecution.getValues() != null) {
-         testExecution.getValues().stream().forEach(value -> cloneValues.add(value.cloneWithParameters()));
-         testExecution.setValues(cloneValues);
-      }
-      return testExecution;
    }
 }

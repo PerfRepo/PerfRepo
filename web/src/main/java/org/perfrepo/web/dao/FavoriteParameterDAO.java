@@ -38,4 +38,13 @@ public class FavoriteParameterDAO extends DAO<FavoriteParameter, Long> {
       List<FavoriteParameter> result = findByNamedQuery(FavoriteParameter.FIND_BY_TEST_AND_PARAM_NAME, params);
       return !result.isEmpty() ? result.get(0) : null;
    }
+
+   public List<FavoriteParameter> findByTest(Long testId, Long userId) {
+      Map<String, Object> params = new HashMap<String, Object>();
+      params.put("userId", userId);
+      params.put("testId", testId);
+
+      List<FavoriteParameter> result = findByNamedQuery(FavoriteParameter.FIND_BY_TEST, params);
+      return result;
+   }
 }

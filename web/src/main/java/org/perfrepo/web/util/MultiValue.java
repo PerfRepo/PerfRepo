@@ -133,12 +133,10 @@ public class MultiValue {
             vInfo.complexValueByParamName = new TreeMap<String, List<ParamInfo>>();
             for (Value v : entry.getValue()) {
                if (v.getParameters() == null || v.getParameters().isEmpty()) {
-                  ValueParameter errorParameter = new ValueParameter();
-                  errorParameter.setName("ERROR");
-                  errorParameter.setParamValue("This value is erroneous.");
-                  v.setParameters(Collections.singletonList(errorParameter));
                   log.error("Multi-value " + v.getResultValue() + " for metric " + vInfo.metricName + " is not parametrized");
                }
+               //TODO: solve this
+               /*
                for (ValueParameter vp : v.getParameters()) {
                   List<ParamInfo> paramInfos = vInfo.complexValueByParamName.get(vp.getName());
                   if (paramInfos == null) {
@@ -149,7 +147,7 @@ public class MultiValue {
                   paramInfo.param = vp;
                   paramInfo.value = v;
                   paramInfos.add(paramInfo);
-               }
+               }*/
             }
          }
          if (vInfo.complexValueByParamName != null) {
@@ -169,6 +167,8 @@ public class MultiValue {
      * @return
      */
    private static Map<String, List<Value>> getValuesByMetric(TestExecution testExecution) {
+      //TODO: solve this
+      /*
       if (testExecution.getValues() == null || testExecution.getValues().isEmpty()) {
          return new HashMap<>();
       }
@@ -176,6 +176,8 @@ public class MultiValue {
       Map<String, List<Value>> valuesByMetric = testExecution.getValues().stream().collect(Collectors.groupingBy(Value::getMetricName));
 
       return valuesByMetric;
+      */
+      return null;
    }
 
    private static final DecimalFormat FMT = new DecimalFormat("0.000");

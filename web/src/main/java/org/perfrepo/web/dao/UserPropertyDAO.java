@@ -19,12 +19,10 @@ import org.perfrepo.model.user.User;
 
 import javax.inject.Named;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * DAO for {@link UserProperty}
@@ -87,5 +85,17 @@ public class UserPropertyDAO extends DAO<UserProperty, Long> {
       query.setParameter("username", userName);
       query.setParameter("name", propertyPrefix + "%");
       return query.getResultList();
+   }
+
+   public void deletePropertiesFromUser(Long userId) {
+      Map<String, Object> parameters = new HashMap<>();
+      parameters.put("userId", userId);
+
+      List<UserProperty> properties = findByNamedQuery(UserProperty.GET_BY_USER, parameters);
+      properties.stream().forEach(property -> remove(property));
+
+      // the flush is needed because we usually want to see the results of the deletion
+      // even during the opened transaction
+      entityManager().flush();
    }
 }

@@ -16,10 +16,9 @@ package org.perfrepo.web.alerting;
 
 
 import org.perfrepo.model.Metric;
+import org.perfrepo.model.TestExecution;
 
 import java.util.Map;
-
-import org.perfrepo.model.TestExecution;
 
 /**
  * API for checking of condition for alerting.

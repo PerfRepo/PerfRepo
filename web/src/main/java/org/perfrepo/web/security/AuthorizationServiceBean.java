@@ -25,12 +25,9 @@ import org.perfrepo.model.user.User;
 import org.perfrepo.web.dao.PermissionDAO;
 import org.perfrepo.web.dao.TestDAO;
 import org.perfrepo.web.service.UserService;
+import org.perfrepo.web.session.UserSession;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
+import javax.ejb.*;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Collection;
@@ -42,13 +39,16 @@ import java.util.Collection;
 public class AuthorizationServiceBean implements AuthorizationService {
 
    @Inject
-   TestDAO testDAO;
+   private TestDAO testDAO;
 
    @Inject
-   PermissionDAO permissionDAO;
+   private PermissionDAO permissionDAO;
 
    @Inject
-   UserService userService;
+   private UserService userService;
+
+   @Inject
+   private UserSession userSession;
 
    private boolean isUserAuthorizedForReport(Long userId, AccessType accessType, Report report) {
       Collection<Permission> permissions = permissionDAO.getByReport(report.getId());
@@ -116,7 +116,7 @@ public class AuthorizationServiceBean implements AuthorizationService {
 
    @Override
    public boolean isUserAuthorizedFor(AccessType accessType, Entity<?> entity) {
-      User user = userService.getLoggedUser();
+      User user = userSession.getLoggedUser();
       return isUserAuthorizedFor(user != null ? user.getId() : null, accessType, entity);
    }
 }

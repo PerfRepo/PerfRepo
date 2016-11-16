@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @Table(name = "test_execution_parameter")
 @SecuredEntity(type = EntityType.TEST, parent = "testExecution")
 @NamedQueries({
-    @NamedQuery(name = TestExecutionParameter.GET_TEST, query = "SELECT test from Test test inner join test.testExecutions te inner join te.parameters tep where tep = :entity"),
+    @NamedQuery(name = TestExecutionParameter.GET_TEST, query = "SELECT test FROM TestExecutionParameter tep INNER JOIN tep.testExecution.test test WHERE tep = :entity"),
     @NamedQuery(name = TestExecutionParameter.FIND_BY_TEST_ID, query = "SELECT DISTINCT p.name FROM TestExecutionParameter p, TestExecution e WHERE p.testExecution.id = e.id AND e.test.id = :testId")})
 @XmlRootElement(name = "testExecutionParameter")
 public class TestExecutionParameter implements Entity<TestExecutionParameter>, Comparable<TestExecutionParameter> {
@@ -36,7 +36,6 @@ public class TestExecutionParameter implements Entity<TestExecutionParameter>, C
    private static final long serialVersionUID = -5534543562306898358L;
 
    public static final String FIND_ALL = "TestExecutionParameter.findAll";
-
    public static final String GET_TEST = "TestExecutionParameter.getTest";
    public static final String FIND_BY_TEST_ID = "TestExecutionParameter.findByTestId";
 

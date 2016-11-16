@@ -43,6 +43,14 @@ public interface UserService {
     */
    public User updateUser(User user) throws ServiceException;
 
+
+    /**
+     * Deletes user
+     *
+     * @param user
+     */
+   public void removeUser(User user) throws ServiceException;
+
    /**
     * Changes user password. Provides check if old password is equal to "current" password
     * and if yes then encrypts the new password and stores it
@@ -75,7 +83,7 @@ public interface UserService {
     * @param prefix
     * @return
     */
-   public List<User> getUsers();
+   public List<User> getAllUsers();
 
    /**
     * Retrieves all groups
@@ -89,13 +97,6 @@ public interface UserService {
     * @return
     */
    public List<String> getLoggedUserGroupNames();
-
-   /**
-    * Retrieves currently logged user
-    *
-    * @return
-    */
-   public User getLoggedUser();
 
    /**
     * Retrieves if logged user is assign in defined group
@@ -117,25 +118,18 @@ public interface UserService {
    /**
     * Return all information about user as detached entity (e.g. cloned)
     *
-    * @param id
-    * @return User with properties.
-    */
-   public User getFullUser(Long id);
-
-   /**
-    * Return all information about user as detached entity (e.g. cloned)
-    *
     * @param username
     * @return User with properties.
     */
-   public User getFullUser(String username);
+   public User getUser(String username);
 
    /**
     * Returns all user properties
     *
+    * @param user
     * @return user properties
     */
-   public Map<String, String> getUserProperties();
+   public Map<String, String> getUserProperties(User user);
 
    /**
     * Adds favorite parameter of user to the test
@@ -145,14 +139,6 @@ public interface UserService {
     * @param label
     */
    public void addFavoriteParameter(Test test, String paramName, String label);
-
-   /**
-    * Adds user parameter
-    *
-    * @param paramName
-    * @param value
-    */
-   public void addUserProperty(String paramName, String value);
 
    /**
     * Removes favorite parameter of the test from user
@@ -169,4 +155,12 @@ public interface UserService {
     * @return list of favorite parameters
     */
    public List<FavoriteParameter> getFavoriteParametersForTest(Test test);
+
+    /**
+     * TODO: document this
+     *
+     * @param properties
+     * @param user
+     */
+   public void updateUserProperties(Map<String, String> properties, User user) throws ServiceException;
 }

@@ -35,7 +35,7 @@ import java.util.Arrays;
 @Table(name = "test_execution_attachment")
 @NamedQueries({
     @NamedQuery(name = TestExecutionAttachment.FIND_BY_EXECUTION, query = "SELECT new TestExecutionAttachment(a.id, a.filename, a.mimetype) from TestExecutionAttachment a WHERE a.testExecution.id = :exec"),
-    @NamedQuery(name = TestExecutionAttachment.GET_TEST, query = "SELECT test from Test test inner join test.testExecutions te inner join te.attachments tea where tea = :entity")
+    @NamedQuery(name = TestExecutionAttachment.GET_TEST, query = "SELECT test FROM TestExecutionAttachment attachment INNER JOIN attachment.testExecution.test test WHERE attachment = :entity")
 })
 @XmlRootElement(name = "attachment")
 @SecuredEntity(type = EntityType.TEST, parent = "testExecution")

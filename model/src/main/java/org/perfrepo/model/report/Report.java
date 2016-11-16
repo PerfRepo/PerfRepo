@@ -36,8 +36,8 @@ import java.util.Map;
 @XmlRootElement(name = "report")
 @NamedQueries({
     @NamedQuery(name = Report.GET_BY_USERNAME, query = "SELECT distinct report from Report report join report.user user where user.username = :username"),
-    @NamedQuery(name = Report.GET_BY_GROUP_PERMISSION, query = "SELECT distinct report from Report report join report.permissions perm where perm.groupId in (:groupIds) or perm.userId= :userId"),
-    @NamedQuery(name = Report.GET_BY_ANY_PERMISSION, query = "SELECT distinct report from Report report join report.permissions perm where perm.level = 'PUBLIC' or perm.groupId in (:groupIds) or perm.userId= :userId"),
+    @NamedQuery(name = Report.GET_BY_GROUP_PERMISSION, query = "SELECT distinct report FROM Permission permission INNER JOIN permission.report report WHERE permission.groupId in (:groupIds) or permission.userId= :userId"),
+    @NamedQuery(name = Report.GET_BY_ANY_PERMISSION, query = "SELECT distinct report FROM Permission permission INNER JOIN permission.report report WHERE permission.level = 'PUBLIC' or permission.groupId in (:groupIds) or permission.userId = :userId"),
     @NamedQuery(name = Report.FIND_MAX_ID, query = "SELECT max(report.id) from Report report")
 })
 public class Report implements Entity<Report>, Comparable<Report> {

@@ -22,9 +22,14 @@ import javax.validation.constraints.Size;
 
 @javax.persistence.Entity
 @Table(name = "user_property")
+@NamedQueries({
+        @NamedQuery(name = UserProperty.GET_BY_USER, query = "SELECT property FROM UserProperty property WHERE property.user.id = :userId")
+})
 public class UserProperty implements Entity<UserProperty>, Comparable<UserProperty> {
 
    private static final long serialVersionUID = -1476383380689021931L;
+
+   public static final String GET_BY_USER = "UserProperty.getByUser";
 
    @Id
    @SequenceGenerator(name = "USER_PROPERTY_ID_GENERATOR", sequenceName = "USER_PROPERTY_SEQUENCE", allocationSize = 1)

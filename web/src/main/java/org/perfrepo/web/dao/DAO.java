@@ -20,14 +20,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.FetchParent;
-import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -67,21 +62,20 @@ public abstract class DAO<T extends Entity<T>, PK extends Serializable> {
       return em.find(type, id);
    }
 
-   public T update(final T entity) {
+   public T merge(final T entity) {
       T stored = em.merge(entity);
-      em.flush();
+
       return stored;
    }
 
    public T create(final T entity) {
       em.persist(entity);
-      em.flush();
+
       return entity;
    }
 
    public void remove(final T entity) {
       em.remove(entity);
-      em.flush();
    }
 
    /**
@@ -135,37 +129,16 @@ public abstract class DAO<T extends Entity<T>, PK extends Serializable> {
     * Return result of named query
     *
     * @param queryName
-    * @param clones Return clones of root objects returned by this query.
     * @param queryParams
     * @return List of entities corresponding to query
     */
-   public List<T> findByNamedQuery(String queryName, Map<String, Object> queryParams, boolean clones) {
+   public List<T> findByNamedQuery(String queryName, Map<String, Object> queryParams) {
       TypedQuery<T> tq = em.createNamedQuery(queryName, type);
       for (Entry<String, Object> entry : queryParams.entrySet()) {
          tq.setParameter(entry.getKey(), entry.getValue());
       }
 
-      List<T> result1 = tq.getResultList();
-      if (!clones || result1.isEmpty()) {
-         return result1;
-      } else {
-         List<T> resultClone = new ArrayList<T>(result1.size());
-         for (T item : result1) {
-            resultClone.add(item.clone());
-         }
-         return resultClone;
-      }
-   }
-
-   /**
-    * Alias for findByNamedQuery(queryName, queryParams, false)
-    *
-    * @param queryName
-    * @param queryParams
-    * @return List of entities corresponding to named query
-    */
-   public List<T> findByNamedQuery(String queryName, Map<String, Object> queryParams) {
-      return findByNamedQuery(queryName, queryParams, false);
+      return tq.getResultList();
    }
 
    public T findWithDepth(Object id, String... fetchRelations) {

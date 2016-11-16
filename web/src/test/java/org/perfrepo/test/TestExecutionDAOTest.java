@@ -23,7 +23,6 @@ import org.perfrepo.web.util.TagUtils;
 import javax.inject.Inject;
 import javax.transaction.Status;
 import javax.transaction.UserTransaction;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -479,9 +478,9 @@ public class TestExecutionDAOTest {
                                metricDAO.create(createMetric("metric2")) };
 
       Test test1 = createTest("testuser1", "uid1");
-      test1.setMetrics(Arrays.asList(metrics[0]));
+      test1.setMetrics(new HashSet<>(Arrays.asList(metrics[0])));
       Test test2 = createTest("testuser1", "uid2");
-      test2.setMetrics(Arrays.asList(metrics[0]));
+      test2.setMetrics(new HashSet<>(Arrays.asList(metrics[0])));
 
       tests = new Test[]{ testDAO.create(test1),
                           testDAO.create(test2) };
@@ -522,10 +521,7 @@ public class TestExecutionDAOTest {
          storedTag = tagDAO.create(tag);
       }
 
-      Collection<Tag> tags = storedTestExecution.getTags();
-      if (tags == null) {
-         tags = new ArrayList<>();
-      }
+      Set<Tag> tags = storedTestExecution.getTags();
       tags.add(storedTag);
       storedTestExecution.setTags(tags);
 
@@ -539,13 +535,7 @@ public class TestExecutionDAOTest {
       value.setTestExecution(testExecution);
 
       Value storedValue = valueDAO.create(value);
-      Collection<Value> values = testExecution.getValues();
-      if (values == null) {
-         values = new ArrayList<>();
-      }
-      values.add(storedValue);
-      testExecution.setValues(values);
-      testExecutionDAO.update(testExecution);
+      testExecutionDAO.merge(testExecution);
 
       return storedValue;
    }
@@ -557,13 +547,10 @@ public class TestExecutionDAOTest {
       parameter.setTestExecution(testExecution);
       TestExecutionParameter storedParameter = testExecutionParameterDAO.create(parameter);
 
-      Collection<TestExecutionParameter> parameters = testExecution.getParameters();
-      if (parameters == null) {
-         parameters = new ArrayList<>();
-      }
-      parameters.add(storedParameter);
+      Map<String, TestExecutionParameter> parameters = testExecution.getParameters();
+      parameters.put(storedParameter.getName(), storedParameter);
       testExecution.setParameters(parameters);
-      testExecutionDAO.update(testExecution);
+      testExecutionDAO.merge(testExecution);
 
       return storedParameter;
    }
@@ -591,13 +578,10 @@ public class TestExecutionDAOTest {
 
          ValueParameter storedValueParameter = valueParameterDAO.create(valueParameter);
 
-         Collection<ValueParameter> valueParameterCollection = storedValue.getParameters();
-         if (valueParameterCollection == null) {
-            valueParameterCollection = new ArrayList<>();
-         }
-         valueParameterCollection.add(storedValueParameter);
+         Map<String, ValueParameter> valueParameterCollection = storedValue.getParameters();
+         valueParameterCollection.put(storedValueParameter.getName(), storedValueParameter);
          storedValue.setParameters(valueParameterCollection);
-         valueDAO.update(storedValue);
+         valueDAO.merge(storedValue);
       }
 
       return storedValue;
