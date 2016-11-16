@@ -16,7 +16,6 @@ package org.perfrepo.web.dao;
 
 import org.perfrepo.model.user.User;
 
-import javax.inject.Named;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import java.util.Map;
  *
  * @author Michal Linhard (mlinhard@redhat.com)
  */
-@Named
 public class UserDAO extends DAO<User, Long> {
 
    public User findByUsername(String name) {

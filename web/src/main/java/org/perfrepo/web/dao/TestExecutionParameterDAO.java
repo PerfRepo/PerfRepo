@@ -17,7 +17,6 @@ package org.perfrepo.web.dao;
 import org.perfrepo.model.TestExecution;
 import org.perfrepo.model.TestExecutionParameter;
 
-import javax.inject.Named;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.List;
@@ -29,7 +28,6 @@ import java.util.List;
  * @author Michal Linhard (mlinhard@redhat.com)
  * @author Jiri Holusa (jholusa@redhat.com)
  */
-@Named
 public class TestExecutionParameterDAO extends DAO<TestExecutionParameter, Long> {
 
    /**

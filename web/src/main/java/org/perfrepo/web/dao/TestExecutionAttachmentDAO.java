@@ -16,7 +16,6 @@ package org.perfrepo.web.dao;
 
 import org.perfrepo.model.TestExecutionAttachment;
 
-import javax.inject.Named;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,7 +25,6 @@ import java.util.TreeMap;
  *
  * @author Michal Linhard (mlinhard@redhat.com)
  */
-@Named
 public class TestExecutionAttachmentDAO extends DAO<TestExecutionAttachment, Long> {
 
    public Collection<TestExecutionAttachment> findByExecution(Long testExecutionId) {

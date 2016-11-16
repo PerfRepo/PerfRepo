@@ -23,7 +23,6 @@ import javax.inject.Named;
  *
  * @author Jiri Holusa (jholusa@redhat.com)
  */
-@Named
 public class ReportPropertyDAO extends DAO<ReportProperty, Long> {
 
 }

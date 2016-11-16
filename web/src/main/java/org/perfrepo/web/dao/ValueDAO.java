@@ -18,7 +18,6 @@ import org.perfrepo.model.Metric;
 import org.perfrepo.model.TestExecution;
 import org.perfrepo.model.Value;
 
-import javax.inject.Named;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.List;
@@ -29,7 +28,6 @@ import java.util.List;
  * @author Pavel Drozd (pdrozd@redhat.com)
  * @author Michal Linhard (mlinhard@redhat.com)
  */
-@Named
 public class ValueDAO extends DAO<Value, Long> {
 
    public Value getValue(Long id) {

@@ -17,7 +17,6 @@ package org.perfrepo.web.dao;
 import org.perfrepo.model.UserProperty;
 import org.perfrepo.model.user.User;
 
-import javax.inject.Named;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.HashMap;
@@ -28,8 +27,8 @@ import java.util.Map;
  * DAO for {@link UserProperty}
  *
  * @author Michal Linhard (mlinhard@redhat.com)
+ * @author Jiri Holusa (jholusa@redhat.com)
  */
-@Named
 public class UserPropertyDAO extends DAO<UserProperty, Long> {
 
    public List<UserProperty> findByUserId(Long userId) {
