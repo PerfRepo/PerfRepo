@@ -82,7 +82,7 @@ public class TestServiceBeanTest {
    @After
    public void removeTests() throws Exception {
       for (final Test test : testService.getAllFullTests()) {
-         LoginContext loginContext = JBossLoginContextFactory.createLoginContext(test.getGroupId(), test.getGroupId());
+         LoginContext loginContext = JBossLoginContextFactory.createLoginContext(test.getGroup().getName(), test.getGroup().getName());
          loginContext.login();
          try {
             Subject.doAs(loginContext.getSubject(), new PrivilegedAction<Void>() {

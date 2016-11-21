@@ -17,6 +17,7 @@ package org.perfrepo.model.builder;
 import org.perfrepo.model.Metric;
 import org.perfrepo.model.MetricComparator;
 import org.perfrepo.model.Test;
+import org.perfrepo.model.user.Group;
 
 import java.util.Set;
 
@@ -64,7 +65,10 @@ public class TestBuilder {
     * @return this {@link TestBuilder}
     */
    public TestBuilder groupId(String groupId) {
-      test.setGroupId(groupId);
+      //TODO: fix this
+      Group group = new Group();
+      group.setName(groupId);
+      test.setGroup(group);
       return this;
    }
 

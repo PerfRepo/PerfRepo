@@ -411,7 +411,7 @@ public class TestServiceBean implements TestService {
          }
 
          for (Test testForMetric : freshMetric.getTests()) {
-            if (!testForMetric.getGroupId().equals(freshTest.getGroupId())) {
+            if (!testForMetric.getGroup().equals(freshTest.getGroup())) {
                throw new ServiceException("serviceException.metricSharingOnlyInGroup");
             }
             if (testForMetric.getId().equals(freshTest.getId())) {
@@ -434,7 +434,7 @@ public class TestServiceBean implements TestService {
          // metric name needs to be unique in the metric space of a certain groupId
          // does it exist in a test with same group id (including the target test) ?
          List<Metric> existingMetricsForGroup = metricDAO.getMetricByNameAndGroup(metric.getName(),
-                                                                                  freshTest.getGroupId());
+                                                                                  freshTest.getGroup().getName());
          for (Metric existingMetric : existingMetricsForGroup) {
             if (existingMetric.getName().equals(metric.getName())) {
                Metric freshMetric = metricDAO.get(existingMetric.getId());
@@ -603,8 +603,7 @@ public class TestServiceBean implements TestService {
       if (value.getMetric().getId() != null) {
          metric = metricDAO.get(value.getMetric().getId());
       } else {
-         List<Metric> metrics = metricDAO.getMetricByNameAndGroup(value.getMetric().getName(), exec.getTest()
-             .getGroupId());
+         List<Metric> metrics = metricDAO.getMetricByNameAndGroup(value.getMetric().getName(), exec.getTest().getGroup().getName());
          if (metrics.size() > 0) {
             metric = metricDAO.get(metrics.get(0).getId());
          }

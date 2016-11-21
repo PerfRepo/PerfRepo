@@ -17,6 +17,7 @@ package org.perfrepo.model;
 import org.perfrepo.model.auth.EntityType;
 import org.perfrepo.model.auth.SecuredEntity;
 import org.perfrepo.model.builder.TestBuilder;
+import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
 
 import javax.persistence.Column;
@@ -27,6 +28,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
@@ -96,10 +98,9 @@ public class Test implements Entity<Test> {
    @Size(max = 2047)
    private String uid;
 
-   @Column(name = "groupId")
-   @NotNull(message = "{page.test.groupRequired}")
-   @Size(max = 255)
-   private String groupId;
+   @ManyToOne(fetch = FetchType.LAZY)
+   @JoinColumn(name = "group_id", referencedColumnName = "id")
+   private Group group;
 
    @Column(name = "description")
    @Size(max = 10239)
@@ -153,13 +154,12 @@ public class Test implements Entity<Test> {
       return this.uid;
    }
 
-   @XmlAttribute(name = "groupId")
-   public String getGroupId() {
-      return groupId;
+   public Group getGroup() {
+      return group;
    }
 
-   public void setGroupId(String groupId) {
-      this.groupId = groupId;
+   public void setGroup(Group group) {
+      this.group = group;
    }
 
    @XmlElement(name = "description")
