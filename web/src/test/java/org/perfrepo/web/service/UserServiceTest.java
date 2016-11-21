@@ -10,16 +10,10 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.After;
 import org.junit.runner.RunWith;
-import org.perfrepo.model.Entity;
 import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
-import org.perfrepo.web.alerting.ConditionChecker;
-import org.perfrepo.web.dao.DAO;
-import org.perfrepo.web.security.SecurityException;
-import org.perfrepo.web.service.exceptions.ServiceException;
-import org.perfrepo.web.session.UserSession;
 
 import javax.inject.Inject;
 import java.util.Arrays;

@@ -15,7 +15,6 @@
 package org.perfrepo.web.session;
 
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
@@ -26,7 +25,6 @@ import java.util.Set;
  *
  * @author Michal Linhard (mlinhard@redhat.com)
  */
-@Named(value = "teComparatorSession")
 @SessionScoped
 public class TEComparatorSession implements Serializable {
 

@@ -19,7 +19,6 @@ import org.perfrepo.model.to.TestExecutionSearchTO;
 import org.perfrepo.model.to.TestSearchTO;
 
 import javax.enterprise.context.SessionScoped;
-import javax.inject.Named;
 import java.io.Serializable;
 
 /**
@@ -28,7 +27,6 @@ import java.io.Serializable;
  * @author Michal Linhard (mlinhard@redhat.com)
  * @author Jiri Holusa (jholusa@redhat.com)
  */
-@Named(value = "searchCriteriaSession")
 @SessionScoped
 public class SearchCriteriaSession implements Serializable {
 

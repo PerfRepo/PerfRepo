@@ -20,7 +20,6 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -42,7 +41,6 @@ import java.util.Map;
  * @author Jiri Holusa (jholusa@redhat.com)
  * @author Matej Novotny (manovotn@redhat.com)
  */
-@Named
 @Stateless
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
