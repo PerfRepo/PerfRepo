@@ -35,12 +35,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -60,7 +54,6 @@ import java.util.stream.Collectors;
 @Table(name = "test_execution")
 @SecuredEntity(type = EntityType.TEST, parent = "test")
 @NamedQueries({@NamedQuery(name = TestExecution.GET_TEST, query = "SELECT te.test from TestExecution te inner join te.test where te= :entity")})
-@XmlRootElement(name = "testExecution")
 public class TestExecution implements Entity<TestExecution> {
 
    private static final long serialVersionUID = -2956845045583534606L;
@@ -101,7 +94,6 @@ public class TestExecution implements Entity<TestExecution> {
    @MapKey(name = "name")
    private Map<String, TestExecutionParameter> parameters;
 
-   @XmlTransient
    public Long getId() {
       return id;
    }
@@ -110,8 +102,6 @@ public class TestExecution implements Entity<TestExecution> {
       this.id = id;
    }
 
-   @XmlID
-   @XmlAttribute(name = "id")
    public String getStringId() {
       return id == null ? null : String.valueOf(id);
    }
@@ -124,7 +114,6 @@ public class TestExecution implements Entity<TestExecution> {
       this.name = name;
    }
 
-   @XmlAttribute(name = "name")
    public String getName() {
       return this.name;
    }
@@ -133,12 +122,10 @@ public class TestExecution implements Entity<TestExecution> {
       this.test = test;
    }
 
-   @XmlTransient
    public Test getTest() {
       return this.test;
    }
 
-   @XmlAttribute(name = "testId")
    public String getTestId() {
       return test == null ? null : (test.getId() == null ? null : test.getId().toString());
    }
@@ -150,7 +137,6 @@ public class TestExecution implements Entity<TestExecution> {
       test.setId(Long.valueOf(id));
    }
 
-   @XmlAttribute(name = "testUid")
    public String getTestUid() {
       return test == null ? null : test.getUid();
    }
@@ -162,8 +148,6 @@ public class TestExecution implements Entity<TestExecution> {
       test.setUid(uid);
    }
 
-   @XmlElementWrapper(name = "tags")
-   @XmlElement(name = "tag")
    public Set<Tag> getTags() {
       return this.tags;
    }
@@ -172,7 +156,6 @@ public class TestExecution implements Entity<TestExecution> {
       this.tags = tags;
    }
 
-   @XmlAttribute(name = "started")
    public Date getStarted() {
       return started;
    }
@@ -197,7 +180,6 @@ public class TestExecution implements Entity<TestExecution> {
       this.comment = comment;
    }
 
-   @XmlTransient
    public List<Tag> getSortedTags() {
       Collection<Tag> tags = getTags();
       if (tags == null) {

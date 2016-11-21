@@ -29,11 +29,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -50,7 +45,6 @@ import java.util.Set;
     @NamedQuery(name = Metric.FIND_BY_NAME_GROUPID, query = "SELECT m from Metric m inner join m.tests test where test.groupId= :groupId and m.name= :name"),
     @NamedQuery(name = Metric.FIND_BY_GROUPID, query = "SELECT DISTINCT m from Metric m inner join m.tests t WHERE t.groupId= :groupId ORDER BY m.name"),
 })
-@XmlRootElement(name = "metric")
 //@SecuredEntity(type = EntityType.TEST) TODO: figure it out correctly
 public class Metric implements Entity<Metric>, Comparable<Metric> {
 
@@ -93,7 +87,6 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
       this.description = description;
    }
 
-   @XmlTransient
    public Long getId() {
       return id;
    }
@@ -102,8 +95,6 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
       this.id = id;
    }
 
-   @XmlID
-   @XmlAttribute(name = "id")
    public String getStringId() {
       return id == null ? null : String.valueOf(id);
    }
@@ -116,7 +107,6 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
       this.comparator = comparator;
    }
 
-   @XmlAttribute(name = "comparator")
    public MetricComparator getComparator() {
       return this.comparator;
    }
@@ -125,12 +115,10 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
       this.name = name;
    }
 
-   @XmlAttribute(name = "name")
    public String getName() {
       return this.name;
    }
 
-   @XmlElement(name = "description")
    public String getDescription() {
       return description;
    }

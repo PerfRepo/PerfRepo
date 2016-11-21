@@ -20,14 +20,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @javax.persistence.Entity
 @Table(name = "tag")
-@XmlRootElement(name = "tag")
 public class Tag implements Entity<Tag>, Comparable<Tag> {
 
    private static final long serialVersionUID = -5239043908577304531L;
@@ -42,7 +37,6 @@ public class Tag implements Entity<Tag>, Comparable<Tag> {
    @Column(name = "name")
    private String name;
 
-   @XmlTransient
    public Long getId() {
       return id;
    }
@@ -51,8 +45,6 @@ public class Tag implements Entity<Tag>, Comparable<Tag> {
       this.id = id;
    }
 
-   @XmlID
-   @XmlAttribute(name = "id")
    public String getStringId() {
       return id == null ? null : String.valueOf(id);
    }
@@ -65,7 +57,6 @@ public class Tag implements Entity<Tag>, Comparable<Tag> {
       this.name = name;
    }
 
-   @XmlAttribute(name = "name")
    public String getName() {
       return this.name;
    }

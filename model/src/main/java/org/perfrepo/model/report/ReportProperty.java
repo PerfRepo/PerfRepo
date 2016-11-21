@@ -26,13 +26,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @javax.persistence.Entity
 @Table(name = "report_property")
-@XmlRootElement(name = "reportProperty")
 public class ReportProperty implements Entity<ReportProperty>, Comparable<ReportProperty> {
 
    private static final long serialVersionUID = -2862333826616822888L;
@@ -56,7 +52,6 @@ public class ReportProperty implements Entity<ReportProperty>, Comparable<Report
    @JoinColumn(name = "report_id", referencedColumnName = "id")
    private Report report;
 
-   @XmlAttribute(name = "id")
    public Long getId() {
       return id;
    }
@@ -65,7 +60,6 @@ public class ReportProperty implements Entity<ReportProperty>, Comparable<Report
       this.id = id;
    }
 
-   @XmlAttribute(name = "name")
    public String getName() {
       return name;
    }
@@ -74,7 +68,6 @@ public class ReportProperty implements Entity<ReportProperty>, Comparable<Report
       this.name = name;
    }
 
-   @XmlAttribute(name = "value")
    public String getValue() {
       return value;
    }
@@ -83,7 +76,6 @@ public class ReportProperty implements Entity<ReportProperty>, Comparable<Report
       this.value = value;
    }
 
-   @XmlTransient
    public Report getReport() {
       return report;
    }

@@ -29,9 +29,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,7 +42,6 @@ import java.util.Map;
 @Table(name = "value")
 @NamedQueries({@NamedQuery(name = Value.GET_TEST, query = "SELECT test from Value v inner join v.testExecution te inner join te.test test where v= :entity")})
 @SecuredEntity(type = EntityType.TEST, parent = "testExecution")
-@XmlRootElement(name = "value")
 public class Value implements Entity<Value> {
 
    private static final long serialVersionUID = 1227873698917395252L;
@@ -72,7 +68,6 @@ public class Value implements Entity<Value> {
    @MapKey(name = "name")
    private Map<String, ValueParameter> parameters = new HashMap<>();
 
-   @XmlTransient
    public Long getId() {
       return id;
    }
@@ -85,7 +80,6 @@ public class Value implements Entity<Value> {
       this.metric = metric;
    }
 
-   @XmlTransient
    public Metric getMetric() {
       return this.metric;
    }
@@ -94,7 +88,6 @@ public class Value implements Entity<Value> {
       this.resultValue = resultValue;
    }
 
-   @XmlAttribute(name = "result")
    public Double getResultValue() {
       return this.resultValue;
    }
@@ -103,7 +96,6 @@ public class Value implements Entity<Value> {
       this.testExecution = testExecution;
    }
 
-   @XmlTransient
    public TestExecution getTestExecution() {
       return this.testExecution;
    }
@@ -116,7 +108,6 @@ public class Value implements Entity<Value> {
       this.parameters = parameters;
    }
 
-   @XmlAttribute(name = "metricName")
    public String getMetricName() {
       return metric == null ? null : metric.getName();
    }
@@ -128,7 +119,6 @@ public class Value implements Entity<Value> {
       metric.setName(metricName);
    }
 
-   @XmlAttribute(name = "metricComparator")
    public MetricComparator getMetricComparator() {
       return metric == null ? null : metric.getComparator();
    }

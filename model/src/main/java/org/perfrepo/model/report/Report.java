@@ -34,11 +34,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.Map;
 
 /**
@@ -49,7 +44,6 @@ import java.util.Map;
 @javax.persistence.Entity
 @Table(name = "report")
 @SecuredEntity(type = EntityType.REPORT)
-@XmlRootElement(name = "report")
 @NamedQueries({
     @NamedQuery(name = Report.GET_BY_USERNAME, query = "SELECT distinct report from Report report join report.user user where user.username = :username"),
     @NamedQuery(name = Report.GET_BY_GROUP_PERMISSION, query = "SELECT distinct report FROM Permission permission INNER JOIN permission.report report WHERE permission.groupId in (:groupIds) or permission.userId= :userId"),
@@ -100,7 +94,6 @@ public class Report implements Entity<Report>, Comparable<Report> {
       this.id = id;
    }
 
-   @XmlAttribute(name = "id")
    public Long getId() {
       return id;
    }
@@ -109,7 +102,6 @@ public class Report implements Entity<Report>, Comparable<Report> {
       this.id = id;
    }
 
-   @XmlAttribute(name = "name")
    public String getName() {
       return name;
    }
@@ -118,7 +110,6 @@ public class Report implements Entity<Report>, Comparable<Report> {
       this.name = name;
    }
 
-   @XmlAttribute(name = "type")
    public String getType() {
       return type;
    }
@@ -127,7 +118,6 @@ public class Report implements Entity<Report>, Comparable<Report> {
       this.type = type;
    }
 
-   @XmlTransient
    public User getUser() {
       return user;
    }
@@ -136,8 +126,6 @@ public class Report implements Entity<Report>, Comparable<Report> {
       this.user = user;
    }
 
-   @XmlElementWrapper(name = "properties")
-   @XmlElement(name = "property")
    public Map<String, ReportProperty> getProperties() {
       return properties;
    }
@@ -146,7 +134,6 @@ public class Report implements Entity<Report>, Comparable<Report> {
       this.properties = properties;
    }
 
-   @XmlAttribute(name = "user")
    public String getUsername() {
       return username;
    }

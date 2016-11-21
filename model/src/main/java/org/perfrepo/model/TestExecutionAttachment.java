@@ -30,10 +30,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.Arrays;
 
 /**
@@ -47,7 +43,6 @@ import java.util.Arrays;
     @NamedQuery(name = TestExecutionAttachment.FIND_BY_EXECUTION, query = "SELECT new TestExecutionAttachment(a.id, a.filename, a.mimetype) from TestExecutionAttachment a WHERE a.testExecution.id = :exec"),
     @NamedQuery(name = TestExecutionAttachment.GET_TEST, query = "SELECT test FROM TestExecutionAttachment attachment INNER JOIN attachment.testExecution.test test WHERE attachment = :entity")
 })
-@XmlRootElement(name = "attachment")
 @SecuredEntity(type = EntityType.TEST, parent = "testExecution")
 public class TestExecutionAttachment implements Entity<TestExecutionAttachment> {
 
@@ -101,7 +96,6 @@ public class TestExecutionAttachment implements Entity<TestExecutionAttachment> 
    @Size(max = 1048576)
    private byte[] content;
 
-   @XmlTransient
    public Long getId() {
       return id;
    }
@@ -110,8 +104,6 @@ public class TestExecutionAttachment implements Entity<TestExecutionAttachment> 
       this.id = id;
    }
 
-   @XmlID
-   @XmlAttribute(name = "id")
    public String getStringId() {
       return id == null ? null : String.valueOf(id);
    }
@@ -128,7 +120,6 @@ public class TestExecutionAttachment implements Entity<TestExecutionAttachment> 
       return this.testExecution;
    }
 
-   @XmlAttribute(name = "filename")
    public String getFilename() {
       return filename;
    }
@@ -137,7 +128,6 @@ public class TestExecutionAttachment implements Entity<TestExecutionAttachment> 
       this.filename = filename;
    }
 
-   @XmlAttribute(name = "mimetype")
    public String getMimetype() {
       return mimetype;
    }
@@ -146,7 +136,6 @@ public class TestExecutionAttachment implements Entity<TestExecutionAttachment> 
       this.mimetype = mimetype;
    }
 
-   @XmlTransient
    public byte[] getContent() {
       return content;
    }

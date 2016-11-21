@@ -29,9 +29,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @javax.persistence.Entity
 @Table(name = "value_parameter")
@@ -45,7 +42,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = ValueParameter.FIND_ALL_SORTED_BY_VALUE_DESC, query = "SELECT x FROM ValueParameter x ORDER BY x.paramValue DESC"),
     @NamedQuery(name = ValueParameter.FIND_BY_ID, query = "SELECT x from ValueParameter x WHERE x.id = :" + ValueParameter.NQ_ID),
     @NamedQuery(name = ValueParameter.GET_TEST, query = "SELECT test from ValueParameter vp inner join vp.value v inner join v.testExecution te inner join te.test test where vp= :entity")})
-@XmlRootElement(name = "valueParameter")
 @SecuredEntity(type = EntityType.TEST, parent = "value")
 public class ValueParameter implements Entity<ValueParameter>, Comparable<ValueParameter> {
 
@@ -84,7 +80,6 @@ public class ValueParameter implements Entity<ValueParameter>, Comparable<ValueP
    @JoinColumn(name = "value_id", referencedColumnName = "id")
    private Value value;
 
-   @XmlTransient
    public Value getValue() {
       return value;
    }
@@ -103,7 +98,6 @@ public class ValueParameter implements Entity<ValueParameter>, Comparable<ValueP
       this.paramValue = value;
    }
 
-   @XmlTransient
    public Long getId() {
       return id;
    }
@@ -116,7 +110,6 @@ public class ValueParameter implements Entity<ValueParameter>, Comparable<ValueP
       this.name = name;
    }
 
-   @XmlAttribute(name = "name")
    public String getName() {
       return this.name;
    }
@@ -125,7 +118,6 @@ public class ValueParameter implements Entity<ValueParameter>, Comparable<ValueP
       this.paramValue = value;
    }
 
-   @XmlAttribute(name = "value")
    public String getParamValue() {
       return this.paramValue;
    }

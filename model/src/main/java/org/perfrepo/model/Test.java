@@ -35,12 +35,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlID;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -60,7 +54,6 @@ import java.util.stream.Collectors;
 @NamedQueries({
     @NamedQuery(name = Test.FIND_BY_UID, query = "SELECT test FROM Test test WHERE test.uid = :uid")
 })
-@XmlRootElement(name = "test")
 public class Test implements Entity<Test> {
 
    private static final long serialVersionUID = 2936849220074718535L;
@@ -106,7 +99,6 @@ public class Test implements Entity<Test> {
    @Size(max = 10239)
    private String description;
 
-   @XmlTransient
    public Long getId() {
       return id;
    }
@@ -115,8 +107,6 @@ public class Test implements Entity<Test> {
       this.id = id;
    }
 
-   @XmlID
-   @XmlAttribute(name = "id")
    public String getStringId() {
       return id == null ? null : String.valueOf(id);
    }
@@ -129,18 +119,14 @@ public class Test implements Entity<Test> {
       this.name = name;
    }
 
-   @XmlAttribute(name = "name")
    public String getName() {
       return this.name;
    }
 
-   @XmlTransient
    public Collection<User> getSubscribers() {
       return subscribers;
    }
 
-   @XmlElementWrapper(name = "metrics")
-   @XmlElement(name = "metric")
    public Set<Metric> getMetrics() {
       return metrics;
    }
@@ -149,7 +135,6 @@ public class Test implements Entity<Test> {
       this.uid = uid;
    }
 
-   @XmlAttribute(name = "uid")
    public String getUid() {
       return this.uid;
    }
@@ -162,7 +147,6 @@ public class Test implements Entity<Test> {
       this.group = group;
    }
 
-   @XmlElement(name = "description")
    public String getDescription() {
       return description;
    }
@@ -179,7 +163,6 @@ public class Test implements Entity<Test> {
       this.subscribers = subscribers;
    }
 
-   @XmlTransient
    public List<Metric> getSortedMetrics() {
       Collection<Metric> tags = getMetrics();
       if (tags == null) {

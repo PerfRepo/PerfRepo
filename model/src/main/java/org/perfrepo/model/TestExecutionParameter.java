@@ -29,9 +29,6 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 @javax.persistence.Entity
 @Table(name = "test_execution_parameter")
@@ -39,7 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = TestExecutionParameter.GET_TEST, query = "SELECT test FROM TestExecutionParameter tep INNER JOIN tep.testExecution.test test WHERE tep = :entity"),
     @NamedQuery(name = TestExecutionParameter.FIND_BY_TEST_ID, query = "SELECT DISTINCT p.name FROM TestExecutionParameter p, TestExecution e WHERE p.testExecution.id = e.id AND e.test.id = :testId")})
-@XmlRootElement(name = "testExecutionParameter")
 public class TestExecutionParameter implements Entity<TestExecutionParameter>, Comparable<TestExecutionParameter> {
 
    private static final long serialVersionUID = -5534543562306898358L;
@@ -77,7 +73,6 @@ public class TestExecutionParameter implements Entity<TestExecutionParameter>, C
       this.value = value;
    }
 
-   @XmlTransient
    public Long getId() {
       return id;
    }
@@ -90,7 +85,6 @@ public class TestExecutionParameter implements Entity<TestExecutionParameter>, C
       this.name = name;
    }
 
-   @XmlAttribute(name = "name")
    public String getName() {
       return this.name;
    }
@@ -99,7 +93,6 @@ public class TestExecutionParameter implements Entity<TestExecutionParameter>, C
       this.testExecution = testExecution;
    }
 
-   @XmlTransient
    public TestExecution getTestExecution() {
       return this.testExecution;
    }
@@ -108,7 +101,6 @@ public class TestExecutionParameter implements Entity<TestExecutionParameter>, C
       this.value = value;
    }
 
-   @XmlAttribute(name = "value")
    public String getValue() {
       return this.value;
    }
