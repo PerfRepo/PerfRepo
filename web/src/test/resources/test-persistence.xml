@@ -7,7 +7,7 @@
 
    <persistence-unit name="PerfRepoPU" transaction-type="JTA">
       <provider>org.hibernate.ejb.HibernatePersistence</provider>
-      <jta-data-source>java:jboss/datasources/PerfRepoTestDS</jta-data-source>
+      <jta-data-source>java:jboss/datasources/PerfRepo2TestDS</jta-data-source>
 
       <properties>
          <!-- Properties for Hibernate -->

@@ -142,7 +142,7 @@ public class TestExecutionController extends BaseController {
 
    public void saveEditedFavoriteParameter() {
       //TODO: solve this
-      //userService.addFavoriteParameter(editedFavoriteParameter.getTest(), editedFavoriteParameter.getParameterName(), editedFavoriteParameter.getLabel());
+      //userService.createFavoriteParameter(editedFavoriteParameter.getTest(), editedFavoriteParameter.getParameterName(), editedFavoriteParameter.getLabel());
       userSession.refresh();
       //TODO: solve this
       //favoriteParameters = userService.getFavoriteParametersForTest(test);

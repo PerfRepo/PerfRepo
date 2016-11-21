@@ -157,7 +157,7 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void addFavoriteParameter(FavoriteParameter parameter, Test test, User user) {
+   public void createFavoriteParameter(FavoriteParameter parameter, Test test, User user) {
       User managedUser = userDAO.get(user.getId());
       Test managedTest = testDAO.get(test.getId());
 
@@ -179,7 +179,7 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void removeFavoriteParameter(FavoriteParameter parameter, Test test, User user) {
+   public void removeFavoriteParameter(FavoriteParameter parameter) {
       FavoriteParameter favoriteParameter = favoriteParameterDAO.get(parameter.getId());
       favoriteParameterDAO.remove(favoriteParameter);
    }

@@ -11,6 +11,7 @@ import java.util.List;
  *
  * @author Jiri Holusa (jholusa@redhat.com)
  */
+
 public interface GroupService {
 
     /**

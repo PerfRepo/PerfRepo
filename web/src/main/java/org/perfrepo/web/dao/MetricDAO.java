@@ -41,9 +41,9 @@ public class MetricDAO extends DAO<Metric, Long> {
     */
    public List<Metric> getMetricByNameAndGroup(String name, String groupId) {
       Map<String, Object> params = new HashMap<String, Object>();
-      params.put("groupId", groupId);
+      params.put("group", groupId);
       params.put("name", name);
-      return findByNamedQuery(Metric.FIND_BY_NAME_GROUPID, params);
+      return findByNamedQuery(Metric.FIND_BY_NAME_AND_GROUP, params);
    }
 
    /**
@@ -54,8 +54,8 @@ public class MetricDAO extends DAO<Metric, Long> {
     */
    public List<Metric> getMetricByGroup(String groupId) {
       Map<String, Object> params = new HashMap();
-      params.put("groupId", groupId);
-      return findByNamedQuery(Metric.FIND_BY_GROUPID, params);
+      params.put("group", groupId);
+      return findByNamedQuery(Metric.FIND_BY_GROUP, params);
    }
 
 }

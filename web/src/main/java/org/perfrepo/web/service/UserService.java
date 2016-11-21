@@ -109,7 +109,7 @@ public interface UserService {
     * @param test
     * @param user
     */
-   public void addFavoriteParameter(FavoriteParameter parameter, Test test, User user);
+   public void createFavoriteParameter(FavoriteParameter parameter, Test test, User user);
 
    /**
     * Updates favorite parameter of user to the test
@@ -124,10 +124,8 @@ public interface UserService {
     * Removes favorite parameter of the test from user
     *
     * @param parameter
-    * @param test
-    * @param user
     */
-   public void removeFavoriteParameter(FavoriteParameter parameter, Test test, User user);
+   public void removeFavoriteParameter(FavoriteParameter parameter);
 
    /**
     * Returns list of favorite parameters that has user selected to specific test

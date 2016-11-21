@@ -13,7 +13,9 @@ import org.junit.runner.RunWith;
 import org.perfrepo.model.Entity;
 import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
+import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
+import org.perfrepo.web.alerting.ConditionChecker;
 import org.perfrepo.web.dao.DAO;
 import org.perfrepo.web.security.SecurityException;
 import org.perfrepo.web.service.exceptions.ServiceException;
@@ -41,25 +43,22 @@ public class UserServiceTest {
     @Inject
     private UserService userService;
 
-    @Inject TestService testService;
+    @Inject
+    private TestService testService;
+
+    @Inject
+    private GroupService groupService;
 
     @Deployment
     public static Archive<?> createDeployment() {
         WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
 
-        war.addClasses(
-                UserService.class,
-                UserServiceBean.class,
-                TestService.class,
-                TestServiceBean.class);
-
-        war.addPackages(true, DAO.class.getPackage());
-        war.addPackages(true, Entity.class.getPackage());
-        war.addPackages(true, UserSession.class.getPackage());
-        war.addPackages(true, SecurityException.class.getPackage());
-        war.addPackages(true, ServiceException.class.getPackage());
+        war.addPackages(true, "org.perfrepo.web");
+        war.addPackages(true, "org.perfrepo.model");
 
         war.addAsLibraries(Maven.resolver().resolve("commons-codec:commons-codec:1.9").withTransitivity().asFile());
+        war.addAsLibraries(Maven.resolver().resolve("org.antlr:antlr:3.5.2").withTransitivity().asFile());
+        war.addAsLibraries(Maven.resolver().resolve("org.apache.maven:maven-artifact:3.0.3").withTransitivity().asFile());
 
         war.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
         war.addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
@@ -69,8 +68,13 @@ public class UserServiceTest {
 
     @After
     public void cleanUp() throws Exception {
+        // deletion of favorite parameters is done via casdace on foreign key in database
         for (User user: userService.getAllUsers()) {
             userService.removeUser(user);
+        }
+
+        for (Group group: groupService.getAllGroups()) {
+            groupService.removeGroup(group);
         }
 
         for (Test test: testService.getAllTests()) {
@@ -166,12 +170,50 @@ public class UserServiceTest {
         User user = new User();
         user.setUsername("test_user");
         fillUser("test_user", user);
-
         userService.createUser(user);
 
+        Group group = createGroup();
+        groupService.createGroup(group);
+
+        Test test = createTest();
+        test.setGroup(group);
+        testService.createTest(test);
+
         FavoriteParameter favoriteParameter1 = new FavoriteParameter();
+        fillFavoriteParameter("param1", favoriteParameter1);
+        FavoriteParameter favoriteParameter2 = new FavoriteParameter();
+        fillFavoriteParameter("param2", favoriteParameter2);
 
+        userService.createFavoriteParameter(favoriteParameter1, test, user);
+        userService.createFavoriteParameter(favoriteParameter2, test, user);
 
+        List<FavoriteParameter> expectedResult = Arrays.asList(favoriteParameter1, favoriteParameter2);
+        List<FavoriteParameter> actualResult = userService.getFavoriteParametersForTest(test, user);
+
+        assertEquals(expectedResult.size(), actualResult.size());
+        assertTrue(expectedResult.stream().allMatch(expected -> actualResult.stream()
+                .anyMatch(actual -> expected.getId().equals(actual.getId()))));
+
+        // test update
+        FavoriteParameter updatedParameter = favoriteParameter1;
+        fillFavoriteParameter("updated_param1", updatedParameter);
+        userService.updateFavoriteParameter(updatedParameter, test, user);
+
+        List<FavoriteParameter> updatedParameters = userService.getFavoriteParametersForTest(test, user);
+
+        assertTrue(updatedParameters.stream()
+                .anyMatch(param -> param.getParameterName().equals(updatedParameter.getParameterName()) && param.getLabel().equals(updatedParameter.getLabel())));
+
+        // test delete
+        FavoriteParameter parameterToDelete = favoriteParameter1;
+        userService.removeFavoriteParameter(parameterToDelete);
+
+        List<FavoriteParameter> expectedAfterDelete = Arrays.asList(favoriteParameter2);
+        List<FavoriteParameter> actualAfterDelete = userService.getFavoriteParametersForTest(test, user);
+
+        assertEquals(expectedAfterDelete.size(), actualAfterDelete.size());
+        assertTrue(expectedAfterDelete.stream().allMatch(expected -> actualAfterDelete.stream()
+                .anyMatch(actual -> expected.getId().equals(actual.getId()))));
     }
 
     /****** HELPER METHODS ******/
@@ -202,6 +244,26 @@ public class UserServiceTest {
         properties.put(keyPrefix + "_key1", valuePrefix + "_value1");
         properties.put(keyPrefix + "_key2", valuePrefix + "_value2");
         properties.put(keyPrefix + "_key3", valuePrefix + "_value3");
+    }
+
+    private void fillFavoriteParameter(String prefix, FavoriteParameter parameter) {
+        parameter.setParameterName(prefix + "_name");
+        parameter.setLabel(prefix + "_label");
+    }
+
+    private Test createTest() {
+        Test test = new Test();
+        test.setName("example_test");
+        test.setUid("example_test_uid");
+
+        return test;
+    }
+
+    private Group createGroup() {
+        Group group = new Group();
+        group.setName("example_group");
+
+        return group;
     }
 
 }

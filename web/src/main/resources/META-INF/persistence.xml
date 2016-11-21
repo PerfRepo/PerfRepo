@@ -6,7 +6,7 @@
         http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
    <persistence-unit name="PerfRepoPU" transaction-type="JTA">
       <provider>org.hibernate.ejb.HibernatePersistence</provider>
-      <jta-data-source>java:jboss/datasources/PerfRepoDS</jta-data-source>
+      <jta-data-source>java:jboss/datasources/PerfRepo2DS</jta-data-source>
       <jar-file>lib/perfrepo-model-${project.version}.jar</jar-file>
 
       <properties>

@@ -652,9 +652,9 @@ ALTER TABLE public.favorite_parameter OWNER TO perfrepo;
 ALTER TABLE ONLY public.favorite_parameter
 ADD CONSTRAINT favorite_parameter_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.favorite_parameter
-ADD CONSTRAINT favorite_parameter_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id);
+ADD CONSTRAINT favorite_parameter_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.favorite_parameter
-ADD CONSTRAINT favorite_parameter_test_fkey FOREIGN KEY (test_id) REFERENCES "test"(id);
+ADD CONSTRAINT favorite_parameter_test_fkey FOREIGN KEY (test_id) REFERENCES "test"(id) ON DELETE CASCADE;
 CREATE INDEX favorite_parameter_user_id ON favorite_parameter(user_id);
 
 --
