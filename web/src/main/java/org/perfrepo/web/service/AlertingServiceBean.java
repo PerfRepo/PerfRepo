@@ -1,16 +1,32 @@
 package org.perfrepo.web.service;
 
-import org.perfrepo.model.*;
+import org.perfrepo.model.Alert;
+import org.perfrepo.model.Metric;
+import org.perfrepo.model.Tag;
+import org.perfrepo.model.Test;
+import org.perfrepo.model.TestExecution;
+import org.perfrepo.model.Value;
 import org.perfrepo.web.alerting.ConditionChecker;
 import org.perfrepo.web.dao.AlertDAO;
 import org.perfrepo.web.dao.MetricDAO;
 import org.perfrepo.web.dao.TagDAO;
 import org.perfrepo.web.dao.TestDAO;
 
-import javax.ejb.*;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of {@link org.perfrepo.web.service.AlertingService}

@@ -1,4 +1,4 @@
-package org.perfrepo.test.alerting;
+package org.perfrepo.web.alerting;
 
 import org.mockito.ArgumentMatcher;
 import org.perfrepo.model.to.TestExecutionSearchTO;

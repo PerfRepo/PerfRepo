@@ -16,7 +16,6 @@ package org.perfrepo.web.dao;
 
 import org.perfrepo.model.FavoriteParameter;
 
-import javax.inject.Named;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import java.util.Map;
  *
  * @author Jiri Holusa (jholusa@redhat.com)
  */
-@Named
 public class FavoriteParameterDAO extends DAO<FavoriteParameter, Long> {
 
    public FavoriteParameter findByTestAndParamName(String paramName, Long testId, Long userId) {

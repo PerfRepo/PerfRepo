@@ -14,7 +14,11 @@ import org.perfrepo.web.dao.TestExecutionDAO;
 import org.perfrepo.web.service.UserService;
 import org.perfrepo.web.util.MultiValue;
 
-import javax.ejb.*;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.script.ScriptEngine;
@@ -23,7 +27,14 @@ import javax.script.ScriptException;
 import javax.script.SimpleBindings;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of @link{ConditionChecker}
@@ -422,7 +433,8 @@ public class ConditionCheckerImpl implements ConditionChecker {
             }
         }
 
-        testExecutions = testExecutionDAO.searchTestExecutions(searchCriteria, userService.getLoggedUserGroupNames()).getResult();
+        //TODO: solve this
+        //testExecutions = testExecutionDAO.searchTestExecutions(searchCriteria, userService.getLoggedUserGroupNames()).getResult();
 
         return testExecutions;
     }

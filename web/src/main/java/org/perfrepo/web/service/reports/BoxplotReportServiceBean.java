@@ -18,7 +18,11 @@ import org.perfrepo.web.service.UserService;
 import org.perfrepo.web.session.UserSession;
 import org.perfrepo.web.util.ReportUtils;
 
-import javax.ejb.*;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,7 +163,9 @@ public class BoxplotReportServiceBean {
             searchCriteria.setLabelParameter(chart.getxAxisLabel() == Chart.AxisOption.PARAMETER ? chart.getxAxisLabelParameter() : null);
 
             Metric metric = metricDAO.get(series.getMetricId());
-            List<MultiValueResultWrapper> resultWrappers = testExecutionDAO.searchMultiValues(searchCriteria, metric, userService.getLoggedUserGroupNames());
+            //TODO: solve this
+            //List<MultiValueResultWrapper> resultWrappers = testExecutionDAO.searchMultiValues(searchCriteria, metric, userService.getLoggedUserGroupNames());
+            List<MultiValueResultWrapper> resultWrappers = null;
 
             List<Chart.Series.DataPoint> dataPoints = assembleResults(resultWrappers);
             series.setDataPoints(dataPoints);

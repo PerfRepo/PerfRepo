@@ -22,6 +22,7 @@ import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.controller.BaseController;
 import org.perfrepo.web.security.AuthorizationService;
+import org.perfrepo.web.service.GroupService;
 import org.perfrepo.web.service.ReportService;
 import org.perfrepo.web.service.UserService;
 import org.perfrepo.web.session.UserSession;
@@ -43,6 +44,9 @@ public class ReportPermissionController extends BaseController {
 
    @Inject
    private UserService userService;
+
+   @Inject
+   private GroupService groupService;
 
    @Inject
    private UserSession userSession;
@@ -95,7 +99,7 @@ public class ReportPermissionController extends BaseController {
 
    public List<Group> getGroupsForSelection() {
       if (groupsForSelection == null) {
-         groupsForSelection = userService.getGroups();
+         groupsForSelection = groupService.getAllGroups();
       }
 
       return groupsForSelection;
@@ -179,7 +183,7 @@ public class ReportPermissionController extends BaseController {
    @Deprecated
    public String getPermissionGroup(Permission p) {
       if (AccessLevel.GROUP.equals(p.getLevel())) {
-         Group group = userService.getGroup(p.getGroupId());
+         Group group = groupService.getGroup(p.getGroupId());
          return group.getName();
       } else {
          return null;

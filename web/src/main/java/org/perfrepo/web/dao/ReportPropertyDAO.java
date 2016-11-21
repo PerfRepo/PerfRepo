@@ -16,8 +16,6 @@ package org.perfrepo.web.dao;
 
 import org.perfrepo.model.report.ReportProperty;
 
-import javax.inject.Named;
-
 /**
  * DAO for {@link ReportProperty}
  *

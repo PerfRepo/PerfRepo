@@ -16,7 +16,11 @@ package org.perfrepo.web.controller;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.perfrepo.model.*;
+import org.perfrepo.model.Alert;
+import org.perfrepo.model.Metric;
+import org.perfrepo.model.MetricComparator;
+import org.perfrepo.model.Tag;
+import org.perfrepo.model.Test;
 import org.perfrepo.model.to.TestExecutionSearchTO;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.service.AlertingService;
@@ -249,7 +253,9 @@ public class TestController extends BaseController {
    }
 
    public List<String> getUserGroups() {
-      return userService.getLoggedUserGroupNames();
+      //TODO: solve this
+      //return userService.getLoggedUserGroupNames();
+      return null;
    }
 
    public Long getAlertId() {

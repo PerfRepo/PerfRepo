@@ -81,12 +81,13 @@ public class UserProfileController extends BaseController {
          return;
       }
 
-      try {
-         userService.changePassword(oldPassword, newPassword);
-         redirectWithMessage("/profile", INFO, "page.user.updatedSuccesfully");
+      /*try {*/
+         //TODO: solve this
+         //userService.changePassword(oldPassword, newPassword);
+      /*   redirectWithMessage("/profile", INFO, "page.user.updatedSuccesfully");
       } catch (ServiceException ex) {
          addMessage(ERROR, "page.user.oldPasswordDoesntMatch");
-      }
+      }*/
    }
 
    public void setOldPassword(String oldPassword) {

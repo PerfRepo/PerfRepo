@@ -1,22 +1,40 @@
-package org.perfrepo.test.alerting;
+package org.perfrepo.web.alerting;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.perfrepo.model.TestExecution;
 import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.to.TestExecutionSearchTO;
-import org.perfrepo.web.alerting.ConditionCheckerImpl;
 import org.perfrepo.web.dao.TestExecutionDAO;
 import org.perfrepo.web.service.UserService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.perfrepo.test.alerting.TestUtils.*;
+import static org.perfrepo.web.alerting.TestUtils.createMetric;
+import static org.perfrepo.web.alerting.TestUtils.createMultivalueTestExecution;
+import static org.perfrepo.web.alerting.TestUtils.createMultivalueTestExecutionWithConstantGivenValue;
+import static org.perfrepo.web.alerting.TestUtils.createMultivalueTestExecutionWithConstantValues;
+import static org.perfrepo.web.alerting.TestUtils.createMultivalueTestExecutionWithLowerLastValue;
+import static org.perfrepo.web.alerting.TestUtils.createMultivalueTestExecutionWithMoreIterations;
+import static org.perfrepo.web.alerting.TestUtils.createMultivalueTestExecutionWithVaryingValues;
+import static org.perfrepo.web.alerting.TestUtils.createMultivalueTestExecutionWithZeroValues;
+import static org.perfrepo.web.alerting.TestUtils.createSearchCriteria;
+import static org.perfrepo.web.alerting.TestUtils.createTestExecution1;
+import static org.perfrepo.web.alerting.TestUtils.createTestExecution2;
+import static org.perfrepo.web.alerting.TestUtils.createTestExecution3;
+import static org.perfrepo.web.alerting.TestUtils.createTestExecution4;
+import static org.perfrepo.web.alerting.TestUtils.createTestExecutionWithProvidedResult;
 
 /**
  * Tests for {@link org.perfrepo.web.alerting.ConditionChecker}
@@ -105,7 +123,8 @@ public class ConditionCheckerTest {
         when(mockedTestExecutionDAO.searchTestExecutions(multiTasAndLastOneTO, Arrays.asList("testuser"))).thenReturn(new SearchResultWrapper<>(multivalueSimple, multivalueSimple.size()));
 
         UserService mockedUserService = mock(UserService.class);
-        when(mockedUserService.getLoggedUserGroupNames()).thenReturn(Arrays.asList("testuser"));
+        //TODO: solve this
+        //when(mockedUserService.getLoggedUserGroupNames()).thenReturn(Arrays.asList("testuser"));
 
         conditionChecker.setTestExecutionDAO(mockedTestExecutionDAO);
         conditionChecker.setUserService(mockedUserService);

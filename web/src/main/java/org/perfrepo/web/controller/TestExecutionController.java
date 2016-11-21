@@ -15,7 +15,15 @@
 package org.perfrepo.web.controller;
 
 import org.apache.log4j.Logger;
-import org.perfrepo.model.*;
+import org.perfrepo.model.FavoriteParameter;
+import org.perfrepo.model.Metric;
+import org.perfrepo.model.Tag;
+import org.perfrepo.model.Test;
+import org.perfrepo.model.TestExecution;
+import org.perfrepo.model.TestExecutionAttachment;
+import org.perfrepo.model.TestExecutionParameter;
+import org.perfrepo.model.Value;
+import org.perfrepo.model.ValueParameter;
 import org.perfrepo.model.builder.TestExecutionBuilder;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.controller.reports.charts.RfChartSeries;
@@ -45,7 +53,11 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -129,9 +141,11 @@ public class TestExecutionController extends BaseController {
    }
 
    public void saveEditedFavoriteParameter() {
-      userService.addFavoriteParameter(editedFavoriteParameter.getTest(), editedFavoriteParameter.getParameterName(), editedFavoriteParameter.getLabel());
+      //TODO: solve this
+      //userService.addFavoriteParameter(editedFavoriteParameter.getTest(), editedFavoriteParameter.getParameterName(), editedFavoriteParameter.getLabel());
       userSession.refresh();
-      favoriteParameters = userService.getFavoriteParametersForTest(test);
+      //TODO: solve this
+      //favoriteParameters = userService.getFavoriteParametersForTest(test);
    }
 
    public void removeFromFavorites(String paramName) {
@@ -139,9 +153,11 @@ public class TestExecutionController extends BaseController {
          log.error("incorrect request for removeFromFavorites");
          return;
       }
-      userService.removeFavoriteParameter(test, paramName);
+      //TODO: solve this
+      //userService.removeFavoriteParameter(test, paramName);
       userSession.refresh();
-      favoriteParameters = userService.getFavoriteParametersForTest(test);
+      //TODO: solve this
+      //favoriteParameters = userService.getFavoriteParametersForTest(test);
    }
 
    public Long getCreateForTest() {
@@ -254,7 +270,8 @@ public class TestExecutionController extends BaseController {
                   redirectWithMessage("/", ERROR, "page.test.errorTestNotFound", testExecution.getTest().getId());
                } else {
                   values = MultiValue.createFrom(testExecution);
-                  favoriteParameters = userService.getFavoriteParametersForTest(test);
+                  //TODO: solve this
+                  //favoriteParameters = userService.getFavoriteParametersForTest(test);
                }
                setEditedTestExecution();
             }

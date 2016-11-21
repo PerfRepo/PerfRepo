@@ -24,10 +24,15 @@ import org.perfrepo.model.report.Report;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.dao.PermissionDAO;
 import org.perfrepo.web.dao.TestDAO;
+import org.perfrepo.web.service.GroupService;
 import org.perfrepo.web.service.UserService;
 import org.perfrepo.web.session.UserSession;
 
-import javax.ejb.*;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.Collection;
@@ -46,6 +51,9 @@ public class AuthorizationServiceBean implements AuthorizationService {
 
    @Inject
    private UserService userService;
+
+   @Inject
+   private GroupService groupService;
 
    @Inject
    private UserSession userSession;
@@ -67,7 +75,7 @@ public class AuthorizationServiceBean implements AuthorizationService {
                   }
                } else if (permission.getGroupId() != null && permission.getLevel().equals(AccessLevel.GROUP)) {
                   //GROUP permission, user must be assigned in permission group
-                  if (userService.isUserInGroup(userId, permission.getGroupId())) {
+                  if (groupService.isUserInGroup(groupService.getGroup(permission.getGroupId()), userService.getUser(userId))) {
                      return true;
                   }
                }
@@ -78,7 +86,9 @@ public class AuthorizationServiceBean implements AuthorizationService {
    }
 
    private boolean isUserAuthorizedForTest(Long userId, AccessType accessType, Test test) {
-      return userService.isLoggedUserInGroup(test.getGroupId());
+      //TODO: solve this
+      //return groupService.isUserInGroup(test.getGroupId());
+      return false;
    }
 
    private Report getParentReportEntity(Entity<?> entity) {

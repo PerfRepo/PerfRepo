@@ -217,6 +217,22 @@
          <artifactId>maven-artifact</artifactId>
          <version>3.0.3</version>
       </dependency>
+
+      <dependency>
+         <groupId>org.jboss.shrinkwrap.resolver</groupId>
+         <artifactId>shrinkwrap-resolver-depchain</artifactId>
+         <version>2.1.1</version>
+         <scope>test</scope>
+         <type>pom</type>
+      </dependency>
+
+      <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+         <artifactId>plexus-utils</artifactId>
+         <version>3.0.24</version>
+         <scope>test</scope>
+      </dependency>
+
    </dependencies>
 
 

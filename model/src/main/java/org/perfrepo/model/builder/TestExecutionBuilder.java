@@ -14,7 +14,11 @@
  */
 package org.perfrepo.model.builder;
 
-import org.perfrepo.model.*;
+import org.perfrepo.model.Tag;
+import org.perfrepo.model.Test;
+import org.perfrepo.model.TestExecution;
+import org.perfrepo.model.TestExecutionParameter;
+import org.perfrepo.model.Value;
 
 import java.util.Date;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package org.perfrepo.test.alerting;
+package org.perfrepo.web.alerting;
 
 import org.perfrepo.model.Metric;
 import org.perfrepo.model.TestExecution;
@@ -6,7 +6,11 @@ import org.perfrepo.model.Value;
 import org.perfrepo.model.builder.TestExecutionBuilder;
 import org.perfrepo.model.to.TestExecutionSearchTO;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Provides some utility functionality for tests. Namely allows to create dummy TestExecution instances for mock tests

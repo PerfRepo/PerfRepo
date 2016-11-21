@@ -16,7 +16,6 @@ package org.perfrepo.web.dao;
 
 import org.perfrepo.model.Metric;
 
-import javax.inject.Named;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import java.util.Map;
  * @author Pavel Drozd (pdrozd@redhat.com)
  * @author Michal Linhard (mlinhard@redhat.com)
  */
-@Named
 public class MetricDAO extends DAO<Metric, Long> {
 
    public List<Metric> getMetrics() {

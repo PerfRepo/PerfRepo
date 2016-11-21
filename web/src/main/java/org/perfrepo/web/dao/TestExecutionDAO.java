@@ -15,8 +15,19 @@
 package org.perfrepo.web.dao;
 
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
-import org.perfrepo.model.*;
-import org.perfrepo.model.to.*;
+import org.perfrepo.model.Metric;
+import org.perfrepo.model.Tag;
+import org.perfrepo.model.Test;
+import org.perfrepo.model.TestExecution;
+import org.perfrepo.model.TestExecutionParameter;
+import org.perfrepo.model.Value;
+import org.perfrepo.model.ValueParameter;
+import org.perfrepo.model.to.MetricReportTO;
+import org.perfrepo.model.to.MultiValueResultWrapper;
+import org.perfrepo.model.to.OrderBy;
+import org.perfrepo.model.to.SearchResultWrapper;
+import org.perfrepo.model.to.SingleValueResultWrapper;
+import org.perfrepo.model.to.TestExecutionSearchTO;
 import org.perfrepo.model.to.TestExecutionSearchTO.ParamCriteria;
 import org.perfrepo.model.userproperty.GroupFilter;
 import org.perfrepo.web.util.TagUtils;
@@ -24,8 +35,24 @@ import org.perfrepo.web.util.TagUtils;
 import javax.inject.Inject;
 import javax.persistence.Tuple;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import java.util.*;
+import javax.persistence.criteria.AbstractQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**

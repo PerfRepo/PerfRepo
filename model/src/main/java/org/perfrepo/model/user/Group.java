@@ -16,15 +16,29 @@ package org.perfrepo.model.user;
 
 import org.perfrepo.model.Entity;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.util.HashSet;
 import java.util.Set;
 
 @javax.persistence.Entity
 @Table(name = "\"group\"")
+@NamedQueries({
+        @NamedQuery(name = Group.GET_BY_NAME, query = "SELECT group FROM Group group WHERE group.name = :name")
+})
 public class Group implements Entity<Group>, Comparable<Group> {
 
    private static final long serialVersionUID = -9158731656089441951L;
+
+   public static final String GET_BY_NAME = "Group.getByName";
 
    @Id
    @SequenceGenerator(name = "GROUP_ID_GENERATOR", sequenceName = "GROUP_SEQUENCE", allocationSize = 1)

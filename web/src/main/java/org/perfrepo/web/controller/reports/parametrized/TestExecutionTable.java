@@ -19,9 +19,18 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import org.apache.commons.collections.keyvalue.MultiKey;
-import org.perfrepo.model.*;
+import org.perfrepo.model.Metric;
+import org.perfrepo.model.Tag;
+import org.perfrepo.model.TestExecution;
+import org.perfrepo.model.TestExecutionParameter;
+import org.perfrepo.model.Value;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TestExecutionTable {

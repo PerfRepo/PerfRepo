@@ -15,10 +15,22 @@
 package org.perfrepo.web.controller.reports.metric;
 
 import org.apache.log4j.Logger;
-import org.perfrepo.model.*;
+import org.perfrepo.model.Metric;
+import org.perfrepo.model.Tag;
+import org.perfrepo.model.Test;
+import org.perfrepo.model.TestExecution;
+import org.perfrepo.model.TestExecutionParameter;
 import org.perfrepo.model.report.Report;
 import org.perfrepo.model.report.ReportProperty;
-import org.perfrepo.model.to.MetricReportTO.*;
+import org.perfrepo.model.to.MetricReportTO.BaselineRequest;
+import org.perfrepo.model.to.MetricReportTO.BaselineResponse;
+import org.perfrepo.model.to.MetricReportTO.ChartRequest;
+import org.perfrepo.model.to.MetricReportTO.ChartResponse;
+import org.perfrepo.model.to.MetricReportTO.DataPoint;
+import org.perfrepo.model.to.MetricReportTO.Request;
+import org.perfrepo.model.to.MetricReportTO.Response;
+import org.perfrepo.model.to.MetricReportTO.SeriesRequest;
+import org.perfrepo.model.to.MetricReportTO.SeriesResponse;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.controller.BaseController;
 import org.perfrepo.web.controller.reports.ReportPermissionController;
@@ -40,7 +52,13 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**

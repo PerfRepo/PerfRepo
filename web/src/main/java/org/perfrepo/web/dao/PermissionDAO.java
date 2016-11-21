@@ -17,7 +17,6 @@ package org.perfrepo.web.dao;
 import org.perfrepo.model.auth.Permission;
 import org.perfrepo.model.report.Report;
 
-import javax.inject.Named;
 import java.util.List;
 
 /**
@@ -25,7 +24,6 @@ import java.util.List;
  *
  * @author Jiri Holusa (jholusa@redhat.com)
  */
-@Named
 public class PermissionDAO extends DAO<Permission, Long> {
 
    /**

@@ -1,4 +1,4 @@
-package org.perfrepo.test.service;
+package org.perfrepo.web.service;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -7,23 +7,28 @@ import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.After;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.perfrepo.model.Entity;
+import org.perfrepo.model.FavoriteParameter;
+import org.perfrepo.model.Test;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.dao.DAO;
 import org.perfrepo.web.security.SecurityException;
-import org.perfrepo.web.service.UserService;
-import org.perfrepo.web.service.UserServiceBean;
 import org.perfrepo.web.service.exceptions.ServiceException;
 import org.perfrepo.web.session.UserSession;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * TODO: document this
@@ -36,17 +41,29 @@ public class UserServiceTest {
     @Inject
     private UserService userService;
 
+    @Inject TestService testService;
+
     @Deployment
     public static Archive<?> createDeployment() {
         WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
+
+        war.addClasses(
+                UserService.class,
+                UserServiceBean.class,
+                TestService.class,
+                TestServiceBean.class);
+
         war.addPackages(true, DAO.class.getPackage());
         war.addPackages(true, Entity.class.getPackage());
-        war.addClasses(UserService.class, UserServiceBean.class);
         war.addPackages(true, UserSession.class.getPackage());
         war.addPackages(true, SecurityException.class.getPackage());
         war.addPackages(true, ServiceException.class.getPackage());
+
+        war.addAsLibraries(Maven.resolver().resolve("commons-codec:commons-codec:1.9").withTransitivity().asFile());
+
         war.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
         war.addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
+
         return war;
     }
 
@@ -55,9 +72,13 @@ public class UserServiceTest {
         for (User user: userService.getAllUsers()) {
             userService.removeUser(user);
         }
+
+        for (Test test: testService.getAllTests()) {
+            testService.removeTest(test);
+        }
     }
 
-    @Test
+    @org.junit.Test
     public void testUserCRUDOperations() throws Exception {
         User user = new User();
         user.setUsername("test_user");
@@ -67,9 +88,12 @@ public class UserServiceTest {
         Long userId = user.getId();
 
         User createdUser = userService.getUser(userId);
+        User createdUserByUsername = userService.getUser(user.getUsername());
 
         assertNotNull(createdUser);
+        assertNotNull(createdUserByUsername);
         assertUser(user, createdUser);
+        assertUser(user, createdUserByUsername);
 
         // test properties creation
         Map<String, String> properties = new HashMap<>();
@@ -100,6 +124,57 @@ public class UserServiceTest {
         userService.removeUser(userToDelete);
         assertNull(userService.getUser(userToDelete.getId()));
     }
+
+    @org.junit.Test
+    public void testGetAllUsers() throws Exception {
+        User user1 = new User();
+        user1.setUsername("test_user1");
+        fillUser("test_user", user1);
+
+        User user2 = new User();
+        user2.setUsername("test_user2");
+        fillUser("test_user2", user2);
+
+        userService.createUser(user1);
+        userService.createUser(user2);
+
+        List<User> expectedResult = Arrays.asList(user1, user2);
+        List<User> actualResult = userService.getAllUsers();
+
+        assertEquals(expectedResult.size(), actualResult.size());
+        assertTrue(expectedResult.stream().allMatch(expected -> actualResult.stream()
+                .anyMatch(actual -> expected.getId().equals(actual.getId()))));
+    }
+
+    @org.junit.Test
+    public void testChangePassword() throws Exception {
+        User user = new User();
+        user.setUsername("test_user");
+        fillUser("test_user", user);
+
+        userService.createUser(user);
+
+        String newPassword = "nastyPassword9";
+        userService.changePassword("test_user_password", newPassword, user);
+
+        User retrievedUser = userService.getUser(user.getId());
+        assertEquals(UserServiceBean.computeMd5(newPassword), retrievedUser.getPassword());
+    }
+
+    @org.junit.Test
+    public void testFavoriteParameterCRUDOperations() throws Exception {
+        User user = new User();
+        user.setUsername("test_user");
+        fillUser("test_user", user);
+
+        userService.createUser(user);
+
+        FavoriteParameter favoriteParameter1 = new FavoriteParameter();
+
+
+    }
+
+    /****** HELPER METHODS ******/
 
     private void assertUser(User expected, User actual) {
         assertEquals(expected.getUsername(), actual.getUsername());

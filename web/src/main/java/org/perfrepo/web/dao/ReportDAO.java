@@ -16,7 +16,6 @@ package org.perfrepo.web.dao;
 
 import org.perfrepo.model.report.Report;
 
-import javax.inject.Named;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import java.util.Map;
  *
  * @author Jiri Holusa (jholusa@redhat.com)
  */
-@Named
 public class ReportDAO extends DAO<Report, Long> {
 
    /**

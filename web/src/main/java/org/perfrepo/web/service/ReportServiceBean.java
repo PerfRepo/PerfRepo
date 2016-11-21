@@ -24,15 +24,29 @@ import org.perfrepo.model.report.ReportProperty;
 import org.perfrepo.model.to.MetricReportTO;
 import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
-import org.perfrepo.web.dao.*;
+import org.perfrepo.web.dao.MetricDAO;
+import org.perfrepo.web.dao.PermissionDAO;
+import org.perfrepo.web.dao.ReportDAO;
+import org.perfrepo.web.dao.ReportPropertyDAO;
+import org.perfrepo.web.dao.TestDAO;
+import org.perfrepo.web.dao.TestExecutionDAO;
 import org.perfrepo.web.security.Secured;
 import org.perfrepo.web.service.exceptions.ServiceException;
 import org.perfrepo.web.session.UserSession;
 
-import javax.ejb.*;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implements @link{ReportService}.

@@ -15,7 +15,11 @@
 package org.perfrepo.web.deprecated_rest.logging;
 
 import javax.interceptor.InterceptorBinding;
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 @Inherited
 @InterceptorBinding

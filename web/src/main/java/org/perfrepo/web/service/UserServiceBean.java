@@ -18,19 +18,26 @@ import org.apache.commons.codec.binary.Base64;
 import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.UserProperty;
-import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
-import org.perfrepo.web.dao.*;
+import org.perfrepo.web.dao.FavoriteParameterDAO;
+import org.perfrepo.web.dao.TestDAO;
+import org.perfrepo.web.dao.UserDAO;
+import org.perfrepo.web.dao.UserPropertyDAO;
 import org.perfrepo.web.service.exceptions.ServiceException;
-import org.perfrepo.web.session.UserSession;
 
-import javax.ejb.*;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Named
@@ -40,13 +47,7 @@ import java.util.stream.Collectors;
 public class UserServiceBean implements UserService {
 
    @Inject
-   private UserSession userSession;
-
-   @Inject
    private UserDAO userDAO;
-
-   @Inject
-   private GroupDAO groupDAO;
 
    @Inject
    private UserPropertyDAO userPropertyDAO;
@@ -59,10 +60,11 @@ public class UserServiceBean implements UserService {
 
    @Override
    public User createUser(User user) throws ServiceException {
-      //TODO: this method needs authorization for this operation, not used at all yet
       if (user.getId() != null) {
          throw new IllegalArgumentException("Can't create with id");
       }
+
+      user.setPassword(computeMd5(user.getPassword()));
 
       User newUser = userDAO.create(user);
       return newUser;
@@ -79,6 +81,8 @@ public class UserServiceBean implements UserService {
          throw new ServiceException("serviceException.usernameAlreadyExists", user.getUsername());
       }
 
+      user.setPassword(computeMd5(user.getPassword()));
+
       User updatedUser = userDAO.merge(user);
       return updatedUser;
    }
@@ -93,7 +97,22 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void changePassword(String oldPassword, String newPassword) throws ServiceException {
+   public User getUser(Long id) {
+      return userDAO.get(id);
+   }
+
+   @Override
+   public User getUser(String username) {
+      return userDAO.findByUsername(username);
+   }
+
+   @Override
+   public List<User> getAllUsers() {
+      return userDAO.getAll();
+   }
+
+   @Override
+   public void changePassword(String oldPassword, String newPassword, User user) throws ServiceException {
       if (oldPassword == null || newPassword == null) {
          throw new ServiceException("serviceException.changePassword");
       }
@@ -101,14 +120,12 @@ public class UserServiceBean implements UserService {
       String newPasswordEncrypted = computeMd5(newPassword);
       String oldPasswordEncrypted = computeMd5(oldPassword);
 
-      User user = userDAO.get(userSession.getLoggedUser().getId());
-
       if (!user.getPassword().equals(oldPasswordEncrypted)) {
          throw new ServiceException("serviceException.passwordDoesntMatch");
       }
 
-      user.setPassword(newPasswordEncrypted);
-      userDAO.merge(user);
+      User managedUser = userDAO.get(user.getId());
+      managedUser.setPassword(newPasswordEncrypted);
    }
 
    @Override
@@ -119,108 +136,6 @@ public class UserServiceBean implements UserService {
       properties.stream().forEach(property -> mapProperties.put(property.getName(), property.getValue()));
 
       return mapProperties;
-   }
-
-   @Override
-   public void addFavoriteParameter(Test test, String paramName, String label) {
-      User user = userDAO.get(userSession.getLoggedUser().getId());
-      Test testEntity = testDAO.get(test.getId());
-
-      FavoriteParameter fp = favoriteParameterDAO.findByTestAndParamName(paramName, test.getId(), userSession.getLoggedUser().getId());
-      if (fp == null) {
-         fp = new FavoriteParameter();
-      }
-
-      fp.setLabel(label);
-      fp.setParameterName(paramName);
-      fp.setTest(testEntity);
-      fp.setUser(user);
-
-      favoriteParameterDAO.create(fp);
-   }
-
-   @Override
-   public void removeFavoriteParameter(Test test, String paramName) {
-      FavoriteParameter fp = favoriteParameterDAO.findByTestAndParamName(paramName, test.getId(), userSession.getLoggedUser().getId());
-
-      if (fp != null) {
-         favoriteParameterDAO.remove(fp);
-      }
-   }
-
-   @Override
-   public User getUser(String username) {
-      return userDAO.findByUsername(username);
-   }
-
-   @Override
-   public User getUser(Long id) {
-      return userDAO.get(id);
-   }
-
-   @Override
-   public Group getGroup(Long id) {
-      return groupDAO.get(id);
-   }
-
-   @Override
-   public List<Group> getGroups() {
-      return groupDAO.getAll();
-   }
-
-   @Override
-   public List<String> getLoggedUserGroupNames() {
-      List<String> names = new ArrayList<String>();
-      User user = userSession.getLoggedUser();
-      Collection<Group> gs = user != null ? userSession.getLoggedUser().getGroups() : Collections.emptyList();
-      for (Group group : gs) {
-         names.add(group.getName());
-      }
-      return names;
-   }
-
-   @Override
-   public List<User> getAllUsers() {
-      return userDAO.getAll();
-   }
-
-   @Override
-   public boolean isLoggedUserInGroup(String guid) {
-      User user = userSession.getLoggedUser();
-      if (user != null && user.getGroups() != null) {
-         for (Group group : user.getGroups()) {
-            if (group.getName().equals(guid)) {
-               return true;
-            }
-         }
-      }
-      return false;
-   }
-
-   @Override
-   public boolean isUserInGroup(Long userId, Long groupId) {
-      if (userId == null) {
-         return false;
-      }
-
-      User user = getUser(userId);
-      if (user != null && user.getGroups() != null) {
-         return user.getGroups().stream().anyMatch(group -> groupId.equals(group.getId()));
-      }
-
-      return false;
-   }
-
-   @Override
-   public List<FavoriteParameter> getFavoriteParametersForTest(Test test) {
-      if (test.getId() == null) {
-         throw new IllegalArgumentException("Test ID cannot be null");
-      }
-
-      User user = userSession.getLoggedUser();
-      List<FavoriteParameter> favoriteParameters = favoriteParameterDAO.findByTest(test.getId(), user.getId());
-      List<FavoriteParameter> result = favoriteParameters.stream().filter(favoriteParameter -> favoriteParameter.getTest().getId().equals(test.getId())).collect(Collectors.toList());
-      return result;
    }
 
    @Override
@@ -241,7 +156,51 @@ public class UserServiceBean implements UserService {
       }
    }
 
-   private String computeMd5(String string) {
+   @Override
+   public void addFavoriteParameter(FavoriteParameter parameter, Test test, User user) {
+      User managedUser = userDAO.get(user.getId());
+      Test managedTest = testDAO.get(test.getId());
+
+      parameter.setTest(managedTest);
+      parameter.setUser(managedUser);
+
+      favoriteParameterDAO.create(parameter);
+   }
+
+   @Override
+   public void updateFavoriteParameter(FavoriteParameter parameter, Test test, User user) {
+      User managedUser = userDAO.get(user.getId());
+      Test managedTest = testDAO.get(test.getId());
+
+      parameter.setTest(managedTest);
+      parameter.setUser(managedUser);
+
+      favoriteParameterDAO.merge(parameter);
+   }
+
+   @Override
+   public void removeFavoriteParameter(FavoriteParameter parameter, Test test, User user) {
+      FavoriteParameter favoriteParameter = favoriteParameterDAO.get(parameter.getId());
+      favoriteParameterDAO.remove(favoriteParameter);
+   }
+
+   @Override
+   public List<FavoriteParameter> getFavoriteParametersForTest(Test test, User user) {
+      if (test.getId() == null) {
+         throw new IllegalArgumentException("Test ID cannot be null");
+      }
+
+      List<FavoriteParameter> favoriteParameters = favoriteParameterDAO.findByTest(test.getId(), user.getId());
+      List<FavoriteParameter> result = favoriteParameters.stream().filter(favoriteParameter -> favoriteParameter.getTest().getId().equals(test.getId())).collect(Collectors.toList());
+      return result;
+   }
+
+   /**
+    * Package-private access for testing purpose.
+    * @param string
+    * @return
+     */
+   static String computeMd5(String string) {
       MessageDigest md = null;
 
       try {

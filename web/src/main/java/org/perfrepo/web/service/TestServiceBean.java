@@ -15,22 +15,47 @@
 package org.perfrepo.web.service;
 
 import org.apache.log4j.Logger;
-import org.perfrepo.model.*;
+import org.perfrepo.model.Alert;
+import org.perfrepo.model.Metric;
+import org.perfrepo.model.Tag;
+import org.perfrepo.model.Test;
+import org.perfrepo.model.TestExecution;
+import org.perfrepo.model.TestExecutionAttachment;
+import org.perfrepo.model.TestExecutionParameter;
+import org.perfrepo.model.Value;
+import org.perfrepo.model.ValueParameter;
 import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.to.TestExecutionSearchTO;
 import org.perfrepo.model.to.TestExecutionSearchTO.ParamCriteria;
 import org.perfrepo.model.to.TestSearchTO;
 import org.perfrepo.model.user.User;
 import org.perfrepo.model.userproperty.GroupFilter;
-import org.perfrepo.web.dao.*;
+import org.perfrepo.web.dao.MetricDAO;
+import org.perfrepo.web.dao.TagDAO;
+import org.perfrepo.web.dao.TestDAO;
+import org.perfrepo.web.dao.TestExecutionAttachmentDAO;
+import org.perfrepo.web.dao.TestExecutionDAO;
+import org.perfrepo.web.dao.TestExecutionParameterDAO;
+import org.perfrepo.web.dao.UserDAO;
+import org.perfrepo.web.dao.ValueDAO;
+import org.perfrepo.web.dao.ValueParameterDAO;
 import org.perfrepo.web.security.Secured;
 import org.perfrepo.web.service.exceptions.ServiceException;
 import org.perfrepo.web.session.UserSession;
 import org.perfrepo.web.util.MultiValue;
 
-import javax.ejb.*;
+import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
+import javax.ejb.TransactionAttributeType;
+import javax.ejb.TransactionManagement;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -161,7 +186,9 @@ public class TestServiceBean implements TestService {
 
    @Override
    public SearchResultWrapper<Test> searchTest(TestSearchTO search) {
-      return testDAO.searchTests(search, userService.getLoggedUserGroupNames());
+      //TODO: solve this
+      //return testDAO.searchTests(search, userService.getLoggedUserGroupNames());
+      return null;
    }
 
    @Override
@@ -176,7 +203,9 @@ public class TestServiceBean implements TestService {
          }
       }
 
-      return testExecutionDAO.searchTestExecutions(search, userService.getLoggedUserGroupNames());
+      //TODO: solve this
+      //return testExecutionDAO.searchTestExecutions(search, userService.getLoggedUserGroupNames());
+      return null;
    }
 
    @Override
@@ -225,9 +254,11 @@ public class TestServiceBean implements TestService {
 
    @Override
    public Test createTest(Test test) throws ServiceException {
+      //TODO: solve this
+      /*
       if (!userService.isLoggedUserInGroup(test.getGroupId())) {
          throw new org.perfrepo.web.security.SecurityException("securityException.userNotInGroup.createTest", userSession.getLoggedUser().getUsername(), test.getGroupId());
-      }
+      }*/
       if (testDAO.findByUid(test.getUid()) != null) {
          throw new ServiceException("serviceException.testUidExists", test.getUid());
       }
@@ -676,9 +707,12 @@ public class TestServiceBean implements TestService {
    public SearchResultWrapper<Test> getAvailableTests() {
       TestSearchTO search = new TestSearchTO();
       search.setGroupFilter(GroupFilter.MY_GROUPS);
-      List<String> groups = userService.getLoggedUserGroupNames();
+      //TODO: solve this
+      //List<String> groups = userService.getLoggedUserGroupNames();
 
-      return testDAO.searchTests(search, groups);
+      //TODO: solve this
+      //return testDAO.searchTests(search, groups);
+      return null;
    }
 
    @Override
@@ -696,11 +730,13 @@ public class TestServiceBean implements TestService {
    public List<String> getTestsByPrefix(String prefix) {
       List<Test> tests = testDAO.findByUIDPrefix(prefix);
       List<String> testuids = new ArrayList<String>();
+      //TODO: solve this
+      /*
       for (Test test : tests) {
          if (userService.isLoggedUserInGroup(test.getGroupId())) {
             testuids.add(test.getUid());
          }
-      }
+      }*/
       return testuids;
    }
 

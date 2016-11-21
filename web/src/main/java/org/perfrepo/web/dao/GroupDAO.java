@@ -16,14 +16,31 @@ package org.perfrepo.web.dao;
 
 import org.perfrepo.model.user.Group;
 
-import javax.inject.Named;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * DAO for {@link Group}
  *
- * @author Pavel Drozd
+ * @author Jiri Holusa (jholusa@redhat.com)
  */
-@Named
 public class GroupDAO extends DAO<Group, Long> {
+
+    public Group findByName(String name) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("name", name);
+        List<Group> result = findByNamedQuery(Group.GET_BY_NAME, parameters);
+
+        if (result.isEmpty()) {
+            return null;
+        }
+
+        return result.get(0);
+    }
+
+    public List<Group> getUserGroups(Long userId) {
+        return null;
+    }
 
 }

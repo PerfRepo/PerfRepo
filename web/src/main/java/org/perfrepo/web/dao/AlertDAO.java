@@ -18,7 +18,6 @@ import org.perfrepo.model.Alert;
 import org.perfrepo.model.Metric;
 import org.perfrepo.model.Test;
 
-import javax.inject.Named;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +27,6 @@ import java.util.Map;
  *
  * @author Jiri Holusa (jholusa@redhat.com)
  */
-@Named
 public class AlertDAO extends DAO<Alert, Long> {
 
    /**
