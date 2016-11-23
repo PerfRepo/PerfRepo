@@ -15,6 +15,7 @@
 package org.perfrepo.web.dao;
 
 import org.perfrepo.model.user.Group;
+import org.perfrepo.model.user.User;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,8 +40,11 @@ public class GroupDAO extends DAO<Group, Long> {
         return result.get(0);
     }
 
-    public List<Group> getUserGroups(Long userId) {
-        return null;
+    public List<Group> getUserGroups(User user) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("user", user);
+
+        return findByNamedQuery(Group.GET_USER_GROUPS, parameters);
     }
 
 }

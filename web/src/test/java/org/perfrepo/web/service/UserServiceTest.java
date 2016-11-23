@@ -62,7 +62,7 @@ public class UserServiceTest {
 
     @After
     public void cleanUp() throws Exception {
-        // deletion of favorite parameters is done via casdace on foreign key in database
+        // deletion of favorite parameters is done via cascade on foreign key in database
         for (User user: userService.getAllUsers()) {
             userService.removeUser(user);
         }

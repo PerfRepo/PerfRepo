@@ -32,13 +32,15 @@ import java.util.Set;
 @javax.persistence.Entity
 @Table(name = "\"group\"")
 @NamedQueries({
-        @NamedQuery(name = Group.GET_BY_NAME, query = "SELECT group FROM Group group WHERE group.name = :name")
+        @NamedQuery(name = Group.GET_BY_NAME, query = "SELECT group FROM Group group WHERE group.name = :name"),
+        @NamedQuery(name = Group.GET_USER_GROUPS, query = "SELECT grp FROM Group grp WHERE :user MEMBER OF grp.users")
 })
 public class Group implements Entity<Group>, Comparable<Group> {
 
    private static final long serialVersionUID = -9158731656089441951L;
 
    public static final String GET_BY_NAME = "Group.getByName";
+   public static final String GET_USER_GROUPS = "Group.getUserGroups";
 
    @Id
    @SequenceGenerator(name = "GROUP_ID_GENERATOR", sequenceName = "GROUP_SEQUENCE", allocationSize = 1)

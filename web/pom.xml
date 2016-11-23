@@ -325,7 +325,6 @@
                </execution>
             </executions>
          </plugin>
-
       </plugins>
 
       <resources>
@@ -372,6 +371,65 @@
                      <outputDirectory>deployments</outputDirectory>
                      <warName>repo</warName>
                   </configuration>
+               </plugin>
+            </plugins>
+         </build>
+      </profile>
+
+      <profile>
+         <id>jacoco</id>
+         <dependencies>
+            <dependency>
+               <groupId>org.jboss.arquillian.extension</groupId>
+               <artifactId>arquillian-jacoco</artifactId>
+               <version>1.0.0.Alpha8</version>
+               <scope>test</scope>
+            </dependency>
+
+            <dependency>
+               <groupId>org.jacoco</groupId>
+               <artifactId>org.jacoco.core</artifactId>
+               <version>0.7.5.201505241946</version>
+               <scope>test</scope>
+            </dependency>
+         </dependencies>
+
+         <build>
+            <plugins>
+               <plugin>
+                  <groupId>org.jacoco</groupId>
+                  <artifactId>jacoco-maven-plugin</artifactId>
+                  <version>0.7.5.201505241946</version>
+                  <executions>
+                     <execution>
+                        <id>default-prepare-agent</id>
+                        <goals>
+                           <goal>prepare-agent</goal>
+                        </goals>
+                     </execution>
+                     <execution>
+                        <id>default-prepare-agent-integration</id>
+                        <goals>
+                           <goal>prepare-agent-integration</goal>
+                        </goals>
+                        <configuration>
+                           <destFile>${project.build.directory}/jacoco-it.exec</destFile>
+                        </configuration>
+                     </execution>
+                     <execution>
+                        <id>Create Unit Test Report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                           <goal>report</goal>
+                        </goals>
+                     </execution>
+                     <execution>
+                        <id>Create Integration Test Report</id>
+                        <goals>
+                           <goal>report-integration</goal>
+                        </goals>
+                     </execution>
+                  </executions>
                </plugin>
             </plugins>
          </build>

@@ -59,7 +59,7 @@ public class GroupServiceBean implements GroupService {
 
     @Override
     public List<Group> getUserGroups(User user) {
-        return groupDAO.getUserGroups(user.getId());
+        return groupDAO.getUserGroups(user);
     }
 
     @Override

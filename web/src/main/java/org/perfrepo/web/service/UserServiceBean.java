@@ -139,7 +139,7 @@ public class UserServiceBean implements UserService {
    @Override
    public void updateUserProperties(Map<String, String> properties, User user) throws ServiceException {
       if (user.getId() == null) {
-         throw new ServiceException("User ID cannot be null when updating properties.");
+         throw new IllegalArgumentException("User ID cannot be null when updating properties.");
       }
 
       userPropertyDAO.deletePropertiesFromUser(user.getId());
