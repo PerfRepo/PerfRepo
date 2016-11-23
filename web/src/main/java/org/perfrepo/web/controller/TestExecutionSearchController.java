@@ -20,6 +20,7 @@ import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.to.TestExecutionSearchTO;
 import org.perfrepo.model.to.TestExecutionSearchTO.ParamCriteria;
 import org.perfrepo.model.userproperty.GroupFilter;
+import org.perfrepo.web.service.TestExecutionService;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.service.exceptions.ServiceException;
 import org.perfrepo.web.session.SearchCriteriaSession;
@@ -51,6 +52,9 @@ public class TestExecutionSearchController extends BaseController {
 
    @Inject
    private TestService testService;
+
+   @Inject
+   private TestExecutionService testExecutionService;
 
    @Inject
    private UserSession userSession;
@@ -90,7 +94,7 @@ public class TestExecutionSearchController extends BaseController {
       criteria.setLimitHowMany(criteria.getLimitHowMany() <= 0 ? null : criteria.getLimitHowMany());
       criteria.setLimitFrom(criteria.getLimitHowMany() == null ? null : (resultsPageNumber - 1) * criteria.getLimitHowMany());
 
-      SearchResultWrapper<TestExecution> searchResult = testService.searchTestExecutions(criteria);
+      SearchResultWrapper<TestExecution> searchResult = testExecutionService.searchTestExecutions(criteria);
       result = searchResult.getResult();
       totalNumberOfResults = searchResult.getTotalSearchResultsCount();
 
@@ -111,7 +115,7 @@ public class TestExecutionSearchController extends BaseController {
       }
 
       try {
-         testService.removeTestExecution(execToRemove);
+         testExecutionService.removeTestExecution(execToRemove);
          addMessage(INFO, "page.execSearch.execSuccessfullyDeleted", execToRemove.getName());
       } catch (ServiceException e) {
          addMessage(e);
@@ -160,7 +164,7 @@ public class TestExecutionSearchController extends BaseController {
    }
 
    public List<String> autocompleteParameter(String parameter) {
-      return testService.getParametersByPrefix(parameter);
+      return testExecutionService.getParametersByPrefix(parameter).stream().map(parameter1 -> parameter1.getName()).collect(Collectors.toList());
    }
 
    public List<String> autocompleteTags(String tag) {
@@ -170,7 +174,7 @@ public class TestExecutionSearchController extends BaseController {
          returnPrefix = "-";
       }
 
-      List<String> tmp = testService.getTagsByPrefix(tag);
+      List<String> tmp = testExecutionService.getTagsByPrefix(tag);
       List<String> result = new ArrayList<String>(tmp.size());
       if (!returnPrefix.isEmpty()) {
          for (String item : tmp) {
@@ -213,21 +217,23 @@ public class TestExecutionSearchController extends BaseController {
    public void addTagsToFoundTestExecutions() {
       List<String> tags = TagUtils.parseTags(massOperationAddTags != null ? massOperationAddTags.toLowerCase() : "");
 
-      testService.addTagsToTestExecutions(tags, result);
+      //TODO: solve this
+      //testExecutionService.addTagsToTestExecutions(tags, result);
       search();
    }
 
    public void deleteTagsFromFoundTestExecutions() {
       List<String> tags = TagUtils.parseTags(massOperationDeleteTags != null ? massOperationDeleteTags.toLowerCase() : "");
 
-      testService.removeTagsFromTestExecutions(tags, result);
+      //TODO: solve this
+      //testExecutionService.removeTagsFromTestExecutions(tags, result);
       search();
    }
 
    public void deleteFoundTestExecutions() {
       for (TestExecution testExecution : result) {
          try {
-            testService.removeTestExecution(testExecution);
+            testExecutionService.removeTestExecution(testExecution);
          } catch (ServiceException ex) {
             addMessage(ex);
          }

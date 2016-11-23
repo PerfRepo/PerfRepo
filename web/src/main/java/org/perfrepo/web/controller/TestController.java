@@ -95,7 +95,7 @@ public class TestController extends BaseController {
          }
       } else {
          if (test == null) {
-            test = testService.getFullTest(testId);
+            test = testService.getTest(testId);
             if (test == null) {
                log.error("Can't find test with id " + testId);
                redirectWithMessage("/", ERROR, "page.test.errorTestNotFound", testId);
@@ -181,7 +181,7 @@ public class TestController extends BaseController {
    }
 
    public List<Alert> getAlertsList() {
-      Test fullTest = testService.getFullTest(test.getId());
+      Test fullTest = testService.getTest(test.getId());
 
       return alertingService.getAlertsList(fullTest);
    }
@@ -341,7 +341,7 @@ public class TestController extends BaseController {
                return;
             }
             try {
-               testService.addMetric(test, selectedAssignedMetric);
+               testService.addMetric(selectedAssignedMetric, test);
                redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyAssigned", selectedAssignedMetric.getName());
             } catch (ServiceException e) {
                addSessionMessage(e);
@@ -359,7 +359,7 @@ public class TestController extends BaseController {
 
       public void createMetric() {
          try {
-            testService.addMetric(test, metric);
+            testService.addMetric(metric, test);
             redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyCreated", metric.getName());
          } catch (ServiceException e) {
             addSessionMessage(e);
@@ -376,7 +376,7 @@ public class TestController extends BaseController {
 
       public void deleteMetric(Metric metricToDelete, Test test) {
          try {
-            testService.removeMetric(metricToDelete, test);
+            testService.removeMetric(metricToDelete);
             redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyDeleted", metricToDelete.getName());
          } catch (ServiceException e) {
             addSessionMessage(e);
@@ -394,7 +394,7 @@ public class TestController extends BaseController {
       private String tags;
 
       public void processAlert() {
-         Metric metric = testService.getFullMetric(metricId);
+         Metric metric = testService.getMetric(metricId);
 
          try {
             alertingService.checkConditionSyntax(alert.getCondition(), metric);

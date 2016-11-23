@@ -65,7 +65,7 @@ public class TestDeprecatedREST {
    @Path("/id/{testId}")
    @Logged
    public Response get(@PathParam("testId") Long testId) {
-      return Response.ok(testService.getFullTest(testId)).build();
+      return Response.ok(testService.getTest(testId)).build();
    }
 
    @GET
@@ -73,8 +73,8 @@ public class TestDeprecatedREST {
    @Path("/uid/{testUid}")
    @Logged
    public Response getByUid(@PathParam("testUid") String testUid) {
-      Test test = testService.getTestByUID(testUid);
-      return Response.ok(testService.getFullTest(test.getId())).build();
+      Test test = testService.getTest(testUid);
+      return Response.ok(testService.getTest(test.getId())).build();
    }
 
    @POST
@@ -104,7 +104,7 @@ public class TestDeprecatedREST {
    public Response addMetric(@PathParam("testId") Long testId, Metric metric, @Context UriInfo uriInfo) throws Exception {
       Test test = new Test();
       test.setId(testId);
-      Long id = testService.addMetric(test, metric).getId();
-      return Response.created(uriInfo.getBaseUriBuilder().path(MetricDeprecatedREST.class).path(GET_METRIC_METHOD).build(id)).entity(id).build();
+      Long id = testService.addMetric(metric, test).getId();
+      return Response.created(uriInfo.getBaseUriBuilder().path(MetricREST.class).path(GET_METRIC_METHOD).build(id)).entity(id).build();
    }
 }

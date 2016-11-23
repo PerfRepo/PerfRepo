@@ -22,6 +22,7 @@ import org.perfrepo.model.Value;
 import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.to.TestExecutionSearchTO;
 import org.perfrepo.web.deprecated_rest.logging.Logged;
+import org.perfrepo.web.service.TestExecutionService;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.service.exceptions.ServiceException;
 
@@ -46,7 +47,6 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * REST interface for test execution related operations.
@@ -73,12 +73,15 @@ public class TestExecutionDeprecatedREST {
    @Inject
    private TestService testService;
 
+   @Inject
+   private TestExecutionService testExecutionService;
+
    @GET
    @Produces(MediaType.TEXT_XML)
    @Path("/{testExecutionId}")
    @Logged
    public Response get(@PathParam("testExecutionId") Long testExecutionId) {
-      return Response.ok(testService.getFullTestExecution(testExecutionId)).build();
+      return Response.ok(testExecutionService.getTestExecution(testExecutionId)).build();
    }
 
    @POST()
@@ -89,9 +92,9 @@ public class TestExecutionDeprecatedREST {
    public Response create(TestExecution testExecution, @Context UriInfo uriInfo) throws ServiceException {
       Test test = null;
       if (testExecution.getTest().getId() != null) {
-         test = testService.getFullTest(testExecution.getTest().getId());
+         test = testService.getTest(testExecution.getTest().getId());
       } else {
-         test = testService.getTestByUID(testExecution.getTest().getUid());
+         test = testService.getTest(testExecution.getTest().getUid());
       }
       testExecution.setTest(test);
 
@@ -99,8 +102,8 @@ public class TestExecutionDeprecatedREST {
          testExecution.setStarted(new Date());
       }
 
-      Long id = testService.createTestExecution(testExecution).getId();
-      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionDeprecatedREST.class).path(GET_TEST_EXECUTION_METHOD).build(id)).entity(id).build();
+      Long id = testExecutionService.createTestExecution(testExecution).getId();
+      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionREST.class).path(GET_TEST_EXECUTION_METHOD).build(id)).entity(id).build();
    }
 
    @POST
@@ -110,13 +113,13 @@ public class TestExecutionDeprecatedREST {
    public Response update(TestExecution testExecution, @Context UriInfo uriInfo) throws Exception {
       Test test = null;
       if (testExecution.getTest().getId() != null) {
-         test = testService.getFullTest(testExecution.getTest().getId());
+         test = testService.getTest(testExecution.getTest().getId());
       } else {
-         test = testService.getTestByUID(testExecution.getTest().getUid());
+         test = testService.getTest(testExecution.getTest().getUid());
       }
 
       testExecution.setTest(test);
-      testService.updateTestExecution(testExecution);
+      testExecutionService.updateTestExecution(testExecution);
 
       return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionDeprecatedREST.class).path(GET_TEST_EXECUTION_METHOD).build(testExecution.getId())).entity(testExecution.getId()).build();
    }
@@ -128,8 +131,10 @@ public class TestExecutionDeprecatedREST {
    @Wrapped(element = "testExecutions")
    @Logged
    public Response search(TestExecutionSearchTO criteria) {
-      SearchResultWrapper<TestExecution> searchResultWrapper = testService.searchTestExecutions(criteria);
-      List<TestExecution> result = testService.getFullTestExecutions(searchResultWrapper.getResult().stream().map(TestExecution::getId).collect(Collectors.toList()));
+      SearchResultWrapper<TestExecution> searchResultWrapper = testExecutionService.searchTestExecutions(criteria);
+      //TODO: solve this
+      //List<TestExecution> result = testExecutionService.getTestExecutions(searchResultWrapper.getResult().stream().map(TestExecution::getId).collect(Collectors.toList()));
+      List<TestExecution> result = null;
       GenericEntity<List<TestExecution>> entity = new GenericEntity<List<TestExecution>>(result) { };
       return Response.ok(entity).build();
    }
@@ -145,8 +150,8 @@ public class TestExecutionDeprecatedREST {
       Collection<Value> values = null;
       Value value = values.iterator().next();
       value.setTestExecution(te);
-      Value result = testService.addValue(value);
-      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionDeprecatedREST.class).path(GET_TEST_EXECUTION_METHOD).build(result.getId())).entity(result.getId()).build();
+      Value result = testExecutionService.addValue(value);
+      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionREST.class).path(GET_TEST_EXECUTION_METHOD).build(result.getId())).entity(result.getId()).build();
    }
 
    @DELETE
@@ -156,7 +161,7 @@ public class TestExecutionDeprecatedREST {
    public Response delete(@PathParam("testExecutionId") Long testExecutionId) throws Exception {
       TestExecution idHolder = new TestExecution();
       idHolder.setId(testExecutionId);
-      testService.removeTestExecution(idHolder);
+      testExecutionService.removeTestExecution(idHolder);
       return Response.noContent().build();
    }
 
@@ -181,7 +186,7 @@ public class TestExecutionDeprecatedREST {
    @Path("/attachment/{attachmentId}")
    @Logged
    public Response getAttachment(@PathParam("attachmentId") Long attachmentId) {
-      TestExecutionAttachment attachment = testService.getAttachment(attachmentId);
+      TestExecutionAttachment attachment = testExecutionService.getAttachment(attachmentId);
       if (attachment == null) {
          return Response.status(Status.NOT_FOUND).build();
       }

@@ -15,7 +15,7 @@
 package org.perfrepo.web.controller;
 
 import org.perfrepo.model.TestExecution;
-import org.perfrepo.web.service.TestService;
+import org.perfrepo.web.service.TestExecutionService;
 import org.perfrepo.web.session.TEComparatorSession;
 import org.richfaces.component.SortOrder;
 
@@ -39,7 +39,7 @@ public class TestExecutionCompareController extends BaseController {
    private static final long serialVersionUID = 1L;
 
    @Inject
-   private TestService testService;
+   private TestExecutionService testExecutionService;
 
    @Inject
    private TEComparatorSession teComparator;
@@ -77,9 +77,10 @@ public class TestExecutionCompareController extends BaseController {
    }
 
    public List<TestExecution> getTestExecutions() {
-      if (teComparator.getExecIds() != null && teComparator.getExecIds().size() > 0) {
-         return testService.getFullTestExecutions(teComparator.getExecIds());
-      }
+      //if (teComparator.getExecIds() != null && teComparator.getExecIds().size() > 0) {
+         //TODO: solve this
+         //return testExecutionService.getTestExecutions(teComparator.getExecIds());
+      //}
       return new ArrayList<TestExecution>();
    }
 

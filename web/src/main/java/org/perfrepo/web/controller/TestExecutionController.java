@@ -28,6 +28,7 @@ import org.perfrepo.model.builder.TestExecutionBuilder;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.controller.reports.charts.RfChartSeries;
 import org.perfrepo.web.service.AlertingService;
+import org.perfrepo.web.service.TestExecutionService;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.service.UserService;
 import org.perfrepo.web.service.exceptions.ServiceException;
@@ -75,6 +76,9 @@ public class TestExecutionController extends BaseController {
 
    @Inject
    private TestService testService;
+
+   @Inject
+   private TestExecutionService testExecutionService;
 
    @Inject
    private UserSession userSession;
@@ -217,10 +221,10 @@ public class TestExecutionController extends BaseController {
       if (editedTestExecution != null) {
          try {
             if (editedTestExecution.getId() == null) {
-               testExecution = testService.createTestExecution(editedTestExecution);
+               testExecution = testExecutionService.createTestExecution(editedTestExecution);
                redirectWithMessage("/exec/" + testExecution.getId(), INFO, "page.exec.successfullyCreated", testExecution.getName());
             } else {
-               testExecution = testService.updateTestExecution(editedTestExecution);
+               testExecution = testExecutionService.updateTestExecution(editedTestExecution);
                showMultiValue(null);
                redirectWithMessage("/exec/" + testExecution.getId(), INFO, "page.exec.successfullyUpdated", testExecution.getName());
             }
@@ -246,7 +250,7 @@ public class TestExecutionController extends BaseController {
             redirectWithMessage("/", ERROR, "page.exec.errorNoExecId");
          } else {
             if (testExecution == null) {
-               test = testService.getFullTest(createForTest);
+               test = testService.getTest(createForTest);
                if (test == null) {
                   log.error("Can't find test with id " + testExecution.getTest().getId());
                   redirectWithMessage("/", ERROR, "page.test.errorTestNotFound", testExecution.getTest().getId());
@@ -259,12 +263,12 @@ public class TestExecutionController extends BaseController {
          }
       } else {
          if (testExecution == null) {
-            testExecution = testService.getFullTestExecution(testExecutionId);
+            testExecution = testExecutionService.getTestExecution(testExecutionId);
             if (testExecution == null) {
                log.error("Can't find execution with id " + testExecutionId);
                redirectWithMessage("/", ERROR, "page.exec.errorExecNotFound", testExecutionId);
             } else {
-               test = testService.getFullTest(testExecution.getTest().getId());
+               test = testService.getTest(testExecution.getTest().getId());
                if (test == null) {
                   log.error("Can't find test with id " + testExecution.getTest().getId());
                   redirectWithMessage("/", ERROR, "page.test.errorTestNotFound", testExecution.getTest().getId());
@@ -315,7 +319,7 @@ public class TestExecutionController extends BaseController {
    public String update() {
       if (testExecution != null) {
          try {
-            testService.updateTestExecution(testExecution);
+            testExecutionService.updateTestExecution(testExecution);
          } catch (ServiceException e) {
             addMessage(e);
          }
@@ -346,7 +350,7 @@ public class TestExecutionController extends BaseController {
          objectToDelete.setId(new Long(getRequestParam("testExecutionId")));
       }
       try {
-         testService.removeTestExecution(objectToDelete);
+         testExecutionService.removeTestExecution(objectToDelete);
       } catch (org.perfrepo.web.service.exceptions.ServiceException e) {
          addMessage(e);
       }
@@ -356,7 +360,7 @@ public class TestExecutionController extends BaseController {
    public void deleteParameter(TestExecutionParameter param) {
       if (param != null) {
          try {
-            testService.removeParameter(param);
+            testExecutionService.removeParameter(param);
          } catch (Exception e) {
             throw new RuntimeException(e);
          }
@@ -369,7 +373,7 @@ public class TestExecutionController extends BaseController {
          idHolder.setId(testExecutionId);
          editedParameter.setTestExecution(idHolder);
          try {
-            TestExecutionParameter freshParam = testService.updateParameter(editedParameter);
+            TestExecutionParameter freshParam = testExecutionService.updateParameter(editedParameter);
             testExecution.getParameters().put(freshParam.getName(), freshParam);
             editedParameter = null;
          } catch (ServiceException e) {
@@ -451,9 +455,9 @@ public class TestExecutionController extends BaseController {
             }
 
             editedValue.setMetric(selectedMetric);
-            freshValue = testService.addValue(editedValue);
+            freshValue = testExecutionService.addValue(editedValue);
          } else {
-            freshValue = testService.updateValue(editedValue);
+            freshValue = testExecutionService.updateValue(editedValue);
             //TODO: solve this
             // EntityUtils.removeById(testExecution.getValues(), freshValue.getId());
          }
@@ -475,9 +479,9 @@ public class TestExecutionController extends BaseController {
    }
 
    public List<Metric> getTestMetric() {
-      if (testExecution != null) {
+      /*if (testExecution != null) {
          return testService.getTestMetrics(testExecution.getTest());
-      }
+      }*/
       return null;
    }
 
@@ -486,8 +490,8 @@ public class TestExecutionController extends BaseController {
          TestExecution idHolder = new TestExecution();
          idHolder.setId(testExecutionId);
          value.setTestExecution(idHolder);
-         try {
-            testService.removeValue(value);
+         /*try {
+            //testService.removeValue(value);
             //TODO: solve this
             //EntityUtils.removeById(testExecution.getValues(), value.getId());
             ValueInfo prevValueInfo = MultiValue.find(values, value);
@@ -495,7 +499,7 @@ public class TestExecutionController extends BaseController {
             showMultiValue(prevValueInfo.getMetricName());
          } catch (ServiceException e) {
             addMessage(e);
-         }
+         }*/
 
          redirectWithMessage("/exec/" + testExecutionId, INFO, "page.exec.value.successfullyRemoved");
       }
@@ -638,7 +642,7 @@ public class TestExecutionController extends BaseController {
    }
 
    public void downloadAttachment() {
-      TestExecutionAttachment attachment = testService.getAttachment(attachmentId);
+      TestExecutionAttachment attachment = testExecutionService.getAttachment(attachmentId);
       if (attachment == null) {
          addMessage(ERROR, "Attachment not found.");
       }
@@ -674,8 +678,8 @@ public class TestExecutionController extends BaseController {
       attachment.setTestExecution(new TestExecution());
       attachment.getTestExecution().setId(testExecutionId);
       try {
-         testService.addAttachment(attachment);
-         testExecution = testService.getFullTestExecution(testExecutionId);
+         testExecutionService.addAttachment(attachment);
+         testExecution = testExecutionService.getTestExecution(testExecutionId);
          showMultiValue(null);
       } catch (ServiceException e) {
          addMessage(e);
@@ -686,8 +690,8 @@ public class TestExecutionController extends BaseController {
       try {
          attachment.setTestExecution(new TestExecution());
          attachment.getTestExecution().setId(testExecutionId);
-         testService.removeAttachment(attachment);
-         testExecution = testService.getFullTestExecution(testExecutionId);
+         testExecutionService.removeAttachment(attachment);
+         testExecution = testExecutionService.getTestExecution(testExecutionId);
          showMultiValue(null);
       } catch (ServiceException e) {
          addMessage(e);

@@ -31,6 +31,7 @@ import org.perfrepo.web.controller.BaseController;
 import org.perfrepo.web.controller.reports.ReportPermissionController;
 import org.perfrepo.web.security.AuthorizationService;
 import org.perfrepo.web.service.ReportService;
+import org.perfrepo.web.service.TestExecutionService;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.service.UserService;
 import org.perfrepo.web.session.TEComparatorSession;
@@ -71,6 +72,9 @@ public class TestGroupReportController extends BaseController {
 
    @Inject
    private TestService testService;
+
+   @Inject
+   private TestExecutionService testExecutionService;
 
    @Inject
    private UserService userService;
@@ -193,7 +197,9 @@ public class TestGroupReportController extends BaseController {
    public List<TestExecution> findTestExecutions() {
       if (testIds.isEmpty() && !tags.isEmpty() && !tests.isEmpty()) {
          missingTE.clear(); //may be useless step
-         List<TestExecution> allTestExecutions = testService.getTestExecutions(tags, tests);
+         //TODO: solve this
+         //List<TestExecution> allTestExecutions = testService.getTestExecutions(tags, tests);
+         List<TestExecution> allTestExecutions = null;
          // build list of test execution ids
          for (TestExecution te : allTestExecutions) {
             if (!testIds.contains(te.getId())) {
@@ -203,7 +209,9 @@ public class TestGroupReportController extends BaseController {
          return allTestExecutions;
       } else if (!testIds.isEmpty()) {
          //find defined test executions by id
-         List<TestExecution> testExecutions = testService.getFullTestExecutions(testIds);
+         //TODO: solve this
+         //List<TestExecution> testExecutions = testService.getFullTestExecutions(testIds);
+         List<TestExecution> testExecutions = null;
          boolean initial = false;
          //is tests && tags are empty - when we go to the report from the search page
          if (tests.isEmpty() && tags.isEmpty()) {
@@ -230,7 +238,9 @@ public class TestGroupReportController extends BaseController {
          }
          //find missing test execution that can be compared in the report - allowed only when user is authorized for write access
          if (userAuthorized) {
-            List<TestExecution> allTestExecutions = testService.getTestExecutions(tags, tests);
+            //TODO: solve this
+            //List<TestExecution> allTestExecutions = testService.getTestExecutions(tags, tests);
+            List<TestExecution> allTestExecutions = null;
             for (TestExecution te : allTestExecutions) {
                if (!filtered.contains(te) && !missingTE.contains(te)) {
                   missingTE.add(te);
@@ -582,7 +592,7 @@ public class TestGroupReportController extends BaseController {
 
    public void addTest() {
       if (currentTest != null) {
-         if (testService.getTestByUID(currentTest) != null) {
+         if (testService.getTest(currentTest) != null) {
             this.testsCopy.add(currentTest);
          } else {
             addSessionMessage(ERROR, "page.reports.testGroup.testNotExists", currentTest);
@@ -623,7 +633,7 @@ public class TestGroupReportController extends BaseController {
    }
 
    public List<String> autocompleteTags(String tag) {
-      List<String> tests = testService.getTagsByPrefix(tag);
+      List<String> tests = testExecutionService.getTagsByPrefix(tag);
       java.util.Iterator<String> it = tests.iterator();
       while (it.hasNext()) {
          String t = it.next();
@@ -640,7 +650,9 @@ public class TestGroupReportController extends BaseController {
 
    public void addTag() {
       if (currentTag != null) {
-         List<TestExecution> tes = testService.getTestExecutions(Lists.newArrayList(currentTag), tests);
+         //TODO: solve this
+         //List<TestExecution> tes = testService.getTestExecutions(Lists.newArrayList(currentTag), tests);
+         List<TestExecution> tes = null;
          newFoundTags = Lists.newArrayList();
          for (TestExecution te : tes) {
             String t = normalizeTags(te.getTags());

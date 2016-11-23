@@ -9,19 +9,14 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.runner.RunWith;
-import org.perfrepo.model.FavoriteParameter;
-import org.perfrepo.model.Test;
 import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
 
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;

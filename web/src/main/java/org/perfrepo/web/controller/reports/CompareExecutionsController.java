@@ -21,6 +21,7 @@ import org.perfrepo.model.Test;
 import org.perfrepo.model.TestExecution;
 import org.perfrepo.web.controller.BaseController;
 import org.perfrepo.web.controller.reports.charts.RfChartSeries;
+import org.perfrepo.web.service.TestExecutionService;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.session.TEComparatorSession;
 import org.perfrepo.web.util.MultiValue;
@@ -72,6 +73,9 @@ public class CompareExecutionsController extends BaseController {
 
    @Inject
    private TestService service;
+
+   @Inject
+   private TestExecutionService testExecutionService;
 
    @Inject
    private TEComparatorSession teComparator;
@@ -282,7 +286,8 @@ public class CompareExecutionsController extends BaseController {
             return;
          }
          Collections.sort(execIdList);
-         testExecutions = service.getFullTestExecutions(execIdList);
+         //TODO: solve this
+         //testExecutions = testExecutionService.getTestExecutions(execIdList);
          // update teComparator, some of the executions might not exist anymore
          teComparator.clear();
          for (TestExecution te : testExecutions) {
@@ -294,7 +299,7 @@ public class CompareExecutionsController extends BaseController {
             addMessage(ERROR, "page.compareExecs.errorDifferentTests");
             return;
          }
-         test = service.getFullTest(testId);
+         test = service.getTest(testId);
          values = computeValues();
       }
    }

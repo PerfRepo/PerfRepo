@@ -35,6 +35,7 @@ import org.perfrepo.model.user.User;
 import org.perfrepo.web.controller.BaseController;
 import org.perfrepo.web.controller.reports.ReportPermissionController;
 import org.perfrepo.web.service.ReportService;
+import org.perfrepo.web.service.TestExecutionService;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.service.UserService;
 import org.perfrepo.web.service.exceptions.ServiceException;
@@ -79,6 +80,9 @@ public class MetricReportController extends BaseController {
 
    @Inject
    private TestService testService;
+
+   @Inject
+   private TestExecutionService testExecutionService;
 
    @Inject
    private UserSession userSession;
@@ -281,7 +285,7 @@ public class MetricReportController extends BaseController {
 
    public void updateTestExecutionFromDetail() {
       try {
-         testService.updateTestExecution(pointDetails.exec);
+         testExecutionService.updateTestExecution(pointDetails.exec);
       } catch (ServiceException ex) {
          addMessage(ex);
       }
@@ -625,7 +629,7 @@ public class MetricReportController extends BaseController {
             pointDetails.execId = series.execIds.get(event.getPointIndex());
          }
 
-         pointDetails.exec = testService.getFullTestExecution(pointDetails.execId);
+         pointDetails.exec = testExecutionService.getTestExecution(pointDetails.execId);
 
          //TODO: solve this
          /*
@@ -700,7 +704,9 @@ public class MetricReportController extends BaseController {
             throw new IllegalStateException("can't change metrics with null test ID");
          }
 
-         selectionMetrics = testService.getAllMetrics(selectedTestId);
+         Test test = new Test();
+         test.setId(selectedTestId);
+         selectionMetrics = testService.getMetricsForTest(test);
          if (selectionMetrics.isEmpty()) {
             addMessage(ERROR, "page.metricreport.noMetrics", findSelectedTestUID(selectedTestId));
          } else if (seriesSpecs != null) {

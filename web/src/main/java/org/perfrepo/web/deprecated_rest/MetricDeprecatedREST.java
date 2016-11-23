@@ -38,6 +38,6 @@ public class MetricDeprecatedREST {
    @Path("/{metricId}")
    @Logged
    public Response get(@PathParam("metricId") Long metricId) {
-      return Response.ok(testService.getFullMetric(metricId)).build();
+      return Response.ok(testService.getMetric(metricId)).build();
    }
 }

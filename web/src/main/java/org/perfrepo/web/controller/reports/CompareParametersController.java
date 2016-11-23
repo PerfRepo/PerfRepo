@@ -21,6 +21,7 @@ import org.perfrepo.model.Test;
 import org.perfrepo.model.TestExecution;
 import org.perfrepo.model.TestExecutionParameter;
 import org.perfrepo.web.controller.BaseController;
+import org.perfrepo.web.service.TestExecutionService;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.session.TEComparatorSession;
 import org.perfrepo.web.viewscope.ViewScoped;
@@ -48,6 +49,9 @@ public class CompareParametersController extends BaseController {
    private static final long serialVersionUID = 1L;
    @Inject
    private TestService service;
+
+   @Inject
+   private TestExecutionService testExecutionService;
 
    @Inject
    private TEComparatorSession teComparator;
@@ -138,13 +142,15 @@ public class CompareParametersController extends BaseController {
             return;
          }
          Collections.sort(execIdList);
-         testExecutions = service.getFullTestExecutions(execIdList);
+         //TODO: solve this
+         //testExecutions = testExecutionService.getTestExecutions(execIdList);
+         testExecutions = null;
          Long testId = checkCommonTestId(testExecutions);
          if (testId == null) {
             addMessage(ERROR, "page.compareExecs.errorDifferentTests");
             return;
          }
-         test = service.getFullTest(testId);
+         test = service.getTest(testId);
          allParameters = extractParams(testExecutions);
       }
    }
