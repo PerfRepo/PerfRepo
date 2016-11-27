@@ -1,32 +1,20 @@
 (function() {
     'use strict';
 
-    var TestController = function() {
-        var vm = this;
-        vm.hello = "test";
-    };
-
     angular.module('org.perfrepo.test',
         [
             'ngResource',
             'ui.router',
 
             'org.perfrepo.test.search',
+            'org.perfrepo.test.detail',
             'org.perfrepo.test.create',
             'org.perfrepo.test.edit'
         ])
 
-        .controller('TestController', TestController)
-
         .config(function($stateProvider) {
             $stateProvider
-                .state('app.test', {
-                    url: 'test',
-                    templateUrl: 'app/test/test.html',
-                    controller: 'TestController',
-                    controllerAs: 'test'})
-
-                .state('app.test-create', {
+                .state('app.testCreate', {
                     url: 'test/create',
                     templateUrl: 'app/test/create/create-test.html',
                     controller: 'CreateTestController',
@@ -38,16 +26,29 @@
                         metrics: function (metricService) {
                             return metricService.getAll();
                         }
-                    }})
+                    }
+                })
 
-                .state('app.test-search', {
+                .state('app.testDetail', {
+                    url: 'test/detail/:id',
+                    templateUrl: 'app/test/detail/detail-test.html',
+                    controller: 'DetailTestController',
+                    controllerAs: 'vm',
+                    resolve: {
+                        test: function(testService, $stateParams) {
+                            return testService.getById($stateParams.id)
+                        }
+                    }
+                })
+
+                .state('app.testSearch', {
                     url: 'test/search',
                     templateUrl: 'app/test/search/search-test.html',
                     controller: 'SearchTestController',
                     controllerAs: 'vm'
                 })
 
-                .state('app.test-edit', {
+                .state('app.testEdit', {
                     url: 'test/edit/:id',
                     templateUrl: 'app/test/edit/edit-test.html',
                     controller: 'EditTestController',

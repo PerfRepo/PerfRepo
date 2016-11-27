@@ -25,7 +25,7 @@
         .component('testForm', {
             bindings: {
                 metrics: '=',
-                userGroups: '=',
+                groups: '=',
                 test: '=',
                 onSave: '&'
             },

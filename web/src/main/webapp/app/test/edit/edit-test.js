@@ -4,13 +4,13 @@
     var EditTestController = function($state, testService, test, userGroups, metrics) {
 
         this.test = test;
-        this.userGroups = userGroups;
+        this.groups = userGroups;
         this.metrics = metrics;
 
         this.update = function(test) {
             testService.update(test)
                 .then(function () {
-                    $state.go('app.test');
+                    $state.go('app.testSearch');
                 });
         };
     };

@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" class="layout-pf layout-pf-fixed" ng-app="org.perfrepo">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="org.perfrepo">
 <head>
     <meta charset="utf-8"/>
     <title>PerfRepo</title>
 
     <!-- Angular -->
-    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
     <script src="bower_components/angular-resource/angular-resource.js"></script>
     <!-- Angular-Bootstrap -->
@@ -13,6 +13,7 @@
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <!-- Angular-Sanitize -->
     <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
     <!-- PatternFly Styles -->
     <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly.min.css"/>
     <link rel="stylesheet" href="bower_components/patternfly/dist/css/patternfly-additions.min.css"/>
@@ -20,6 +21,7 @@
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
     <!-- Datatables, jQuery Grid Component -->
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="bower_components/datatables-colvis/js/dataTables.colVis.js"></script>
@@ -33,7 +35,7 @@
     <!-- Bootstrap Date Picker -->
     <script src="bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
     <!-- Bootstrap Select -->
-    <script src="bower_components/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+
     <!-- Bootstrap Switch -->
     <script src="bower_components/bootstrap-switch/dist/js/bootstrap-switch.min.js"></script>
     <!-- Bootstrap Touchspin -->
@@ -46,7 +48,8 @@
     <script src="bower_components/matchHeight/jquery.matchHeight-min.js"></script>
     <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.min.css"/>
     <!-- Angular-PatternFly  -->
-    <script src="bower_components/angular-patternfly/dist/angular-patternfly.min.js"></script>
+    <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
+    <script src="http://angular-patternfly.rhcloud.com/grunt-scripts/lodash.min.js"></script>
     <!-- Trix wysiwyg  -->
     <link rel="stylesheet" href="bower_components/trix/dist/trix.css"/>
     <script src="bower_components/trix/dist/trix.js"></script>
@@ -64,9 +67,13 @@
     <script src="app/test/search/components/form-search-test.js"></script>
     <script src="app/test/search/components/list-search-test.js"></script>
     <script src="app/test/edit/edit-test.js"></script>
+    <script src="app/test/detail/detail-test.js"></script>
     <script src="app/test/form/form-test.js"></script>
     <script src="app/test_execution/test-execution.js"></script>
     <script src="app/report/report.js"></script>
+
+
+    <link rel="stylesheet" href="styles.css"/>
 
 
 </head>

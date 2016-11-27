@@ -19,7 +19,7 @@
     var TestService = function($http, Test, API_URL) {
 
         this.search = function(searchParams){
-            return $http.get(API_URL + '/tests', {params: searchParams});
+            return $http.post(API_URL + '/tests/search', searchParams);
         }
 
         this.getById = function(id) {

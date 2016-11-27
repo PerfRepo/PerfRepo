@@ -4,16 +4,17 @@
     var CreateTestController = function($state, testService, userGroups, metrics) {
 
         this.test = {};
-        this.userGroups = userGroups;
+        this.groups = userGroups;
         this.metrics = metrics;
-        //if(this.userGroups != undefined && this.userGroups.length > 0) {
-        //    this.test.groupId = this.userGroups[0].id; //TODO
-        //}
+
+        if(this.groups != undefined && this.groups.length > 0) {
+            this.test.group = this.groups[0];
+        }
 
         this.save = function(test) {
             testService.save(test)
                 .then(function () {
-                    $state.go('app.test');
+                    $state.go('app.testSearch');
                 });
         };
     };

@@ -1,0 +1,30 @@
+.content-container {
+    padding-top: 40px;
+}
+
+trix-editor {
+    border-radius: 0;
+    background-color: white;
+}
+
+trix-toolbar .button_group {
+    border-radius: 0;
+    border-bottom: 0;
+    margin: 0 10px 0px 0;
+}
+
+trix-toolbar .button_group button {
+    border-color: #bbb;
+    height: 25px;
+}
+
+/* TODO */
+.editor-wrap {
+    border: 1px solid #bbb;
+    padding: 3px;
+    background-color: #f8f8f8;
+}
+
+.page-limit {
+    width: 50px !important;
+}

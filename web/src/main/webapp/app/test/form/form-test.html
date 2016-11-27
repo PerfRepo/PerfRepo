@@ -17,9 +17,7 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="testGroup">Group:</label>
                 <div class="col-sm-10">
-                    <!-- ng-model="vm.test.groupId" it doesn't work with ng-model -->
-                    <select combo-box id="testGroup" class="form-control">
-                        <option ng-repeat="userGroup in vm.userGroups" value="{{userGroup.id}}">{{userGroup.name}}</option>
+                    <select combo-box id="testGroup" ng-model="vm.test.group" class="form-control" ng-options="group.name for group in vm.groups track by group.id">
                     </select>
                 </div>
             </div>
@@ -27,15 +25,14 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="testMetrics">Metrics:</label>
                 <div class="col-sm-10">
-                    <select select-picker ng-model="vm.test.metrics" id="testMetrics"class="form-control" multiple>
-                        <option ng-repeat="metric in vm.metrics" value="{{metric}}">{{metric.name}}</option>
+                    <select select-picker ng-model="vm.test.metrics" id="testMetrics"class="form-control" ng-options="metric.name for metric in vm.metrics track by metric.id" multiple>
                     </select>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-sm-12">
-                    <a ng-click="vm.addMetricModal()" class="btn btn-default pull-right">Create metric</a>
+                    <a disabled ng-click="vm.addMetricModal()" class="btn btn-default pull-right">Create metric</a>
                 </div>
             </div>
 
@@ -50,7 +47,7 @@
 
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary pull-right">Create</button>
                 </div>
             </div>
         </form>
