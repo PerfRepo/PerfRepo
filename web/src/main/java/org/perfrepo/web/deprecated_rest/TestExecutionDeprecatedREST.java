@@ -12,7 +12,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.perfrepo.web.rest;
+package org.perfrepo.web.deprecated_rest;
 
 import org.jboss.resteasy.annotations.providers.jaxb.Wrapped;
 import org.perfrepo.model.Test;
@@ -21,7 +21,7 @@ import org.perfrepo.model.TestExecutionAttachment;
 import org.perfrepo.model.Value;
 import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.to.TestExecutionSearchTO;
-import org.perfrepo.web.rest.logging.Logged;
+import org.perfrepo.web.deprecated_rest.logging.Logged;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.service.exceptions.ServiceException;
 
@@ -45,15 +45,15 @@ import java.util.stream.Collectors;
  */
 @Path("/testExecution")
 @RequestScoped
-public class TestExecutionREST {
+public class TestExecutionDeprecatedREST {
 
    private static Method GET_TEST_EXECUTION_METHOD;
    private static Method GET_ATTACHMENT_METHOD;
 
    static {
       try {
-         GET_TEST_EXECUTION_METHOD = TestExecutionREST.class.getMethod("get", Long.class);
-         GET_ATTACHMENT_METHOD = TestExecutionREST.class.getMethod("getAttachment", Long.class);
+         GET_TEST_EXECUTION_METHOD = TestExecutionDeprecatedREST.class.getMethod("get", Long.class);
+         GET_ATTACHMENT_METHOD = TestExecutionDeprecatedREST.class.getMethod("getAttachment", Long.class);
       } catch (Exception e) {
          e.printStackTrace(System.err);
       }
@@ -89,7 +89,7 @@ public class TestExecutionREST {
       }
 
       Long id = testService.createTestExecution(testExecution).getId();
-      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionREST.class).path(GET_TEST_EXECUTION_METHOD).build(id)).entity(id).build();
+      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionDeprecatedREST.class).path(GET_TEST_EXECUTION_METHOD).build(id)).entity(id).build();
    }
 
    @POST
@@ -107,7 +107,7 @@ public class TestExecutionREST {
       testExecution.setTest(test);
       testService.updateTestExecution(testExecution);
 
-      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionREST.class).path(GET_TEST_EXECUTION_METHOD).build(testExecution.getId())).entity(testExecution.getId()).build();
+      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionDeprecatedREST.class).path(GET_TEST_EXECUTION_METHOD).build(testExecution.getId())).entity(testExecution.getId()).build();
    }
 
    @POST
@@ -133,7 +133,7 @@ public class TestExecutionREST {
       Value value = values.iterator().next();
       value.setTestExecution(te);
       Value result = testService.addValue(value);
-      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionREST.class).path(GET_TEST_EXECUTION_METHOD).build(result.getId())).entity(result.getId()).build();
+      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionDeprecatedREST.class).path(GET_TEST_EXECUTION_METHOD).build(result.getId())).entity(result.getId()).build();
    }
 
    @DELETE
@@ -161,7 +161,7 @@ public class TestExecutionREST {
       testExec.setId(testExecutionId);
       attachment.setTestExecution(testExec);
       Long id = testService.addAttachment(attachment);
-      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionREST.class).path(GET_ATTACHMENT_METHOD).build(id)).entity(id).build();
+      return Response.created(uriInfo.getBaseUriBuilder().path(TestExecutionDeprecatedREST.class).path(GET_ATTACHMENT_METHOD).build(id)).entity(id).build();
    }
 
    @GET

@@ -58,7 +58,7 @@ public class PerfRepoClient {
    private static final Logger log = Logger.getLogger(PerfRepoClient.class);
 
    private static final String CONTENT_TYPE_XML = "text/xml";
-   private static final String REST_BASE_URL_TEMPLATE = "http://%s%s/rest/";
+   private static final String REST_BASE_URL_TEMPLATE = "http://%s%s/deprecated_rest/";
    private String host;
    private String url;
    private String basicAuthHash;

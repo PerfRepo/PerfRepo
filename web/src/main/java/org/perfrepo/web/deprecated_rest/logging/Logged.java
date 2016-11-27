@@ -12,28 +12,18 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.perfrepo.web.rest;
+package org.perfrepo.web.deprecated_rest.logging;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
-import java.util.HashSet;
-import java.util.Set;
+import javax.interceptor.InterceptorBinding;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-@ApplicationPath("/rest")
-public class PerfRepoRESTApplication extends Application {
-
-   private Set<Class<?>> classes = new HashSet<Class<?>>();
-
-   public PerfRepoRESTApplication() {
-      classes.add(MetricREST.class);
-      classes.add(TestExecutionREST.class);
-      classes.add(TestREST.class);
-      classes.add(ReportREST.class);
-      classes.add(InfoREST.class);
-   }
-
-   @Override
-   public Set<Class<?>> getClasses() {
-      return classes;
-   }
+@Inherited
+@InterceptorBinding
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Logged {
 }

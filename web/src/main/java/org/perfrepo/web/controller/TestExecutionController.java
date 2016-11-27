@@ -20,6 +20,7 @@ import org.perfrepo.model.builder.TestExecutionBuilder;
 import org.perfrepo.model.user.User;
 import org.perfrepo.model.util.EntityUtils;
 import org.perfrepo.web.controller.reports.charts.RfChartSeries;
+import org.perfrepo.web.deprecated_rest.TestExecutionDeprecatedREST;
 import org.perfrepo.web.service.AlertingService;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.service.UserService;
@@ -483,7 +484,7 @@ public class TestExecutionController extends BaseController {
 
    /**
     * Produce download link for an attachment. It will be an URL for the
-    * {@link org.perfrepo.web.rest.TestExecutionREST#getAttachment(Long)} method.
+    * {@link TestExecutionDeprecatedREST#getAttachment(Long)} method.
     *
     * @param attachment
     * @return The download link.

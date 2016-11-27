@@ -12,11 +12,11 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.perfrepo.web.rest;
+package org.perfrepo.web.deprecated_rest;
 
 import org.perfrepo.model.Metric;
 import org.perfrepo.model.Test;
-import org.perfrepo.web.rest.logging.Logged;
+import org.perfrepo.web.deprecated_rest.logging.Logged;
 import org.perfrepo.web.service.TestService;
 
 import javax.enterprise.context.RequestScoped;
@@ -43,15 +43,15 @@ import java.lang.reflect.Method;
  */
 @Path("/test")
 @RequestScoped
-public class TestREST {
+public class TestDeprecatedREST {
 
    private static Method GET_TEST_METHOD;
    private static Method GET_METRIC_METHOD;
 
    static {
       try {
-         GET_TEST_METHOD = TestREST.class.getMethod("get", Long.class);
-         GET_METRIC_METHOD = MetricREST.class.getMethod("get", Long.class);
+         GET_TEST_METHOD = TestDeprecatedREST.class.getMethod("get", Long.class);
+         GET_METRIC_METHOD = MetricDeprecatedREST.class.getMethod("get", Long.class);
       } catch (Exception e) {
          e.printStackTrace(System.err);
       }
@@ -84,7 +84,7 @@ public class TestREST {
    @Logged
    public Response create(Test test, @Context UriInfo uriInfo) throws Exception {
       Long id = testService.createTest(test).getId();
-      return Response.created(uriInfo.getBaseUriBuilder().path(TestREST.class).path(GET_TEST_METHOD).build(id)).entity(id).build();
+      return Response.created(uriInfo.getBaseUriBuilder().path(TestDeprecatedREST.class).path(GET_TEST_METHOD).build(id)).entity(id).build();
    }
 
    @DELETE
@@ -105,6 +105,6 @@ public class TestREST {
       Test test = new Test();
       test.setId(testId);
       Long id = testService.addMetric(test, metric).getId();
-      return Response.created(uriInfo.getBaseUriBuilder().path(MetricREST.class).path(GET_METRIC_METHOD).build(id)).entity(id).build();
+      return Response.created(uriInfo.getBaseUriBuilder().path(MetricDeprecatedREST.class).path(GET_METRIC_METHOD).build(id)).entity(id).build();
    }
 }

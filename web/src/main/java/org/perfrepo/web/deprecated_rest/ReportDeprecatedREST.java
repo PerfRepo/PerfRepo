@@ -12,13 +12,13 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.perfrepo.web.rest;
+package org.perfrepo.web.deprecated_rest;
 
 import org.perfrepo.model.auth.Permission;
 import org.perfrepo.model.report.Report;
 import org.perfrepo.model.report.ReportProperty;
 import org.perfrepo.model.user.User;
-import org.perfrepo.web.rest.logging.Logged;
+import org.perfrepo.web.deprecated_rest.logging.Logged;
 import org.perfrepo.web.service.ReportService;
 import org.perfrepo.web.service.UserService;
 import org.perfrepo.web.service.exceptions.ServiceException;
@@ -45,7 +45,7 @@ import java.lang.reflect.Method;
  */
 @Path("/report")
 @RequestScoped
-public class ReportREST {
+public class ReportDeprecatedREST {
 
    private static Method GET_REPORT_METHOD;
 
@@ -57,7 +57,7 @@ public class ReportREST {
 
    static {
       try {
-         GET_REPORT_METHOD = ReportREST.class.getMethod("get", Long.class);
+         GET_REPORT_METHOD = ReportDeprecatedREST.class.getMethod("get", Long.class);
       } catch (Exception e) {
          e.printStackTrace(System.err);
       }
@@ -88,7 +88,7 @@ public class ReportREST {
       }
 
       Long id = reportService.createReport(report).getId();
-      return Response.created(uriInfo.getBaseUriBuilder().path(ReportREST.class).path(GET_REPORT_METHOD).build(id)).entity(id).build();
+      return Response.created(uriInfo.getBaseUriBuilder().path(ReportDeprecatedREST.class).path(GET_REPORT_METHOD).build(id)).entity(id).build();
    }
 
    @POST
@@ -107,7 +107,7 @@ public class ReportREST {
       }
 
       reportService.updateReport(report);
-      return Response.created(uriInfo.getBaseUriBuilder().path(ReportREST.class).path(GET_REPORT_METHOD).build(report.getId())).entity(report.getId()).build();
+      return Response.created(uriInfo.getBaseUriBuilder().path(ReportDeprecatedREST.class).path(GET_REPORT_METHOD).build(report.getId())).entity(report.getId()).build();
    }
 
    @DELETE

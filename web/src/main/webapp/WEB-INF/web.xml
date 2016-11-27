@@ -13,16 +13,16 @@
 		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
 		<init-param>
 			<param-name>resteasy.servlet.mapping.prefix</param-name>
-			<param-value>/rest</param-value>
+			<param-value>/deprecated_rest</param-value>
 		</init-param>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>org.perfrepo.web.rest.PerfRepoRESTApplication</param-value>
+			<param-value>org.perfrepo.web.deprecated_rest.PerfRepoDeprecatedRESTApplication</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Resteasy</servlet-name>
-		<url-pattern>/rest/*</url-pattern>
+		<url-pattern>/deprecated_rest/*</url-pattern>
 	</servlet-mapping>
 
 	<servlet>
@@ -30,22 +30,21 @@
 		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
 		<init-param>
 			<param-name>resteasy.servlet.mapping.prefix</param-name>
-			<param-value>/api</param-value>
+			<param-value>/rest/json</param-value>
 		</init-param>
 		<init-param>
 			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>org.perfrepo.web.front_api.FrontRestApiApplication</param-value>
+			<param-value>org.perfrepo.web.rest.RestApiApplication</param-value>
 		</init-param>
 		<init-param>
 			<param-name>resteasy.providers</param-name>
-			<param-value>org.perfrepo.web.front_api.exception_mapper.ValidationExceptionMapper,
-				org.perfrepo.web.front_api.exception_mapper.WebApplicationExceptionMapper,
-				org.perfrepo.web.front_api.exception_mapper.ServiceExceptionMapper</param-value>
+			<param-value>org.perfrepo.web.rest.exception_mapper.ValidationExceptionMapper,
+				org.perfrepo.web.rest.exception_mapper.AdapterExceptionMapper</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>ResteasyFrontApi</servlet-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/rest/json/*</url-pattern>
 	</servlet-mapping>
 
 	<!-- Context parameters -->
@@ -80,11 +79,11 @@
 	<!-- filters -->
 	<filter>
 		<filter-name>RestAuthenticationFilter</filter-name>
-		<filter-class>org.perfrepo.web.rest.security.RestAuthenticationFilter</filter-class>
+		<filter-class>org.perfrepo.web.deprecated_rest.security.RestAuthenticationFilter</filter-class>
 	</filter>
 	<filter>
 		<filter-name>FrontApiAuthenticationFilter</filter-name>
-		<filter-class>org.perfrepo.web.front_api.security.FrontApiAuthenticationFilter</filter-class>
+		<filter-class>org.perfrepo.web.rest.security.FrontApiAuthenticationFilter</filter-class>
 	</filter>
 	<filter>
 		<filter-name>UrlRewriteFilter</filter-name>
@@ -92,13 +91,13 @@
 	</filter>
 	<filter-mapping>
 		<filter-name>RestAuthenticationFilter</filter-name>
-		<url-pattern>/rest/*</url-pattern>
+		<url-pattern>/deprecated_rest/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
 	<filter-mapping>
 		<filter-name>FrontApiAuthenticationFilter</filter-name>
-		<url-pattern>/api/*</url-pattern>
+		<url-pattern>/rest/json/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
@@ -155,14 +154,14 @@
 		<web-resource-collection>
 			<web-resource-name>Rest</web-resource-name>
 			<description>Web resources for REST Services</description>
-			<url-pattern>/rest/*</url-pattern>
+			<url-pattern>/deprecated_rest/*</url-pattern>
 		</web-resource-collection>
 	</security-constraint>
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Front api</web-resource-name>
 			<description>Web resources for front API</description>
-			<url-pattern>/api/*</url-pattern>
+			<url-pattern>/rest/json/*</url-pattern>
 		</web-resource-collection>
 	</security-constraint>
 	<security-constraint>

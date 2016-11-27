@@ -12,7 +12,7 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.perfrepo.web.rest.security;
+package org.perfrepo.web.deprecated_rest.security;
 
 import org.jboss.resteasy.util.Base64;
 
@@ -22,12 +22,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
- * Filter used to authenticate rest requests
+ * Filter used to authenticate deprecated_rest requests
  * The request should contain basic authentication header
  *
  * @author Pavel Drozd
  */
-@WebFilter(filterName = "RestAuthenticationFilter", urlPatterns = {"/rest/*"})
+@WebFilter(filterName = "RestAuthenticationFilter", urlPatterns = {"/deprecated_rest/*"})
 public class RestAuthenticationFilter implements Filter {
 
    /**

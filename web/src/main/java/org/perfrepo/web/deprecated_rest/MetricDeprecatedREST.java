@@ -12,31 +12,32 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.perfrepo.web.rest;
+package org.perfrepo.web.deprecated_rest;
 
-import org.perfrepo.web.rest.logging.Logged;
-import org.perfrepo.web.service.ApplicationConfiguration;
+import org.perfrepo.web.deprecated_rest.logging.Logged;
+import org.perfrepo.web.service.TestService;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/info")
+@Path("/metric")
 @RequestScoped
-public class InfoREST {
+public class MetricDeprecatedREST {
 
    @Inject
-   private ApplicationConfiguration applicationConfiguration;
+   private TestService testService;
 
    @GET
-   @Produces(MediaType.TEXT_PLAIN)
-   @Path("/version")
+   @Produces(MediaType.TEXT_XML)
+   @Path("/{metricId}")
    @Logged
-   public Response get() {
-      return Response.ok(applicationConfiguration.getPerfRepoVersion()).build();
+   public Response get(@PathParam("metricId") Long metricId) {
+      return Response.ok(testService.getFullMetric(metricId)).build();
    }
 }
