@@ -45,7 +45,7 @@
             'org.perfrepo.report'
         ])
 
-        .constant('API_URL', 'api/json')
+        .constant('API_URL', 'rest/json')
 
         .config(function($stateProvider, $urlRouterProvider) {
 //            $urlRouterProvider.otherwise('/login');
