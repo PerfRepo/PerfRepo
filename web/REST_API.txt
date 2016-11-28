@@ -1,17 +1,26 @@
-GET    /rest/test/all - all tests (MAY BE REMOVED)
+Perfrepo REST API
+=================
+
+Test and metric related methods
+
+GET    /rest/test/uid/{testId} - get test with all subobjects (by it's UID)
+GET    /rest/test/id/{testId} - get test with all subobjects
 POST   /rest/test/create - create a new test
-GET    /rest/test/{testId} - get test with all subobjects
-DELETE /rest/test/{testId} - delete test and all subobjects
-POST   /rest/test/{testId}/addMetric - add new metric to an existing test
-GET    /rest/test/{testId}/executions - list all executions for a test (MAY BE REMOVED)
-GET    /rest/metric/all - all metrics (MAY BE REMOVED)
+POST   /rest/test/id/{testId}/addMetric - add new metric to an existing test
+DELETE /rest/test/id/{testId} - delete test and all subobjects
 GET    /rest/metric/{metricId} - get metric
-GET    /rest/testExecution/all (MAY BE REMOVED)
-GET    /rest/testExecution/attachment/{attachmentId} - get attachment
-POST   /rest/testExecution/create - create a new test execution
+
+Test execution related methods
+
 GET    /rest/testExecution/{testExecutionId} - get test execution with all subobjects
+POST   /rest/testExecution/create - create a new test execution
 DELETE /rest/testExecution/{testExecutionId} - delete test execution and all subobjects
+
+POST   /rest/testExecution/addValue - add value to existing test execution
+GET    /rest/testExecution/attachment/{attachmentId} - get attachment
 POST   /rest/testExecution/{testExecutionId}/addAttachment - add new attachment to an existing test execution
+
+Return HTTP statuses
 
 GET methods, on success, return HTTP STATUS 200 (OK) with requested entity
 POST methods, on success, return HTTP STATUS 201 (Created) with properly set Location header, returned entity contains id of newly created object
