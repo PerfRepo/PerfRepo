@@ -18,8 +18,10 @@ import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * DAO for {@link Group}
@@ -40,11 +42,12 @@ public class GroupDAO extends DAO<Group, Long> {
         return result.get(0);
     }
 
-    public List<Group> getUserGroups(User user) {
+    public Set<Group> getUserGroups(User user) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("user", user);
 
-        return findByNamedQuery(Group.GET_USER_GROUPS, parameters);
+        List<Group> result = findByNamedQuery(Group.GET_USER_GROUPS, parameters);
+        return new HashSet<>(result);
     }
 
 }

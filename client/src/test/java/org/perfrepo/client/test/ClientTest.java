@@ -458,9 +458,9 @@ public class ClientTest {
           .groupId(clientGroup)
           .uid(name + "uid" + salt)
           .description("this is a test test")
-          .metric("metric1", MetricComparator.LB, "this is a test metric 1")
+          .metric("metric1", MetricComparator.LOWER_BETTER, "this is a test metric 1")
           .metric("metric2", "this is a test metric 2")
-          .metric("multimetric", MetricComparator.HB, "this is a metric with multiple values")
+          .metric("multimetric", MetricComparator.HIGHER_BETTER, "this is a metric with multiple values")
           .build();
    }
 

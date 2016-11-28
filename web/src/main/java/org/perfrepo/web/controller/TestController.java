@@ -26,7 +26,9 @@ import org.perfrepo.model.user.User;
 import org.perfrepo.web.service.AlertingService;
 import org.perfrepo.web.service.TestService;
 import org.perfrepo.web.service.UserService;
+import org.perfrepo.web.service.exceptions.DuplicateEntityException;
 import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.service.exceptions.UnauthorizedException;
 import org.perfrepo.web.session.SearchCriteriaSession;
 import org.perfrepo.web.session.UserSession;
 import org.perfrepo.web.util.MessageUtils;
@@ -99,9 +101,9 @@ public class TestController extends BaseController {
             if (test == null) {
                log.error("Can't find test with id " + testId);
                redirectWithMessage("/", ERROR, "page.test.errorTestNotFound", testId);
-            } else {
-               metricDetails.selectionAssignedMetrics = testService.getAvailableMetrics(test);
-            }
+            } //else {
+            //   metricDetails.selectionAssignedMetrics = testService.getAvailableMetrics(test);
+            //}
          }
       }
    }
@@ -113,8 +115,6 @@ public class TestController extends BaseController {
       try {
          Test createdTest = testService.createTest(test);
          redirectWithMessage("/test/" + createdTest.getId(), INFO, "page.test.createdSuccessfully", createdTest.getId());
-      } catch (ServiceException e) {
-         addMessage(e);
       } catch (org.perfrepo.web.security.SecurityException e) {
          addMessage(e);
       } catch (EJBException e) {
@@ -123,6 +123,10 @@ public class TestController extends BaseController {
          } else {
             throw e;
          }
+      } catch (UnauthorizedException e) {
+         e.printStackTrace();
+      } catch (DuplicateEntityException e) {
+         e.printStackTrace();
       }
       return null;
    }
@@ -131,7 +135,11 @@ public class TestController extends BaseController {
       if (test == null) {
          throw new IllegalStateException("test is null");
       }
-      testService.updateTest(test);
+      try {
+         testService.updateTest(test);
+      } catch (DuplicateEntityException e) {
+         e.printStackTrace();
+      }
       redirectWithMessage("/test/" + testId, INFO, "page.test.updatedSuccessfully");
       return null;
    }
@@ -340,12 +348,8 @@ public class TestController extends BaseController {
                redirectWithMessage("/test/" + testId, ERROR, "page.test.errorNoAssignedMetric");
                return;
             }
-            try {
-               testService.addMetric(selectedAssignedMetric, test);
-               redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyAssigned", selectedAssignedMetric.getName());
-            } catch (ServiceException e) {
-               addSessionMessage(e);
-            }
+            testService.addMetric(selectedAssignedMetric, test);
+            redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyAssigned", selectedAssignedMetric.getName());
          }
       }
 
@@ -358,12 +362,8 @@ public class TestController extends BaseController {
       }
 
       public void createMetric() {
-         try {
-            testService.addMetric(metric, test);
-            redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyCreated", metric.getName());
-         } catch (ServiceException e) {
-            addSessionMessage(e);
-         }
+         testService.addMetric(metric, test);
+         redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyCreated", metric.getName());
       }
 
       public void updateMetric() {
@@ -375,12 +375,12 @@ public class TestController extends BaseController {
       }
 
       public void deleteMetric(Metric metricToDelete, Test test) {
-         try {
-            testService.removeMetric(metricToDelete);
-            redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyDeleted", metricToDelete.getName());
-         } catch (ServiceException e) {
-            addSessionMessage(e);
-         }
+         //try {
+         testService.removeMetricFromTest(metricToDelete, test);
+         redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyDeleted", metricToDelete.getName());
+         //} catch (ServiceException e) {
+         //   addSessionMessage(e);
+         //}
       }
    }
 

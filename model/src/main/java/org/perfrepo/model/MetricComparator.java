@@ -25,10 +25,10 @@ public enum MetricComparator {
    /**
     * Higher Better - The higher value is better, i.e. throughput.
     */
-   HB,
+   HIGHER_BETTER,
 
    /**
     * Lower better - The lower value is better, i.e. response time.
     */
-   LB
+   LOWER_BETTER
 }

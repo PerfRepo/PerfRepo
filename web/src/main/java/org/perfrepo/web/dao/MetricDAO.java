@@ -15,10 +15,13 @@
 package org.perfrepo.web.dao;
 
 import org.perfrepo.model.Metric;
+import org.perfrepo.model.Test;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * DAO for {@link Metric}
@@ -28,34 +31,22 @@ import java.util.Map;
  */
 public class MetricDAO extends DAO<Metric, Long> {
 
-   public List<Metric> getMetrics() {
-      return getAll();
-   }
-
-   /**
-    * Returns all metrics by name prefix, which belong tests with defined group id
-    *
-    * @param name
-    * @param groupId
-    * @return List of {@link Metric}
-    */
-   public List<Metric> getMetricByNameAndGroup(String name, String groupId) {
-      Map<String, Object> params = new HashMap<String, Object>();
-      params.put("group", groupId);
-      params.put("name", name);
-      return findByNamedQuery(Metric.FIND_BY_NAME_AND_GROUP, params);
-   }
-
-   /**
-    * Returns all metrics which belong tests with defined group id
-    *
-    * @param groupId
-    * @return List of {@link Metric}
-    */
-   public List<Metric> getMetricByGroup(String groupId) {
+   public Metric getByName(String name) {
       Map<String, Object> params = new HashMap();
-      params.put("group", groupId);
-      return findByNamedQuery(Metric.FIND_BY_GROUP, params);
+      params.put("name", name);
+      List<Metric> result = findByNamedQuery(Metric.FIND_BY_NAME, params);
+
+      if (result.isEmpty()) {
+         return null;
+      }
+
+      return result.get(0);
+   }
+
+   public Set<Metric> getMetricsByTest(Test test) {
+      Map<String, Object> params = new HashMap();
+      params.put("test", test);
+      return new HashSet<>(findByNamedQuery(Metric.FIND_BY_TEST, params));
    }
 
 }

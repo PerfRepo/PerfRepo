@@ -43,4 +43,47 @@ ALTER TABLE ONLY favorite_parameter ADD CONSTRAINT favorite_parameter_user_fkey 
 ALTER TABLE favorite_parameter DROP CONSTRAINT favorite_parameter_test_fkey;
 ALTER TABLE ONLY favorite_parameter ADD CONSTRAINT favorite_parameter_test_fkey FOREIGN KEY (test_id) REFERENCES "test"(id) ON DELETE CASCADE;
 
+ALTER TABLE value DROP CONSTRAINT fk6ac9171c4825995;
+ALTER TABLE ONLY value ADD CONSTRAINT fk6ac9171c4825995 FOREIGN KEY (metric_id) REFERENCES metric(id) ON DELETE CASCADE;
+
+ALTER TABLE value DROP CONSTRAINT fk6ac9171fdfcba9a;
+ALTER TABLE ONLY value ADD CONSTRAINT fk6ac9171fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id) ON DELETE CASCADE;
+
+ALTER TABLE test_execution_parameter DROP CONSTRAINT fk8f4e9015fdfcba9a;
+ALTER TABLE ONLY test_execution_parameter ADD CONSTRAINT fk8f4e9015fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id) ON DELETE CASCADE;
+
+ALTER TABLE test_execution DROP CONSTRAINT fkc4d93bab3f0c1115;
+ALTER TABLE ONLY test_execution ADD CONSTRAINT fkc4d93bab3f0c1115 FOREIGN KEY (test_id) REFERENCES test(id) ON DELETE CASCADE;
+
+ALTER TABLE test_execution_attachment DROP CONSTRAINT fkca230a37fdfcba9a;
+ALTER TABLE ONLY test_execution_attachment ADD CONSTRAINT fkca230a37fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id) ON DELETE CASCADE;
+
+ALTER TABLE public.report DROP CONSTRAINT report_user_fkey;
+ALTER TABLE ONLY public.report ADD CONSTRAINT report_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
+
+ALTER TABLE public.report_property DROP CONSTRAINT report_property_report_fkey;
+ALTER TABLE ONLY public.report_property ADD CONSTRAINT report_property_report_fkey FOREIGN KEY (report_id) REFERENCES "report"(id) ON DELETE CASCADE;
+
+ALTER TABLE public.permission DROP CONSTRAINT permission_report_fkey;
+ALTER TABLE ONLY public.permission ADD CONSTRAINT permission_report_fkey FOREIGN KEY(report_id) REFERENCES "report"(id) ON DELETE CASCADE;
+
+ALTER TABLE public.permission DROP CONSTRAINT permission_group_fkey;
+ALTER TABLE ONLY public.permission ADD CONSTRAINT permission_group_fkey FOREIGN KEY (group_id) REFERENCES "group"(id) ON DELETE CASCADE;
+
+ALTER TABLE public.permission DROP CONSTRAINT permission_user_fkey;
+ALTER TABLE ONLY public.permission ADD CONSTRAINT permission_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
+
+ALTER TABLE public.alert DROP CONSTRAINT alert_metric_fkey;
+ALTER TABLE ONLY public.alert ADD CONSTRAINT alert_metric_fkey FOREIGN KEY (metric_id) REFERENCES metric(id) ON DELETE CASCADE;
+
+ALTER TABLE public.alert DROP CONSTRAINT alert_test_fkey;
+ALTER TABLE ONLY public.alert ADD CONSTRAINT alert_test_fkey FOREIGN KEY (test_id) REFERENCES test(id) ON DELETE CASCADE;
+
+ALTER TABLE public.alert_tag DROP CONSTRAINT alert_tag_alert_fkey;
+ALTER TABLE ONLY public.alert_tag ADD CONSTRAINT alert_tag_alert_fkey FOREIGN KEY (alert_id) REFERENCES alert(id) ON DELETE CASCADE;
+
+ALTER TABLE public.alert_tag DROP CONSTRAINT alert_tag_tag_fkey;
+ALTER TABLE ONLY public.alert_tag ADD CONSTRAINT alert_tag_tag_fkey FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE;
+
+
 COMMIT;

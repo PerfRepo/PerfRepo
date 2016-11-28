@@ -3,15 +3,13 @@ package org.perfrepo.web.service;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.After;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
+import org.perfrepo.web.service.exceptions.DuplicateEntityException;
+import org.perfrepo.web.service.util.TestUtils;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -24,6 +22,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * TODO: document this
@@ -41,23 +40,11 @@ public class GroupServiceTest {
 
     @Deployment
     public static Archive<?> createDeployment() {
-        WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
-
-        war.addPackages(true, "org.perfrepo.web");
-        war.addPackages(true, "org.perfrepo.model");
-
-        war.addAsLibraries(Maven.resolver().resolve("commons-codec:commons-codec:1.9").withTransitivity().asFile());
-        war.addAsLibraries(Maven.resolver().resolve("org.antlr:antlr:3.5.2").withTransitivity().asFile());
-        war.addAsLibraries(Maven.resolver().resolve("org.apache.maven:maven-artifact:3.0.3").withTransitivity().asFile());
-
-        war.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
-        war.addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
-
-        return war;
+        return TestUtils.createDeployment();
     }
 
     @After
-    public void cleanUp() throws Exception {
+    public void cleanUp() {
         for (User user: userService.getAllUsers()) {
             userService.removeUser(user);
         }
@@ -68,7 +55,7 @@ public class GroupServiceTest {
     }
 
     @org.junit.Test
-    public void testUserCRUDOperations() throws Exception {
+    public void testUserCRUDOperations() throws DuplicateEntityException {
         Group group = new Group();
         fillGroup("group", group);
 
@@ -96,7 +83,7 @@ public class GroupServiceTest {
     }
 
     @org.junit.Test
-    public void testGetAllGroups() throws Exception {
+    public void testGetAllGroups() throws DuplicateEntityException {
         Group group1 = new Group();
         fillGroup("group1", group1);
 
@@ -115,7 +102,7 @@ public class GroupServiceTest {
     }
 
     @org.junit.Test
-    public void testGetUserGroupsAndIsUserInGroup() throws Exception {
+    public void testGetUserGroupsAndIsUserInGroup() throws DuplicateEntityException {
         Group group1 = new Group();
         fillGroup("group1", group1);
 
@@ -136,16 +123,78 @@ public class GroupServiceTest {
         group3.setUsers(new HashSet<>(Arrays.asList(user)));
         userService.createUser(user);
 
-        List<Group> expectedResult = Arrays.asList(group2, group3);
-        List<Group> actualResult = groupService.getUserGroups(user);
+        Set<Group> expectedResult = new HashSet<>(Arrays.asList(group2, group3));
+        Set<Group> actualResult = groupService.getUserGroups(user);
 
         assertEquals(expectedResult.size(), actualResult.size());
         assertTrue(expectedResult.stream().allMatch(expected -> actualResult.stream()
                 .anyMatch(actual -> expected.getId().equals(actual.getId()))));
 
-        assertFalse(groupService.isUserInGroup(group1, user));
-        assertTrue(groupService.isUserInGroup(group2, user));
-        assertTrue(groupService.isUserInGroup(group3, user));
+        assertFalse(groupService.isUserInGroup(user, group1));
+        assertTrue(groupService.isUserInGroup(user, group2));
+        assertTrue(groupService.isUserInGroup(user, group3));
+    }
+
+    @org.junit.Test
+    public void testAssignUserToGroup() throws DuplicateEntityException {
+        Group group1 = new Group();
+        fillGroup("group1", group1);
+
+        Group group2 = new Group();
+        fillGroup("group2", group2);
+
+        groupService.createGroup(group1);
+        groupService.createGroup(group2);
+
+        User user = createUser();
+        Set<Group> userGroups = new HashSet<>(Arrays.asList(group1));
+        user.setGroups(userGroups);
+        group1.setUsers(new HashSet<>(Arrays.asList(user)));
+        userService.createUser(user);
+
+        Set<Group> expectedResult = new HashSet<>(Arrays.asList(group1));
+        Set<Group> actualResult = groupService.getUserGroups(user);
+
+        assertEquals(expectedResult.size(), actualResult.size());
+        assertTrue(expectedResult.stream().allMatch(expected -> actualResult.stream()
+                .anyMatch(actual -> expected.getId().equals(actual.getId()))));
+
+        groupService.addUserToGroup(user, group2);
+
+        assertTrue(groupService.isUserInGroup(user, group1));
+        assertTrue(groupService.isUserInGroup(user, group2));
+    }
+
+    @Test
+    public void testDuplicateNames() throws DuplicateEntityException {
+        Group group1 = new Group();
+        fillGroup("group1", group1);
+
+        Group group2 = new Group();
+        fillGroup("group2", group2);
+
+        groupService.createGroup(group1);
+        groupService.createGroup(group2);
+
+        Group duplicateGroup = new Group();
+        fillGroup("group1", duplicateGroup);
+
+        try {
+            groupService.createGroup(duplicateGroup);
+            fail("Duplicate group name creation should fail.");
+        } catch (DuplicateEntityException ex) {
+            // expected
+        }
+
+        duplicateGroup = group1;
+        fillGroup("group2", duplicateGroup);
+
+        try {
+            groupService.updateGroup(duplicateGroup);
+            fail("Duplicate group name update should fail.");
+        } catch (DuplicateEntityException ex) {
+            // expected
+        }
     }
 
     /****** HELPER METHODS ******/

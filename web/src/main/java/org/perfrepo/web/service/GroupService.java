@@ -2,9 +2,10 @@ package org.perfrepo.web.service;
 
 import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
-import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.service.exceptions.DuplicateEntityException;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * TODO: document this
@@ -19,25 +20,23 @@ public interface GroupService {
      *
      * @param group
      * @return group
-     * @throws ServiceException
      */
-    public Group createGroup(Group group) throws ServiceException;
+    public Group createGroup(Group group) throws DuplicateEntityException;
 
     /**
      * Updates group
      *
      * @param group
      * @return group
-     * @throws ServiceException
      */
-    public Group updateGroup(Group group) throws ServiceException;
+    public Group updateGroup(Group group) throws DuplicateEntityException;
 
     /**
      * Deletes group
      *
      * @param group
      */
-    public void removeGroup(Group group) throws ServiceException;
+    public void removeGroup(Group group);
 
     /**
      * Retrieves group
@@ -68,14 +67,22 @@ public interface GroupService {
      * @param user
      * @return
      */
-    public List<Group> getUserGroups(User user);
+    public Set<Group> getUserGroups(User user);
 
     /**
      * Retrieves if user is assign in defined group
      *
-     * @param group
      * @param user
+     * @param group
      * @return boolean
      */
-    public boolean isUserInGroup(Group group, User user);
+    public boolean isUserInGroup(User user, Group group);
+
+    /**
+     * Adds user to group.
+     *
+     * @param user
+     * @param group
+     */
+    public void addUserToGroup(User user, Group group);
 }

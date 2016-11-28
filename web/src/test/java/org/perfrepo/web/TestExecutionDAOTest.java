@@ -530,7 +530,7 @@ public class TestExecutionDAOTest {
    private Metric createMetric(String name) {
       Metric metric = new Metric();
       metric.setName(name);
-      metric.setComparator(MetricComparator.HB);
+      metric.setComparator(MetricComparator.HIGHER_BETTER);
       metric.setDescription("this is a test " + name);
 
       return metric;

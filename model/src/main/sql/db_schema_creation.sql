@@ -454,7 +454,7 @@ ALTER TABLE ONLY value
 --
 
 ALTER TABLE ONLY value
-    ADD CONSTRAINT fk6ac9171c4825995 FOREIGN KEY (metric_id) REFERENCES metric(id);
+    ADD CONSTRAINT fk6ac9171c4825995 FOREIGN KEY (metric_id) REFERENCES metric(id) ON DELETE CASCADE;
 
 
 --
@@ -462,7 +462,7 @@ ALTER TABLE ONLY value
 --
 
 ALTER TABLE ONLY value
-    ADD CONSTRAINT fk6ac9171fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id);
+    ADD CONSTRAINT fk6ac9171fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id) ON DELETE CASCADE;
 
 
 --
@@ -470,7 +470,7 @@ ALTER TABLE ONLY value
 --
 
 ALTER TABLE ONLY test_execution_parameter
-    ADD CONSTRAINT fk8f4e9015fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id);
+    ADD CONSTRAINT fk8f4e9015fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id) ON DELETE CASCADE;
 
 
 --
@@ -478,7 +478,7 @@ ALTER TABLE ONLY test_execution_parameter
 --
 
 ALTER TABLE ONLY test_execution
-    ADD CONSTRAINT fkc4d93bab3f0c1115 FOREIGN KEY (test_id) REFERENCES test(id);
+    ADD CONSTRAINT fkc4d93bab3f0c1115 FOREIGN KEY (test_id) REFERENCES test(id) ON DELETE CASCADE;
 
 
 --
@@ -486,7 +486,7 @@ ALTER TABLE ONLY test_execution
 --
 
 ALTER TABLE ONLY test_execution_attachment
-    ADD CONSTRAINT fkca230a37fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id);
+    ADD CONSTRAINT fkca230a37fdfcba9a FOREIGN KEY (test_execution_id) REFERENCES test_execution(id) ON DELETE CASCADE;
 
 
 --
@@ -586,7 +586,7 @@ ALTER TABLE public.report OWNER TO perfrepo;
 ALTER TABLE ONLY public.report
 ADD CONSTRAINT report_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.report
-ADD CONSTRAINT report_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id);
+ADD CONSTRAINT report_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
 CREATE INDEX report_user_id ON report(user_id);
 
 --
@@ -618,7 +618,7 @@ ALTER TABLE public.report_property OWNER TO perfrepo;
 ALTER TABLE ONLY public.report_property
 ADD CONSTRAINT report_property_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.report_property
-ADD CONSTRAINT report_property_report_fkey FOREIGN KEY (report_id) REFERENCES "report"(id);
+ADD CONSTRAINT report_property_report_fkey FOREIGN KEY (report_id) REFERENCES "report"(id) ON DELETE CASCADE;
 CREATE INDEX report_property_report_id ON report_property(report_id);
 
 --
@@ -733,11 +733,11 @@ ALTER TABLE public.permission OWNER TO perfrepo;
 ALTER TABLE ONLY public.permission
 ADD CONSTRAINT permission_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.permission
-ADD CONSTRAINT permission_report_fkey FOREIGN KEY(report_id) REFERENCES "report"(id);
+ADD CONSTRAINT permission_report_fkey FOREIGN KEY(report_id) REFERENCES "report"(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.permission
-ADD CONSTRAINT permission_group_fkey FOREIGN KEY (group_id) REFERENCES "group"(id);
+ADD CONSTRAINT permission_group_fkey FOREIGN KEY (group_id) REFERENCES "group"(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.permission
-ADD CONSTRAINT permission_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id);
+ADD CONSTRAINT permission_user_fkey FOREIGN KEY (user_id) REFERENCES "user"(id) ON DELETE CASCADE;
 
 --
 -- Name: permission_sequence; Type: SEQUENCE; Schema: public; Owner: perfrepo
@@ -791,9 +791,9 @@ ALTER TABLE public.alert OWNER TO perfrepo;
 ALTER TABLE ONLY public.alert
 ADD CONSTRAINT alert_pkey PRIMARY KEY (id);
 ALTER TABLE ONLY public.alert
-ADD CONSTRAINT alert_metric_fkey FOREIGN KEY (metric_id) REFERENCES metric(id);
+ADD CONSTRAINT alert_metric_fkey FOREIGN KEY (metric_id) REFERENCES metric(id) ON DELETE CASCADE;
 ALTER TABLE ONLY public.alert
-ADD CONSTRAINT alert_test_fkey FOREIGN KEY (test_id) REFERENCES test(id);
+ADD CONSTRAINT alert_test_fkey FOREIGN KEY (test_id) REFERENCES test(id) ON DELETE CASCADE;
 CREATE INDEX alert_metric_id ON alert(metric_id);
 CREATE INDEX alert_test_id ON alert(test_id);
 
@@ -822,10 +822,10 @@ ALTER TABLE ONLY public.alert_tag
     ADD CONSTRAINT alert_tag_pkey PRIMARY KEY (alert_id, tag_id);
 
 ALTER TABLE ONLY public.alert_tag
-    ADD CONSTRAINT alert_tag_alert_fkey FOREIGN KEY (alert_id) REFERENCES alert(id);
+    ADD CONSTRAINT alert_tag_alert_fkey FOREIGN KEY (alert_id) REFERENCES alert(id) ON DELETE CASCADE;
 
 ALTER TABLE ONLY public.alert_tag
-    ADD CONSTRAINT alert_tag_tag_fkey FOREIGN KEY (tag_id) REFERENCES tag(id);
+    ADD CONSTRAINT alert_tag_tag_fkey FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE;
 
 CREATE INDEX alert_tag_alert ON alert_tag(alert_id);
 CREATE INDEX alert_tag_tag ON alert_tag(tag_id);

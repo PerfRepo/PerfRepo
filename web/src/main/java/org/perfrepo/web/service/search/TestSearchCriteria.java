@@ -12,19 +12,22 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.perfrepo.model.to;
+package org.perfrepo.web.service.search;
 
-import org.perfrepo.model.userproperty.GroupFilter;
+import org.perfrepo.model.to.OrderBy;
+import org.perfrepo.model.user.Group;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
- * Test search criteria.
+ * Test search criteria. TODO: revisit the documentation
  *
+ * @author Jiri Holusa (jholusa@redhat.com)
  * @author Pavel Drozd (pdrozd@redhat.com)
  * @author Michal Linhard (mlinhard@redhat.com)
  */
-public class TestSearchTO implements Serializable {
+public class TestSearchCriteria implements Serializable {
 
    private static final long serialVersionUID = -2549234530526625783L;
 
@@ -32,9 +35,7 @@ public class TestSearchTO implements Serializable {
 
    private String uid;
 
-   private String groupId;
-
-   private GroupFilter groupFilter;
+   private Set<Group> groups;
 
    private OrderBy orderBy = OrderBy.NAME_ASC;
 
@@ -58,20 +59,12 @@ public class TestSearchTO implements Serializable {
       this.uid = uid;
    }
 
-   public String getGroupId() {
-      return groupId;
+   public Set<Group> getGroups() {
+      return groups;
    }
 
-   public void setGroupId(String groupId) {
-      this.groupId = groupId;
-   }
-
-   public GroupFilter getGroupFilter() {
-      return groupFilter;
-   }
-
-   public void setGroupFilter(GroupFilter groupFilter) {
-      this.groupFilter = groupFilter;
+   public void setGroups(Set<Group> groups) {
+      this.groups = groups;
    }
 
    public OrderBy getOrderBy() {

@@ -73,7 +73,7 @@ public class AuthorizationServiceBean implements AuthorizationService {
                   }
                } else if (permission.getGroupId() != null && permission.getLevel().equals(AccessLevel.GROUP)) {
                   //GROUP permission, user must be assigned in permission group
-                  if (groupService.isUserInGroup(groupService.getGroup(permission.getGroupId()), userService.getUser(userId))) {
+                  if (groupService.isUserInGroup(userService.getUser(userId), groupService.getGroup(permission.getGroupId()))) {
                      return true;
                   }
                }

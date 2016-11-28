@@ -17,7 +17,8 @@ package org.perfrepo.web.service;
 import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.user.User;
-import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.service.exceptions.DuplicateEntityException;
+import org.perfrepo.web.service.exceptions.IncorrectPasswordException;
 
 import java.util.List;
 import java.util.Map;
@@ -32,25 +33,23 @@ public interface UserService {
     *
     * @param user
     * @return user
-    * @throws ServiceException
     */
-   public User createUser(User user) throws ServiceException;
+   public User createUser(User user) throws DuplicateEntityException;
 
    /**
     * Updates user. THE USER'S PASSWORD MUST BE IN PLAIN TEXT!
     *
     * @param user
     * @return user
-    * @throws ServiceException
     */
-   public User updateUser(User user) throws ServiceException;
+   public User updateUser(User user) throws DuplicateEntityException;
 
    /**
     * Deletes user
     *
     * @param user
     */
-   public void removeUser(User user) throws ServiceException;
+   public void removeUser(User user);
 
    /**
     * Retrieves managed entity of user
@@ -82,9 +81,8 @@ public interface UserService {
     * @param oldPassword
     * @param newPassword
     * @param user
-    * @throws ServiceException
     */
-   public void changePassword(String oldPassword, String newPassword, User user) throws ServiceException;
+   public void changePassword(String oldPassword, String newPassword, User user) throws IncorrectPasswordException;
 
    /**
     * Returns all user properties
@@ -100,7 +98,7 @@ public interface UserService {
     * @param properties
     * @param user
     */
-   public void updateUserProperties(Map<String, String> properties, User user) throws ServiceException;
+   public void updateUserProperties(Map<String, String> properties, User user);
 
    /**
     * Adds favorite parameter of user to the test

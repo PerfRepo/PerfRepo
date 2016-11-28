@@ -3,17 +3,16 @@ package org.perfrepo.web.service;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.After;
 import org.junit.runner.RunWith;
 import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
+import org.perfrepo.web.service.exceptions.DuplicateEntityException;
+import org.perfrepo.web.service.exceptions.IncorrectPasswordException;
+import org.perfrepo.web.service.util.TestUtils;
+import org.perfrepo.web.service.util.UserSessionMock;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -25,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * TODO: document this
@@ -45,19 +45,7 @@ public class UserServiceTest {
 
     @Deployment
     public static Archive<?> createDeployment() {
-        WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
-
-        war.addPackages(true, "org.perfrepo.web");
-        war.addPackages(true, "org.perfrepo.model");
-
-        war.addAsLibraries(Maven.resolver().resolve("commons-codec:commons-codec:1.9").withTransitivity().asFile());
-        war.addAsLibraries(Maven.resolver().resolve("org.antlr:antlr:3.5.2").withTransitivity().asFile());
-        war.addAsLibraries(Maven.resolver().resolve("org.apache.maven:maven-artifact:3.0.3").withTransitivity().asFile());
-
-        war.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
-        war.addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
-
-        return war;
+        return TestUtils.createDeployment();
     }
 
     @After
@@ -145,7 +133,7 @@ public class UserServiceTest {
     }
 
     @org.junit.Test
-    public void testChangePassword() throws Exception {
+    public void testChangePassword() throws DuplicateEntityException, IncorrectPasswordException{
         User user = new User();
         user.setUsername("test_user");
         fillUser("test_user", user);
@@ -157,6 +145,29 @@ public class UserServiceTest {
 
         User retrievedUser = userService.getUser(user.getId());
         assertEquals(UserServiceBean.computeMd5(newPassword), retrievedUser.getPassword());
+
+        // test invalid situations
+
+        try {
+            userService.changePassword(null, newPassword, retrievedUser);
+            fail("UserService.changePassword with null oldPassword should fail.");
+        } catch (IncorrectPasswordException ex) {
+            // expected
+        }
+
+        try {
+            userService.changePassword("test_user_password", null, retrievedUser);
+            fail("UserService.changePassword with null newPassword should fail.");
+        } catch (IncorrectPasswordException ex) {
+            // expected
+        }
+
+        try {
+            userService.changePassword("test_user_password", "change_when_old_doesnt_match", retrievedUser);
+            fail("UserService.changePassword should fail when the oldPassword is not matching the current one.");
+        } catch (IncorrectPasswordException ex) {
+            // expected
+        }
     }
 
     @org.junit.Test
@@ -168,6 +179,9 @@ public class UserServiceTest {
 
         Group group = createGroup();
         groupService.createGroup(group);
+
+        groupService.addUserToGroup(user, group);
+        UserSessionMock.setLoggedUser(user);
 
         Test test = createTest();
         test.setGroup(group);
@@ -208,6 +222,41 @@ public class UserServiceTest {
         assertEquals(expectedAfterDelete.size(), actualAfterDelete.size());
         assertTrue(expectedAfterDelete.stream().allMatch(expected -> actualAfterDelete.stream()
                 .anyMatch(actual -> expected.getId().equals(actual.getId()))));
+    }
+
+    @org.junit.Test
+    public void testDuplicateUsernames() throws DuplicateEntityException {
+        User user1 = new User();
+        fillUser("user1", user1);
+        user1.setUsername("test_user1");
+
+        User user2 = new User();
+        fillUser("user2", user2);
+        user2.setUsername("test_user2");
+
+        userService.createUser(user1);
+        userService.createUser(user2);
+
+        User duplicateUser = new User();
+        fillUser("user3", duplicateUser);
+        duplicateUser.setUsername("test_user1");
+
+        try {
+            userService.createUser(duplicateUser);
+            fail("Duplicate username creation should fail.");
+        } catch (DuplicateEntityException ex) {
+            // expected
+        }
+
+        duplicateUser = user1;
+        duplicateUser.setUsername("test_user2");
+
+        try {
+            userService.updateUser(duplicateUser);
+            fail("Duplicate username update should fail.");
+        } catch (DuplicateEntityException ex) {
+            // expected
+        }
     }
 
     /****** HELPER METHODS ******/

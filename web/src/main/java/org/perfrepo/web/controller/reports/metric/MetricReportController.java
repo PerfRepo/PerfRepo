@@ -159,7 +159,8 @@ public class MetricReportController extends BaseController {
 
       updateReport();
 
-      User user = userService.getUser(userSession.getUser().getId());
+      //User user = userService.getUser(userSession.getUser().getId());
+      User user = null;
       Report report = new Report();
 
       if (reportId != null) { //editing existing report
@@ -706,7 +707,7 @@ public class MetricReportController extends BaseController {
 
          Test test = new Test();
          test.setId(selectedTestId);
-         selectionMetrics = testService.getMetricsForTest(test);
+         selectionMetrics = new ArrayList<>(testService.getMetricsForTest(test));
          if (selectionMetrics.isEmpty()) {
             addMessage(ERROR, "page.metricreport.noMetrics", findSelectedTestUID(selectedTestId));
          } else if (seriesSpecs != null) {

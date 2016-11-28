@@ -128,7 +128,8 @@ public class TestExecutionController extends BaseController {
       Test testEntity = testService.getTest(test.getId());
       editedFavoriteParameter.setTest(testEntity);
 
-      User user = userService.getUser(userSession.getUser().getId());
+      //User user = userService.getUser(userSession.getUser().getId());
+      User user = null;
       editedFavoriteParameter.setUser(user);
 
       editedFavoriteParameter.setParameterName(paramName);
@@ -147,7 +148,7 @@ public class TestExecutionController extends BaseController {
    public void saveEditedFavoriteParameter() {
       //TODO: solve this
       //userService.createFavoriteParameter(editedFavoriteParameter.getTest(), editedFavoriteParameter.getParameterName(), editedFavoriteParameter.getLabel());
-      userSession.refresh();
+      //userSession.refresh();
       //TODO: solve this
       //favoriteParameters = userService.getFavoriteParametersForTest(test);
    }
@@ -159,7 +160,7 @@ public class TestExecutionController extends BaseController {
       }
       //TODO: solve this
       //userService.removeFavoriteParameter(test, paramName);
-      userSession.refresh();
+      //userSession.refresh();
       //TODO: solve this
       //favoriteParameters = userService.getFavoriteParametersForTest(test);
    }

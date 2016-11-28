@@ -90,7 +90,7 @@ public class TestExecutionSearchController extends BaseController {
     */
    public void search() {
       TestExecutionSearchTO criteria = criteriaSession.getExecutionSearchCriteria();
-      criteria.setGroupFilter(userSession.getGroupFilter());
+      //criteria.setGroupFilter(userSession.getGroupFilter());
       criteria.setLimitHowMany(criteria.getLimitHowMany() <= 0 ? null : criteria.getLimitHowMany());
       criteria.setLimitFrom(criteria.getLimitHowMany() == null ? null : (resultsPageNumber - 1) * criteria.getLimitHowMany());
 
@@ -160,7 +160,8 @@ public class TestExecutionSearchController extends BaseController {
    }
 
    public List<String> autocompleteTest(String test) {
-      return testService.getTestsByPrefix(test);
+      //return testService.getTestsByUidPrefix(test);
+      return null;
    }
 
    public List<String> autocompleteParameter(String parameter) {
@@ -188,7 +189,7 @@ public class TestExecutionSearchController extends BaseController {
    }
 
    public void setGroupFilter(GroupFilter groupFilter) {
-      userSession.setGroupFilter(groupFilter);
+      //userSession.setGroupFilter(groupFilter);
       criteriaChanged();
       search();
    }

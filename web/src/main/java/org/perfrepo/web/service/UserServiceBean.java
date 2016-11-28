@@ -23,7 +23,8 @@ import org.perfrepo.web.dao.FavoriteParameterDAO;
 import org.perfrepo.web.dao.TestDAO;
 import org.perfrepo.web.dao.UserDAO;
 import org.perfrepo.web.dao.UserPropertyDAO;
-import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.service.exceptions.DuplicateEntityException;
+import org.perfrepo.web.service.exceptions.IncorrectPasswordException;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -57,9 +58,9 @@ public class UserServiceBean implements UserService {
    private FavoriteParameterDAO favoriteParameterDAO;
 
    @Override
-   public User createUser(User user) throws ServiceException {
-      if (user.getId() != null) {
-         throw new IllegalArgumentException("Can't create with id");
+   public User createUser(User user) throws DuplicateEntityException {
+      if (getUser(user.getUsername()) != null) {
+         throw new DuplicateEntityException("user.usernameAlreadyExists", user.getUsername());
       }
 
       user.setPassword(computeMd5(user.getPassword()));
@@ -69,14 +70,10 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public User updateUser(User user) throws ServiceException {
-      if (user.getId() == null) {
-         throw new IllegalArgumentException("Can't update without id");
-      }
-
-      User duplicateUsernameUser = userDAO.findByUsername(user.getUsername());
-      if (duplicateUsernameUser != null && !duplicateUsernameUser.getId().equals(user.getId())) {
-         throw new ServiceException("serviceException.usernameAlreadyExists", user.getUsername());
+   public User updateUser(User user) throws DuplicateEntityException {
+      User possibleDuplicate = getUser(user.getUsername());
+      if (possibleDuplicate != null && !possibleDuplicate.getId().equals(user.getId())) {
+         throw new DuplicateEntityException("user.usernameAlreadyExists", user.getUsername());
       }
 
       user.setPassword(computeMd5(user.getPassword()));
@@ -86,10 +83,7 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void removeUser(User user) throws ServiceException {
-      if (user.getId() == null) {
-         throw new ServiceException("User's ID cannot be null when deleting");
-      }
+   public void removeUser(User user) {
       User managedUser = userDAO.get(user.getId());
       userDAO.remove(managedUser);
    }
@@ -110,16 +104,16 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void changePassword(String oldPassword, String newPassword, User user) throws ServiceException {
+   public void changePassword(String oldPassword, String newPassword, User user) throws IncorrectPasswordException {
       if (oldPassword == null || newPassword == null) {
-         throw new ServiceException("serviceException.changePassword");
+         throw new IncorrectPasswordException("user.oldOrNewPasswordNotSet");
       }
 
       String newPasswordEncrypted = computeMd5(newPassword);
       String oldPasswordEncrypted = computeMd5(oldPassword);
 
       if (!user.getPassword().equals(oldPasswordEncrypted)) {
-         throw new ServiceException("serviceException.passwordDoesntMatch");
+         throw new IncorrectPasswordException("user.oldPasswordDoesntMatch");
       }
 
       User managedUser = userDAO.get(user.getId());
@@ -137,11 +131,7 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void updateUserProperties(Map<String, String> properties, User user) throws ServiceException {
-      if (user.getId() == null) {
-         throw new IllegalArgumentException("User ID cannot be null when updating properties.");
-      }
-
+   public void updateUserProperties(Map<String, String> properties, User user) {
       userPropertyDAO.deletePropertiesFromUser(user.getId());
 
       User managedUser = userDAO.get(user.getId());
@@ -184,10 +174,6 @@ public class UserServiceBean implements UserService {
 
    @Override
    public List<FavoriteParameter> getFavoriteParametersForTest(Test test, User user) {
-      if (test.getId() == null) {
-         throw new IllegalArgumentException("Test ID cannot be null");
-      }
-
       List<FavoriteParameter> favoriteParameters = favoriteParameterDAO.findByTest(test.getId(), user.getId());
       List<FavoriteParameter> result = favoriteParameters.stream().filter(favoriteParameter -> favoriteParameter.getTest().getId().equals(test.getId())).collect(Collectors.toList());
       return result;

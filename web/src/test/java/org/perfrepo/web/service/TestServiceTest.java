@@ -3,28 +3,36 @@ package org.perfrepo.web.service;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.runner.RunWith;
-import org.perfrepo.model.FavoriteParameter;
+import org.perfrepo.model.Metric;
+import org.perfrepo.model.MetricComparator;
 import org.perfrepo.model.Test;
+import org.perfrepo.model.to.OrderBy;
+import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
+import org.perfrepo.web.dao.MetricDAO;
+import org.perfrepo.web.service.exceptions.DuplicateEntityException;
+import org.perfrepo.web.service.exceptions.UnauthorizedException;
+import org.perfrepo.web.service.search.TestSearchCriteria;
+import org.perfrepo.web.service.util.TestUtils;
+import org.perfrepo.web.service.util.UserSessionMock;
 
 import javax.inject.Inject;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
+import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * TODO: document this
@@ -43,26 +51,33 @@ public class TestServiceTest {
     @Inject
     private GroupService groupService;
 
+    @Inject
+    private MetricDAO metricDAO;
+
+    private Group testGroup;
+    private User testUser;
+
     @Deployment
     public static Archive<?> createDeployment() {
-        WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
+        return TestUtils.createDeployment();
+    }
 
-        war.addPackages(true, "org.perfrepo.web");
-        war.addPackages(true, "org.perfrepo.model");
+    @Before
+    public void init() throws DuplicateEntityException {
+        Group group = createGroup("test_group");
+        groupService.createGroup(group);
+        testGroup = group;
 
-        war.addAsLibraries(Maven.resolver().resolve("commons-codec:commons-codec:1.9").withTransitivity().asFile());
-        war.addAsLibraries(Maven.resolver().resolve("org.antlr:antlr:3.5.2").withTransitivity().asFile());
-        war.addAsLibraries(Maven.resolver().resolve("org.apache.maven:maven-artifact:3.0.3").withTransitivity().asFile());
+        User user = createUser("test");
+        userService.createUser(user);
+        testUser = user;
 
-        war.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
-        war.addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
-
-        return war;
+        groupService.addUserToGroup(user, group);
+        UserSessionMock.setLoggedUser(user);
     }
 
     @After
-    public void cleanUp() throws Exception {
-        // deletion of favorite parameters is done via cascade on foreign key in database
+    public void cleanUp() {
         for (User user: userService.getAllUsers()) {
             userService.removeUser(user);
         }
@@ -71,193 +86,392 @@ public class TestServiceTest {
             groupService.removeGroup(group);
         }
 
+        //removing of the test also removes test executions and metrics
         for (Test test: testService.getAllTests()) {
             testService.removeTest(test);
         }
     }
 
     @org.junit.Test
-    public void testUserCRUDOperations() throws Exception {
-        User user = new User();
-        user.setUsername("test_user");
-        fillUser("test_user", user);
-
-        userService.createUser(user);
-        Long userId = user.getId();
-
-        User createdUser = userService.getUser(userId);
-        User createdUserByUsername = userService.getUser(user.getUsername());
-
-        assertNotNull(createdUser);
-        assertNotNull(createdUserByUsername);
-        assertUser(user, createdUser);
-        assertUser(user, createdUserByUsername);
-
-        // test properties creation
-        Map<String, String> properties = new HashMap<>();
-        fillProperties("version_1", "version_1", properties);
-        userService.updateUserProperties(properties, user);
-
-        Map<String, String> createdProperties = userService.getUserProperties(createdUser);
-        assertEquals(properties, createdProperties);
-
-        // test update
-        User userToUpdate = createdUser;
-        fillUser("updated_user", createdUser);
-
-        User updatedUser = userService.updateUser(userToUpdate);
-        assertUser(userToUpdate, updatedUser);
-
-        // test update properties
-        Map<String, String> propertiesToUpdate = new HashMap<>();
-        fillProperties("version_1", "updated_version_1", propertiesToUpdate);
-        fillProperties("version_2", "new_version_2", propertiesToUpdate);
-        userService.updateUserProperties(propertiesToUpdate, user);
-
-        Map<String, String> updatedProperties = userService.getUserProperties(createdUser);
-        assertEquals(propertiesToUpdate, updatedProperties);
-
-        // test delete
-        User userToDelete = updatedUser;
-        userService.removeUser(userToDelete);
-        assertNull(userService.getUser(userToDelete.getId()));
-    }
-
-    @org.junit.Test
-    public void testGetAllUsers() throws Exception {
-        User user1 = new User();
-        user1.setUsername("test_user1");
-        fillUser("test_user", user1);
-
-        User user2 = new User();
-        user2.setUsername("test_user2");
-        fillUser("test_user2", user2);
-
-        userService.createUser(user1);
-        userService.createUser(user2);
-
-        List<User> expectedResult = Arrays.asList(user1, user2);
-        List<User> actualResult = userService.getAllUsers();
-
-        assertEquals(expectedResult.size(), actualResult.size());
-        assertTrue(expectedResult.stream().allMatch(expected -> actualResult.stream()
-                .anyMatch(actual -> expected.getId().equals(actual.getId()))));
-    }
-
-    @org.junit.Test
-    public void testChangePassword() throws Exception {
-        User user = new User();
-        user.setUsername("test_user");
-        fillUser("test_user", user);
-
-        userService.createUser(user);
-
-        String newPassword = "nastyPassword9";
-        userService.changePassword("test_user_password", newPassword, user);
-
-        User retrievedUser = userService.getUser(user.getId());
-        assertEquals(UserServiceBean.computeMd5(newPassword), retrievedUser.getPassword());
-    }
-
-    @org.junit.Test
-    public void testFavoriteParameterCRUDOperations() throws Exception {
-        User user = new User();
-        user.setUsername("test_user");
-        fillUser("test_user", user);
-        userService.createUser(user);
-
-        Group group = createGroup();
-        groupService.createGroup(group);
-
-        Test test = createTest();
-        test.setGroup(group);
+    public void testTestCRUDOperations() throws DuplicateEntityException, UnauthorizedException {
+        Test test = new Test();
+        fillTest("test1", test);
+        test.setGroup(testGroup);
         testService.createTest(test);
 
-        FavoriteParameter favoriteParameter1 = new FavoriteParameter();
-        fillFavoriteParameter("param1", favoriteParameter1);
-        FavoriteParameter favoriteParameter2 = new FavoriteParameter();
-        fillFavoriteParameter("param2", favoriteParameter2);
+        Test createdTest = testService.getTest(test.getId());
+        Test createdTestByUid = testService.getTest(test.getUid());
 
-        userService.createFavoriteParameter(favoriteParameter1, test, user);
-        userService.createFavoriteParameter(favoriteParameter2, test, user);
+        assertNotNull(createdTest);
+        assertNotNull(createdTestByUid);
+        assertTest(test, createdTest);
+        assertTest(test, createdTestByUid);
 
-        List<FavoriteParameter> expectedResult = Arrays.asList(favoriteParameter1, favoriteParameter2);
-        List<FavoriteParameter> actualResult = userService.getFavoriteParametersForTest(test, user);
+        Test duplicateTest = new Test();
+        fillTest("test1", duplicateTest);
+        duplicateTest.setGroup(testGroup);
+
+        try {
+            testService.createTest(duplicateTest);
+            fail("TestService.createTest should fail when creating test with duplicate UID.");
+        } catch (DuplicateEntityException ex) {
+            // expected
+        }
+
+        // test update
+        Test testToUpdate = createdTest;
+        fillTest("updated_test", testToUpdate);
+
+        Test updatedTest = testService.updateTest(testToUpdate);
+        assertTest(testToUpdate, updatedTest);
+
+        // test delete
+        Test testToDelete = updatedTest;
+        testService.removeTest(testToDelete);
+        assertNull(testService.getTest(testToDelete.getId()));
+    }
+
+    @org.junit.Test
+    public void testTestCreationToInvalidGroup() throws DuplicateEntityException, UnauthorizedException {
+        Test test = new Test();
+        fillTest("test1", test);
+        test.setGroup(testGroup);
+
+        // create user that is not within correct group
+        User correctLoggedUser = UserSessionMock.getLoggedUserStatic();
+        User user = createUser("test2");
+        userService.createUser(user);
+        UserSessionMock.setLoggedUser(user);
+
+        try {
+            testService.createTest(test);
+            fail("TestService.createTest should fail when trying to create a test with group that user doesn't belong to.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        } finally {
+            UserSessionMock.setLoggedUser(correctLoggedUser);
+        }
+    }
+
+    @org.junit.Test
+    public void testCreateWithMetrics() throws DuplicateEntityException, UnauthorizedException {
+        Test test = new Test();
+        fillTest("test", test);
+        test.setGroup(testGroup);
+
+        Metric metric1 = new Metric();
+        fillMetric("metric1", metric1);
+        Metric metric2 = new Metric();
+        fillMetric("metric2", metric2);
+
+        test.getMetrics().add(metric1);
+        test.getMetrics().add(metric2);
+
+        testService.createTest(test);
+        Test createdTest = testService.getTest(test.getId());
+
+        Set<String> expectedResult = new HashSet<>(Arrays.asList(metric1.getName(), metric2.getName()));
+        Set<Metric> actualResult = testService.getMetricsForTest(createdTest);
+
+        assertEquals(expectedResult.size(), actualResult.size());
+        assertTrue(expectedResult.stream().allMatch(expected -> actualResult.stream()
+                .anyMatch(actual -> expected.equals(actual.getName()))));
+    }
+
+    @org.junit.Test
+    public void testGetAllTests() throws DuplicateEntityException, UnauthorizedException {
+        Test test1 = new Test();
+        fillTest("test1", test1);
+        test1.setGroup(testGroup);
+        testService.createTest(test1);
+
+        Test test2 = new Test();
+        fillTest("test2", test2);
+        test2.setGroup(testGroup);
+        testService.createTest(test2);
+
+        Test test3 = new Test();
+        fillTest("test3", test3);
+        test3.setGroup(testGroup);
+        testService.createTest(test3);
+
+        List<Test> expectedResult = Arrays.asList(test1, test2, test3);
+        List<Test> actualResult = testService.getAllTests();
 
         assertEquals(expectedResult.size(), actualResult.size());
         assertTrue(expectedResult.stream().allMatch(expected -> actualResult.stream()
                 .anyMatch(actual -> expected.getId().equals(actual.getId()))));
+    }
+
+    @org.junit.Test
+    public void testMetricCRUDOperations() throws DuplicateEntityException, UnauthorizedException {
+        Test test = new Test();
+        fillTest("test1", test);
+        test.setGroup(testGroup);
+        testService.createTest(test);
+
+        Metric metric = new Metric();
+        fillMetric("metric", metric);
+
+        Metric createdMetric = testService.addMetric(metric, test);
+        Metric retrievedMetric = testService.getMetric(createdMetric.getId());
+
+        assertNotNull(createdMetric);
+        assertNotNull(retrievedMetric);
+        assertMetric(retrievedMetric, createdMetric);
 
         // test update
-        FavoriteParameter updatedParameter = favoriteParameter1;
-        fillFavoriteParameter("updated_param1", updatedParameter);
-        userService.updateFavoriteParameter(updatedParameter, test, user);
+        Metric metricToUpdate = createdMetric;
+        fillMetric("updated_metric", metricToUpdate);
+        testService.updateMetric(metricToUpdate);
 
-        List<FavoriteParameter> updatedParameters = userService.getFavoriteParametersForTest(test, user);
+        Metric updatedMetric = testService.getMetric(metricToUpdate.getId());
+        assertMetric(metricToUpdate, updatedMetric);
 
-        assertTrue(updatedParameters.stream()
-                .anyMatch(param -> param.getParameterName().equals(updatedParameter.getParameterName()) && param.getLabel().equals(updatedParameter.getLabel())));
+        // test disassociation from test
+        Metric metricToDisassociate = updatedMetric;
+        testService.removeMetricFromTest(metricToDisassociate, test);
 
-        // test delete
-        FavoriteParameter parameterToDelete = favoriteParameter1;
-        userService.removeFavoriteParameter(parameterToDelete);
+        assertNull(testService.getMetric(metricToDisassociate.getId()));
+        Set<Metric> testMetrics = testService.getMetricsForTest(test);
+        assertTrue(!testMetrics.contains(metricToDisassociate));
+    }
 
-        List<FavoriteParameter> expectedAfterDelete = Arrays.asList(favoriteParameter2);
-        List<FavoriteParameter> actualAfterDelete = userService.getFavoriteParametersForTest(test, user);
+    @org.junit.Test
+    public void testGetTestsByUidPrefix() throws DuplicateEntityException, UnauthorizedException {
+        Test test1 = new Test();
+        fillTest("a_test", test1);
+        test1.setGroup(testGroup);
+        testService.createTest(test1);
 
-        assertEquals(expectedAfterDelete.size(), actualAfterDelete.size());
-        assertTrue(expectedAfterDelete.stream().allMatch(expected -> actualAfterDelete.stream()
+        Test test2 = new Test();
+        fillTest("aa_test", test2);
+        test2.setGroup(testGroup);
+        testService.createTest(test2);
+
+        Test test3 = new Test();
+        fillTest("b_test", test3);
+        test3.setGroup(testGroup);
+        testService.createTest(test3);
+
+        List<Test> expectedResult1 = Arrays.asList(test1, test2);
+        List<Test> actualResult1 = testService.getTestsByUidPrefix("a");
+
+        assertEquals(expectedResult1.size(), actualResult1.size());
+        assertTrue(expectedResult1.stream().allMatch(expected -> actualResult1.stream()
+                .anyMatch(actual -> expected.getId().equals(actual.getId()))));
+
+        List<Test> expectedResult2 = Arrays.asList(test2);
+        List<Test> actualResult2 = testService.getTestsByUidPrefix("aa");
+
+        assertEquals(expectedResult2.size(), actualResult2.size());
+        assertTrue(expectedResult2.stream().allMatch(expected -> actualResult2.stream()
                 .anyMatch(actual -> expected.getId().equals(actual.getId()))));
     }
 
-    /****** HELPER METHODS ******/
+    @org.junit.Test
+    public void testMetricManipulationWithTest() throws DuplicateEntityException, UnauthorizedException {
+        Test test1 = new Test();
+        fillTest("test1", test1);
+        test1.setGroup(testGroup);
+        testService.createTest(test1);
 
-    private void assertUser(User expected, User actual) {
-        assertEquals(expected.getUsername(), actual.getUsername());
-        assertEquals(expected.getFirstName(), actual.getFirstName());
-        assertEquals(expected.getLastName(), actual.getLastName());
-        assertEquals(expected.getPassword(), actual.getPassword());
-        assertEquals(expected.getEmail(), actual.getEmail());
+        Test test2 = new Test();
+        fillTest("test2", test2);
+        test2.setGroup(testGroup);
+        testService.createTest(test2);
+
+        Metric metric = new Metric();
+        fillMetric("metric", metric);
+
+        Metric createdMetric = testService.addMetric(metric, test1);
+        testService.addMetric(createdMetric, test2);
+
+        Set<Metric> metricsOfTest1 = testService.getMetricsForTest(test1);
+        Set<Metric> metricsOfTest2 = testService.getMetricsForTest(test2);
+
+        Set<Metric> expectedResult = new HashSet<>(Arrays.asList(createdMetric));
+
+        assertEquals(expectedResult.size(), metricsOfTest1.size());
+        assertEquals(expectedResult.size(), metricsOfTest2.size());
+        assertTrue(expectedResult.stream().allMatch(expected -> metricsOfTest1.stream()
+                .anyMatch(actual -> expected.equals(actual))));
+        assertTrue(expectedResult.stream().allMatch(expected -> metricsOfTest2.stream()
+                .anyMatch(actual -> expected.equals(actual))));
+
+        // test disassociation without removing the metric, because it's still associated to other test
+        testService.removeMetricFromTest(createdMetric, test1);
+
+        Set<Metric> metricsOfTest1AfterRemoval = testService.getMetricsForTest(test1);
+        assertTrue(metricsOfTest1AfterRemoval.isEmpty());
+        // the metric should still exist
+        assertNotNull(testService.getMetric(createdMetric.getId()));
+
+        // test disassociation of the metric, but now it should be removed completely from the database
+        testService.removeMetricFromTest(createdMetric, test2);
+
+        Set<Metric> metricsOfTest2AfterRemoval = testService.getMetricsForTest(test2);
+        assertTrue(metricsOfTest2AfterRemoval.isEmpty());
+        // the metric should not exist anymore
+        assertNull(testService.getMetric(createdMetric.getId()));
+
+        // test also removing metric by removing test
+        Metric metric2 = new Metric();
+        fillMetric("metric", metric2);
+
+        Metric createdMetric2 = testService.addMetric(metric2, test1);
+        testService.removeTest(test1);
+
+        assertNull(testService.getMetric(createdMetric2.getId()));
     }
 
-    /**
-     * Helper method to assign some values to test user entity.
-     *
-     * @param prefix
-     * @param user
-     * @return
-     */
-    private void fillUser(String prefix, User user) {
+    @org.junit.Test
+    public void testSearchTests() throws DuplicateEntityException, UnauthorizedException {
+        Group group2 = createGroup("second_group");
+        groupService.createGroup(group2);
+        groupService.addUserToGroup(testUser, group2);
+
+        Test test1 = new Test();
+        fillTest("test1", test1);
+        test1.setGroup(testGroup);
+        testService.createTest(test1);
+
+        Test test2 = new Test();
+        fillTest("my_test2", test2);
+        test2.setGroup(testGroup);
+        testService.createTest(test2);
+
+        Test test3 = new Test();
+        fillTest("my_test3", test3);
+        test3.setGroup(group2);
+        testService.createTest(test3);
+
+        // search by name without wildcard
+        TestSearchCriteria searchByName = new TestSearchCriteria();
+        searchByName.setName(test1.getName());
+        assertSearchResultWithoutOrdering(Arrays.asList(test1), testService.searchTests(searchByName));
+
+        // search by name with wildcard
+        TestSearchCriteria searchByNameWithWildcard = new TestSearchCriteria();
+        searchByNameWithWildcard.setName("my_test*");
+        assertSearchResultWithoutOrdering(Arrays.asList(test2, test3), testService.searchTests(searchByNameWithWildcard));
+
+        // search by UID
+        TestSearchCriteria searchByUid = new TestSearchCriteria();
+        searchByUid.setUid(test1.getUid());
+        assertSearchResultWithoutOrdering(Arrays.asList(test1), testService.searchTests(searchByUid));
+
+        // search by one group
+        TestSearchCriteria searchByOneGroup = new TestSearchCriteria();
+        searchByOneGroup.setGroups(new HashSet<>(Arrays.asList(testGroup)));
+        assertSearchResultWithoutOrdering(Arrays.asList(test1, test2), testService.searchTests(searchByOneGroup));
+
+        // search by more groups
+        TestSearchCriteria searchByMoreGroups = new TestSearchCriteria();
+        searchByMoreGroups.setGroups(new HashSet<>(Arrays.asList(testGroup, group2)));
+        assertSearchResultWithoutOrdering(Arrays.asList(test1, test2, test3), testService.searchTests(searchByMoreGroups));
+
+        // search with ordering
+        TestSearchCriteria searchWithOrdering = new TestSearchCriteria();
+        searchWithOrdering.setOrderBy(OrderBy.UID_DESC);
+        assertSearchResultWithOrdering(Arrays.asList(test1, test3, test2), testService.searchTests(searchWithOrdering));
+
+        // search with limit from
+        TestSearchCriteria searchWithLimitFrom = new TestSearchCriteria();
+        searchWithLimitFrom.setLimitFrom(1);
+        searchWithLimitFrom.setOrderBy(OrderBy.NAME_ASC);
+        assertSearchResultWithOrdering(Arrays.asList(test3, test1), testService.searchTests(searchWithLimitFrom), 3);
+
+        // search with how many
+        TestSearchCriteria searchWithHowMany = new TestSearchCriteria();
+        searchWithHowMany.setLimitHowMany(2);
+        searchWithHowMany.setOrderBy(OrderBy.NAME_DESC);
+        assertSearchResultWithOrdering(Arrays.asList(test1, test3), testService.searchTests(searchWithHowMany), 3);
+
+        // test getTestsForUser
+        assertSearchResultWithoutOrdering(Arrays.asList(test1, test2, test3), testService.getTestsForUser(testUser));
+    }
+
+    @org.junit.Test
+    public void testSubscribing() throws DuplicateEntityException, UnauthorizedException {
+        Test test1 = new Test();
+        fillTest("test1", test1);
+        test1.setGroup(testGroup);
+        testService.createTest(test1);
+
+        testService.addSubscriber(testUser, test1);
+        assertTrue(testService.isUserSubscribed(testUser, test1));
+
+        testService.removeSubscriber(testUser, test1);
+        assertFalse(testService.isUserSubscribed(testUser, test1));
+    }
+
+    @org.junit.Test
+    public void testTestRemovalWithTestExecution() {
+        //TODO: implement this to be sure that test executions are removed automatically
+    }
+
+    /*** HELPER METHODS ***/
+
+    private void assertTest(Test expected, Test actual) {
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getUid(), actual.getUid());
+        assertEquals(expected.getDescription(), actual.getDescription());
+    }
+
+    private void assertMetric(Metric expected, Metric actual) {
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getDescription(), actual.getDescription());
+        assertEquals(expected.getComparator(), actual.getComparator());
+    }
+
+    private void fillTest(String prefix, Test test) {
+        test.setName(prefix + "_name");
+        test.setUid(prefix + "_uid");
+        test.setDescription(prefix + "_description");
+    }
+
+    private void fillMetric(String prefix, Metric metric) {
+        metric.setName(prefix + "_name");
+        metric.setDescription(prefix + "_description");
+        metric.setComparator(MetricComparator.HIGHER_BETTER);
+    }
+
+    private User createUser(String prefix) {
+        User user = new User();
         user.setFirstName(prefix + "_first_name");
         user.setLastName(prefix + "_last_name");
+        user.setEmail(prefix + "@email.com");
+        user.setUsername(prefix + "_username");
         user.setPassword(prefix + "_password");
-        user.setEmail(prefix + "_email@example.com");
+
+        return user;
     }
 
-    private void fillProperties(String keyPrefix, String valuePrefix, Map<String, String> properties) {
-        properties.put(keyPrefix + "_key1", valuePrefix + "_value1");
-        properties.put(keyPrefix + "_key2", valuePrefix + "_value2");
-        properties.put(keyPrefix + "_key3", valuePrefix + "_value3");
-    }
-
-    private void fillFavoriteParameter(String prefix, FavoriteParameter parameter) {
-        parameter.setParameterName(prefix + "_name");
-        parameter.setLabel(prefix + "_label");
-    }
-
-    private Test createTest() {
-        Test test = new Test();
-        test.setName("example_test");
-        test.setUid("example_test_uid");
-
-        return test;
-    }
-
-    private Group createGroup() {
+    private Group createGroup(String name) {
         Group group = new Group();
-        group.setName("example_group");
+        group.setName(name);
 
         return group;
+    }
+    
+    private void assertSearchResultWithoutOrdering(List<Test> expectedResult, SearchResultWrapper<Test> actualResult) {
+        assertEquals(expectedResult.size(), actualResult.getTotalSearchResultsCount());
+        assertEquals(expectedResult.size(), actualResult.getResult().size());
+        assertTrue(expectedResult.stream().allMatch(expected -> actualResult.getResult().stream()
+                .anyMatch(actual -> expected.getId().equals(actual.getId()))));
+    }
+
+    private void assertSearchResultWithOrdering(List<Test> expectedResult, SearchResultWrapper<Test> actualResult) {
+        assertSearchResultWithOrdering(expectedResult, actualResult, expectedResult.size());
+    }
+
+    private void assertSearchResultWithOrdering(List<Test> expectedResult, SearchResultWrapper<Test> actualResult, int expectedTotalCount) {
+        assertEquals(expectedTotalCount, actualResult.getTotalSearchResultsCount());
+        assertEquals(expectedResult.size(), actualResult.getResult().size());
+
+        IntStream.range(0, expectedResult.size())
+                .forEach(index -> assertEquals(expectedResult.get(index), actualResult.getResult().get(index)));
     }
 
 }

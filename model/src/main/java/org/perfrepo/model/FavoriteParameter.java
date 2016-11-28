@@ -37,14 +37,12 @@ import javax.validation.constraints.Size;
 @javax.persistence.Entity
 @Table(name = "favorite_parameter")
 @NamedQueries({
-    @NamedQuery(name = FavoriteParameter.FIND_BY_TEST_AND_PARAM_NAME, query = "SELECT fp FROM FavoriteParameter fp JOIN fp.test test JOIN fp.user user WHERE test.id = :testId AND user.id = :userId AND fp.parameterName = :paramName"),
     @NamedQuery(name = FavoriteParameter.FIND_BY_TEST, query = "SELECT fp FROM FavoriteParameter fp WHERE test.id = :testId AND user.id = :userId")
 })
 public class FavoriteParameter implements Entity<FavoriteParameter> {
 
    private static final long serialVersionUID = 2290056642668445219L;
 
-   public static final String FIND_BY_TEST_AND_PARAM_NAME = "findByTestAndParamName";
    public static final String FIND_BY_TEST = "findByTest";
 
    @Id

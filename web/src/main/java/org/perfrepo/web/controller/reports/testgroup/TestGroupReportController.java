@@ -347,7 +347,8 @@ public class TestGroupReportController extends BaseController {
    private void saveReport(String reportName) {
       Report report = null;
 
-      User user = userService.getUser(userSession.getUser().getId());
+      //User user = userService.getUser(userSession.getUser().getId());
+      User user = null;
 
       if (reportId != null) {
          report = reportService.getFullReport(new Report(reportId));
@@ -575,7 +576,8 @@ public class TestGroupReportController extends BaseController {
    }
 
    public List<String> autocompleteTests(String test) {
-      List<String> tests = testService.getTestsByPrefix(test);
+      //List<String> tests = testService.getTestsByUidPrefix(test);
+      List<String> tests = null;
       java.util.Iterator<String> it = tests.iterator();
       while (it.hasNext()) {
          String t = it.next();

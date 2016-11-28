@@ -112,7 +112,7 @@ public class TestBuilder {
     * @return this {@link TestBuilder}
     */
    public TestBuilder metric(String name, String description) {
-      return metric().name(name).description(description).comparator(MetricComparator.HB).test();
+      return metric().name(name).description(description).comparator(MetricComparator.HIGHER_BETTER).test();
    }
 
    /**

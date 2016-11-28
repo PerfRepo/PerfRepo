@@ -14,6 +14,8 @@
  */
 package org.perfrepo.web.service.exceptions;
 
+import org.perfrepo.web.util.MessageUtils;
+
 import javax.ejb.ApplicationException;
 
 /**
@@ -42,7 +44,7 @@ public class ServiceException extends Exception {
     * @param params
     */
    public ServiceException(String keyToResourceBundle, Throwable cause, String... params) {
-      super(cause);
+      super(MessageUtils.getMessage(keyToResourceBundle, params), cause);
       this.keyToResourceBundle = keyToResourceBundle;
       this.params = params;
    }

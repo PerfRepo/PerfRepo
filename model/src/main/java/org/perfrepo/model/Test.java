@@ -107,14 +107,6 @@ public class Test implements Entity<Test> {
       this.id = id;
    }
 
-   public String getStringId() {
-      return id == null ? null : String.valueOf(id);
-   }
-
-   public void setStringId(String id) {
-      this.id = Long.valueOf(id);
-   }
-
    public void setName(String name) {
       this.name = name;
    }
@@ -123,7 +115,7 @@ public class Test implements Entity<Test> {
       return this.name;
    }
 
-   public Collection<User> getSubscribers() {
+   public Set<User> getSubscribers() {
       return subscribers;
    }
 

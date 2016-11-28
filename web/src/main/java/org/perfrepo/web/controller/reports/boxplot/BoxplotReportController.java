@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Controller for boxplot reports
@@ -155,7 +156,7 @@ public class BoxplotReportController extends BaseController {
       chart.removeBaseline(baseline);
    }
 
-   public List<Metric> getMetricsForSelection(Chart chart) {
+   public Set<Metric> getMetricsForSelection(Chart chart) {
       Test test = new Test();
       test.setId(chart.getTestId());
       return testService.getMetricsForTest(test);

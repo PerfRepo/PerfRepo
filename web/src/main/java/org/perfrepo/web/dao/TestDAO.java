@@ -18,8 +18,7 @@ import org.perfrepo.model.Entity;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.to.OrderBy;
 import org.perfrepo.model.to.SearchResultWrapper;
-import org.perfrepo.model.to.TestSearchTO;
-import org.perfrepo.model.userproperty.GroupFilter;
+import org.perfrepo.web.service.search.TestSearchCriteria;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -63,17 +62,16 @@ public class TestDAO extends DAO<Test, Long> {
     * Main search method for tests. All criteria are passed via transfer object.
     *
     * @param search
-    * @param userGroupNames
     * @return
     */
-   public SearchResultWrapper<Test> searchTests(TestSearchTO search, List<String> userGroupNames) {
+   public SearchResultWrapper<Test> searchTests(TestSearchCriteria search) {
       CriteriaQuery<Test> criteria = createCriteria();
 
-      int lastQueryResultsCount = processSearchCountQuery(search, userGroupNames);
+      int lastQueryResultsCount = processSearchCountQuery(search);
 
       Root<Test> root = criteria.from(Test.class);
       criteria.select(root);
-      List<Predicate> predicates = createSearchPredicates(search, root, userGroupNames);
+      List<Predicate> predicates = createSearchPredicates(search, root);
 
       if (!predicates.isEmpty()) {
          criteria.where(predicates.toArray(new Predicate[0]));
@@ -124,16 +122,15 @@ public class TestDAO extends DAO<Test, Long> {
     * search criteria.
     *
     * @param search
-    * @param userGroupNames
     * @return
     */
-   private int processSearchCountQuery(TestSearchTO search, List<String> userGroupNames) {
+   private int processSearchCountQuery(TestSearchCriteria search) {
       CriteriaBuilder cb = criteriaBuilder();
       CriteriaQuery<Long> countQuery = cb.createQuery(Long.class);
 
       Root<Test> root = countQuery.from(Test.class);
       countQuery.select(cb.countDistinct(root));
-      List<Predicate> predicates = createSearchPredicates(search, root, userGroupNames);
+      List<Predicate> predicates = createSearchPredicates(search, root);
 
       if (!predicates.isEmpty()) {
          countQuery.where(predicates.toArray(new Predicate[0]));
@@ -149,10 +146,9 @@ public class TestDAO extends DAO<Test, Long> {
     *
     * @param search
     * @param root
-    * @param userGroupNames
     * @return
     */
-   private List<Predicate> createSearchPredicates(TestSearchTO search, Root root, List<String> userGroupNames) {
+   private List<Predicate> createSearchPredicates(TestSearchCriteria search, Root root) {
       CriteriaBuilder cb = criteriaBuilder();
       List<Predicate> predicates = new ArrayList<>();
 
@@ -174,12 +170,8 @@ public class TestDAO extends DAO<Test, Long> {
          }
       }
 
-      if (search.getGroupId() != null && !"".equals(search.getGroupId())) {
-         predicates.add(cb.equal(root.get("groupId"), search.getGroupId()));
-      }
-
-      if (GroupFilter.MY_GROUPS.equals(search.getGroupFilter())) {
-         predicates.add(cb.and(root.get("groupId").in(userGroupNames)));
+      if (search.getGroups() != null && !search.getGroups().isEmpty()) {
+         predicates.add(cb.and(root.get("group").in(search.getGroups())));
       }
 
       return predicates;

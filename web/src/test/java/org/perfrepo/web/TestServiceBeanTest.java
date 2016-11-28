@@ -137,8 +137,8 @@
 //         @Override
 //         public Void call() throws Exception {
 //            assert testService.getAllFullTests().isEmpty();
-//            Test createdTest = testService.createTest(test("test1").description("this is a test test").metric("metric1", MetricComparator.HB, "this is a test metric 1")
-//                                                          .metric("metric2", MetricComparator.HB, "this is a test metric 2").metric("multimetric", MetricComparator.HB, "this is a metric with multiple values").build());
+//            Test createdTest = testService.createTest(test("test1").description("this is a test test").metric("metric1", MetricComparator.HIGHER_BETTER, "this is a test metric 1")
+//                                                          .metric("metric2", MetricComparator.HIGHER_BETTER, "this is a test metric 2").metric("multimetric", MetricComparator.HIGHER_BETTER, "this is a metric with multiple values").build());
 //            assert testService.getAllFullTests().contains(createdTest);
 //            testService.removeTest(createdTest);
 //            assert testService.getAllFullTests().isEmpty();

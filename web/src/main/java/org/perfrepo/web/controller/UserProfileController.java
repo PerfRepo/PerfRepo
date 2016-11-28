@@ -49,7 +49,7 @@ public class UserProfileController extends BaseController {
     */
    public void preRender() throws Exception {
       reloadSessionMessages();
-      user = userService.getUser(userSession.getUser().getId());
+      //user = userService.getUser(userSession.getUser().getId());
    }
 
    public User getUser() {

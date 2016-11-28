@@ -16,7 +16,7 @@ package org.perfrepo.web.session;
 
 import org.perfrepo.model.to.OrderBy;
 import org.perfrepo.model.to.TestExecutionSearchTO;
-import org.perfrepo.model.to.TestSearchTO;
+import org.perfrepo.web.service.search.TestSearchCriteria;
 
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
@@ -34,7 +34,7 @@ public class SearchCriteriaSession implements Serializable {
 
    private TestExecutionSearchTO executionSearchCriteria;
 
-   private TestSearchTO testSearchCriteria;
+   private TestSearchCriteria testSearchCriteria;
 
    public TestExecutionSearchTO getExecutionSearchCriteria() {
       if (executionSearchCriteria == null) {
@@ -57,9 +57,9 @@ public class SearchCriteriaSession implements Serializable {
       getTestSearchCriteria();
    }
 
-   public TestSearchTO getTestSearchCriteria() {
+   public TestSearchCriteria getTestSearchCriteria() {
       if (testSearchCriteria == null) {
-         testSearchCriteria = new TestSearchTO();
+         testSearchCriteria = new TestSearchCriteria();
          testSearchCriteria.setOrderBy(OrderBy.NAME_ASC);
          testSearchCriteria.setLimitHowMany(25);
       }

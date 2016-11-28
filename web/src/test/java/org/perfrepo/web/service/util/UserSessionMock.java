@@ -12,27 +12,35 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.perfrepo.web.dao;
+package org.perfrepo.web.service.util;
 
-import org.perfrepo.model.FavoriteParameter;
+import org.perfrepo.model.user.User;
+import org.perfrepo.web.session.UserSession;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.enterprise.context.SessionScoped;
+import java.io.Serializable;
 
 /**
- * DAO for {@link org.perfrepo.model.FavoriteParameter}
+ * TODO: document this
  *
  * @author Jiri Holusa (jholusa@redhat.com)
  */
-public class FavoriteParameterDAO extends DAO<FavoriteParameter, Long> {
+@SessionScoped
+public class UserSessionMock implements UserSession, Serializable {
 
-   public List<FavoriteParameter> findByTest(Long testId, Long userId) {
-      Map<String, Object> params = new HashMap<String, Object>();
-      params.put("userId", userId);
-      params.put("testId", testId);
+   private static final long serialVersionUID = 1487959021438612784L;
 
-      List<FavoriteParameter> result = findByNamedQuery(FavoriteParameter.FIND_BY_TEST, params);
-      return result;
+   private static User user;
+
+   public static void setLoggedUser(User testUser) {
+      user = testUser;
+   }
+
+   public static User getLoggedUserStatic() {
+      return user;
+   }
+
+   public User getLoggedUser() {
+      return user;
    }
 }

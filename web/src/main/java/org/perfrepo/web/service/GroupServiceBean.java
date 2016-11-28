@@ -3,7 +3,8 @@ package org.perfrepo.web.service;
 import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.dao.GroupDAO;
-import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.dao.UserDAO;
+import org.perfrepo.web.service.exceptions.DuplicateEntityException;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -12,6 +13,7 @@ import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Set;
 
 /**
  * TODO: document this
@@ -26,18 +28,30 @@ public class GroupServiceBean implements GroupService {
     @Inject
     private GroupDAO groupDAO;
 
+    @Inject
+    private UserDAO userDAO;
+
     @Override
-    public Group createGroup(Group group) throws ServiceException {
+    public Group createGroup(Group group) throws DuplicateEntityException {
+        if (getGroup(group.getName()) != null) {
+            throw new DuplicateEntityException("group.duplicateName", group.getName());
+        }
+
         return groupDAO.create(group);
     }
 
     @Override
-    public Group updateGroup(Group group) throws ServiceException {
+    public Group updateGroup(Group group) throws DuplicateEntityException {
+        Group possibleDuplicate = getGroup(group.getName());
+        if (possibleDuplicate != null && !possibleDuplicate.getId().equals(group.getId())) {
+            throw new DuplicateEntityException("group.duplicateName", group.getName());
+        }
+
         return groupDAO.merge(group);
     }
 
     @Override
-    public void removeGroup(Group group) throws ServiceException {
+    public void removeGroup(Group group) {
         Group managedGroup = groupDAO.get(group.getId());
         groupDAO.remove(managedGroup);
     }
@@ -58,14 +72,22 @@ public class GroupServiceBean implements GroupService {
     }
 
     @Override
-    public List<Group> getUserGroups(User user) {
+    public Set<Group> getUserGroups(User user) {
         return groupDAO.getUserGroups(user);
     }
 
     @Override
-    public boolean isUserInGroup(Group group, User user) {
-        List<Group> groups = getUserGroups(user);
-        return groups.stream().anyMatch(g -> g.equals(group));
+    public boolean isUserInGroup(User user, Group group) {
+        Set<Group> groups = getUserGroups(user);
+        return groups.contains(group);
     }
 
+    @Override
+    public void addUserToGroup(User user, Group group) {
+        User managedUser = userDAO.get(user.getId());
+        Group managedGroup = groupDAO.get(group.getId());
+
+        managedUser.getGroups().add(managedGroup);
+        managedGroup.getUsers().add(managedUser);
+    }
 }

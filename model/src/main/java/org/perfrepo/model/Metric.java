@@ -42,8 +42,8 @@ import java.util.Set;
 @Table(name = "metric")
 @NamedQueries({
     @NamedQuery(name = Metric.GET_TEST, query = "SELECT m.tests from Metric m where m= :entity"),
-    @NamedQuery(name = Metric.FIND_BY_NAME_AND_GROUP, query = "SELECT m from Metric m inner join m.tests test where test.group.name = :group and m.name= :name"),
-    @NamedQuery(name = Metric.FIND_BY_GROUP, query = "SELECT DISTINCT m from Metric m inner join m.tests test WHERE test.group.name = :group ORDER BY m.name"),
+    @NamedQuery(name = Metric.FIND_BY_NAME, query = "SELECT metric FROM Metric metric WHERE metric.name= :name"),
+    @NamedQuery(name = Metric.FIND_BY_TEST, query = "SELECT metric FROM Metric metric WHERE :test MEMBER OF metric.tests"),
 })
 //@SecuredEntity(type = EntityType.TEST) TODO: figure it out correctly
 public class Metric implements Entity<Metric>, Comparable<Metric> {
@@ -51,8 +51,8 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
    private static final long serialVersionUID = -5234628391341278215L;
 
    public static final String GET_TEST = "Metric.getTest";
-   public static final String FIND_BY_NAME_AND_GROUP = "Metric.findByNameGroup";
-   public static final String FIND_BY_GROUP = "Metric.findByGroup";
+   public static final String FIND_BY_NAME = "Metric.findByName";
+   public static final String FIND_BY_TEST = "Metric.findByTest";
 
    @Id
    @SequenceGenerator(name = "METRIC_ID_GENERATOR", sequenceName = "METRIC_SEQUENCE", allocationSize = 1)
@@ -93,14 +93,6 @@ public class Metric implements Entity<Metric>, Comparable<Metric> {
 
    public void setId(Long id) {
       this.id = id;
-   }
-
-   public String getStringId() {
-      return id == null ? null : String.valueOf(id);
-   }
-
-   public void setStringId(String id) {
-      this.id = Long.valueOf(id);
    }
 
    public void setComparator(MetricComparator comparator) {

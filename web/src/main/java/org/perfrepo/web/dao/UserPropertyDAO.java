@@ -15,14 +15,7 @@
 package org.perfrepo.web.dao;
 
 import org.perfrepo.model.UserProperty;
-import org.perfrepo.model.user.User;
 
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,57 +32,6 @@ public class UserPropertyDAO extends DAO<UserProperty, Long> {
       return getAllByProperty("user", userId);
    }
 
-   public UserProperty findByUserIdAndName(Long userId, String name) {
-      CriteriaQuery<UserProperty> criteria = createCriteria();
-      CriteriaBuilder cb = criteriaBuilder();
-      Root<UserProperty> rUserProperty = criteria.from(UserProperty.class);
-      Join<UserProperty, User> rUser = rUserProperty.join("user");
-
-      Predicate pUser = cb.equal(rUser.get("id"), cb.parameter(Long.class, "userId"));
-      Predicate pName = cb.equal(rUserProperty.get("name"), cb.parameter(String.class, "name"));
-      criteria.select(rUserProperty);
-      criteria.where(cb.and(pUser, pName));
-
-      TypedQuery<UserProperty> query = query(criteria);
-      query.setParameter("userId", userId);
-      query.setParameter("name", name);
-
-      List<UserProperty> props = query.getResultList();
-      if (props.isEmpty()) {
-         return null;
-      } else {
-         return props.get(0);
-      }
-   }
-
-   public List<UserProperty> findByUserName(String userName) {
-      CriteriaQuery<UserProperty> criteria = createCriteria();
-      CriteriaBuilder cb = criteriaBuilder();
-      Root<UserProperty> rUserProperty = criteria.from(UserProperty.class);
-      Join<UserProperty, User> rUser = rUserProperty.join("user");
-      Predicate pUser = cb.equal(rUser.get("username"), cb.parameter(String.class, "username"));
-      criteria.select(rUserProperty);
-      criteria.where(pUser);
-      TypedQuery<UserProperty> query = query(criteria);
-      query.setParameter("username", userName);
-      return query.getResultList();
-   }
-
-   public List<UserProperty> findByUserName(String userName, String propertyPrefix) {
-      CriteriaQuery<UserProperty> criteria = createCriteria();
-      CriteriaBuilder cb = criteriaBuilder();
-      Root<UserProperty> rUserProperty = criteria.from(UserProperty.class);
-      Join<UserProperty, User> rUser = rUserProperty.join("user");
-      Predicate pUser = cb.equal(rUser.get("username"), cb.parameter(String.class, "username"));
-      Predicate pName = cb.like(rUserProperty.<String>get("name"), cb.parameter(String.class, "name"));
-      criteria.select(rUserProperty);
-      criteria.where(cb.and(pUser, pName));
-      TypedQuery<UserProperty> query = query(criteria);
-      query.setParameter("username", userName);
-      query.setParameter("name", propertyPrefix + "%");
-      return query.getResultList();
-   }
-
    public void deletePropertiesFromUser(Long userId) {
       Map<String, Object> parameters = new HashMap<>();
       parameters.put("userId", userId);
@@ -97,8 +39,10 @@ public class UserPropertyDAO extends DAO<UserProperty, Long> {
       List<UserProperty> properties = findByNamedQuery(UserProperty.GET_BY_USER, parameters);
       properties.stream().forEach(property -> remove(property));
 
-      // the flush is needed because we usually want to see the results of the deletion
+      // the flush is needed because we want to see the results of the deletion
       // even during the opened transaction
+      // this is related to the way we update user properties - delete them all and replace them from scratch
+      // in a single transaction
       entityManager().flush();
    }
 }
