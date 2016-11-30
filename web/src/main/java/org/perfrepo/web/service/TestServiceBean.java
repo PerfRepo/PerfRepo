@@ -127,7 +127,7 @@ public class TestServiceBean implements TestService {
 
    @Override
    public SearchResultWrapper<Test> getTestsForUser(User user) {
-      Set<Group> userGroups = groupService.getUserGroups(user);
+      Set<Group> userGroups = userService.getUserGroups(user);
       TestSearchCriteria searchCriteria = new TestSearchCriteria();
       searchCriteria.setGroups(userGroups);
 

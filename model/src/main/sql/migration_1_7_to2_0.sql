@@ -85,5 +85,12 @@ ALTER TABLE ONLY public.alert_tag ADD CONSTRAINT alert_tag_alert_fkey FOREIGN KE
 ALTER TABLE public.alert_tag DROP CONSTRAINT alert_tag_tag_fkey;
 ALTER TABLE ONLY public.alert_tag ADD CONSTRAINT alert_tag_tag_fkey FOREIGN KEY (tag_id) REFERENCES tag(id) ON DELETE CASCADE;
 
+COMMIT;
+
+BEGIN;
+
+ALTER TABLE public.user ADD COLUMN type character varying(25) NOT NULL;
+
+ALTER TABLE user_group ADD COLUMN type character varying(25) NOT NULL;
 
 COMMIT;

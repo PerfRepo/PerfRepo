@@ -1,8 +1,11 @@
 package org.perfrepo.web.service;
 
 import org.perfrepo.model.user.Group;
+import org.perfrepo.model.user.Membership;
+import org.perfrepo.model.user.Membership.MembershipType;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.dao.GroupDAO;
+import org.perfrepo.web.dao.MembershipDAO;
 import org.perfrepo.web.dao.UserDAO;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
 
@@ -30,6 +33,12 @@ public class GroupServiceBean implements GroupService {
 
     @Inject
     private UserDAO userDAO;
+
+    @Inject
+    private MembershipDAO membershipDAO;
+
+    @Inject
+    private UserService userService;
 
     @Override
     public Group createGroup(Group group) throws DuplicateEntityException {
@@ -72,22 +81,26 @@ public class GroupServiceBean implements GroupService {
     }
 
     @Override
-    public Set<Group> getUserGroups(User user) {
-        return groupDAO.getUserGroups(user);
-    }
-
-    @Override
     public boolean isUserInGroup(User user, Group group) {
-        Set<Group> groups = getUserGroups(user);
+        Set<Group> groups = userService.getUserGroups(user);
         return groups.contains(group);
     }
 
     @Override
     public void addUserToGroup(User user, Group group) {
+        addUserToGroup(user, group, MembershipType.REGULAR_USER);
+    }
+
+    @Override
+    public void addUserToGroup(User user, Group group, MembershipType membershipType) {
         User managedUser = userDAO.get(user.getId());
         Group managedGroup = groupDAO.get(group.getId());
 
-        managedUser.getGroups().add(managedGroup);
-        managedGroup.getUsers().add(managedUser);
+        Membership membership = new Membership();
+        membership.setUser(managedUser);
+        membership.setGroup(managedGroup);
+        membership.setType(membershipType);
+
+        membershipDAO.create(membership);
     }
 }

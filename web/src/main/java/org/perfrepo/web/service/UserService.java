@@ -16,12 +16,14 @@ package org.perfrepo.web.service;
 
 import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
+import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
 import org.perfrepo.web.service.exceptions.IncorrectPasswordException;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * TODO: document this
@@ -73,6 +75,14 @@ public interface UserService {
     * @return
     */
    public List<User> getAllUsers();
+
+   /**
+    * Retrieves all user groups
+    *
+    * @param user
+    * @return
+    */
+   public Set<Group> getUserGroups(User user);
 
    /**
     * Changes user password. Provides check if old password is equal to "current" password

@@ -17,23 +17,19 @@ package org.perfrepo.model.user;
 import org.perfrepo.model.Entity;
 
 import javax.persistence.Column;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
 
 @javax.persistence.Entity
 @Table(name = "\"group\"")
 @NamedQueries({
         @NamedQuery(name = Group.GET_BY_NAME, query = "SELECT group FROM Group group WHERE group.name = :name"),
-        @NamedQuery(name = Group.GET_USER_GROUPS, query = "SELECT grp FROM Group grp WHERE :user MEMBER OF grp.users")
+        @NamedQuery(name = Group.GET_USER_GROUPS, query = "SELECT membership.group FROM Membership membership WHERE membership.user = :user")
 })
 public class Group implements Entity<Group>, Comparable<Group> {
 
@@ -50,9 +46,6 @@ public class Group implements Entity<Group>, Comparable<Group> {
    @Column(name = "name", unique = true)
    private String name;
 
-   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "groups")
-   private Set<User> users = new HashSet<>();
-
    public Long getId() {
       return id;
    }
@@ -67,14 +60,6 @@ public class Group implements Entity<Group>, Comparable<Group> {
 
    public void setName(String name) {
       this.name = name;
-   }
-
-   public Set<User> getUsers() {
-      return users;
-   }
-
-   public void setUsers(Set<User> users) {
-      this.users = users;
    }
 
    @Override

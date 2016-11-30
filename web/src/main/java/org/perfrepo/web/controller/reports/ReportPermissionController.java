@@ -129,7 +129,7 @@ public class ReportPermissionController extends BaseController {
          permission.setLevel(AccessLevel.GROUP);
          permission.setAccessType(AccessType.WRITE);
 
-         Collection<Group> groups = userService.getUser(userSession.getLoggedUser().getId()).getGroups();
+         Collection<Group> groups = userService.getUserGroups(userSession.getLoggedUser());
          permission.setGroupId(groups.stream().findFirst().get().getId());
 
          permissions.add(permission);

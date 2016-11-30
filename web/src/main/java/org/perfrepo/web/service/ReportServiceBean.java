@@ -46,6 +46,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Implements @link{ReportService}.
@@ -89,20 +91,16 @@ public class ReportServiceBean implements ReportService {
    @Override
    public List<Report> getAllReports() {
       User user = userSession.getLoggedUser();
-      List<Long> groupIds = new ArrayList<Long>();
-      for (Group group : user.getGroups()) {
-         groupIds.add(group.getId());
-      }
+      List<Long> groupIds = userService.getUserGroups(user).stream().map(Group::getId).collect(Collectors.toList());
+
       return reportDAO.getByAnyPermission(user.getId(), groupIds);
    }
 
    @Override
    public List<Report> getAllGroupReports() {
       User user = userSession.getLoggedUser();
-      List<Long> groupIds = new ArrayList<Long>();
-      for (Group group : user.getGroups()) {
-         groupIds.add(group.getId());
-      }
+      List<Long> groupIds = userService.getUserGroups(user).stream().map(Group::getId).collect(Collectors.toList());
+
       return reportDAO.getByGroupPermission(user.getId(), groupIds);
    }
 
@@ -376,8 +374,9 @@ public class ReportServiceBean implements ReportService {
       write.setAccessType(AccessType.WRITE);
       write.setLevel(AccessLevel.GROUP);
       User user = userSession.getLoggedUser();
-      if (user.getGroups() != null && user.getGroups().size() > 0) {
-         write.setGroupId(user.getGroups().iterator().next().getId());
+      Set<Group> userGroups = userService.getUserGroups(user);
+      if (userGroups != null && userGroups.size() > 0) {
+         write.setGroupId(userGroups.iterator().next().getId());
       } else {
          throw new IllegalStateException("User is not assigned in any group");
       }

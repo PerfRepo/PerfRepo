@@ -1,11 +1,11 @@
 package org.perfrepo.web.service;
 
 import org.perfrepo.model.user.Group;
+import org.perfrepo.model.user.Membership.MembershipType;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * TODO: document this
@@ -62,14 +62,6 @@ public interface GroupService {
     public List<Group> getAllGroups();
 
     /**
-     * Retrieves all user groups
-     *
-     * @param user
-     * @return
-     */
-    public Set<Group> getUserGroups(User user);
-
-    /**
      * Retrieves if user is assign in defined group
      *
      * @param user
@@ -79,10 +71,18 @@ public interface GroupService {
     public boolean isUserInGroup(User user, Group group);
 
     /**
-     * Adds user to group.
+     * Adds user to group as a regular user.
      *
      * @param user
      * @param group
      */
     public void addUserToGroup(User user, Group group);
+
+    /**
+     * Adds user to group.
+     *
+     * @param user
+     * @param group
+     */
+    public void addUserToGroup(User user, Group group, MembershipType membershipType);
 }

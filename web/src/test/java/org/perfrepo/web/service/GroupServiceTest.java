@@ -117,14 +117,12 @@ public class GroupServiceTest {
         groupService.createGroup(group3);
 
         User user = createUser();
-        Set<Group> userGroups = new HashSet<>(Arrays.asList(group2, group3));
-        user.setGroups(userGroups);
-        group2.setUsers(new HashSet<>(Arrays.asList(user)));
-        group3.setUsers(new HashSet<>(Arrays.asList(user)));
         userService.createUser(user);
+        groupService.addUserToGroup(user, group2);
+        groupService.addUserToGroup(user, group3);
 
         Set<Group> expectedResult = new HashSet<>(Arrays.asList(group2, group3));
-        Set<Group> actualResult = groupService.getUserGroups(user);
+        Set<Group> actualResult = userService.getUserGroups(user);
 
         assertEquals(expectedResult.size(), actualResult.size());
         assertTrue(expectedResult.stream().allMatch(expected -> actualResult.stream()
@@ -147,13 +145,11 @@ public class GroupServiceTest {
         groupService.createGroup(group2);
 
         User user = createUser();
-        Set<Group> userGroups = new HashSet<>(Arrays.asList(group1));
-        user.setGroups(userGroups);
-        group1.setUsers(new HashSet<>(Arrays.asList(user)));
         userService.createUser(user);
+        groupService.addUserToGroup(user, group1);
 
         Set<Group> expectedResult = new HashSet<>(Arrays.asList(group1));
-        Set<Group> actualResult = groupService.getUserGroups(user);
+        Set<Group> actualResult = userService.getUserGroups(user);
 
         assertEquals(expectedResult.size(), actualResult.size());
         assertTrue(expectedResult.stream().allMatch(expected -> actualResult.stream()

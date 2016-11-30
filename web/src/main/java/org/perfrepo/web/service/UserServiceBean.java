@@ -18,8 +18,10 @@ import org.apache.commons.codec.binary.Base64;
 import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.UserProperty;
+import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.dao.FavoriteParameterDAO;
+import org.perfrepo.web.dao.GroupDAO;
 import org.perfrepo.web.dao.TestDAO;
 import org.perfrepo.web.dao.UserDAO;
 import org.perfrepo.web.dao.UserPropertyDAO;
@@ -38,6 +40,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Stateless
@@ -47,6 +50,9 @@ public class UserServiceBean implements UserService {
 
    @Inject
    private UserDAO userDAO;
+
+   @Inject
+   private GroupDAO groupDAO;
 
    @Inject
    private UserPropertyDAO userPropertyDAO;
@@ -101,6 +107,11 @@ public class UserServiceBean implements UserService {
    @Override
    public List<User> getAllUsers() {
       return userDAO.getAll();
+   }
+
+   @Override
+   public Set<Group> getUserGroups(User user) {
+      return groupDAO.getUserGroups(user);
    }
 
    @Override

@@ -19,12 +19,11 @@ import org.perfrepo.model.Entity;
 import org.perfrepo.model.Test;
 
 import javax.persistence.Column;
-import javax.persistence.FetchType;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -77,13 +76,9 @@ public class User implements Entity<User>, Comparable<User> {
    @Size(max = 2047)
    private String email;
 
-   @ManyToMany(fetch = FetchType.LAZY)
-   @JoinTable(
-       name = "user_group",
-       joinColumns = {@JoinColumn(name = "user_id", nullable = false, updatable = false)},
-       inverseJoinColumns = {@JoinColumn(name = "group_id", nullable = false, updatable = false)}
-   )
-   private Set<Group> groups = new HashSet<>();
+   @Column(name = "type")
+   @Enumerated(EnumType.STRING)
+   private UserType type = UserType.REGULAR_USER;
 
    @ManyToMany(mappedBy = "subscribers")
    private Set<Test> subscribedTests = new HashSet<>();
@@ -136,12 +131,12 @@ public class User implements Entity<User>, Comparable<User> {
       this.email = email;
    }
 
-   public Set<Group> getGroups() {
-      return groups;
+   public UserType getType() {
+      return type;
    }
 
-   public void setGroups(Set<Group> groups) {
-      this.groups = groups;
+   public void setType(UserType type) {
+      this.type = type;
    }
 
    public Set<Test> getSubscribedTests() {
@@ -182,5 +177,9 @@ public class User implements Entity<User>, Comparable<User> {
               ", password='" + password + '\'' +
               ", username='" + username + '\'' +
               '}';
+   }
+
+   public enum UserType {
+      ROBOT, REGULAR_USER, SUPER_ADMIN;
    }
 }
