@@ -20,6 +20,7 @@ import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
 import org.perfrepo.web.service.exceptions.IncorrectPasswordException;
+import org.perfrepo.web.service.exceptions.UnauthorizedException;
 
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public interface UserService {
     * @param user
     * @return user
     */
-   public User createUser(User user) throws DuplicateEntityException;
+   public User createUser(User user) throws DuplicateEntityException, UnauthorizedException;
 
    /**
     * Updates user. THE USER'S PASSWORD MUST BE IN PLAIN TEXT!
@@ -44,14 +45,14 @@ public interface UserService {
     * @param user
     * @return user
     */
-   public User updateUser(User user) throws DuplicateEntityException;
+   public User updateUser(User user) throws DuplicateEntityException, UnauthorizedException;
 
    /**
     * Deletes user
     *
     * @param user
     */
-   public void removeUser(User user);
+   public void removeUser(User user) throws UnauthorizedException;
 
    /**
     * Retrieves managed entity of user
@@ -93,6 +94,23 @@ public interface UserService {
     * @param user
     */
    public void changePassword(String oldPassword, String newPassword, User user) throws IncorrectPasswordException;
+
+   /**
+    * Detects if user is group admin of any group.
+    *
+    * @param user
+    * @return
+    */
+   public boolean isUserGroupAdmin(User user);
+
+   /**
+    * Detects if user is group admin of provided group.
+    *
+    * @param user
+    * @param group
+    * @return
+    */
+   public boolean isUserGroupAdmin(User user, Group group);
 
    /**
     * Returns all user properties

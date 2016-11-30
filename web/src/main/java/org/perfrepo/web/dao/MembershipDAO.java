@@ -14,7 +14,13 @@
  */
 package org.perfrepo.web.dao;
 
+import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.Membership;
+import org.perfrepo.model.user.User;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * DAO for {@link org.perfrepo.model.user.Membership}
@@ -22,5 +28,19 @@ import org.perfrepo.model.user.Membership;
  * @author Jiri Holusa (jholusa@redhat.com)
  */
 public class MembershipDAO extends DAO<Membership, Long> {
+
+    public Membership getMembership(User user, Group group) {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("user", user);
+        parameters.put("group", group);
+
+        // there should be always only one
+        List<Membership> memberships = findByNamedQuery(Membership.GET_BY_USER_AND_GROUP, parameters);
+        if (memberships.isEmpty()) {
+            return null;
+        }
+
+        return memberships.get(0);
+    }
 
 }

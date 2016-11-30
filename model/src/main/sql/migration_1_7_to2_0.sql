@@ -90,7 +90,6 @@ COMMIT;
 BEGIN;
 
 ALTER TABLE public.user ADD COLUMN type character varying(25) NOT NULL;
-
 ALTER TABLE user_group ADD COLUMN type character varying(25) NOT NULL;
 
 COMMIT;

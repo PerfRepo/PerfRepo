@@ -4,13 +4,16 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.user.Group;
+import org.perfrepo.model.user.Membership.MembershipType;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
 import org.perfrepo.web.service.exceptions.IncorrectPasswordException;
+import org.perfrepo.web.service.exceptions.UnauthorizedException;
 import org.perfrepo.web.service.util.TestUtils;
 import org.perfrepo.web.service.util.UserSessionMock;
 
@@ -43,13 +46,27 @@ public class UserServiceTest {
     @Inject
     private GroupService groupService;
 
+    private User adminUser;
+
     @Deployment
     public static Archive<?> createDeployment() {
         return TestUtils.createDeployment();
     }
 
+    @Before
+    public void init() throws DuplicateEntityException, UnauthorizedException {
+        adminUser = new User();
+        adminUser.setUsername("adminUser");
+        fillUser("admin", adminUser);
+        adminUser.setType(User.UserType.SUPER_ADMIN);
+        UserSessionMock.setLoggedUser(adminUser); // hack, because we need some super admin to create a super admin :)
+        userService.createUser(adminUser);
+        UserSessionMock.setLoggedUser(adminUser);
+    }
+
     @After
     public void cleanUp() throws Exception {
+        UserSessionMock.setLoggedUser(adminUser);
         // deletion of favorite parameters is done via cascade on foreign key in database
         for (User user: userService.getAllUsers()) {
             userService.removeUser(user);
@@ -124,7 +141,7 @@ public class UserServiceTest {
         userService.createUser(user1);
         userService.createUser(user2);
 
-        List<User> expectedResult = Arrays.asList(user1, user2);
+        List<User> expectedResult = Arrays.asList(user1, user2, adminUser);
         List<User> actualResult = userService.getAllUsers();
 
         assertEquals(expectedResult.size(), actualResult.size());
@@ -133,7 +150,7 @@ public class UserServiceTest {
     }
 
     @org.junit.Test
-    public void testChangePassword() throws DuplicateEntityException, IncorrectPasswordException{
+    public void testChangePassword() throws DuplicateEntityException, IncorrectPasswordException, UnauthorizedException {
         User user = new User();
         user.setUsername("test_user");
         fillUser("test_user", user);
@@ -177,7 +194,7 @@ public class UserServiceTest {
         fillUser("test_user", user);
         userService.createUser(user);
 
-        Group group = createGroup();
+        Group group = createGroup("group");
         groupService.createGroup(group);
 
         groupService.addUserToGroup(user, group);
@@ -225,7 +242,7 @@ public class UserServiceTest {
     }
 
     @org.junit.Test
-    public void testDuplicateUsernames() throws DuplicateEntityException {
+    public void testDuplicateUsernames() throws DuplicateEntityException, UnauthorizedException {
         User user1 = new User();
         fillUser("user1", user1);
         user1.setUsername("test_user1");
@@ -255,6 +272,87 @@ public class UserServiceTest {
             userService.updateUser(duplicateUser);
             fail("Duplicate username update should fail.");
         } catch (DuplicateEntityException ex) {
+            // expected
+        }
+    }
+
+    @org.junit.Test
+    public void testUnauthorizedManagement() throws DuplicateEntityException, UnauthorizedException {
+        User user = new User();
+        user.setUsername("regularUser");
+        fillUser("regularUser", user);
+        User regularUser = userService.createUser(user);
+        UserSessionMock.setLoggedUser(regularUser);
+
+        User newUser = new User();
+        newUser.setUsername("new_user");
+        fillUser("new_user", newUser);
+        try {
+            userService.createUser(newUser);
+            fail("Regular user shouldn't be able to create a user.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        } finally {
+            UserSessionMock.setLoggedUser(adminUser);
+        }
+
+        try {
+            userService.createUser(newUser);
+        } catch (UnauthorizedException ex) {
+            fail("Super admin should be able to create a user.");
+        }
+
+        newUser.setFirstName("updated_first_name");
+        UserSessionMock.setLoggedUser(regularUser);
+        try {
+            userService.updateUser(newUser);
+            fail("Regular user shouldn't be able to update a user.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        }
+
+        // try adding user as a group admin
+        UserSessionMock.setLoggedUser(adminUser);
+        User tmpUser = new User();
+        tmpUser.setUsername("group_admin");
+        fillUser("group_admin", tmpUser);
+        User groupAdmin = userService.createUser(tmpUser);
+
+        Group group1 = createGroup("group1");
+        groupService.createGroup(group1);
+
+        groupService.addUserToGroup(groupAdmin, group1, MembershipType.GROUP_ADMIN);
+        UserSessionMock.setLoggedUser(groupAdmin);
+
+        User nextToBeCreated = new User();
+        nextToBeCreated.setUsername("next_to_be_created");
+        fillUser("next_to_be_created", nextToBeCreated);
+        try {
+            userService.createUser(nextToBeCreated);
+        } catch (UnauthorizedException ex) {
+            fail("Group admin should be able to create users.");
+        }
+
+        try {
+            userService.updateUser(nextToBeCreated);
+            fail("Group admin shouldn't be able to update users.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        }
+
+        try {
+            userService.removeUser(nextToBeCreated);
+            fail("Group admin shouldn't be able to remove users.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        } finally {
+            UserSessionMock.setLoggedUser(regularUser);
+        }
+
+        try {
+            userService.removeUser(nextToBeCreated);
+            fail("Regular user shouldn't be able to remove a user.");
+        } catch (UnauthorizedException ex) {
             // expected
         }
     }
@@ -302,9 +400,9 @@ public class UserServiceTest {
         return test;
     }
 
-    private Group createGroup() {
+    private Group createGroup(String prefix) {
         Group group = new Group();
-        group.setName("example_group");
+        group.setName(prefix + "_group");
 
         return group;
     }

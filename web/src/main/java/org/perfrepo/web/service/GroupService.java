@@ -4,6 +4,7 @@ import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.Membership.MembershipType;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
+import org.perfrepo.web.service.exceptions.UnauthorizedException;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public interface GroupService {
      * @param group
      * @return group
      */
-    public Group createGroup(Group group) throws DuplicateEntityException;
+    public Group createGroup(Group group) throws DuplicateEntityException, UnauthorizedException;
 
     /**
      * Updates group
@@ -29,14 +30,14 @@ public interface GroupService {
      * @param group
      * @return group
      */
-    public Group updateGroup(Group group) throws DuplicateEntityException;
+    public Group updateGroup(Group group) throws DuplicateEntityException, UnauthorizedException;
 
     /**
      * Deletes group
      *
      * @param group
      */
-    public void removeGroup(Group group);
+    public void removeGroup(Group group) throws UnauthorizedException;
 
     /**
      * Retrieves group
@@ -76,7 +77,7 @@ public interface GroupService {
      * @param user
      * @param group
      */
-    public void addUserToGroup(User user, Group group);
+    public void addUserToGroup(User user, Group group) throws UnauthorizedException;
 
     /**
      * Adds user to group.
@@ -84,5 +85,13 @@ public interface GroupService {
      * @param user
      * @param group
      */
-    public void addUserToGroup(User user, Group group, MembershipType membershipType);
+    public void addUserToGroup(User user, Group group, MembershipType membershipType) throws UnauthorizedException;
+
+    /**
+     * Removes user from group.
+     *
+     * @param user
+     * @param group
+     */
+    public void removeUserFromGroup(User user, Group group) throws UnauthorizedException;
 }

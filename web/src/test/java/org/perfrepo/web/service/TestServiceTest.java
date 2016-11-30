@@ -56,6 +56,7 @@ public class TestServiceTest {
 
     private Group testGroup;
     private User testUser;
+    private User adminUser;
 
     @Deployment
     public static Archive<?> createDeployment() {
@@ -63,7 +64,13 @@ public class TestServiceTest {
     }
 
     @Before
-    public void init() throws DuplicateEntityException {
+    public void init() throws DuplicateEntityException, UnauthorizedException {
+        adminUser = createUser("admin");
+        adminUser.setType(User.UserType.SUPER_ADMIN);
+        UserSessionMock.setLoggedUser(adminUser); // hack, because we need some super admin to create a super admin :)
+        userService.createUser(adminUser);
+        UserSessionMock.setLoggedUser(adminUser);
+
         Group group = createGroup("test_group");
         groupService.createGroup(group);
         testGroup = group;
@@ -77,7 +84,8 @@ public class TestServiceTest {
     }
 
     @After
-    public void cleanUp() {
+    public void cleanUp() throws UnauthorizedException {
+        UserSessionMock.setLoggedUser(adminUser);
         for (User user: userService.getAllUsers()) {
             userService.removeUser(user);
         }
@@ -138,7 +146,7 @@ public class TestServiceTest {
         test.setGroup(testGroup);
 
         // create user that is not within correct group
-        User correctLoggedUser = UserSessionMock.getLoggedUserStatic();
+        UserSessionMock.setLoggedUser(adminUser);
         User user = createUser("test2");
         userService.createUser(user);
         UserSessionMock.setLoggedUser(user);
@@ -149,7 +157,7 @@ public class TestServiceTest {
         } catch (UnauthorizedException ex) {
             // expected
         } finally {
-            UserSessionMock.setLoggedUser(correctLoggedUser);
+            UserSessionMock.setLoggedUser(testUser);
         }
     }
 
@@ -327,9 +335,11 @@ public class TestServiceTest {
 
     @org.junit.Test
     public void testSearchTests() throws DuplicateEntityException, UnauthorizedException {
+        UserSessionMock.setLoggedUser(adminUser);
         Group group2 = createGroup("second_group");
         groupService.createGroup(group2);
         groupService.addUserToGroup(testUser, group2);
+        UserSessionMock.setLoggedUser(testUser);
 
         Test test1 = new Test();
         fillTest("test1", test1);

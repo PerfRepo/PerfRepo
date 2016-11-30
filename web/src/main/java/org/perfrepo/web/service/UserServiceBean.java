@@ -19,14 +19,18 @@ import org.perfrepo.model.FavoriteParameter;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.UserProperty;
 import org.perfrepo.model.user.Group;
+import org.perfrepo.model.user.Membership;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.dao.FavoriteParameterDAO;
 import org.perfrepo.web.dao.GroupDAO;
+import org.perfrepo.web.dao.MembershipDAO;
 import org.perfrepo.web.dao.TestDAO;
 import org.perfrepo.web.dao.UserDAO;
 import org.perfrepo.web.dao.UserPropertyDAO;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
 import org.perfrepo.web.service.exceptions.IncorrectPasswordException;
+import org.perfrepo.web.service.exceptions.UnauthorizedException;
+import org.perfrepo.web.session.UserSession;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -63,8 +67,18 @@ public class UserServiceBean implements UserService {
    @Inject
    private FavoriteParameterDAO favoriteParameterDAO;
 
+   @Inject
+   private MembershipDAO membershipDAO;
+
+   @Inject
+   private UserSession userSession;
+
    @Override
-   public User createUser(User user) throws DuplicateEntityException {
+   public User createUser(User user) throws DuplicateEntityException, UnauthorizedException {
+      if (!userSession.getLoggedUser().isSuperAdmin() && !isUserGroupAdmin(userSession.getLoggedUser())) {
+         throw new UnauthorizedException("user.userNotAllowedToCreateUsers", userSession.getLoggedUser().getUsername());
+      }
+
       if (getUser(user.getUsername()) != null) {
          throw new DuplicateEntityException("user.usernameAlreadyExists", user.getUsername());
       }
@@ -76,7 +90,11 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public User updateUser(User user) throws DuplicateEntityException {
+   public User updateUser(User user) throws DuplicateEntityException, UnauthorizedException {
+      if (!userSession.getLoggedUser().isSuperAdmin()) {
+         throw new UnauthorizedException("user.userNotAllowedToUpdateOrRemoveUsers", userSession.getLoggedUser().getUsername());
+      }
+
       User possibleDuplicate = getUser(user.getUsername());
       if (possibleDuplicate != null && !possibleDuplicate.getId().equals(user.getId())) {
          throw new DuplicateEntityException("user.usernameAlreadyExists", user.getUsername());
@@ -89,7 +107,11 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void removeUser(User user) {
+   public void removeUser(User user) throws UnauthorizedException {
+      if (!userSession.getLoggedUser().isSuperAdmin()) {
+         throw new UnauthorizedException("user.userNotAllowedToUpdateOrRemoveUsers", userSession.getLoggedUser().getUsername());
+      }
+
       User managedUser = userDAO.get(user.getId());
       userDAO.remove(managedUser);
    }
@@ -111,7 +133,8 @@ public class UserServiceBean implements UserService {
 
    @Override
    public Set<Group> getUserGroups(User user) {
-      return groupDAO.getUserGroups(user);
+      User managedUser = userDAO.get(user.getId());
+      return groupDAO.getUserGroups(managedUser);
    }
 
    @Override
@@ -129,6 +152,34 @@ public class UserServiceBean implements UserService {
 
       User managedUser = userDAO.get(user.getId());
       managedUser.setPassword(newPasswordEncrypted);
+   }
+
+   @Override
+   public boolean isUserGroupAdmin(User user) {
+      User managedUser = userDAO.get(user.getId());
+      Set<Group> groups = getUserGroups(managedUser);
+
+      for (Group group: groups) {
+         Membership membership = membershipDAO.getMembership(managedUser, group);
+         if (membership.getType() == Membership.MembershipType.GROUP_ADMIN) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   @Override
+   public boolean isUserGroupAdmin(User user, Group group) {
+      User managedUser = userDAO.get(user.getId());
+      Group managedGroup = groupDAO.get(group.getId());
+
+      Membership membership = membershipDAO.getMembership(managedUser, managedGroup);
+      if (membership == null || membership.getType() != Membership.MembershipType.GROUP_ADMIN) {
+         return false;
+      }
+
+      return true;
    }
 
    @Override

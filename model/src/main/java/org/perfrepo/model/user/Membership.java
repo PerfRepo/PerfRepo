@@ -23,13 +23,20 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @javax.persistence.Entity
 @Table(name = "user_group")
+@NamedQueries({
+        @NamedQuery(name = Membership.GET_BY_USER_AND_GROUP, query = "SELECT membership FROM Membership membership WHERE membership.user = :user AND membership.group = :group")
+})
 public class Membership implements Entity<Membership> {
 
    private static final long serialVersionUID = 4616015836066622075L;
+
+   public static final String GET_BY_USER_AND_GROUP = "Membership.getByUserAndGroup";
 
    @Enumerated(EnumType.STRING)
    @Column(name = "type")

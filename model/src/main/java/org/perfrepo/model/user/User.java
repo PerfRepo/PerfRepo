@@ -179,6 +179,10 @@ public class User implements Entity<User>, Comparable<User> {
               '}';
    }
 
+   public boolean isSuperAdmin() {
+      return type == UserType.SUPER_ADMIN;
+   }
+
    public enum UserType {
       ROBOT, REGULAR_USER, SUPER_ADMIN;
    }

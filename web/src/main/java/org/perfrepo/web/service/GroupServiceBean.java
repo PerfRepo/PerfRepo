@@ -8,6 +8,8 @@ import org.perfrepo.web.dao.GroupDAO;
 import org.perfrepo.web.dao.MembershipDAO;
 import org.perfrepo.web.dao.UserDAO;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
+import org.perfrepo.web.service.exceptions.UnauthorizedException;
+import org.perfrepo.web.session.UserSession;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -40,8 +42,15 @@ public class GroupServiceBean implements GroupService {
     @Inject
     private UserService userService;
 
+    @Inject
+    private UserSession userSession;
+
     @Override
-    public Group createGroup(Group group) throws DuplicateEntityException {
+    public Group createGroup(Group group) throws DuplicateEntityException, UnauthorizedException {
+        if (!userSession.getLoggedUser().isSuperAdmin()) {
+            throw new UnauthorizedException("group.userNotAllowedToManageGroups", userSession.getLoggedUser().getUsername());
+        }
+
         if (getGroup(group.getName()) != null) {
             throw new DuplicateEntityException("group.duplicateName", group.getName());
         }
@@ -50,7 +59,11 @@ public class GroupServiceBean implements GroupService {
     }
 
     @Override
-    public Group updateGroup(Group group) throws DuplicateEntityException {
+    public Group updateGroup(Group group) throws DuplicateEntityException, UnauthorizedException {
+        if (!userSession.getLoggedUser().isSuperAdmin()) {
+            throw new UnauthorizedException("group.userNotAllowedToManageGroups", userSession.getLoggedUser().getUsername());
+        }
+
         Group possibleDuplicate = getGroup(group.getName());
         if (possibleDuplicate != null && !possibleDuplicate.getId().equals(group.getId())) {
             throw new DuplicateEntityException("group.duplicateName", group.getName());
@@ -60,7 +73,11 @@ public class GroupServiceBean implements GroupService {
     }
 
     @Override
-    public void removeGroup(Group group) {
+    public void removeGroup(Group group) throws UnauthorizedException {
+        if (!userSession.getLoggedUser().isSuperAdmin()) {
+            throw new UnauthorizedException("group.userNotAllowedToManageGroups", userSession.getLoggedUser().getUsername());
+        }
+
         Group managedGroup = groupDAO.get(group.getId());
         groupDAO.remove(managedGroup);
     }
@@ -87,12 +104,16 @@ public class GroupServiceBean implements GroupService {
     }
 
     @Override
-    public void addUserToGroup(User user, Group group) {
+    public void addUserToGroup(User user, Group group) throws UnauthorizedException {
         addUserToGroup(user, group, MembershipType.REGULAR_USER);
     }
 
     @Override
-    public void addUserToGroup(User user, Group group, MembershipType membershipType) {
+    public void addUserToGroup(User user, Group group, MembershipType membershipType) throws UnauthorizedException {
+        if (!userSession.getLoggedUser().isSuperAdmin() && !userService.isUserGroupAdmin(userSession.getLoggedUser(), group)) {
+            throw new UnauthorizedException("group.userNotAllowedToManageGroups", userSession.getLoggedUser().getUsername());
+        }
+
         User managedUser = userDAO.get(user.getId());
         Group managedGroup = groupDAO.get(group.getId());
 
@@ -102,5 +123,18 @@ public class GroupServiceBean implements GroupService {
         membership.setType(membershipType);
 
         membershipDAO.create(membership);
+    }
+
+    @Override
+    public void removeUserFromGroup(User user, Group group) throws UnauthorizedException {
+        if (!userSession.getLoggedUser().isSuperAdmin() && !userService.isUserGroupAdmin(userSession.getLoggedUser(), group)) {
+            throw new UnauthorizedException("group.userNotAllowedToManageGroups", userSession.getLoggedUser().getUsername());
+        }
+
+        User managedUser = userDAO.get(user.getId());
+        Group managedGroup = groupDAO.get(group.getId());
+
+        Membership membership = membershipDAO.getMembership(managedUser, managedGroup);
+        membershipDAO.remove(membership);
     }
 }

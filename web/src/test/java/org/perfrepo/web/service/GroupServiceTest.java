@@ -4,12 +4,17 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.perfrepo.model.user.Group;
+import org.perfrepo.model.user.Membership;
+import org.perfrepo.model.user.Membership.MembershipType;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
+import org.perfrepo.web.service.exceptions.UnauthorizedException;
 import org.perfrepo.web.service.util.TestUtils;
+import org.perfrepo.web.service.util.UserSessionMock;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -43,8 +48,21 @@ public class GroupServiceTest {
         return TestUtils.createDeployment();
     }
 
+    private User adminUser;
+    
+    @Before
+    public void init() throws DuplicateEntityException, UnauthorizedException {
+        adminUser = createUser("admin");
+        adminUser.setType(User.UserType.SUPER_ADMIN);
+        UserSessionMock.setLoggedUser(adminUser); // hack, because we need some super admin to create a super admin :)
+        userService.createUser(adminUser);
+        UserSessionMock.setLoggedUser(adminUser);
+    }
+
     @After
-    public void cleanUp() {
+    public void cleanUp() throws UnauthorizedException {
+        UserSessionMock.setLoggedUser(adminUser);
+
         for (User user: userService.getAllUsers()) {
             userService.removeUser(user);
         }
@@ -55,7 +73,7 @@ public class GroupServiceTest {
     }
 
     @org.junit.Test
-    public void testUserCRUDOperations() throws DuplicateEntityException {
+    public void testUserCRUDOperations() throws DuplicateEntityException, UnauthorizedException {
         Group group = new Group();
         fillGroup("group", group);
 
@@ -83,7 +101,7 @@ public class GroupServiceTest {
     }
 
     @org.junit.Test
-    public void testGetAllGroups() throws DuplicateEntityException {
+    public void testGetAllGroups() throws DuplicateEntityException, UnauthorizedException {
         Group group1 = new Group();
         fillGroup("group1", group1);
 
@@ -102,7 +120,7 @@ public class GroupServiceTest {
     }
 
     @org.junit.Test
-    public void testGetUserGroupsAndIsUserInGroup() throws DuplicateEntityException {
+    public void testGetUserGroupsAndIsUserInGroup() throws DuplicateEntityException, UnauthorizedException {
         Group group1 = new Group();
         fillGroup("group1", group1);
 
@@ -116,7 +134,7 @@ public class GroupServiceTest {
         groupService.createGroup(group2);
         groupService.createGroup(group3);
 
-        User user = createUser();
+        User user = createUser("test");
         userService.createUser(user);
         groupService.addUserToGroup(user, group2);
         groupService.addUserToGroup(user, group3);
@@ -134,7 +152,7 @@ public class GroupServiceTest {
     }
 
     @org.junit.Test
-    public void testAssignUserToGroup() throws DuplicateEntityException {
+    public void testAssignUserToGroup() throws DuplicateEntityException, UnauthorizedException {
         Group group1 = new Group();
         fillGroup("group1", group1);
 
@@ -144,7 +162,7 @@ public class GroupServiceTest {
         groupService.createGroup(group1);
         groupService.createGroup(group2);
 
-        User user = createUser();
+        User user = createUser("test");
         userService.createUser(user);
         groupService.addUserToGroup(user, group1);
 
@@ -159,10 +177,14 @@ public class GroupServiceTest {
 
         assertTrue(groupService.isUserInGroup(user, group1));
         assertTrue(groupService.isUserInGroup(user, group2));
+
+        groupService.removeUserFromGroup(user, group2);
+
+        assertFalse(groupService.isUserInGroup(user, group2));
     }
 
     @Test
-    public void testDuplicateNames() throws DuplicateEntityException {
+    public void testDuplicateNames() throws DuplicateEntityException, UnauthorizedException {
         Group group1 = new Group();
         fillGroup("group1", group1);
 
@@ -193,6 +215,102 @@ public class GroupServiceTest {
         }
     }
 
+    @Test
+    public void testUnauthorizedManagement() throws DuplicateEntityException, UnauthorizedException {
+        User user = createUser("test");
+        User regularUser = userService.createUser(user);
+        UserSessionMock.setLoggedUser(regularUser);
+
+        Group group1 = new Group();
+        fillGroup("group1", group1);
+        try {
+            groupService.createGroup(group1);
+            fail("Regular user shouldn't be able to create a group.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        } finally {
+            UserSessionMock.setLoggedUser(adminUser);
+        }
+
+        Group group2 = new Group();
+        fillGroup("group2", group2);
+        try {
+            groupService.createGroup(group1);
+            groupService.createGroup(group2);
+        } catch (UnauthorizedException ex) {
+            fail("Super admin should be able to create a group.");
+        }
+
+        group1.setName("updated_group");
+        UserSessionMock.setLoggedUser(regularUser);
+        try {
+            groupService.updateGroup(group1);
+            fail("Regular user shouldn't be able to update a group.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        }
+
+        try {
+            groupService.addUserToGroup(regularUser, group1);
+            fail("Regular user shouldn't be able to add somebody to group.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        }
+
+        try {
+            groupService.removeUserFromGroup(regularUser, group1);
+            fail("Regular user shouldn't be able to remove somebody from group.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        }
+
+        // try adding user to group as a group admin
+        UserSessionMock.setLoggedUser(adminUser);
+        User tmpUser = createUser("group_admin");
+        User groupAdmin = userService.createUser(tmpUser);
+        groupService.addUserToGroup(groupAdmin, group1, MembershipType.GROUP_ADMIN);
+        UserSessionMock.setLoggedUser(groupAdmin);
+
+        try {
+            groupService.addUserToGroup(regularUser, group1);
+        } catch (UnauthorizedException ex) {
+            fail("Group admin should be able to add other users to his group.");
+        }
+
+        try {
+            groupService.addUserToGroup(regularUser, group2);
+            fail("Group admin shouldn't be able to add users to group that he's not group admin of.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        }
+
+        try {
+            groupService.removeUserFromGroup(regularUser, group1);
+        } catch (UnauthorizedException ex) {
+            fail("Group admin should be able to remove other users from his group.");
+        }
+
+        UserSessionMock.setLoggedUser(adminUser);
+        groupService.addUserToGroup(regularUser, group2);
+        UserSessionMock.setLoggedUser(groupAdmin);
+
+        try {
+            groupService.removeUserFromGroup(regularUser, group2);
+            fail("Group admin shouldn't be able to remove users from group that he's not group admin of.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        } finally {
+            UserSessionMock.setLoggedUser(regularUser);
+        }
+
+        try {
+            groupService.removeGroup(group1);
+            fail("Regular user shouldn't be able to remove a group.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        }
+    }
+
     /****** HELPER METHODS ******/
 
     private void assertGroup(Group expected, Group actual) {
@@ -203,13 +321,13 @@ public class GroupServiceTest {
         group.setName(prefix + "_name");
     }
 
-    private User createUser() {
+    private User createUser(String prefix) {
         User user = new User();
-        user.setFirstName("test_first_name");
-        user.setLastName("test_last_name");
-        user.setEmail("test@email.com");
-        user.setUsername("test_username");
-        user.setPassword("test_password");
+        user.setFirstName(prefix + "_first_name");
+        user.setLastName(prefix + "_last_name");
+        user.setEmail(prefix + "@email.com");
+        user.setUsername(prefix + "_username");
+        user.setPassword(prefix + "_password");
 
         return user;
     }

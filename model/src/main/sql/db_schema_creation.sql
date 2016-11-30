@@ -217,7 +217,8 @@ CREATE TABLE "user" (
     password character varying(300) NOT NULL,
     first_name character varying(2047) NOT NULL,
     last_name character varying(2047) NOT NULL,
-    email character varying(2047) NOT NULL
+    email character varying(2047) NOT NULL,
+    type character varying(25) NOT NULL;
 );
 
 
@@ -702,6 +703,7 @@ ALTER TABLE public.group_sequence OWNER TO perfrepo;
 --
 
 CREATE TABLE user_group (
+  type character varying(25) NOT NULL;
   user_id bigint NOT NULL,
   group_id bigint NOT NULL
 );
