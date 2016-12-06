@@ -354,6 +354,17 @@ public class ClientTest {
               .anyMatch(permission -> permission.getLevel().equals(AccessLevel.PUBLIC)
                       && permission.getAccessType().equals(AccessType.READ)));
 
+      // test for PERFREPO-263
+      Report updateReport = createReport();
+      updateReport.setId(reportId);
+      updateReport.setName("different_report_name");
+      client.updateReport(updateReport);
+
+      retrievedReport = client.getReport(reportId);
+      assertTrue(retrievedReport.getPermissions().stream()
+              .anyMatch(permission -> permission.getLevel().equals(AccessLevel.PUBLIC)
+                      && permission.getAccessType().equals(AccessType.READ)));
+
       // delete permission
       client.deleteReportPermission(newPermission);
 

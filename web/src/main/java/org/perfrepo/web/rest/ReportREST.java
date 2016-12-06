@@ -99,6 +99,7 @@ public class ReportREST {
       String username = report.getUsername();
       User user = userService.getFullUser(username);
       report.setUser(user);
+      report.setPermissions(reportService.getReportPermissions(report)); // don't update report permissions
 
       if (report.getProperties() != null) {
          for (ReportProperty property : report.getProperties().values()) {
