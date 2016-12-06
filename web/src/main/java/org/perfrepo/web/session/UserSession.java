@@ -23,7 +23,6 @@ import org.perfrepo.web.service.exceptions.ServiceException;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -78,7 +77,7 @@ public class UserSession implements Serializable {
     * @return
     */
    public String logout() {
-      FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+      //FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
       return "HomeRedirect";
    }
 

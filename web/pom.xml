@@ -84,12 +84,6 @@
       </dependency>
 
       <dependency>
-         <groupId>org.jboss.spec.javax.faces</groupId>
-         <artifactId>jboss-jsf-api_2.2_spec</artifactId>
-         <scope>provided</scope>
-      </dependency>
-
-      <dependency>
          <groupId>org.jboss.spec.javax.servlet</groupId>
          <artifactId>jboss-servlet-api_3.1_spec</artifactId>
          <scope>provided</scope>
@@ -136,12 +130,6 @@
          <groupId>commons-codec</groupId>
          <artifactId>commons-codec</artifactId>
          <version>${commons.codec.version}</version>
-      </dependency>
-
-      <dependency>
-         <groupId>org.richfaces</groupId>
-         <artifactId>richfaces</artifactId>
-         <version>${richfaces.version}</version>
       </dependency>
 
       <dependency>
