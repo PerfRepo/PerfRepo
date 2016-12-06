@@ -91,8 +91,8 @@ public class UserServiceBean implements UserService {
 
    @Override
    public User updateUser(User user) throws DuplicateEntityException, UnauthorizedException {
-      if (!userSession.getLoggedUser().isSuperAdmin()) {
-         throw new UnauthorizedException("user.userNotAllowedToUpdateOrRemoveUsers", userSession.getLoggedUser().getUsername());
+      if (!userSession.getLoggedUser().equals(user) && !userSession.getLoggedUser().isSuperAdmin()) {
+         throw new UnauthorizedException("user.userNotAllowedToUpdateDifferentUser", userSession.getLoggedUser().getUsername());
       }
 
       User possibleDuplicate = getUser(user.getUsername());
@@ -109,7 +109,7 @@ public class UserServiceBean implements UserService {
    @Override
    public void removeUser(User user) throws UnauthorizedException {
       if (!userSession.getLoggedUser().isSuperAdmin()) {
-         throw new UnauthorizedException("user.userNotAllowedToUpdateOrRemoveUsers", userSession.getLoggedUser().getUsername());
+         throw new UnauthorizedException("user.userNotAllowedToRemoveUsers", userSession.getLoggedUser().getUsername());
       }
 
       User managedUser = userDAO.get(user.getId());
@@ -138,7 +138,7 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void changePassword(String oldPassword, String newPassword, User user) throws IncorrectPasswordException {
+   public void changePassword(String oldPassword, String newPassword) throws IncorrectPasswordException {
       if (oldPassword == null || newPassword == null) {
          throw new IncorrectPasswordException("user.oldOrNewPasswordNotSet");
       }
@@ -146,6 +146,7 @@ public class UserServiceBean implements UserService {
       String newPasswordEncrypted = computeMd5(newPassword);
       String oldPasswordEncrypted = computeMd5(oldPassword);
 
+      User user = userSession.getLoggedUser();
       if (!user.getPassword().equals(oldPasswordEncrypted)) {
          throw new IncorrectPasswordException("user.oldPasswordDoesntMatch");
       }
@@ -193,7 +194,8 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void updateUserProperties(Map<String, String> properties, User user) {
+   public void updateUserProperties(Map<String, String> properties) {
+      User user = userSession.getLoggedUser();
       userPropertyDAO.deletePropertiesFromUser(user.getId());
 
       User managedUser = userDAO.get(user.getId());
@@ -207,8 +209,8 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void createFavoriteParameter(FavoriteParameter parameter, Test test, User user) {
-      User managedUser = userDAO.get(user.getId());
+   public void createFavoriteParameter(FavoriteParameter parameter, Test test) {
+      User managedUser = userDAO.get(userSession.getLoggedUser().getId());
       Test managedTest = testDAO.get(test.getId());
 
       parameter.setTest(managedTest);
@@ -218,8 +220,8 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void updateFavoriteParameter(FavoriteParameter parameter, Test test, User user) {
-      User managedUser = userDAO.get(user.getId());
+   public void updateFavoriteParameter(FavoriteParameter parameter, Test test) {
+      User managedUser = userDAO.get(userSession.getLoggedUser().getId());
       Test managedTest = testDAO.get(test.getId());
 
       parameter.setTest(managedTest);
@@ -235,8 +237,8 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public List<FavoriteParameter> getFavoriteParametersForTest(Test test, User user) {
-      List<FavoriteParameter> favoriteParameters = favoriteParameterDAO.findByTest(test.getId(), user.getId());
+   public List<FavoriteParameter> getFavoriteParametersForTest(Test test) {
+      List<FavoriteParameter> favoriteParameters = favoriteParameterDAO.findByTest(test.getId(), userSession.getLoggedUser().getId());
       List<FavoriteParameter> result = favoriteParameters.stream().filter(favoriteParameter -> favoriteParameter.getTest().getId().equals(test.getId())).collect(Collectors.toList());
       return result;
    }

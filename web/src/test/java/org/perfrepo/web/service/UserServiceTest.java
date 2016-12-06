@@ -99,9 +99,11 @@ public class UserServiceTest {
         assertUser(user, createdUserByUsername);
 
         // test properties creation
+        UserSessionMock.setLoggedUser(createdUser);
+
         Map<String, String> properties = new HashMap<>();
         fillProperties("version_1", "version_1", properties);
-        userService.updateUserProperties(properties, user);
+        userService.updateUserProperties(properties);
 
         Map<String, String> createdProperties = userService.getUserProperties(createdUser);
         assertEquals(properties, createdProperties);
@@ -117,10 +119,12 @@ public class UserServiceTest {
         Map<String, String> propertiesToUpdate = new HashMap<>();
         fillProperties("version_1", "updated_version_1", propertiesToUpdate);
         fillProperties("version_2", "new_version_2", propertiesToUpdate);
-        userService.updateUserProperties(propertiesToUpdate, user);
+        userService.updateUserProperties(propertiesToUpdate);
 
         Map<String, String> updatedProperties = userService.getUserProperties(createdUser);
         assertEquals(propertiesToUpdate, updatedProperties);
+
+        UserSessionMock.setLoggedUser(adminUser);
 
         // test delete
         User userToDelete = updatedUser;
@@ -155,32 +159,33 @@ public class UserServiceTest {
         user.setUsername("test_user");
         fillUser("test_user", user);
 
-        userService.createUser(user);
+        User createdUser = userService.createUser(user);
 
+        UserSessionMock.setLoggedUser(createdUser);
         String newPassword = "nastyPassword9";
-        userService.changePassword("test_user_password", newPassword, user);
+        userService.changePassword("test_user_password", newPassword);
 
         User retrievedUser = userService.getUser(user.getId());
         assertEquals(UserServiceBean.computeMd5(newPassword), retrievedUser.getPassword());
-
+        UserSessionMock.setLoggedUser(retrievedUser);
         // test invalid situations
 
         try {
-            userService.changePassword(null, newPassword, retrievedUser);
+            userService.changePassword(null, newPassword);
             fail("UserService.changePassword with null oldPassword should fail.");
         } catch (IncorrectPasswordException ex) {
             // expected
         }
 
         try {
-            userService.changePassword("test_user_password", null, retrievedUser);
+            userService.changePassword("test_user_password", null);
             fail("UserService.changePassword with null newPassword should fail.");
         } catch (IncorrectPasswordException ex) {
             // expected
         }
 
         try {
-            userService.changePassword("test_user_password", "change_when_old_doesnt_match", retrievedUser);
+            userService.changePassword("test_user_password", "change_when_old_doesnt_match");
             fail("UserService.changePassword should fail when the oldPassword is not matching the current one.");
         } catch (IncorrectPasswordException ex) {
             // expected
@@ -209,11 +214,11 @@ public class UserServiceTest {
         FavoriteParameter favoriteParameter2 = new FavoriteParameter();
         fillFavoriteParameter("param2", favoriteParameter2);
 
-        userService.createFavoriteParameter(favoriteParameter1, test, user);
-        userService.createFavoriteParameter(favoriteParameter2, test, user);
+        userService.createFavoriteParameter(favoriteParameter1, test);
+        userService.createFavoriteParameter(favoriteParameter2, test);
 
         List<FavoriteParameter> expectedResult = Arrays.asList(favoriteParameter1, favoriteParameter2);
-        List<FavoriteParameter> actualResult = userService.getFavoriteParametersForTest(test, user);
+        List<FavoriteParameter> actualResult = userService.getFavoriteParametersForTest(test);
 
         assertEquals(expectedResult.size(), actualResult.size());
         assertTrue(expectedResult.stream().allMatch(expected -> actualResult.stream()
@@ -222,9 +227,9 @@ public class UserServiceTest {
         // test update
         FavoriteParameter updatedParameter = favoriteParameter1;
         fillFavoriteParameter("updated_param1", updatedParameter);
-        userService.updateFavoriteParameter(updatedParameter, test, user);
+        userService.updateFavoriteParameter(updatedParameter, test);
 
-        List<FavoriteParameter> updatedParameters = userService.getFavoriteParametersForTest(test, user);
+        List<FavoriteParameter> updatedParameters = userService.getFavoriteParametersForTest(test);
 
         assertTrue(updatedParameters.stream()
                 .anyMatch(param -> param.getParameterName().equals(updatedParameter.getParameterName()) && param.getLabel().equals(updatedParameter.getLabel())));
@@ -234,7 +239,7 @@ public class UserServiceTest {
         userService.removeFavoriteParameter(parameterToDelete);
 
         List<FavoriteParameter> expectedAfterDelete = Arrays.asList(favoriteParameter2);
-        List<FavoriteParameter> actualAfterDelete = userService.getFavoriteParametersForTest(test, user);
+        List<FavoriteParameter> actualAfterDelete = userService.getFavoriteParametersForTest(test);
 
         assertEquals(expectedAfterDelete.size(), actualAfterDelete.size());
         assertTrue(expectedAfterDelete.stream().allMatch(expected -> actualAfterDelete.stream()

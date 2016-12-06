@@ -135,11 +135,11 @@ public class TestController extends BaseController {
       if (test == null) {
          throw new IllegalStateException("test is null");
       }
-      try {
+      /*try {
          testService.updateTest(test);
       } catch (DuplicateEntityException e) {
          e.printStackTrace();
-      }
+      }*/
       redirectWithMessage("/test/" + testId, INFO, "page.test.updatedSuccessfully");
       return null;
    }
@@ -203,13 +203,13 @@ public class TestController extends BaseController {
 
    public void addSubscriber() {
       User currentUser = userSession.getLoggedUser();
-      testService.addSubscriber(currentUser, test);
+      //testService.addSubscriber(currentUser, test);
       redirectWithMessage("/test/" + testId, INFO, "page.test.subscribed");
    }
 
    public void removeSubscriber() {
       User currentUser = userSession.getLoggedUser();
-      testService.removeSubscriber(currentUser, test);
+      //testService.removeSubscriber(currentUser, test);
       redirectWithMessage("/test/" + testId, INFO, "page.test.unsubscribed");
    }
 
@@ -348,7 +348,7 @@ public class TestController extends BaseController {
                redirectWithMessage("/test/" + testId, ERROR, "page.test.errorNoAssignedMetric");
                return;
             }
-            testService.addMetric(selectedAssignedMetric, test);
+            //testService.addMetric(selectedAssignedMetric, test);
             redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyAssigned", selectedAssignedMetric.getName());
          }
       }
@@ -362,7 +362,7 @@ public class TestController extends BaseController {
       }
 
       public void createMetric() {
-         testService.addMetric(metric, test);
+         //testService.addMetric(metric, test);
          redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyCreated", metric.getName());
       }
 
@@ -376,7 +376,7 @@ public class TestController extends BaseController {
 
       public void deleteMetric(Metric metricToDelete, Test test) {
          //try {
-         testService.removeMetricFromTest(metricToDelete, test);
+         //testService.removeMetricFromTest(metricToDelete, test);
          redirectWithMessage("/test/" + testId, INFO, "page.test.metricSuccessfullyDeleted", metricToDelete.getName());
          //} catch (ServiceException e) {
          //   addSessionMessage(e);

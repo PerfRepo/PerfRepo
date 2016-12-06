@@ -89,7 +89,7 @@ public class TestSearchController extends BaseController {
       }
 
       //try {
-      testService.removeTest(testToRemove);
+      //testService.removeTest(testToRemove);
       addMessage(INFO, "page.testSearch.testDeleted", testToRemove.getName());
       //} catch (ServiceException e) {
       //   addMessage(e);

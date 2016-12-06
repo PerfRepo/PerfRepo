@@ -409,10 +409,10 @@ public class TestServiceTest {
         test1.setGroup(testGroup);
         testService.createTest(test1);
 
-        testService.addSubscriber(testUser, test1);
+        testService.addSubscriber(test1);
         assertTrue(testService.isUserSubscribed(testUser, test1));
 
-        testService.removeSubscriber(testUser, test1);
+        testService.removeSubscriber(test1);
         assertFalse(testService.isUserSubscribed(testUser, test1));
     }
 

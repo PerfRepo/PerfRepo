@@ -51,7 +51,7 @@ public interface TestService {
     * @return
     * @throws DuplicateEntityException
      */
-   public Test updateTest(Test test) throws DuplicateEntityException;
+   public Test updateTest(Test test) throws DuplicateEntityException, UnauthorizedException;
 
    /**
     * Delete a test with all it's sub-objects, but first it disassociates all the metrics from it.
@@ -59,7 +59,7 @@ public interface TestService {
     *
     * @param test
     */
-   public void removeTest(Test test);
+   public void removeTest(Test test) throws UnauthorizedException;
 
    /**
     * Get test.
@@ -115,7 +115,7 @@ public interface TestService {
     * @param test
     * @return metric
     */
-   public Metric addMetric(Metric metric, Test test);
+   public Metric addMetric(Metric metric, Test test) throws UnauthorizedException;
 
    /**
     * Update metric.
@@ -132,7 +132,7 @@ public interface TestService {
     *
     * @param metric
     */
-   public void removeMetricFromTest(Metric metric, Test test);
+   public void removeMetricFromTest(Metric metric, Test test) throws UnauthorizedException;
 
    /**
     * Retrieves metric.
@@ -152,20 +152,18 @@ public interface TestService {
    /******** Methods related to subscribers ********/
 
    /**
-    * Adds given user to the subscriber list of the given test.
+    * Adds current user to the subscriber list of the given test.
     *
-    * @param user
     * @param test
     */
-   public void addSubscriber(User user, Test test);
+   public void addSubscriber(Test test) throws UnauthorizedException;
 
    /**
-    * Removes given user from the subscriber list of the given test
+    * Removes current user from the subscriber list of the given test
     *
-    * @param user
     * @param test
     */
-   public void removeSubscriber(User user, Test test);
+   public void removeSubscriber(Test test) throws UnauthorizedException;
 
    /**
     * Returns true if the given user is subscribed to given test

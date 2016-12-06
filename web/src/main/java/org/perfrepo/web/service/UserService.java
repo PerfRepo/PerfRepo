@@ -91,9 +91,8 @@ public interface UserService {
     *
     * @param oldPassword
     * @param newPassword
-    * @param user
     */
-   public void changePassword(String oldPassword, String newPassword, User user) throws IncorrectPasswordException;
+   public void changePassword(String oldPassword, String newPassword) throws IncorrectPasswordException;
 
    /**
     * Detects if user is group admin of any group.
@@ -124,27 +123,24 @@ public interface UserService {
     * Updates user properties.
     *
     * @param properties
-    * @param user
     */
-   public void updateUserProperties(Map<String, String> properties, User user);
+   public void updateUserProperties(Map<String, String> properties);
 
    /**
     * Adds favorite parameter of user to the test
     *
     * @param parameter
     * @param test
-    * @param user
     */
-   public void createFavoriteParameter(FavoriteParameter parameter, Test test, User user);
+   public void createFavoriteParameter(FavoriteParameter parameter, Test test);
 
    /**
     * Updates favorite parameter of user to the test
     *
     * @param parameter
     * @param test
-    * @param user
     */
-   public void updateFavoriteParameter(FavoriteParameter parameter, Test test, User user);
+   public void updateFavoriteParameter(FavoriteParameter parameter, Test test);
 
    /**
     * Removes favorite parameter of the test from user
@@ -157,10 +153,9 @@ public interface UserService {
     * Returns list of favorite parameters that has user selected to specific test
     *
     * @param test
-    * @param user
     * @return list of favorite parameters
     */
-   public List<FavoriteParameter> getFavoriteParametersForTest(Test test, User user);
+   public List<FavoriteParameter> getFavoriteParametersForTest(Test test);
 
 
 }

@@ -91,7 +91,7 @@ public class Test implements Entity<Test> {
    @Size(max = 2047)
    private String uid;
 
-   @ManyToOne(fetch = FetchType.LAZY)
+   @ManyToOne(fetch = FetchType.EAGER)
    @JoinColumn(name = "group_id", referencedColumnName = "id")
    private Group group;
 

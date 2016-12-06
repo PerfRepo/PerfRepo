@@ -69,10 +69,12 @@ public class TestServiceBean implements TestService {
    @Inject
    private GroupService groupService;
 
+   /******** Methods related to test ********/
+
    @Override
    public Test createTest(Test test) throws DuplicateEntityException, UnauthorizedException {
-      if (!groupService.isUserInGroup(userSession.getLoggedUser(), test.getGroup())) {
-         throw new UnauthorizedException("authorization.cannotCreateTestInGroupIfNotInIt");
+      if (!groupService.isUserInGroup(userSession.getLoggedUser(), test.getGroup()) && !userSession.getLoggedUser().isSuperAdmin()) {
+         throw new UnauthorizedException("authorization.cannotCreateOrModifyTestInGroupIfNotInIt");
       }
 
       if (getTest(test.getUid()) != null) {
@@ -92,13 +94,25 @@ public class TestServiceBean implements TestService {
 
    @Secured
    @Override
-   public Test updateTest(Test test) throws DuplicateEntityException {
+   public Test updateTest(Test test) throws DuplicateEntityException, UnauthorizedException {
+      if (!groupService.isUserInGroup(userSession.getLoggedUser(), test.getGroup()) && !userSession.getLoggedUser().isSuperAdmin()) {
+         throw new UnauthorizedException("authorization.cannotCreateOrModifyTestInGroupIfNotInIt");
+      }
+
+      if (getTest(test.getUid()) != null) {
+         throw new DuplicateEntityException("test.duplicateUid", test.getUid());
+      }
+
       return testDAO.merge(test);
    }
 
    @Override
    @Secured
-   public void removeTest(Test test) {
+   public void removeTest(Test test) throws UnauthorizedException {
+      if (!groupService.isUserInGroup(userSession.getLoggedUser(), test.getGroup()) && !userSession.getLoggedUser().isSuperAdmin()) {
+         throw new UnauthorizedException("authorization.cannotCreateOrModifyTestInGroupIfNotInIt");
+      }
+
       Test managedTest = testDAO.get(test.getId());
 
       Set<Metric> metrics = getMetricsForTest(managedTest);
@@ -147,9 +161,15 @@ public class TestServiceBean implements TestService {
               .collect(Collectors.toList());
    }
 
+   /******** Methods related to metric ********/
+
    @Override
    @Secured
-   public Metric addMetric(Metric metric, Test test) {
+   public Metric addMetric(Metric metric, Test test) throws UnauthorizedException {
+      if (!groupService.isUserInGroup(userSession.getLoggedUser(), test.getGroup()) && !userSession.getLoggedUser().isSuperAdmin()) {
+         throw new UnauthorizedException("authorization.cannotCreateOrModifyTestInGroupIfNotInIt");
+      }
+
       Test managedTest = testDAO.get(test.getId());
 
       Metric managedMetric = metricDAO.getByName(metric.getName());
@@ -166,12 +186,17 @@ public class TestServiceBean implements TestService {
    @Override
    @Secured
    public Metric updateMetric(Metric metric) throws DuplicateEntityException {
+      Metric possibleDuplicate = getMetric(metric.getId());
+      if (possibleDuplicate != null && !possibleDuplicate.getId().equals(metric.getId())) {
+         throw new DuplicateEntityException("metric.duplicateName", metric.getName());
+      }
+
       return metricDAO.merge(metric);
    }
 
    @Override
    //@Secured TODO: we need to handle this property, since getTestByRelation will not work as metric is associated with more tests
-   public void removeMetricFromTest(Metric metric, Test test) {
+   public void removeMetricFromTest(Metric metric, Test test) throws UnauthorizedException {
       Metric managedMetric = metricDAO.get(metric.getId());
       Test managedTest = testDAO.get(test.getId());
 
@@ -194,19 +219,21 @@ public class TestServiceBean implements TestService {
       return metricDAO.getMetricsByTest(managedTest);
    }
 
+   /******** Methods related to subscribers ********/
+
    @Override
-   public void addSubscriber(User user, Test test) {
+   public void addSubscriber(Test test) throws UnauthorizedException {
       Test managedTest = testDAO.get(test.getId());
-      User managedUser = userDAO.get(user.getId());
+      User managedUser = userDAO.get(userSession.getLoggedUser().getId());
 
       managedTest.getSubscribers().add(managedUser);
       managedUser.getSubscribedTests().add(managedTest);
    }
 
    @Override
-   public void removeSubscriber(User user, Test test) {
+   public void removeSubscriber(Test test) throws UnauthorizedException {
       Test managedTest = testDAO.get(test.getId());
-      User managedUser = userDAO.get(user.getId());
+      User managedUser = userDAO.get(userSession.getLoggedUser().getId());
 
       managedTest.getSubscribers().remove(managedUser);
       managedUser.getSubscribedTests().remove(test);
