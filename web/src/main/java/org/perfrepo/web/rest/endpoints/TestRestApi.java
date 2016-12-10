@@ -1,9 +1,12 @@
-package org.perfrepo.web.rest.test;
+package org.perfrepo.web.rest.endpoints;
 
-import org.perfrepo.dto.SearchResult;
+import org.perfrepo.dto.alert.AlertDto;
+import org.perfrepo.dto.metric.MetricDto;
+import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.dto.test.TestSearchParams;
 import org.perfrepo.dto.test.TestDto;
-import org.perfrepo.web.adapter.test.TestAdapter;
+import org.perfrepo.web.adapter.AlertAdapter;
+import org.perfrepo.web.adapter.TestAdapter;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -25,6 +28,9 @@ public class TestRestApi {
 
    @Inject
    private TestAdapter testAdapter;
+
+   @Inject
+   private AlertAdapter alertAdapter;
 
    @GET
    @Path("/{id}")
@@ -61,13 +67,29 @@ public class TestRestApi {
       TestDto createdTest = testAdapter.createTest(testDto);
 
       URI uri = URI.create("/tests/" + createdTest.getId());
+
       return Response.created(uri).build();
    }
 
    @PUT
-   @Path("/{id}")
    public Response update(TestDto testDto) {
-      TestDto updatedTest = testAdapter.updateTest(testDto);
+      testAdapter.updateTest(testDto);
+
+      return Response.noContent().build();
+   }
+
+   @POST
+   @Path("/{id}/metric-addition")
+   public Response addMetric(MetricDto metric, @PathParam("id") Long testId) {
+      testAdapter.addMetricToTest(metric, testId);
+
+      return Response.noContent().build();
+   }
+
+   @POST
+   @Path("/{id}/metric-removal/{metricId}")
+   public Response removeMetric(@PathParam("metricId") Long metricId, @PathParam("id") Long testId) {
+      testAdapter.removeMetricFromTest(metricId, testId);
 
       return Response.noContent().build();
    }
@@ -78,6 +100,14 @@ public class TestRestApi {
       testAdapter.deleteTest(testId);
 
       return Response.noContent().build();
+   }
+
+   @GET
+   @Path("/{id}/alerts")
+   public Response getAllAlertsForTest(@PathParam("id") Long testId) {
+      List<AlertDto> alerts = alertAdapter.getAllAlertsForTest(testId);
+
+      return Response.ok().entity(alerts).build();
    }
 
    @GET

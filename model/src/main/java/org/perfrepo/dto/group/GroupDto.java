@@ -1,4 +1,4 @@
-package org.perfrepo.dto.user;
+package org.perfrepo.dto.group;
 
 /**
  * Data transfer object for {@link org.perfrepo.model.user.Group} entity that represents a user group.
@@ -25,5 +25,21 @@ public class GroupDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GroupDto)) return false;
+
+        GroupDto group = (GroupDto) o;
+
+        return getName() != null ? getName().equals(group.getName()) : group.getName() == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return getName() != null ? getName().hashCode() : 0;
     }
 }

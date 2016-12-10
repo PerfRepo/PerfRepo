@@ -1,7 +1,6 @@
 package org.perfrepo.web.rest;
 
-import org.perfrepo.web.rest.test.MetricRestApi;
-import org.perfrepo.web.rest.test.TestRestApi;
+import org.perfrepo.web.rest.endpoints.*;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -20,7 +19,10 @@ public class RestApiApplication extends Application {
    public RestApiApplication() {
       classes.add(TestRestApi.class);
       classes.add(MetricRestApi.class);
+      classes.add(AlertRestApi.class);
       classes.add(UserRestApi.class);
+      classes.add(GroupRestApi.class);
+      classes.add(AuthenticationRestApi.class);
    }
 
    @Override

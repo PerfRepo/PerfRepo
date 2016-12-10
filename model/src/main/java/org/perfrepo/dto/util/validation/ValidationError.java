@@ -8,15 +8,15 @@ import java.util.List;
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
-public class ValidationErrorDto {
+public class ValidationError {
 
-    private List<FieldErrorDto> fieldErrors = new ArrayList<>();
+    private List<FieldError> fieldErrors = new ArrayList<>();
 
     /**
      *
      * @param fieldError
      */
-    public void addFieldError(FieldErrorDto fieldError) {
+    public void addFieldError(FieldError fieldError) {
         fieldErrors.add(fieldError);
     }
 
@@ -27,7 +27,7 @@ public class ValidationErrorDto {
      * @param message
      */
     public void addFieldError(String field, String message) {
-        fieldErrors.add(new FieldErrorDto(field, message));
+        fieldErrors.add(new FieldError(field, message));
     }
 
     /**
@@ -35,7 +35,7 @@ public class ValidationErrorDto {
      *
      * @return
      */
-    public List<FieldErrorDto> getFieldErrors() {
+    public List<FieldError> getFieldErrors() {
         return fieldErrors;
     }
 }

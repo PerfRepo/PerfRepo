@@ -1,19 +1,15 @@
-package org.perfrepo.web.adapter.test_execution;
-
-import org.perfrepo.dto.SearchResult;
-import org.perfrepo.dto.test_execution.TestExecutionDto;
-import org.perfrepo.dto.test_execution.TestExecutionSearchParams;
-
-
-import java.util.List;
+package org.perfrepo.web.adapter;
 
 /**
- * Service adapter for {@link TestExecutionDto} object. Adapter supports CRUD and another operations over this object.
+ * Service adapter for {@link org.perfrepo.dto.test_execution.TestExecutionDto} object.
+ * Adapter supports CRUD and another operations over this object.
+ * TODO adapter is not complete
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
 public interface TestExecutionAdapter {
 
+    /*
     TestExecutionDto getTestExecutionById(Long id);
 
     TestExecutionDto createTestExecution(TestExecutionDto testExecution);
@@ -25,7 +21,6 @@ public interface TestExecutionAdapter {
     List<TestExecutionDto> getAllTestExecutions();
 
     SearchResult<TestExecutionDto> searchTestExecutions(TestExecutionSearchParams searchParams);
-
-    // TODO
+    */
 
 }

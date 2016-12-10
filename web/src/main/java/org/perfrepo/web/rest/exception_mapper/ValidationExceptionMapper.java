@@ -1,7 +1,7 @@
 package org.perfrepo.web.rest.exception_mapper;
 
 import org.apache.http.HttpStatus;
-import org.perfrepo.dto.util.validation.ValidationErrorDto;
+import org.perfrepo.dto.util.validation.ValidationError;
 import org.perfrepo.web.adapter.exceptions.ValidationException;
 
 
@@ -28,9 +28,9 @@ public class ValidationExceptionMapper implements ExceptionMapper<ValidationExce
 
         private String message;
 
-        private ValidationErrorDto validation;
+        private ValidationError validation;
 
-        public ValidationExceptionResponse(String message, ValidationErrorDto validationErrors) {
+        public ValidationExceptionResponse(String message, ValidationError validationErrors) {
             this.message = message;
             this.validation = validationErrors;
         }
@@ -39,7 +39,7 @@ public class ValidationExceptionMapper implements ExceptionMapper<ValidationExce
             return message;
         }
 
-        public ValidationErrorDto getValidation() {
+        public ValidationError getValidation() {
             return validation;
         }
     }

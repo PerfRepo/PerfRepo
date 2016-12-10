@@ -6,6 +6,5 @@ package org.perfrepo.dto.test_execution;
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
 public class TestExecutionSearchParams {
-
     // TODO
 }

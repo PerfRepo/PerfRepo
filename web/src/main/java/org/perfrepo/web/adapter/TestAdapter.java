@@ -1,8 +1,8 @@
-package org.perfrepo.web.adapter.test;
+package org.perfrepo.web.adapter;
 
-import org.perfrepo.dto.SearchResult;
-import org.perfrepo.dto.alert.AlertDto;
 import org.perfrepo.dto.metric.MetricDto;
+import org.perfrepo.dto.util.SearchResult;
+import org.perfrepo.dto.alert.AlertDto;
 import org.perfrepo.dto.test.TestDto;
 import org.perfrepo.dto.test.TestSearchParams;
 import org.perfrepo.dto.user.UserDto;
@@ -42,7 +42,6 @@ public interface TestAdapter {
      * @param test Parameters of the test that will be created.
      * @return Created {@link TestDto} object.
      * @throws org.perfrepo.web.adapter.exceptions.ValidationException If the input parameters are not valid.
-     * @throws org.perfrepo.web.adapter.exceptions.ConstraintViolationException If a constraint violation is caused.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     TestDto createTest(TestDto test);
@@ -54,7 +53,6 @@ public interface TestAdapter {
      * @return Updated {@link TestDto} object.
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.ValidationException If the input parameters are not valid.
-     * @throws org.perfrepo.web.adapter.exceptions.ConstraintViolationException If a constraint violation is caused.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     TestDto updateTest(TestDto test);
@@ -64,45 +62,45 @@ public interface TestAdapter {
      *
      * @param id The test identifier.
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
-     * @throws org.perfrepo.web.adapter.exceptions.ConstraintViolationException If a constraint violation is caused.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     void deleteTest(Long id);
 
     /**
+     * Return all tests.
      *
-     * @return
+     * @return List of all tests.
      */
     List<TestDto> getAllTests();
 
     /**
-     * Return all stored {@link TestDto} objects.
+     * Return all {@link TestDto} tests that satisfy search conditions.
      *
-     * @return List of all stored {@link TestDto} objects.
+     * @return List of {@link TestDto} tests.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    SearchResult<TestDto> searchTests(TestSearchParams searchParams);
+    SearchResult searchTests(TestSearchParams searchParams);
 
     /**
-     * Add existing metric to existing test.
+     * Add a metric to existing test. If a metric does not exist, it will be created.
      *
+     * @param metric Metric {@link org.perfrepo.dto.metric.MetricDto} that will be added to the test.
      * @param testId Test {@link TestDto} identifier.
-     * @param metricId Metric {@link MetricDto} identifier.
-     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test or metric does not exist.
+     * @return Metric {@link MetricDto} that was added to test.
+     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    void addMetricToTest(Long testId, Long metricId);
+    MetricDto addMetricToTest(MetricDto metric, Long testId);
 
     /**
-     * Remove existing metric from existing test.
+     * Remove a metric from existing test.
      *
+     * @param metricId Identifier of {@link org.perfrepo.dto.metric.MetricDto} metric that will be removed.
      * @param testId Test {@link TestDto} identifier.
-     * @param metricId Metric {@link MetricDto} identifier.
-     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test or metric does not exist.
-     * @throws org.perfrepo.web.adapter.exceptions.ConstraintViolationException If a constraint violation is caused.
+     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    void removeMetricFromTest(Long testId, Long metricId);
+    void removeMetricFromTest(Long metricId, Long testId);
 
     /**
      * Subscribe the user to the test alerts.
@@ -120,7 +118,6 @@ public interface TestAdapter {
      * @param testId Test {@link TestDto} identifier.
      * @param userId User {@link UserDto} identifier.
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test or user does not exist.
-     * @throws org.perfrepo.web.adapter.exceptions.ConstraintViolationException If a constraint violation is caused.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     void unsubscribeFromTestAlerts(Long testId, Long userId);

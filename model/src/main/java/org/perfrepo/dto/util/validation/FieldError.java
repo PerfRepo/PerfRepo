@@ -5,7 +5,7 @@ package org.perfrepo.dto.util.validation;
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
-public class FieldErrorDto {
+public class FieldError {
 
     private String field;
 
@@ -17,7 +17,7 @@ public class FieldErrorDto {
      * @param field Field name of validation item.
      * @param message Subscribing validation error.
      */
-    public FieldErrorDto(String field, String message) {
+    public FieldError(String field, String message) {
         this.field = field;
         this.message = message;
     }

@@ -2,11 +2,11 @@ package org.perfrepo.dto.test;
 
 import org.perfrepo.dto.alert.AlertDto;
 import org.perfrepo.dto.metric.MetricDto;
-import org.perfrepo.dto.user.GroupDto;
+import org.perfrepo.dto.group.GroupDto;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 
 /**
  * Data transfer object for {@link org.perfrepo.model.Test} entity that represents a test.
@@ -30,9 +30,9 @@ public class TestDto {
 
     private GroupDto group;
 
-    private List<MetricDto> metrics;
+    private Set<MetricDto> metrics;
 
-    private List<AlertDto> alerts;
+    private Set<AlertDto> alerts;
 
     public Long getId() {
         return id;
@@ -74,19 +74,34 @@ public class TestDto {
         this.group = group;
     }
 
-    public List<MetricDto> getMetrics() {
+    public Set<MetricDto> getMetrics() {
         return metrics;
     }
 
-    public void setMetrics(List<MetricDto> metrics) {
+    public void setMetrics(Set<MetricDto> metrics) {
         this.metrics = metrics;
     }
 
-    public List<AlertDto> getAlerts() {
+    public Set<AlertDto> getAlerts() {
         return alerts;
     }
 
-    public void setAlerts(List<AlertDto> alerts) {
+    public void setAlerts(Set<AlertDto> alerts) {
         this.alerts = alerts;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TestDto)) return false;
+
+        TestDto test = (TestDto) o;
+
+        return getUid() != null ? getUid().equals(test.getUid()) : test.getUid() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getUid() != null ? getUid().hashCode() : 0;
     }
 }

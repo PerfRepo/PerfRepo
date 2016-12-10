@@ -27,7 +27,7 @@ public class UidUniqueValidator implements ConstraintValidator<TestUidUnique, Te
     @Override
     public boolean isValid(TestDto testDto, ConstraintValidatorContext context) {
         // only duplicate value is invalid
-        if(testDto == null || testDto.getUid() == null) {
+        if (testDto == null || testDto.getUid() == null) {
             return true;
         }
 

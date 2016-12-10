@@ -1,4 +1,4 @@
-package org.perfrepo.web.adapter.test;
+package org.perfrepo.web.adapter;
 
 import org.perfrepo.dto.metric.MetricDto;
 
@@ -21,37 +21,15 @@ public interface MetricAdapter {
     MetricDto getMetricById(Long id);
 
     /**
-     * Create new {@link MetricDto} object.
-     *
-     * @param metric Parameters of the metric that will be created.
-     * @return Created {@link MetricDto} object.
-     * @throws org.perfrepo.web.adapter.exceptions.ValidationException If the input parameters are not valid.
-     * @throws org.perfrepo.web.adapter.exceptions.ConstraintViolationException If a constraint violation is caused.
-     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
-     */
-    MetricDto createMetric(MetricDto metric);
-
-    /**
      * Update the {@link MetricDto} object.
      *
      * @param metric Parameters of the metric that will be updated.
      * @return Updated {@link MetricDto} object.
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.ValidationException If the input parameters are not valid.
-     * @throws org.perfrepo.web.adapter.exceptions.ConstraintViolationException If a constraint violation is caused.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     MetricDto updateMetric(MetricDto metric);
-
-    /**
-     * Delete the {@link MetricDto} object.
-     *
-     * @param id The metric identifier.
-     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
-     * @throws org.perfrepo.web.adapter.exceptions.ConstraintViolationException If a constraint violation is caused.
-     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
-     */
-    void deleteMetric(Long id);
 
     /**
      * Return all stored {@link MetricDto} objects.

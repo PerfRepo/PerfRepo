@@ -1,5 +1,7 @@
 package org.perfrepo.dto.metric;
 
+import org.perfrepo.model.MetricComparator;
+
 /**
  * Data transfer object for {@link org.perfrepo.model.Metric} that represents a test metric.
  *
@@ -13,7 +15,7 @@ public class MetricDto {
 
     private String description;
 
-    private String comparator;
+    private MetricComparator comparator;
 
     public String getName() {
         return name;
@@ -39,11 +41,26 @@ public class MetricDto {
         this.id = id;
     }
 
-    public String getComparator() {
+    public MetricComparator getComparator() {
         return comparator;
     }
 
-    public void setComparator(String comparator) {
+    public void setComparator(MetricComparator comparator) {
         this.comparator = comparator;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MetricDto)) return false;
+
+        MetricDto metric = (MetricDto) o;
+
+        return getName() != null ? getName().equals(metric.getName()) : metric.getName() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        return getName() != null ? getName().hashCode() : 0;
     }
 }

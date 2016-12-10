@@ -1,18 +1,18 @@
 package org.perfrepo.web.adapter.exceptions;
 
-import org.perfrepo.dto.util.validation.FieldErrorDto;
-import org.perfrepo.dto.util.validation.ValidationErrorDto;
+import org.perfrepo.dto.util.validation.ValidationError;
 
 /**
  * This unchecked exception is thrown when service adapter performed validation
- * and it was not successful. The exception contains {@link ValidationErrorDto} object
- * which contains the list of particular validation errors ({@link FieldErrorDto}).
+ * and it was not successful. The exception contains {@link ValidationError} object
+ * which contains the list of particular validation
+ * errors ({@link org.perfrepo.dto.util.validation.FieldError}).
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
 public class ValidationException extends AdapterException {
 
-    private ValidationErrorDto validationErrors;
+    private ValidationError validationErrors;
 
     /**
      * Constructs a {@link ValidationException} with the specified detail message
@@ -21,19 +21,19 @@ public class ValidationException extends AdapterException {
      * @param message Detailed message.
      * @param validationErrors The list of fields validation errors.
      */
-    public ValidationException(String message, ValidationErrorDto validationErrors) {
+    public ValidationException(String message, ValidationError validationErrors) {
         super(message);
         this.validationErrors = validationErrors;
     }
 
     /**
-     * Returns {@link ValidationErrorDto} object
+     * Returns {@link ValidationError} object
      * which contains validation errors.
      *
-     * @return {@link ValidationErrorDto} object which contains the list of particular validation
-     * errors ({@link FieldErrorDto}).
+     * @return {@link ValidationError} object which contains the list of particular validation
+     * errors ({@link FieldError}).
      */
-    public ValidationErrorDto getValidationErrors() {
+    public ValidationError getValidationErrors() {
         return validationErrors;
     }
 }

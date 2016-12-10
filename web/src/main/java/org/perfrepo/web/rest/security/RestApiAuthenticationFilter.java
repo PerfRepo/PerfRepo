@@ -12,8 +12,8 @@ import java.io.IOException;
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
-@WebFilter(filterName = "FrontApiAuthenticationFilter", urlPatterns = {"/rest/json/*"})
-public class FrontApiAuthenticationFilter implements Filter {
+@WebFilter(filterName = "RestApiAuthenticationFilter", urlPatterns = {"/rest/json/*"})
+public class RestApiAuthenticationFilter implements Filter {
 
    @Override
    public void init(FilterConfig filterConfig) throws ServletException {
@@ -25,9 +25,10 @@ public class FrontApiAuthenticationFilter implements Filter {
            ServletException {
       HttpServletRequest req = (HttpServletRequest) request;
       String basicLogin = req.getHeader("Authorization");
+      // TODO basic or bearer header value
       String username;
       String password;
-      if(true) {
+      if (true) {
       //if ((basicLogin != null) && (basicLogin.indexOf("Basic") != -1)) {
       //   String loginPassword = new String(Base64.decode(basicLogin.substring("Basic ".length()).trim()));
       //   username = loginPassword.substring(0, loginPassword.indexOf(":"));

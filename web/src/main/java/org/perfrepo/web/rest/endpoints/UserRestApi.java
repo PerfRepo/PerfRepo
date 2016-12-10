@@ -1,14 +1,13 @@
-package org.perfrepo.web.rest;
+package org.perfrepo.web.rest.endpoints;
 
-import org.perfrepo.dto.user.GroupDto;
-import org.perfrepo.web.adapter.user.UserAdapter;
+import org.apache.commons.lang.NotImplementedException;
+import org.perfrepo.web.adapter.UserAdapter;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 /**
  *
@@ -24,9 +23,7 @@ public class UserRestApi {
     private UserAdapter userAdapter;
 
     @GET
-    @Path("/groups")
-    public Response getAllGroups() {
-        List<GroupDto> groups = userAdapter.getAllGroups();
-        return Response.ok(groups).build();
+    public Response getAllUsers() {
+        throw new NotImplementedException();
     }
 }

@@ -2,7 +2,7 @@ package org.perfrepo.dto.alert;
 
 import org.perfrepo.dto.metric.MetricDto;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * Data transfer object for {@link org.perfrepo.model.Alert} that represents a alert condition defined on a test.
@@ -19,11 +19,13 @@ public class AlertDto {
 
     private String condition;
 
-    private String links;
+    private Set<String> links;
 
     private MetricDto metric;
 
-    private List<String> tags;
+    private Set<String> tags;
+
+    private Long testId;
 
     public Long getId() {
         return id;
@@ -57,11 +59,11 @@ public class AlertDto {
         this.condition = condition;
     }
 
-    public String getLinks() {
+    public Set<String> getLinks() {
         return links;
     }
 
-    public void setLinks(String links) {
+    public void setLinks(Set<String> links) {
         this.links = links;
     }
 
@@ -73,12 +75,37 @@ public class AlertDto {
         this.metric = metric;
     }
 
-    public List<String> getTags() {
+    public Set<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(Set<String> tags) {
         this.tags = tags;
     }
 
+    public Long getTestId() {
+        return testId;
+    }
+
+    public void setTestId(Long testId) {
+        this.testId = testId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AlertDto)) return false;
+
+        AlertDto alert = (AlertDto) o;
+
+        if (getName() != null ? !getName().equals(alert.getName()) : alert.getName() != null) return false;
+        return getCondition() != null ? getCondition().equals(alert.getCondition()) : alert.getCondition() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName() != null ? getName().hashCode() : 0;
+        result = 31 * result + (getCondition() != null ? getCondition().hashCode() : 0);
+        return result;
+    }
 }

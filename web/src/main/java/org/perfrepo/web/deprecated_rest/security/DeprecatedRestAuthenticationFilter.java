@@ -27,8 +27,8 @@ import java.io.IOException;
  *
  * @author Pavel Drozd
  */
-@WebFilter(filterName = "RestAuthenticationFilter", urlPatterns = {"/deprecated_rest/*"})
-public class RestAuthenticationFilter implements Filter {
+@WebFilter(filterName = "DeprecatedRestAuthenticationFilter", urlPatterns = {"/deprecated_rest/*"})
+public class DeprecatedRestAuthenticationFilter implements Filter {
 
    /**
     * @see Filter#init(FilterConfig)

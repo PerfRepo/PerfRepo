@@ -1,14 +1,13 @@
-package org.perfrepo.web.rest.test;
+package org.perfrepo.web.rest.endpoints;
 
 import org.perfrepo.dto.metric.MetricDto;
-import org.perfrepo.web.adapter.test.MetricAdapter;
+import org.perfrepo.web.adapter.MetricAdapter;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.net.URI;
 import java.util.List;
 
 /**
@@ -39,26 +38,9 @@ public class MetricRestApi {
       return Response.ok().entity(metrics).build();
    }
 
-   @POST
-   public Response create(MetricDto metricDto) {
-      MetricDto createdMetric = metricAdapter.createMetric(metricDto);
-
-      URI uri = URI.create("/metrics/" + createdMetric.getId());
-      return Response.created(uri).build();
-   }
-
    @PUT
-   @Path("/{id}")
    public Response update(MetricDto metricDto) {
-      MetricDto updatedMetric = metricAdapter.updateMetric(metricDto);
-
-      return Response.noContent().build();
-   }
-
-   @DELETE
-   @Path("/{id}")
-   public Response delete(@PathParam("id") Long metricId) {
-      metricAdapter.deleteMetric(metricId);
+      metricAdapter.updateMetric(metricDto);
 
       return Response.noContent().build();
    }

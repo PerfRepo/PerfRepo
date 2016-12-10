@@ -1,22 +1,24 @@
 package org.perfrepo.web.adapter.dummy_impl.storage;
 
-import org.perfrepo.dto.user.GroupDto;
+import org.perfrepo.dto.group.GroupDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Temporary in-memory user and group storage for development purpose.
+ * Temporary in-memory group storage for development purpose.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
-public class UserGroupStorage {
+public class GroupStorage {
 
-    private Long key = 1l;
+    private Long key = 1L;
     private List<GroupDto> data = new ArrayList<>();
 
     public GroupDto getById(Long id) {
-        return data.stream().filter(dto -> dto.getId().equals(id)).findFirst().get();
+        Optional<GroupDto> group = data.stream().filter(dto -> dto.getId().equals(id)).findFirst();
+        return group.isPresent() ? group.get() : null;
     }
 
     public GroupDto create(GroupDto dto) {
@@ -28,9 +30,9 @@ public class UserGroupStorage {
     public GroupDto update(GroupDto dto) {
         boolean removed = data.removeIf(userGroup -> userGroup.getId().equals(dto.getId()));
 
-        if(removed){
+        if (removed) {
             data.add(dto);
-        }else {
+        } else {
             return null;
         }
 
@@ -41,7 +43,7 @@ public class UserGroupStorage {
         return data.removeIf(userGroup -> userGroup.getId().equals(id));
     }
 
-    public List<GroupDto> getAll(){
+    public List<GroupDto> getAll() {
         return data;
     }
 

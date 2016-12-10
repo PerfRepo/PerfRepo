@@ -41,8 +41,12 @@
 		</init-param>
 		<init-param>
 			<param-name>resteasy.providers</param-name>
-			<param-value>org.perfrepo.web.rest.exception_mapper.ValidationExceptionMapper,
-				org.perfrepo.web.rest.exception_mapper.AdapterExceptionMapper</param-value>
+			<param-value>
+				org.perfrepo.web.rest.exception_mapper.NotFoundExceptionMapper,
+				org.perfrepo.web.rest.exception_mapper.UnauthorizedExceptionMapper,
+				org.perfrepo.web.rest.exception_mapper.ValidationExceptionMapper,
+				org.perfrepo.web.rest.exception_mapper.AdapterExceptionMapper
+			</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
@@ -52,11 +56,11 @@
 
 	<!-- filters for deprecated REST api -->
 	<filter>
-		<filter-name>RestAuthenticationFilter</filter-name>
-		<filter-class>org.perfrepo.web.deprecated_rest.security.RestAuthenticationFilter</filter-class>
+		<filter-name>DeprecatedRestAuthenticationFilter</filter-name>
+		<filter-class>org.perfrepo.web.deprecated_rest.security.DeprecatedRestAuthenticationFilter</filter-class>
 	</filter>
 	<filter-mapping>
-		<filter-name>RestAuthenticationFilter</filter-name>
+		<filter-name>DeprecatedRestAuthenticationFilter</filter-name>
 		<url-pattern>/deprecated_rest/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>
@@ -64,11 +68,11 @@
 
 	<!-- filters for new REST api -->
 	<filter>
-		<filter-name>FrontApiAuthenticationFilter</filter-name>
-		<filter-class>org.perfrepo.web.rest.security.FrontApiAuthenticationFilter</filter-class>
+		<filter-name>RestApiAuthenticationFilter</filter-name>
+		<filter-class>org.perfrepo.web.rest.security.RestApiAuthenticationFilter</filter-class>
 	</filter>
 	<filter-mapping>
-		<filter-name>FrontApiAuthenticationFilter</filter-name>
+		<filter-name>RestApiAuthenticationFilter</filter-name>
 		<url-pattern>/rest/json/*</url-pattern>
 		<dispatcher>REQUEST</dispatcher>
 		<dispatcher>FORWARD</dispatcher>

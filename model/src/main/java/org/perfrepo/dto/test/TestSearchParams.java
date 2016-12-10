@@ -1,5 +1,7 @@
 package org.perfrepo.dto.test;
 
+import org.perfrepo.model.to.OrderBy;
+
 import java.util.List;
 
 /**
@@ -15,11 +17,11 @@ public class TestSearchParams {
 
     private List<Integer> groupIdFilters;
 
-    private Integer limit = 5;
+    private int limit = 5;
 
-    private Integer offset = 0;
+    private int offset = 0;
 
-    private String orderBy;
+    private OrderBy orderBy;
 
     /**
      * Returns list of filters for test {@link TestDto#getName() name}.
@@ -80,7 +82,7 @@ public class TestSearchParams {
      *
      * @return Limit count of records.
      */
-    public Integer getLimit() {
+    public int getLimit() {
         return limit;
     }
 
@@ -89,7 +91,7 @@ public class TestSearchParams {
      *
      * @param limit Limit count of records.
      */
-    public void setLimit(Integer limit) {
+    public void setLimit(int limit) {
         this.limit = limit;
     }
 
@@ -98,7 +100,7 @@ public class TestSearchParams {
      *
      * @return Offset of the first record.
      */
-    public Integer getOffset() {
+    public int getOffset() {
         return offset;
     }
 
@@ -107,7 +109,7 @@ public class TestSearchParams {
      *
      * @param offset Offset of the first record.
      */
-    public void setOffset(Integer offset) {
+    public void setOffset(int offset) {
         this.offset = offset;
     }
 
@@ -116,7 +118,7 @@ public class TestSearchParams {
      *
      * @return Order by parameter.
      */
-    public String getOrderBy() {
+    public OrderBy getOrderBy() {
         return orderBy;
     }
 
@@ -125,7 +127,7 @@ public class TestSearchParams {
      *
      * @param orderBy Order by parameter.
      */
-    public void setOrderBy(String orderBy) {
+    public void setOrderBy(OrderBy orderBy) {
         this.orderBy = orderBy;
     }
 }

@@ -1,4 +1,4 @@
-package org.perfrepo.dto;
+package org.perfrepo.dto.util;
 
 import java.util.List;
 
@@ -9,17 +9,17 @@ import java.util.List;
  */
 public class SearchResult<T> {
     private List<T> data;
-    private Integer totalCount;
-    private Integer currentPage;
-    private Integer pageCount;
-    private Integer perPage;
+    private int totalCount;
+    private int currentPage;
+    private int pageCount;
+    private int perPage;
 
-    public SearchResult(List<T> data, Integer totalCount, Integer limit, Integer from) {
+    public SearchResult(List<T> data, int totalCount, int limit, int from) {
         this.data = data;
         this.totalCount = totalCount;
         this.perPage = limit;
         this.currentPage = (from / limit) + 1;
-        this.pageCount = (int) Math.ceil(totalCount / (double)limit);
+        this.pageCount = (int) Math.ceil(totalCount / (double) limit);
 
     }
 
@@ -27,19 +27,19 @@ public class SearchResult<T> {
         return data;
     }
 
-    public Integer getTotalCount() {
+    public int getTotalCount() {
         return totalCount;
     }
 
-    public Integer getCurrentPage() {
+    public int getCurrentPage() {
         return currentPage;
     }
 
-    public Integer getPageCount() {
+    public int getPageCount() {
         return pageCount;
     }
 
-    public Integer getPerPage() {
+    public int getPerPage() {
         return perPage;
     }
 }
