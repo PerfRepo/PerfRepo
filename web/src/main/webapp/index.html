@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app="org.perfrepo">
+<html ng-app="org.perfrepo">
 <head>
     <meta charset="utf-8"/>
     <title>PerfRepo</title>
@@ -49,30 +49,72 @@
     <link rel="stylesheet" href="bower_components/angular-patternfly/dist/styles/angular-patternfly.min.css"/>
     <!-- Angular-PatternFly  -->
     <script src="bower_components/angular-patternfly/dist/angular-patternfly.js"></script>
-    <script src="http://angular-patternfly.rhcloud.com/grunt-scripts/lodash.min.js"></script>
+    <script src="bower_components/lodash/lodash.min.js"></script>
     <!-- Trix wysiwyg  -->
     <link rel="stylesheet" href="bower_components/trix/dist/trix.css"/>
     <script src="bower_components/trix/dist/trix.js"></script>
     <script src="bower_components/angular-trix/dist/angular-trix.min.js"></script>
+
     <!-- TODO gulp inject -->
-    <script src="app/app.js"></script>
-    <script src="app/common/directives/select-picker.js"></script>
-    <script src="app/dashboard/dashboard.js"></script>
-    <script src="app/test/test.js"></script>
-    <script src="app/test/test.service.js"></script>
+
+    <!-- app -->
+    <script src="app/app.module.js"></script>
+    <script src="app/app.config.js"></script>
+    <script src="app/app.controller.js"></script>
+
+    <!-- login -->
+    <script src="app/login/login.module.js"></script>
     <script src="app/login/login.service.js"></script>
-    <script src="app/test/metric.service.js"></script>
-    <script src="app/user/group/user-group.service.js"></script>
-    <script src="app/test/create/create-test.js"></script>
-    <script src="app/test/search/search-test.js"></script>
+    <script src="app/login/login.controller.js"></script>
+
+    <!-- dashboard -->
+    <script src="app/dashboard/dashboard.module.js"></script>
+    <script src="app/dashboard/dashboard.config.js"></script>
+    <script src="app/dashboard/dashboard.controller.js"></script>
+
+    <!-- test -->
+    <script src="app/test/test.module.js"></script>
+    <script src="app/test/test.config.js"></script>
+    <script src="app/test/test.service.js"></script>
+    <!-- test form -->
+    <script src="app/test/form/form-test.module.js"></script>
+    <script src="app/test/form/components/form-test.component.js"></script>
+    <!-- test create -->
+    <script src="app/test/create/create-test.module.js"></script>
+    <script src="app/test/create/create-test.controller.js"></script>
+    <!-- test edit -->
+    <script src="app/test/edit/edit-test.module.js"></script>
+    <script src="app/test/edit/edit-test.controller.js"></script>
+    <!-- test metric -->
+    <script src="app/test/metric/metric.module.js"></script>
+    <script src="app/test/metric/metric.service.js"></script>
+    <!-- test detail -->
+    <script src="app/test/detail/detail-test.module.js"></script>
+    <script src="app/test/detail/detail-test.controller.js"></script>
+    <!-- test search -->
+    <script src="app/test/search/search-test.module.js"></script>
+    <script src="app/test/search/search-test.controller.js"></script>
     <script src="app/test/search/components/form-search-test.js"></script>
     <script src="app/test/search/components/list-search-test.js"></script>
-    <script src="app/test/edit/edit-test.js"></script>
-    <script src="app/test/detail/detail-test.js"></script>
-    <script src="app/test/form/form-test.js"></script>
-    <script src="app/test_execution/test-execution.js"></script>
-    <script src="app/report/report.js"></script>
 
+    <!-- common -->
+    <script src="app/common/common.module.js"></script>
+    <script src="app/common/directives/select-picker.directive.js"></script>
+    <script src="app/common/directives/combo-box.directive.js"></script>
+
+    <!-- groups -->
+    <script src="app/group/group.module.js"></script>
+    <script src="app/group/group.service.js"></script>
+
+    <!-- test executions -->
+    <script src="app/test_execution/test-execution.module.js"></script>
+    <script src="app/test_execution/test-execution.config.js"></script>
+    <script src="app/test_execution/test-execution.controller.js"></script>
+
+    <!-- reports -->
+    <script src="app/report/report.module.js"></script>
+    <script src="app/report/report.config.js"></script>
+    <script src="app/report/report.controller.js"></script>
 
     <link rel="stylesheet" href="styles.css"/>
 

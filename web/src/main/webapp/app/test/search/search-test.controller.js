@@ -1,7 +1,10 @@
 (function() {
 
-    var SearchTestController = function(testService, pfViewUtils) {
+    angular
+        .module('org.perfrepo.test.search')
+        .controller('SearchTestController', SearchTestController);
 
+    function SearchTestController(testService, pfViewUtils) {
         var vm = this;
 
         vm.pagination = {};
@@ -10,15 +13,17 @@
             limit: 5,
             offset: 0,
             orderBy: 'NAME_ASC'
-        }
+        };
+        vm.updateSearch = updateSearch;
+        update();
 
-        vm.updateSearch = function() {
+        function updateSearch() {
             update();
         }
 
         function update() {
             vm.searchParams.offset = ((vm.currentPage - 1) * vm.pagination.pageCount) || 0;
-            
+
             testService.search(vm.searchParams).then(function(response){
                 vm.items = response.data;
                 vm.filterConfig.resultsCount = response.headers('X-Pagination-Total-Count');
@@ -26,8 +31,6 @@
                 vm.pagination.currentPage = response.headers('X-Pagination-Current-Page');
             });
         }
-
-        update();
 
         var applyFilters = function (filters) {
 
@@ -114,18 +117,5 @@
             selectionMatchProp: 'name',
             checkDisabled: false
         };
-
-
-    };
-
-    angular.module('org.perfrepo.test.search',
-        [
-            'patternfly.toolbars',
-            'patternfly.select',
-
-            'org.perfrepo.test.search.components'
-        ])
-
-        .controller('SearchTestController', SearchTestController);
-
+    }
 })();

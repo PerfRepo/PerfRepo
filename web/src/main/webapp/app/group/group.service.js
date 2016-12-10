@@ -1,7 +1,11 @@
 (function() {
     'use strict';
 
-    var UserGroupService = function($http, API_URL) {
+    angular
+        .module('org.perfrepo.group')
+        .service('groupService', GroupService);
+
+    function GroupService($http, API_URL) {
 
         this.getUserGroups = function() {
             return $http.get(API_URL + '/groups')
@@ -9,11 +13,5 @@
                     return response.data;
                 });
         };
-
-    };
-
-    // TODO create new module
-    angular.module('org.perfrepo.test')
-        .service('userGroupService', UserGroupService);
-
+    }
 })();

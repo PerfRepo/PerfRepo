@@ -1,21 +1,8 @@
 (function() {
     'use strict';
 
-    var SearchTestFormController = function() {
-
-        this.search = function(form) {
-            if (form.$invalid) {
-                return;
-            }
-
-            this.onSearch({searchParams: this.searchParams});
-        };
-    };
-
-    angular.module('org.perfrepo.test.search.components',
-        [
-
-        ])
+    angular
+        .module('org.perfrepo.test.search')
         .component('searchTestForm', {
             bindings: {
                 searchParams: '=',
@@ -24,6 +11,18 @@
 
             controller: SearchTestFormController,
             controllerAs: 'vm',
-            templateUrl: 'app/test/search/components/form-search-test.html'
+            templateUrl: 'app/test/search/components/form-search-test.view.html'
         });
+
+    function SearchTestFormController() {
+        var vm = this;
+        vm.search = search;
+
+        function search(form) {
+            if (form.$invalid) {
+                return;
+            }
+            this.onSearch({searchParams: this.searchParams});
+        }
+    }
 })();

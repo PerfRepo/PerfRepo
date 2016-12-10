@@ -1,10 +1,12 @@
 (function() {
     'use strict';
 
-    var LoginService = function(API_URL, $http, $rootScope, $q) {
+    angular.module('org.perfrepo.login')
+        .service('loginService', LoginService);
+
+    function LoginService(API_URL, $http, $rootScope, $q) {
 
         this.login = function(username, password) {
-
             var deferred = $q.defer();
 
             $http.post(API_URL + '/authentication',
@@ -22,10 +24,5 @@
 
             return deferred.promise;
         };
-
-    };
-
-    angular.module('org.perfrepo')
-        .service('loginService', LoginService);
-
+    }
 })();

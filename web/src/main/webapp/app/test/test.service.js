@@ -1,23 +1,27 @@
 (function() {
     'use strict';
 
-    var Test = function($resource, API_URL) {
+    angular
+        .module('org.perfrepo.test')
+        .service('testService', TestService)
+        .factory('Test', Test);
 
+    function Test($resource, API_URL) {
+        var url = API_URL + '/tests';
         return $resource(
-            API_URL + '/tests/:id',
+            url + '/:id',
             {id: '@id'},
             {
                 'query': {
                     method: 'GET', isArray: false
                 },
                 'update': {
-                    method: 'PUT', isArray: false
+                    method: 'PUT', isArray: false, url: url, params: {}
                 }
             });
-    };
+    }
 
-    var TestService = function($http, Test, API_URL) {
-
+    function TestService($http, Test, API_URL) {
         this.search = function(searchParams){
             return $http.post(API_URL + '/tests/search', searchParams);
         }
@@ -37,10 +41,5 @@
         this.delete = function(test) {
             return Test.delete(test).$promise;
         };
-    };
-
-    angular.module('org.perfrepo.test')
-        .service('testService', TestService)
-        .factory('Test', Test);
-
+    }
 })();

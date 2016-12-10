@@ -1,19 +1,18 @@
 (function() {
     'use strict';
 
-    var SearchTestListController = function() {
-
-    };
-
-    angular.module('org.perfrepo.test.search.components')
-
+    angular
+        .module('org.perfrepo.test.search')
         .component('searchTestList', {
             bindings: {
                 tests: '='
             },
-
             controller: SearchTestListController,
             controllerAs: 'vm',
-            templateUrl: 'app/test/search/components/list-search-test.html'
+            templateUrl: 'app/test/search/components/list-search-test.view.html'
         });
+
+    function SearchTestListController() {
+
+    }
 })();

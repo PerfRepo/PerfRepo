@@ -5,16 +5,14 @@
 (function() {
     'use strict';
 
-    var DetailTestController = function(test) {
-
-        this.test = test;
-
-    };
-
-    angular.module('org.perfrepo.test.detail',
-        [
+    angular
+        .module('org.perfrepo.test.detail', [
 
         ])
         .controller('DetailTestController', DetailTestController);
 
+    function DetailTestController(test) {
+        var vm = this;
+        vm.test = test;
+    }
 })();
