@@ -33,6 +33,25 @@
         ];
     };
 
+    var LoginController = function($state, loginService) {
+        var vm = this;
+
+        vm.login = login;
+
+        function login() {
+            loginService.login(vm.username, vm.password).then(function(response){
+                if(response != undefined) {
+                    $state.go($state.params.toState, $state.params.toParams);
+                }
+            }, function() {
+                console.log("Bad login!!!");
+            });
+        }
+
+
+
+    };
+
     angular.module('org.perfrepo',
         [
             'patternfly.navigation',
@@ -48,7 +67,8 @@
         .constant('API_URL', 'rest/json')
 
         .config(function($stateProvider, $urlRouterProvider) {
-//            $urlRouterProvider.otherwise('/login');
+
+            $urlRouterProvider.otherwise('/dashboard');
 
             $stateProvider
                 .state('app', {
@@ -56,14 +76,35 @@
                     templateUrl: 'app/app.html',
                     abstract: true,
                     data: {
+                        requireLogin: true
                     }
                 })
                 .state('login', {
                     url: '/login',
-                    template: 'login page'
+                    templateUrl: 'app/login/login.html',
+                    params: {
+                        'toState': 'app.dashboard',
+                        'toParams': {}
+                    },
+                    data: {
+                        requireLogin: false
+                    }
                 });
         })
 
-        .controller('AppController', AppController);
+        .run(function($rootScope, $state){
+
+            $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
+                var requireLogin = toState.data.requireLogin;
+                if (requireLogin && typeof $rootScope.currentUser === 'undefined') {
+                    event.preventDefault();
+                    $state.go('login', {'toState': toState.name, 'toParams': toParams});
+                }
+            });
+
+        })
+
+        .controller('AppController', AppController)
+        .controller('LoginController', LoginController);
 
 })();

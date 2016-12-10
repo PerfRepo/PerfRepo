@@ -4,7 +4,7 @@
     var UserGroupService = function($http, API_URL) {
 
         this.getUserGroups = function() {
-            return $http.get(API_URL + '/users/groups')
+            return $http.get(API_URL + '/groups')
                 .then(function (response) {
                     return response.data;
                 });
