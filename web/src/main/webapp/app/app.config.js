@@ -31,10 +31,11 @@
             });
     }
 
-    function run($rootScope, $state){
+    function run($rootScope, $state, authenticationService){
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             var requireLogin = toState.data.requireLogin;
-            if (requireLogin && typeof $rootScope.currentUser === 'undefined') {
+
+            if (requireLogin && !authenticationService.isAuthenticated()) {
                 event.preventDefault();
                 $state.go('login', {'toState': toState.name, 'toParams': toParams});
             }

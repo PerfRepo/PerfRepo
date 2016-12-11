@@ -6,6 +6,7 @@
             'patternfly.navigation',
             'ui.router',
 
+            'org.perfrepo.authentication',
             'org.perfrepo.login',
             'org.perfrepo.group',
             'org.perfrepo.common',

@@ -2,9 +2,7 @@
     'use strict';
 
     angular
-        .module('org.perfrepo.common', [
-
-        ])
+        .module('org.perfrepo.common')
         .directive('comboBox' , ComboBox);
 
     function ComboBox($timeout) {

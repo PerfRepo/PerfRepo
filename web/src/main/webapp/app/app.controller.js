@@ -5,8 +5,9 @@
         .module('org.perfrepo')
         .controller('AppController', AppController);
 
-    function AppController($state) {
+    function AppController($state, authenticationService) {
         var vm = this;
+        vm.logout = logout;
 
         vm.navigationItems = [
             {
@@ -35,5 +36,9 @@
                 href: $state.href('app.report')
             }
         ];
+
+        function logout() {
+            authenticationService.logout();
+        }
     }
 })();
