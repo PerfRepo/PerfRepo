@@ -110,7 +110,7 @@
 	<!-- security for deprecated REST api -->
 	<security-constraint>
 		<web-resource-collection>
-			<web-resource-name>Rest</web-resource-name>
+			<web-resource-name>Rest deprecated</web-resource-name>
 			<description>Web resources for REST Services</description>
 			<url-pattern>/deprecated_rest/*</url-pattern>
 		</web-resource-collection>
@@ -119,8 +119,8 @@
 	<!-- security for new REST api -->
 	<security-constraint>
 		<web-resource-collection>
-			<web-resource-name>Front api</web-resource-name>
-			<description>Web resources for front API</description>
+			<web-resource-name>Rest api</web-resource-name>
+			<description>Web resources for REST api</description>
 			<url-pattern>/rest/json/*</url-pattern>
 		</web-resource-collection>
 	</security-constraint>

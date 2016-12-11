@@ -12,12 +12,10 @@
     function tokenInterceptor($injector) {
         return {
             request: function(config) {
-                //   var authService = $injector.get('authService');
-                //   if (authService.isAuthenticated()
-                // authService.getToken()
-                if (true) {
+                var authenticationService = $injector.get('authenticationService');
+                if (authenticationService.isAuthenticated()) {
                     config.headers = config.headers || {};
-                    config.headers['Authorization'] = "Bearer CfdAdRgS-security token ;)";
+                    config.headers['Authorization'] = "Bearer " + authenticationService.getToken();
                 }
 
                 return config;

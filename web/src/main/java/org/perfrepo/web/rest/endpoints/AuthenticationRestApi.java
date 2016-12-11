@@ -32,10 +32,11 @@ public class AuthenticationRestApi {
 
     @POST
     @Path("/logout")
-    public Response logout() {
-        // TODO get the token from header Authentication: BEARER <<token>>
-        String token = "token";
-        authenticationAdapter.logout(token);
+    public Response logout(@HeaderParam("Authorization") String authorization) {
+        if ((authorization != null) && authorization.contains("Bearer ")) {
+            String authorizationToken = authorization.substring("Bearer ".length()).trim();
+            authenticationAdapter.logout(authorizationToken);
+        }
 
         return Response.noContent().build();
     }

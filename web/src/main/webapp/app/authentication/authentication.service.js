@@ -20,7 +20,7 @@
                 {'username': username, 'password': password})
                 .then(function(response) {
                     var authData = response.data;
-                    $window.sessionStorage.authData = authData;
+                    $window.sessionStorage.authData = JSON.stringify(authData);
                     deferred.resolve(authData);
                 }, function(error) {
                     deferred.reject(error);
@@ -44,13 +44,13 @@
 
         function getToken() {
             if (vm.isAuthenticated()) {
-                return $window.sessionStorage.authData.token;
+                return JSON.parse($window.sessionStorage.authData).token;
             }
         }
 
         function getUser() {
             if (vm.isAuthenticated()) {
-                return $window.sessionStorage.authData.user;
+                return JSON.parse($window.sessionStorage.authData).user;
             }
         }
     }

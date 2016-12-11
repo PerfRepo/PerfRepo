@@ -1,7 +1,8 @@
 package org.perfrepo.web.rest.security;
 
-import org.perfrepo.web.util.MessageUtils;
+import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
 
+import javax.inject.Inject;
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,9 @@ import java.io.IOException;
 @WebFilter(filterName = "RestApiAuthenticationFilter", urlPatterns = {"/rest/json/*"})
 public class RestApiAuthenticationFilter implements Filter {
 
+   @Inject
+   private Storage storage;
+
    @Override
    public void init(FilterConfig filterConfig) throws ServletException {
 
@@ -23,31 +27,29 @@ public class RestApiAuthenticationFilter implements Filter {
    @Override
    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
            ServletException {
-      HttpServletRequest req = (HttpServletRequest) request;
-      String basicLogin = req.getHeader("Authorization");
-      // TODO basic or bearer header value
-      String username;
-      String password;
-      if (true) {
-      //if ((basicLogin != null) && (basicLogin.indexOf("Basic") != -1)) {
-      //   String loginPassword = new String(Base64.decode(basicLogin.substring("Basic ".length()).trim()));
-      //   username = loginPassword.substring(0, loginPassword.indexOf(":"));
-      //   password = loginPassword.substring(loginPassword.indexOf(":") + 1);
-         username = "perfrepouser";
-         password = "perfrepouser1.";
 
-         try {
-            if (req.getUserPrincipal() == null) {
-               req.login(username, password);
-            }
-         } catch (Exception ex) {
-            unauthorized((HttpServletResponse) response,
-                    MessageUtils.getMessage(new org.perfrepo.web.security.SecurityException("securityException.wrongCredentials", ex)));
+      HttpServletRequest req = (HttpServletRequest) request;
+      String authorization = req.getHeader("Authorization");
+
+      // TODO add support for Basic
+      // TODO remove this and exclude this url from filter
+      if (((HttpServletRequest) request).getRequestURI().equals("/rest/json/authentication")) {
+
+          chain.doFilter(request, response);
+          return;
+      }
+
+      if (authorization != null && authorization.contains("Bearer ")) {
+         String token = authorization.substring("Bearer ".length()).trim();
+
+         if (storage.token().tokenExists(token)) {
+            chain.doFilter(request, response);
+         } else {
+            unauthorized((HttpServletResponse) response, "Invalid credentials.");
          }
-         chain.doFilter(request, response);
+
       } else {
-         unauthorized((HttpServletResponse) response,
-                 MessageUtils.getMessage(new org.perfrepo.web.security.SecurityException("securityException.wrongCredentials")));
+         unauthorized((HttpServletResponse) response, "Invalid credentials.");
       }
    }
 

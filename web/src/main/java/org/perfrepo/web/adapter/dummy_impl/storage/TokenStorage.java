@@ -22,5 +22,9 @@ public class TokenStorage {
     public void removeToken(String token) {
         tokens.remove(token);
     }
+
+    public void removeAllTokens() {
+        tokens.clear();
+    }
 }
 

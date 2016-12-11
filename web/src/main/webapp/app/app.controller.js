@@ -8,6 +8,7 @@
     function AppController($state, authenticationService) {
         var vm = this;
         vm.logout = logout;
+        vm.user = authenticationService.getUser();
 
         vm.navigationItems = [
             {
