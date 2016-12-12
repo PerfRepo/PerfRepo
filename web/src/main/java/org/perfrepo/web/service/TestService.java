@@ -20,7 +20,6 @@ import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.security.AuthEntity;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
-import org.perfrepo.web.service.exceptions.UnauthorizedException;
 import org.perfrepo.web.service.search.TestSearchCriteria;
 import org.perfrepo.web.service.validation.ValidTest;
 import org.perfrepo.web.service.validation.ValidationType;
@@ -44,9 +43,8 @@ public interface TestService {
     * @param test
     * @return
     * @throws DuplicateEntityException
-    * @throws UnauthorizedException
      */
-   public Test createTest(@ValidTest(type = { ValidationType.ID_NULL, ValidationType.FULL_CHECK }) @AuthEntity Test test) throws DuplicateEntityException, UnauthorizedException;
+   public Test createTest(@ValidTest(type = { ValidationType.ID_NULL, ValidationType.FULL_CHECK }) @AuthEntity Test test) throws DuplicateEntityException;
 
    /**
     * Updates the test.
@@ -55,7 +53,7 @@ public interface TestService {
     * @return
     * @throws DuplicateEntityException
      */
-   public Test updateTest(@ValidTest(type = { ValidationType.EXISTS, ValidationType.FULL_CHECK}) @AuthEntity Test test) throws DuplicateEntityException, UnauthorizedException;
+   public Test updateTest(@ValidTest(type = { ValidationType.EXISTS, ValidationType.FULL_CHECK}) @AuthEntity Test test) throws DuplicateEntityException;
 
    /**
     * Delete a test with all it's sub-objects, but first it disassociates all the metrics from it.
@@ -63,7 +61,7 @@ public interface TestService {
     *
     * @param test
     */
-   public void removeTest(@ValidTest @AuthEntity Test test) throws UnauthorizedException;
+   public void removeTest(@ValidTest @AuthEntity Test test);
 
    /**
     * Get test.
@@ -119,7 +117,7 @@ public interface TestService {
     * @param test
     * @return metric
     */
-   public Metric addMetric(Metric metric, @ValidTest @AuthEntity Test test) throws UnauthorizedException;
+   public Metric addMetric(Metric metric, @ValidTest @AuthEntity Test test);
 
    /**
     * Update metric.
@@ -136,7 +134,7 @@ public interface TestService {
     *
     * @param metric
     */
-   public void removeMetricFromTest(Metric metric, @ValidTest Test test) throws UnauthorizedException;
+   public void removeMetricFromTest(Metric metric, @ValidTest Test test);
 
    /**
     * Retrieves metric.
@@ -160,14 +158,14 @@ public interface TestService {
     *
     * @param test
     */
-   public void addSubscriber(@ValidTest Test test) throws UnauthorizedException;
+   public void addSubscriber(@ValidTest Test test);
 
    /**
     * Removes current user from the subscriber list of the given test
     *
     * @param test
     */
-   public void removeSubscriber(@ValidTest Test test) throws UnauthorizedException;
+   public void removeSubscriber(@ValidTest Test test);
 
    /**
     * Returns true if the given user is subscribed to given test

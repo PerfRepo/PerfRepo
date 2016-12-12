@@ -66,7 +66,7 @@ public class TestServiceTest {
     }
 
     @Before
-    public void init() throws DuplicateEntityException, UnauthorizedException {
+    public void init() throws DuplicateEntityException {
         adminUser = createUser("admin");
         adminUser.setType(User.UserType.SUPER_ADMIN);
         UserSessionMock.setLoggedUser(adminUser); // hack, because we need some super admin to create a super admin :)
@@ -103,7 +103,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testTestCRUDOperations() throws DuplicateEntityException, UnauthorizedException {
+    public void testTestCRUDOperations() throws DuplicateEntityException {
         Test test = new Test();
         fillTest("test1", test);
         test.setGroup(testGroup);
@@ -156,7 +156,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testTestModificationsFromInvalidGroup() throws DuplicateEntityException, UnauthorizedException {
+    public void testTestModificationsFromInvalidGroup() throws DuplicateEntityException {
         Test test = new Test();
         fillTest("test1", test);
         test.setGroup(testGroup);
@@ -197,7 +197,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testCreateWithMetrics() throws DuplicateEntityException, UnauthorizedException {
+    public void testCreateWithMetrics() throws DuplicateEntityException {
         Test test = new Test();
         fillTest("test", test);
         test.setGroup(testGroup);
@@ -222,7 +222,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testGetAllTests() throws DuplicateEntityException, UnauthorizedException {
+    public void testGetAllTests() throws DuplicateEntityException {
         Test test1 = new Test();
         fillTest("test1", test1);
         test1.setGroup(testGroup);
@@ -247,7 +247,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testMetricCRUDOperations() throws DuplicateEntityException, UnauthorizedException {
+    public void testMetricCRUDOperations() throws DuplicateEntityException {
         Test test = new Test();
         fillTest("test1", test);
         test.setGroup(testGroup);
@@ -281,7 +281,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testGetTestsByUidPrefix() throws DuplicateEntityException, UnauthorizedException {
+    public void testGetTestsByUidPrefix() throws DuplicateEntityException {
         Test test1 = new Test();
         fillTest("a_test", test1);
         test1.setGroup(testGroup);
@@ -313,7 +313,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testMetricManipulationWithTest() throws DuplicateEntityException, UnauthorizedException {
+    public void testMetricManipulationWithTest() throws DuplicateEntityException {
         Test test1 = new Test();
         fillTest("test1", test1);
         test1.setGroup(testGroup);
@@ -369,7 +369,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testSearchTests() throws DuplicateEntityException, UnauthorizedException {
+    public void testSearchTests() throws DuplicateEntityException {
         UserSessionMock.setLoggedUser(adminUser);
         Group group2 = createGroup("second_group");
         groupService.createGroup(group2);
@@ -438,7 +438,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testSubscribing() throws DuplicateEntityException, UnauthorizedException {
+    public void testSubscribing() throws DuplicateEntityException {
         Test test1 = new Test();
         fillTest("test1", test1);
         test1.setGroup(testGroup);
@@ -452,7 +452,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testNulls() throws DuplicateEntityException, UnauthorizedException {
+    public void testNulls() throws DuplicateEntityException {
         try {
             testService.createTest(null);
             fail("TestService.createTest should fail when argument null.");

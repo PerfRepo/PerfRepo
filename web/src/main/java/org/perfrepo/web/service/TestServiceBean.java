@@ -25,7 +25,6 @@ import org.perfrepo.web.dao.UserDAO;
 import org.perfrepo.web.security.AuthEntity;
 import org.perfrepo.web.security.Secured;
 import org.perfrepo.web.service.exceptions.DuplicateEntityException;
-import org.perfrepo.web.service.exceptions.UnauthorizedException;
 import org.perfrepo.web.service.search.TestSearchCriteria;
 import org.perfrepo.web.service.validation.ValidTest;
 import org.perfrepo.web.service.validation.ValidationType;
@@ -79,7 +78,7 @@ public class TestServiceBean implements TestService {
    @Override
    public Test createTest(@ValidTest(type = { ValidationType.ID_NULL, ValidationType.FULL_CHECK })
                           @AuthEntity(messageKey = "authorization.test.cannotCreateOrModifyTestInGroupIfNotInIt") Test test)
-           throws DuplicateEntityException, UnauthorizedException {
+           throws DuplicateEntityException {
 
       if (getTest(test.getUid()) != null) {
          throw new DuplicateEntityException("test.duplicateUid", test.getUid());
@@ -100,7 +99,7 @@ public class TestServiceBean implements TestService {
    @Override
    public Test updateTest(@ValidTest(type = { ValidationType.EXISTS, ValidationType.FULL_CHECK})
                           @AuthEntity(messageKey = "authorization.test.cannotCreateOrModifyTestInGroupIfNotInIt") Test test)
-           throws DuplicateEntityException, UnauthorizedException {
+           throws DuplicateEntityException {
 
       Test possibleDuplicate = getTest(test.getUid());
       if (possibleDuplicate != null && !possibleDuplicate.getId().equals(test.getId())) {
@@ -112,9 +111,7 @@ public class TestServiceBean implements TestService {
 
    @Secured
    @Override
-   public void removeTest(@ValidTest @AuthEntity(messageKey = "authorization.test.cannotCreateOrModifyTestInGroupIfNotInIt") Test test)
-           throws UnauthorizedException {
-
+   public void removeTest(@ValidTest @AuthEntity(messageKey = "authorization.test.cannotCreateOrModifyTestInGroupIfNotInIt") Test test) {
       Test managedTest = testDAO.get(test.getId());
 
       Set<Metric> metrics = getMetricsForTest(managedTest);
@@ -168,7 +165,7 @@ public class TestServiceBean implements TestService {
    @Secured
    @Override
    public Metric addMetric(Metric metric,
-                           @ValidTest @AuthEntity(messageKey = "authorization.test.cannotCreateOrModifyTestInGroupIfNotInIt") Test test) throws UnauthorizedException {
+                           @ValidTest @AuthEntity(messageKey = "authorization.test.cannotCreateOrModifyTestInGroupIfNotInIt") Test test) {
 
       Test managedTest = testDAO.get(test.getId());
 
@@ -194,7 +191,7 @@ public class TestServiceBean implements TestService {
    }
 
    @Override
-   public void removeMetricFromTest(Metric metric, @ValidTest Test test) throws UnauthorizedException {
+   public void removeMetricFromTest(Metric metric, @ValidTest Test test) {
       Metric managedMetric = metricDAO.get(metric.getId());
       Test managedTest = testDAO.get(test.getId());
 
@@ -220,7 +217,7 @@ public class TestServiceBean implements TestService {
    /******** Methods related to subscribers ********/
 
    @Override
-   public void addSubscriber(@ValidTest Test test) throws UnauthorizedException {
+   public void addSubscriber(@ValidTest Test test) {
       Test managedTest = testDAO.get(test.getId());
       User managedUser = userDAO.get(userSession.getLoggedUser().getId());
 
@@ -229,7 +226,7 @@ public class TestServiceBean implements TestService {
    }
 
    @Override
-   public void removeSubscriber(@ValidTest Test test) throws UnauthorizedException {
+   public void removeSubscriber(@ValidTest Test test) {
       Test managedTest = testDAO.get(test.getId());
       User managedUser = userDAO.get(userSession.getLoggedUser().getId());
 
