@@ -14,9 +14,6 @@
  */
 package org.perfrepo.model;
 
-import org.perfrepo.model.auth.EntityType;
-import org.perfrepo.model.auth.SecuredEntity;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -43,7 +40,6 @@ import java.util.Arrays;
     @NamedQuery(name = TestExecutionAttachment.FIND_BY_EXECUTION, query = "SELECT new TestExecutionAttachment(a.id, a.filename, a.mimetype) from TestExecutionAttachment a WHERE a.testExecution.id = :exec"),
     @NamedQuery(name = TestExecutionAttachment.GET_TEST, query = "SELECT test FROM TestExecutionAttachment attachment INNER JOIN attachment.testExecution.test test WHERE attachment = :entity")
 })
-@SecuredEntity(type = EntityType.TEST, parent = "testExecution")
 public class TestExecutionAttachment implements Entity<TestExecutionAttachment> {
 
    private static final long serialVersionUID = -3358483095886229881L;

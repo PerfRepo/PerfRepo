@@ -14,9 +14,6 @@
  */
 package org.perfrepo.model;
 
-import org.perfrepo.model.auth.EntityType;
-import org.perfrepo.model.auth.SecuredEntity;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,7 +39,6 @@ import javax.validation.constraints.Size;
     @NamedQuery(name = ValueParameter.FIND_ALL_SORTED_BY_VALUE_DESC, query = "SELECT x FROM ValueParameter x ORDER BY x.paramValue DESC"),
     @NamedQuery(name = ValueParameter.FIND_BY_ID, query = "SELECT x from ValueParameter x WHERE x.id = :" + ValueParameter.NQ_ID),
     @NamedQuery(name = ValueParameter.GET_TEST, query = "SELECT test from ValueParameter vp inner join vp.value v inner join v.testExecution te inner join te.test test where vp= :entity")})
-@SecuredEntity(type = EntityType.TEST, parent = "value")
 public class ValueParameter implements Entity<ValueParameter>, Comparable<ValueParameter> {
 
    private static final long serialVersionUID = 1673366421709715346L;

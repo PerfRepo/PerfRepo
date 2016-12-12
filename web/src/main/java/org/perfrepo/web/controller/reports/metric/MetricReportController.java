@@ -16,7 +16,6 @@ package org.perfrepo.web.controller.reports.metric;
 
 import org.apache.log4j.Logger;
 import org.perfrepo.model.Metric;
-import org.perfrepo.model.Tag;
 import org.perfrepo.model.Test;
 import org.perfrepo.model.TestExecution;
 import org.perfrepo.model.TestExecutionParameter;
@@ -60,7 +59,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Shows development of metric based on a specific test execution parameter.
@@ -1019,7 +1017,8 @@ public class MetricReportController extends BaseController {
       }
 
       public List<String> getTags() {
-         return exec == null ? null : exec.getSortedTags().stream().map(Tag::getName).collect(Collectors.toList());
+         //return exec == null ? null : exec.getSortedTags().stream().map(Tag::getName).collect(Collectors.toList());
+         return null;
       }
 
       public List<PointDetailsFavParam> getFavParams() {

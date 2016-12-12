@@ -14,9 +14,6 @@
  */
 package org.perfrepo.web.security;
 
-import org.perfrepo.model.auth.AccessType;
-
-import javax.enterprise.util.Nonbinding;
 import javax.interceptor.InterceptorBinding;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
@@ -30,5 +27,4 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @InterceptorBinding
 public @interface Secured {
 
-   @Nonbinding AccessType accessType() default AccessType.WRITE;
 }

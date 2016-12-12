@@ -29,9 +29,9 @@ public class TestUtils {
         war.addAsLibraries(Maven.resolver().resolve("org.apache.maven:maven-artifact:3.0.3").withTransitivity().asFile());
 
         war.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
+        war.addAsResource("test-beans.xml", "META-INF/beans.xml");
         war.addAsResource(new File("src/main/resources/lang"));
 
-        war.addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
 
         return war;
     }

@@ -14,8 +14,6 @@
  */
 package org.perfrepo.model;
 
-import org.perfrepo.model.auth.EntityType;
-import org.perfrepo.model.auth.SecuredEntity;
 import org.perfrepo.model.builder.TestExecutionBuilder;
 
 import javax.persistence.Column;
@@ -35,14 +33,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Represents one execution of a test.
@@ -52,7 +46,6 @@ import java.util.stream.Collectors;
  */
 @javax.persistence.Entity
 @Table(name = "test_execution")
-@SecuredEntity(type = EntityType.TEST, parent = "test")
 @NamedQueries({@NamedQuery(name = TestExecution.GET_TEST, query = "SELECT te.test from TestExecution te inner join te.test where te= :entity")})
 public class TestExecution implements Entity<TestExecution> {
 
@@ -84,7 +77,7 @@ public class TestExecution implements Entity<TestExecution> {
 
    @NotNull(message = "{page.testExecution.startedRequired}")
    @Column(name = "started")
-   private Date started;
+   private Date started = new Date();
 
    @Column(name = "comment")
    @Size(max = 10239)
@@ -102,14 +95,6 @@ public class TestExecution implements Entity<TestExecution> {
       this.id = id;
    }
 
-   public String getStringId() {
-      return id == null ? null : String.valueOf(id);
-   }
-
-   public void setStringId(String id) {
-      this.id = Long.valueOf(id);
-   }
-
    public void setName(String name) {
       this.name = name;
    }
@@ -124,28 +109,6 @@ public class TestExecution implements Entity<TestExecution> {
 
    public Test getTest() {
       return this.test;
-   }
-
-   public String getTestId() {
-      return test == null ? null : (test.getId() == null ? null : test.getId().toString());
-   }
-
-   public void setTestId(String id) {
-      if (test == null) {
-         test = new Test();
-      }
-      test.setId(Long.valueOf(id));
-   }
-
-   public String getTestUid() {
-      return test == null ? null : test.getUid();
-   }
-
-   public void setTestUid(String uid) {
-      if (test == null) {
-         test = new Test();
-      }
-      test.setUid(uid);
    }
 
    public Set<Tag> getTags() {
@@ -178,15 +141,6 @@ public class TestExecution implements Entity<TestExecution> {
 
    public void setComment(String comment) {
       this.comment = comment;
-   }
-
-   public List<Tag> getSortedTags() {
-      Collection<Tag> tags = getTags();
-      if (tags == null) {
-         return new ArrayList<>();
-      }
-
-      return tags.stream().sorted(((o1, o2) -> o1.compareTo(o2))).collect(Collectors.toList());
    }
 
    public static TestExecutionBuilder builder() {

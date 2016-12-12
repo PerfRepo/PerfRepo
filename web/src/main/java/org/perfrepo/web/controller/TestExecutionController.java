@@ -59,7 +59,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Details of {@link TestExecution}
@@ -173,9 +172,10 @@ public class TestExecutionController extends BaseController {
       this.createForTest = createForTest;
    }
 
+   /*
    public String getRawTags() {
       return TagUtils.rawTags(editedTestExecution == null ? null : editedTestExecution.getSortedTags().stream().map(Tag::getName).collect(Collectors.toList()));
-   }
+   }*/
 
    public void setRawTags(String rawTags) {
       if (editedTestExecution == null) {
@@ -335,7 +335,8 @@ public class TestExecutionController extends BaseController {
    }
 
    public List<Tag> getTags() {
-      return testExecution.getSortedTags();
+      //return testExecution.getSortedTags();
+      return null;
    }
 
    public Collection<TestExecutionAttachment> getAttachments() {

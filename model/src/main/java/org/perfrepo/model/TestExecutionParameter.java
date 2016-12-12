@@ -14,9 +14,6 @@
  */
 package org.perfrepo.model;
 
-import org.perfrepo.model.auth.EntityType;
-import org.perfrepo.model.auth.SecuredEntity;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -32,7 +29,6 @@ import javax.validation.constraints.Size;
 
 @javax.persistence.Entity
 @Table(name = "test_execution_parameter")
-@SecuredEntity(type = EntityType.TEST, parent = "testExecution")
 @NamedQueries({
     @NamedQuery(name = TestExecutionParameter.GET_TEST, query = "SELECT test FROM TestExecutionParameter tep INNER JOIN tep.testExecution.test test WHERE tep = :entity"),
     @NamedQuery(name = TestExecutionParameter.FIND_BY_TEST_ID, query = "SELECT DISTINCT p.name FROM TestExecutionParameter p, TestExecution e WHERE p.testExecution.id = e.id AND e.test.id = :testId")})

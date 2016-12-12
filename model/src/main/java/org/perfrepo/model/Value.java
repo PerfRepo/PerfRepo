@@ -14,9 +14,6 @@
  */
 package org.perfrepo.model;
 
-import org.perfrepo.model.auth.EntityType;
-import org.perfrepo.model.auth.SecuredEntity;
-
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,7 +38,6 @@ import java.util.Map;
 @javax.persistence.Entity
 @Table(name = "value")
 @NamedQueries({@NamedQuery(name = Value.GET_TEST, query = "SELECT test from Value v inner join v.testExecution te inner join te.test test where v= :entity")})
-@SecuredEntity(type = EntityType.TEST, parent = "testExecution")
 public class Value implements Entity<Value> {
 
    private static final long serialVersionUID = 1227873698917395252L;

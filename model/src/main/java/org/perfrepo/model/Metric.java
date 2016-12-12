@@ -45,7 +45,6 @@ import java.util.Set;
     @NamedQuery(name = Metric.FIND_BY_NAME, query = "SELECT metric FROM Metric metric WHERE metric.name= :name"),
     @NamedQuery(name = Metric.FIND_BY_TEST, query = "SELECT metric FROM Metric metric WHERE :test MEMBER OF metric.tests"),
 })
-//@SecuredEntity(type = EntityType.TEST) TODO: figure it out correctly
 public class Metric implements Entity<Metric>, Comparable<Metric> {
 
    private static final long serialVersionUID = -5234628391341278215L;

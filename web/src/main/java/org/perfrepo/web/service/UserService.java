@@ -130,17 +130,15 @@ public interface UserService {
     * Adds favorite parameter of user to the test
     *
     * @param parameter
-    * @param test
     */
-   public void createFavoriteParameter(FavoriteParameter parameter, Test test);
+   public void createFavoriteParameter(FavoriteParameter parameter);
 
    /**
     * Updates favorite parameter of user to the test
     *
     * @param parameter
-    * @param test
     */
-   public void updateFavoriteParameter(FavoriteParameter parameter, Test test);
+   public void updateFavoriteParameter(FavoriteParameter parameter);
 
    /**
     * Removes favorite parameter of the test from user

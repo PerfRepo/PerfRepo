@@ -15,8 +15,6 @@
 package org.perfrepo.model.report;
 
 import org.perfrepo.model.Entity;
-import org.perfrepo.model.auth.EntityType;
-import org.perfrepo.model.auth.SecuredEntity;
 import org.perfrepo.model.user.User;
 
 import javax.persistence.Column;
@@ -43,7 +41,6 @@ import java.util.Map;
  */
 @javax.persistence.Entity
 @Table(name = "report")
-@SecuredEntity(type = EntityType.REPORT)
 @NamedQueries({
     @NamedQuery(name = Report.GET_BY_USERNAME, query = "SELECT distinct report from Report report join report.user user where user.username = :username"),
     @NamedQuery(name = Report.GET_BY_GROUP_PERMISSION, query = "SELECT distinct report FROM Permission permission INNER JOIN permission.report report WHERE permission.groupId in (:groupIds) or permission.userId= :userId"),

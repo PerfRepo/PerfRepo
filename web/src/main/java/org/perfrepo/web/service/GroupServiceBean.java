@@ -48,7 +48,7 @@ public class GroupServiceBean implements GroupService {
     @Override
     public Group createGroup(Group group) throws DuplicateEntityException, UnauthorizedException {
         if (!userSession.getLoggedUser().isSuperAdmin()) {
-            throw new UnauthorizedException("group.userNotAllowedToManageGroups", userSession.getLoggedUser().getUsername());
+            throw new UnauthorizedException("authorization.group.notAllowedToManageGroups", userSession.getLoggedUser().getUsername());
         }
 
         if (getGroup(group.getName()) != null) {
@@ -61,7 +61,7 @@ public class GroupServiceBean implements GroupService {
     @Override
     public Group updateGroup(Group group) throws DuplicateEntityException, UnauthorizedException {
         if (!userSession.getLoggedUser().isSuperAdmin()) {
-            throw new UnauthorizedException("group.userNotAllowedToManageGroups", userSession.getLoggedUser().getUsername());
+            throw new UnauthorizedException("authorization.group.notAllowedToManageGroups", userSession.getLoggedUser().getUsername());
         }
 
         Group possibleDuplicate = getGroup(group.getName());
@@ -75,7 +75,7 @@ public class GroupServiceBean implements GroupService {
     @Override
     public void removeGroup(Group group) throws UnauthorizedException {
         if (!userSession.getLoggedUser().isSuperAdmin()) {
-            throw new UnauthorizedException("group.userNotAllowedToManageGroups", userSession.getLoggedUser().getUsername());
+            throw new UnauthorizedException("authorization.group.notAllowedToManageGroups", userSession.getLoggedUser().getUsername());
         }
 
         Group managedGroup = groupDAO.get(group.getId());
@@ -111,7 +111,7 @@ public class GroupServiceBean implements GroupService {
     @Override
     public void addUserToGroup(User user, Group group, MembershipType membershipType) throws UnauthorizedException {
         if (!userSession.getLoggedUser().isSuperAdmin() && !userService.isUserGroupAdmin(userSession.getLoggedUser(), group)) {
-            throw new UnauthorizedException("group.userNotAllowedToManageGroups", userSession.getLoggedUser().getUsername());
+            throw new UnauthorizedException("authorization.group.notAllowedToManageGroups", userSession.getLoggedUser().getUsername());
         }
 
         User managedUser = userDAO.get(user.getId());
@@ -128,7 +128,7 @@ public class GroupServiceBean implements GroupService {
     @Override
     public void removeUserFromGroup(User user, Group group) throws UnauthorizedException {
         if (!userSession.getLoggedUser().isSuperAdmin() && !userService.isUserGroupAdmin(userSession.getLoggedUser(), group)) {
-            throw new UnauthorizedException("group.userNotAllowedToManageGroups", userSession.getLoggedUser().getUsername());
+            throw new UnauthorizedException("authorization.group.notAllowedToManageGroups", userSession.getLoggedUser().getUsername());
         }
 
         User managedUser = userDAO.get(user.getId());

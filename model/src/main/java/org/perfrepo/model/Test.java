@@ -14,8 +14,6 @@
  */
 package org.perfrepo.model;
 
-import org.perfrepo.model.auth.EntityType;
-import org.perfrepo.model.auth.SecuredEntity;
 import org.perfrepo.model.builder.TestBuilder;
 import org.perfrepo.model.user.Group;
 import org.perfrepo.model.user.User;
@@ -50,7 +48,6 @@ import java.util.stream.Collectors;
  */
 @javax.persistence.Entity
 @Table(name = "test")
-@SecuredEntity(type = EntityType.TEST)
 @NamedQueries({
     @NamedQuery(name = Test.FIND_BY_UID, query = "SELECT test FROM Test test WHERE test.uid = :uid")
 })

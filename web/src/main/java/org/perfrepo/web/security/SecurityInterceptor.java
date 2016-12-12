@@ -14,14 +14,14 @@
  */
 package org.perfrepo.web.security;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.perfrepo.model.Entity;
-import org.perfrepo.model.auth.SecuredEntity;
+import org.perfrepo.web.service.exceptions.UnauthorizedException;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
+import java.lang.annotation.Annotation;
 
 @Secured
 @Interceptor
@@ -33,22 +33,29 @@ public class SecurityInterceptor {
    @AroundInvoke
    public Object invoke(InvocationContext ctx) throws Exception {
       Object[] params = ctx.getParameters();
-      Secured secureAnnotation = ctx.getMethod().getAnnotation(Secured.class);
+
       if (params.length > 0) {
-         //just verify first attribute
-         Object param = params[0];
-         SecuredEntity se = param.getClass().getAnnotation(SecuredEntity.class);
-         if (se != null && param instanceof Entity<?>) {
-            Entity<?> entity = (Entity<?>) param;
-            if (entity.getId() == null) {
-               //create mode, need to verify parent entity
-               entity = (Entity<?>) PropertyUtils.getProperty(entity, se.parent());
-            }
-            if (!authorizationService.isUserAuthorizedFor(secureAnnotation.accessType(), entity)) {
-               throw new org.perfrepo.web.security.SecurityException("securityException.permissionDenied", ctx.getMethod().getName(), param.getClass().getSimpleName(), ((Entity<?>) param).getId().toString());
+         Annotation[][] paramAnnotations = ctx.getMethod().getParameterAnnotations();
+         for (int i = 0; i < params.length; i++) {
+            AuthEntity authAnnotation = containsAuthAnnotation(paramAnnotations[i]);
+            if (authAnnotation != null) {
+               Entity<?> entity = (Entity<?>) params[i];
+               if (!authorizationService.isUserAuthorizedFor(authAnnotation.accessType(), entity)) {
+                  throw new UnauthorizedException(authAnnotation.messageKey(), authAnnotation.messageArgs());
+               }
             }
          }
       }
       return ctx.proceed();
+   }
+
+   private AuthEntity containsAuthAnnotation(Annotation[] annotations) {
+      for (Annotation annotation: annotations) {
+         if (annotation.annotationType().equals(AuthEntity.class)) {
+            return (AuthEntity) annotation;
+         }
+      }
+
+      return null;
    }
 }

@@ -220,21 +220,21 @@ public class TestGroupReportController extends BaseController {
          List<TestExecution> filtered = new ArrayList<TestExecution>();
          for (TestExecution te : testExecutions) {
             if (initial) {
-               if (!tests.contains(te.getTestUid())) {
+               /*if (!tests.contains(te.getTestUid())) {
                   tests.add(te.getTestUid());
-               }
+               }*/
                String tagsKey = normalizeTags(te.getTags());
                if (!tags.contains(tagsKey)) {
                   tags.add(tagsKey);
                }
                filtered.add(te);
-            } else {
+            } /*else {
                if (tests.contains(te.getTestUid()) && tags.contains(normalizeTags(te.getTags()))) {
                   filtered.add(te);
                } else {
                   testIds.remove(te.getId());
                }
-            }
+            }*/
          }
          //find missing test execution that can be compared in the report - allowed only when user is authorized for write access
          if (userAuthorized) {
@@ -559,11 +559,11 @@ public class TestGroupReportController extends BaseController {
    }
 
    public String getTestName(String testuid) {
-      for (TestExecution te : getTestExecutions()) {
+      /*for (TestExecution te : getTestExecutions()) {
          if (testuid.equals(te.getTestUid())) {
             return te.getTest().getName();
          }
-      }
+      }*/
       return null;
    }
 

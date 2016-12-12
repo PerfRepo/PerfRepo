@@ -19,7 +19,6 @@ import org.perfrepo.model.Test;
 import org.perfrepo.model.auth.AccessLevel;
 import org.perfrepo.model.auth.AccessType;
 import org.perfrepo.model.auth.Permission;
-import org.perfrepo.model.auth.SecuredEntity;
 import org.perfrepo.model.report.Report;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.dao.PermissionDAO;
@@ -83,48 +82,27 @@ public class AuthorizationServiceBean implements AuthorizationService {
       return false;
    }
 
-   private boolean isUserAuthorizedForTest(Long userId, AccessType accessType, Test test) {
-      //TODO: solve this
-      //return groupService.isUserInGroup(test.getGroupId());
-      return false;
-   }
-
-   private Report getParentReportEntity(Entity<?> entity) {
-      if (entity instanceof Report) {
-         return (Report) entity;
-      }
-      return null;
-   }
-
-   private Test getParentTestEntity(Entity<?> entity) {
-      if (entity instanceof Test) {
-         return (Test) entity;
-      }
-      return testDAO.getTestByRelation(entity);
+   private boolean isUserAuthorizedForTest(User user, AccessType accessType, Test test) {
+      return groupService.isUserInGroup(user, test.getGroup());
    }
 
    @Override
-   public boolean isUserAuthorizedFor(Long userId, AccessType accessType, Entity<?> entity) {
-      SecuredEntity securedEntityAnnotation = entity.getClass().getAnnotation(SecuredEntity.class);
-      if (securedEntityAnnotation != null) {
-         switch (securedEntityAnnotation.type()) {
-            case TEST:
-               return isUserAuthorizedForTest(userId, accessType, getParentTestEntity(entity));
-            case REPORT:
-               return isUserAuthorizedForReport(userId, accessType, getParentReportEntity(entity));
-            case USER:
-               //TODO: add implementation
-               return true;
-            default:
-               return false;
-         }
+   public boolean isUserAuthorizedFor(User user, AccessType accessType, Entity<?> entity) {
+      User managedUser = userService.getUser(user.getId());
+      if (managedUser.isSuperAdmin()) {
+         return true;
       }
-      return true;
+
+      if (entity instanceof Test) {
+        return isUserAuthorizedForTest(user, accessType, (Test) entity);
+      } else {
+         throw new UnsupportedOperationException("Not implemented yet.");
+      }
    }
 
    @Override
    public boolean isUserAuthorizedFor(AccessType accessType, Entity<?> entity) {
       User user = userSession.getLoggedUser();
-      return isUserAuthorizedFor(user != null ? user.getId() : null, accessType, entity);
+      return isUserAuthorizedFor(user, accessType, entity);
    }
 }

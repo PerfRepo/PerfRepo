@@ -148,7 +148,7 @@ public class ReportServiceBean implements ReportService {
    }
 
    @Override
-   @Secured(accessType = AccessType.READ)
+   @Secured
    public Report getFullReport(Report report) {
       Report freshReport = reportDAO.get(report.getId());
       if (freshReport == null) {

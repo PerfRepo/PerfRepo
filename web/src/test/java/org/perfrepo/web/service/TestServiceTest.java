@@ -20,7 +20,9 @@ import org.perfrepo.web.service.search.TestSearchCriteria;
 import org.perfrepo.web.service.util.TestUtils;
 import org.perfrepo.web.service.util.UserSessionMock;
 
+import javax.ejb.EJBException;
 import javax.inject.Inject;
+import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -133,6 +135,20 @@ public class TestServiceTest {
         Test updatedTest = testService.updateTest(testToUpdate);
         assertTest(testToUpdate, updatedTest);
 
+        // test update to duplicate
+        Test duplicateTestForUpdate = new Test();
+        fillTest("test2", duplicateTestForUpdate);
+        duplicateTestForUpdate.setGroup(testGroup);
+        testService.createTest(duplicateTestForUpdate);
+
+        fillTest("updated_test", duplicateTestForUpdate);
+        try {
+            testService.updateTest(duplicateTestForUpdate);
+            fail("TestService.updateTest should fail when updating test with duplicate UID.");
+        } catch (DuplicateEntityException ex) {
+            // expected
+        }
+
         // test delete
         Test testToDelete = updatedTest;
         testService.removeTest(testToDelete);
@@ -140,7 +156,7 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testTestCreationToInvalidGroup() throws DuplicateEntityException, UnauthorizedException {
+    public void testTestModificationsFromInvalidGroup() throws DuplicateEntityException, UnauthorizedException {
         Test test = new Test();
         fillTest("test1", test);
         test.setGroup(testGroup);
@@ -158,6 +174,25 @@ public class TestServiceTest {
             // expected
         } finally {
             UserSessionMock.setLoggedUser(testUser);
+        }
+
+        // test update from user that is not part of the group
+        Test createdTest = testService.createTest(test);
+        UserSessionMock.setLoggedUser(user);
+
+        try {
+            testService.updateTest(createdTest);
+            fail("TestService.updateTest should fail when trying to update a test with group that user doesn't belong to.");
+        } catch (UnauthorizedException ex) {
+            // expected
+        }
+
+        // test unauthorized remove
+        try {
+            testService.removeTest(test);
+            fail("TestService.removeTest should fail when trying to remove a test with group that user doesn't belong to.");
+        } catch (UnauthorizedException ex) {
+            // expected
         }
     }
 
@@ -417,8 +452,84 @@ public class TestServiceTest {
     }
 
     @org.junit.Test
-    public void testTestRemovalWithTestExecution() {
-        //TODO: implement this to be sure that test executions are removed automatically
+    public void testNulls() throws DuplicateEntityException, UnauthorizedException {
+        try {
+            testService.createTest(null);
+            fail("TestService.createTest should fail when argument null.");
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof ConstraintViolationException) {
+                // expected
+                System.out.println("neco?");
+            }
+        }
+
+        Test test = new Test();
+        test.setId(1L);
+        try {
+            testService.createTest(test);
+            fail("TestService.createTest should fail when test ID is set.");
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof ConstraintViolationException) {
+                // expected
+            }
+        }
+
+        try {
+            testService.updateTest(null);
+            fail("TestService.updateTest should fail when argument null.");
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof ConstraintViolationException) {
+                // expected
+            }
+        }
+
+        test.setId(null);
+        try {
+            testService.updateTest(test);
+            fail("TestService.updateTest should fail when test ID is null.");
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof ConstraintViolationException) {
+                // expected
+            }
+        }
+
+        test.setId(-1L);
+        try {
+            testService.updateTest(test);
+            fail("TestService.updateTest should fail when test doesn't exist.");
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof ConstraintViolationException) {
+                // expected
+            }
+        }
+
+        try {
+            testService.removeTest(null);
+            fail("TestService.removeTest should fail when argument is null.");
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof ConstraintViolationException) {
+                // expected
+            }
+        }
+
+        try {
+            testService.removeTest(test);
+            fail("TestService.removeTest should fail when test ID is null.");
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof ConstraintViolationException) {
+                // expected
+            }
+        }
+
+        test.setId(-1L);
+        try {
+            testService.removeTest(test);
+            fail("TestService.removeTest should fail when test doesn't exist.");
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof ConstraintViolationException) {
+                // expected
+            }
+        }
     }
 
     /*** HELPER METHODS ***/

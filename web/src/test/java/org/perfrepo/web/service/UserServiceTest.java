@@ -211,11 +211,13 @@ public class UserServiceTest {
 
         FavoriteParameter favoriteParameter1 = new FavoriteParameter();
         fillFavoriteParameter("param1", favoriteParameter1);
+        favoriteParameter1.setTest(test);
         FavoriteParameter favoriteParameter2 = new FavoriteParameter();
         fillFavoriteParameter("param2", favoriteParameter2);
+        favoriteParameter2.setTest(test);
 
-        userService.createFavoriteParameter(favoriteParameter1, test);
-        userService.createFavoriteParameter(favoriteParameter2, test);
+        userService.createFavoriteParameter(favoriteParameter1);
+        userService.createFavoriteParameter(favoriteParameter2);
 
         List<FavoriteParameter> expectedResult = Arrays.asList(favoriteParameter1, favoriteParameter2);
         List<FavoriteParameter> actualResult = userService.getFavoriteParametersForTest(test);
@@ -227,7 +229,8 @@ public class UserServiceTest {
         // test update
         FavoriteParameter updatedParameter = favoriteParameter1;
         fillFavoriteParameter("updated_param1", updatedParameter);
-        userService.updateFavoriteParameter(updatedParameter, test);
+        updatedParameter.setTest(test);
+        userService.updateFavoriteParameter(updatedParameter);
 
         List<FavoriteParameter> updatedParameters = userService.getFavoriteParametersForTest(test);
 

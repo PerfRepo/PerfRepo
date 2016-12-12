@@ -21,7 +21,7 @@ import org.perfrepo.model.TestExecutionParameter;
 import org.perfrepo.model.Value;
 import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.to.TestExecutionSearchTO;
-import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.service.exceptions.UnauthorizedException;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,27 +42,27 @@ public interface TestExecutionService {
     *
     * @param testExecution New test execution.
     * @return
-    * @throws ServiceException
+    * @throws UnauthorizedException
     */
-   public TestExecution createTestExecution(TestExecution testExecution) throws ServiceException;
+   public TestExecution createTestExecution(TestExecution testExecution) throws UnauthorizedException;
 
    /**
     * Updates test execution.
     * Update only attributes name, comment, started and collection of tags.
     *
     * @param updatedTestExecution
+    * @throws UnauthorizedException
     * @return
-    * @throws ServiceException
     */
-   public TestExecution updateTestExecution(TestExecution updatedTestExecution) throws ServiceException;
+   public TestExecution updateTestExecution(TestExecution updatedTestExecution) throws UnauthorizedException;
 
    /**
     * Delete a test execution with all it's subobjects.
     *
     * @param testExecution
-    * @throws ServiceException
+    * @throws UnauthorizedException
     */
-   public void removeTestExecution(TestExecution testExecution) throws ServiceException;
+   public void removeTestExecution(TestExecution testExecution) throws UnauthorizedException;
 
    /**
     * Get {@link TestExecution}.
@@ -93,17 +93,18 @@ public interface TestExecutionService {
     * Add attachment to the test execution.
     *
     * @param attachment
+    * @throws UnauthorizedException
     * @return id of newly created attachment
     */
-   public Long addAttachment(TestExecutionAttachment attachment) throws ServiceException;
+   public Long addAttachment(TestExecutionAttachment attachment) throws UnauthorizedException;
 
    /**
     * Delete attachment.
     *
     * @param attachment
-    * @throws ServiceException
+    * @throws UnauthorizedException
     */
-   public void removeAttachment(TestExecutionAttachment attachment) throws ServiceException;
+   public void removeAttachment(TestExecutionAttachment attachment) throws UnauthorizedException;
 
    /**
     * Get test execution attachment by id.
@@ -119,27 +120,27 @@ public interface TestExecutionService {
     * Adds test execution parameter
     *
     * @param parameter
+    * @throws UnauthorizedException
     * @return
-    * @throws ServiceException
     */
-   public TestExecutionParameter addParameter(TestExecutionParameter parameter) throws ServiceException;
+   public TestExecutionParameter addParameter(TestExecutionParameter parameter) throws UnauthorizedException;
 
    /**
     * Updates test execution parameter
     *
     * @param parameter
+    * @throws UnauthorizedException
     * @return test execution parameter
-    * @throws ServiceException
     */
-   public TestExecutionParameter updateParameter(TestExecutionParameter parameter) throws ServiceException;
+   public TestExecutionParameter updateParameter(TestExecutionParameter parameter) throws UnauthorizedException;
 
    /**
     * Removes TestExecutionParameter
     *
     * @param parameter
-    * @throws ServiceException
+    * @throws UnauthorizedException
     */
-   public void removeParameter(TestExecutionParameter parameter) throws ServiceException;
+   public void removeParameter(TestExecutionParameter parameter) throws UnauthorizedException;
 
    /**
     * Get parameter and test execution.
@@ -164,28 +165,54 @@ public interface TestExecutionService {
     *
     * @param value
     * @return value
-    * @throws ServiceException
+    * @throws UnauthorizedException
     */
-   public Value addValue(Value value) throws ServiceException;
+   public Value addValue(Value value) throws UnauthorizedException;
 
    /**
     * Updates Test Execution Value and the set of it's parameters.
     *
     * @param value
     * @return value
-    * @throws ServiceException
+    * @throws UnauthorizedException
     */
-   public Value updateValue(Value value) throws ServiceException;
+   public Value updateValue(Value value) throws UnauthorizedException;
 
    /**
     * Removes value from TestExecution
     *
     * @param value
-    * @throws ServiceException
+    * @throws UnauthorizedException
     */
-   public void removeValue(Value value) throws ServiceException;
+   public void removeValue(Value value) throws UnauthorizedException;
 
    /******** Methods related to tags ********/
+
+
+   /**
+    * Adds tag
+    *
+    * @param tag
+    * @return
+    * @throws UnauthorizedException
+    */
+   public Tag addTag(Tag tag, TestExecution testExecution) throws UnauthorizedException;
+
+   /**
+    *
+    * @param tag
+    * @return
+    * @throws UnauthorizedException
+    */
+   public Tag updateTag(Tag tag) throws UnauthorizedException;
+
+   /**
+    *
+    *
+    * @param tag
+    * @throws UnauthorizedException
+    */
+   public void removeTag(Tag tag) throws UnauthorizedException;
 
    /**
     * Returns tags matching prefix
@@ -200,15 +227,17 @@ public interface TestExecutionService {
     *
     * @param tags
     * @param testExecutions
+    * @throws UnauthorizedException
     */
-   public void addTagsToTestExecutions(Set<Tag> tags, Collection<TestExecution> testExecutions);
+   public void addTagsToTestExecutions(Set<Tag> tags, Collection<TestExecution> testExecutions) throws UnauthorizedException;
 
    /**
     * Perform mass operation. Deletes tags from provided test executions.
     *
     * @param tags
     * @param testExecutions
+    * @throws UnauthorizedException
     */
-   public void removeTagsFromTestExecutions(Set<Tag> tags, Collection<TestExecution> testExecutions);
+   public void removeTagsFromTestExecutions(Set<Tag> tags, Collection<TestExecution> testExecutions) throws UnauthorizedException;
 
 }

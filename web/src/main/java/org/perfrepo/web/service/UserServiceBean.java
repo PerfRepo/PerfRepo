@@ -76,11 +76,11 @@ public class UserServiceBean implements UserService {
    @Override
    public User createUser(User user) throws DuplicateEntityException, UnauthorizedException {
       if (!userSession.getLoggedUser().isSuperAdmin() && !isUserGroupAdmin(userSession.getLoggedUser())) {
-         throw new UnauthorizedException("user.userNotAllowedToCreateUsers", userSession.getLoggedUser().getUsername());
+         throw new UnauthorizedException("authorization.user.notAllowedToCreateUsers", userSession.getLoggedUser().getUsername());
       }
 
       if (getUser(user.getUsername()) != null) {
-         throw new DuplicateEntityException("user.usernameAlreadyExists", user.getUsername());
+         throw new DuplicateEntityException("user.duplicateUsername", user.getUsername());
       }
 
       user.setPassword(computeMd5(user.getPassword()));
@@ -92,12 +92,12 @@ public class UserServiceBean implements UserService {
    @Override
    public User updateUser(User user) throws DuplicateEntityException, UnauthorizedException {
       if (!userSession.getLoggedUser().equals(user) && !userSession.getLoggedUser().isSuperAdmin()) {
-         throw new UnauthorizedException("user.userNotAllowedToUpdateDifferentUser", userSession.getLoggedUser().getUsername());
+         throw new UnauthorizedException("authorization.user.notAllowedToUpdateDifferentUser", userSession.getLoggedUser().getUsername());
       }
 
       User possibleDuplicate = getUser(user.getUsername());
       if (possibleDuplicate != null && !possibleDuplicate.getId().equals(user.getId())) {
-         throw new DuplicateEntityException("user.usernameAlreadyExists", user.getUsername());
+         throw new DuplicateEntityException("user.duplicateUsername", user.getUsername());
       }
 
       user.setPassword(computeMd5(user.getPassword()));
@@ -109,7 +109,7 @@ public class UserServiceBean implements UserService {
    @Override
    public void removeUser(User user) throws UnauthorizedException {
       if (!userSession.getLoggedUser().isSuperAdmin()) {
-         throw new UnauthorizedException("user.userNotAllowedToRemoveUsers", userSession.getLoggedUser().getUsername());
+         throw new UnauthorizedException("authorization.user.notAllowedToRemoveUsers", userSession.getLoggedUser().getUsername());
       }
 
       User managedUser = userDAO.get(user.getId());
@@ -209,9 +209,9 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void createFavoriteParameter(FavoriteParameter parameter, Test test) {
+   public void createFavoriteParameter(FavoriteParameter parameter) {
       User managedUser = userDAO.get(userSession.getLoggedUser().getId());
-      Test managedTest = testDAO.get(test.getId());
+      Test managedTest = testDAO.get(parameter.getTest().getId());
 
       parameter.setTest(managedTest);
       parameter.setUser(managedUser);
@@ -220,9 +220,9 @@ public class UserServiceBean implements UserService {
    }
 
    @Override
-   public void updateFavoriteParameter(FavoriteParameter parameter, Test test) {
+   public void updateFavoriteParameter(FavoriteParameter parameter) {
       User managedUser = userDAO.get(userSession.getLoggedUser().getId());
-      Test managedTest = testDAO.get(test.getId());
+      Test managedTest = testDAO.get(parameter.getTest().getId());
 
       parameter.setTest(managedTest);
       parameter.setUser(managedUser);
