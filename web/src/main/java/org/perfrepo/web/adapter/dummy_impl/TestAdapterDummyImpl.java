@@ -59,23 +59,6 @@ public class TestAdapterDummyImpl implements TestAdapter {
     @Override
     public TestDto createTest(TestDto test) {
         // TODO validation
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
-        Set<ConstraintViolation<TestDto>> constrainViolations = validator.validate(test);
-
-        if (!constrainViolations.isEmpty()) {
-            ValidationError errors = new ValidationError();
-
-            constrainViolations.forEach(val -> {
-                FieldError error = new FieldError(val.getPropertyPath().toString(), val.getMessage());
-                errors.addFieldError(error);
-            });
-
-            throw new ValidationException("Validation error", errors);
-        }
-        // TODO validation end
-
         // it is not possible to set it, metrics and alerts can be added in test detail
         test.setMetrics(null);
         test.setAlerts(null);

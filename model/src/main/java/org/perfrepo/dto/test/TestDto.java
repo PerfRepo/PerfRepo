@@ -4,8 +4,6 @@ import org.perfrepo.dto.alert.AlertDto;
 import org.perfrepo.dto.metric.MetricDto;
 import org.perfrepo.dto.group.GroupDto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Set;
 
 /**
@@ -17,15 +15,10 @@ public class TestDto {
 
     private Long id;
 
-    @NotNull(message = "{page.test.nameRequired}")
-    @Size(max = 2047)
     private String name;
 
-    @NotNull(message = "{page.test.uidRequired}")
-    @Size(max = 2047)
     private String uid;
 
-    @Size(max = 10239)
     private String description;
 
     private GroupDto group;
