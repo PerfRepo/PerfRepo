@@ -26,13 +26,18 @@ COMMIT;
 BEGIN;
 
 ALTER TABLE test ADD COLUMN group_id bigint;
-ALTER TABLE ONLY test ADD CONSTRAINT test_group_fk FOREIGN KEY (group_id) REFERENCES "group"(id) ON DELETE CASCADE;
 
 SELECT migrate_test_group_relations();
 
 ALTER TABLE test ALTER COLUMN group_id SET NOT NULL;
 CREATE INDEX test_group_id ON test(group_id);
 ALTER TABLE test DROP COLUMN groupid;
+
+COMMIT;
+
+BEGIN;
+
+ALTER TABLE ONLY test ADD CONSTRAINT test_group_fk FOREIGN KEY (group_id) REFERENCES "group"(id) ON DELETE CASCADE;
 
 COMMIT;
 
@@ -89,7 +94,12 @@ COMMIT;
 
 BEGIN;
 
-ALTER TABLE public.user ADD COLUMN type character varying(25) NOT NULL;
-ALTER TABLE user_group ADD COLUMN type character varying(25) NOT NULL;
+ALTER TABLE public.user ADD COLUMN type character varying(25);
+UPDATE public.user SET type = 'REGULAR_USER';
+ALTER TABLE public.user ALTER COLUMN type SET NOT NULL;
+
+ALTER TABLE user_group ADD COLUMN type character varying(25);
+UPDATE user_group SET type = 'REGULAR_USER';
+ALTER TABLE user_group ALTER COLUMN type SET NOT NULL;
 
 COMMIT;

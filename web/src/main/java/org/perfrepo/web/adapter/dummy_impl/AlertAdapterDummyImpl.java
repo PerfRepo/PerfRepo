@@ -1,6 +1,5 @@
 package org.perfrepo.web.adapter.dummy_impl;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.perfrepo.dto.alert.AlertDto;
 import org.perfrepo.dto.test.TestDto;
 import org.perfrepo.dto.user.UserDto;
@@ -83,16 +82,16 @@ public class AlertAdapterDummyImpl implements AlertAdapter {
 
     @Override
     public void subscribeAlerts(Long alertId) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void unsubscribeAlerts(Long alertId) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<UserDto> getAlertSubscribers(Long testId) {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 }

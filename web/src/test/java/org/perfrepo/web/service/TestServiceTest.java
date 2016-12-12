@@ -86,7 +86,7 @@ public class TestServiceTest {
     }
 
     @After
-    public void cleanUp() throws UnauthorizedException {
+    public void cleanUp() {
         UserSessionMock.setLoggedUser(adminUser);
         for (User user: userService.getAllUsers()) {
             userService.removeUser(user);
@@ -170,8 +170,12 @@ public class TestServiceTest {
         try {
             testService.createTest(test);
             fail("TestService.createTest should fail when trying to create a test with group that user doesn't belong to.");
-        } catch (UnauthorizedException ex) {
-            // expected
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof UnauthorizedException) {
+                // expected
+            } else {
+                fail("Unexpected exception thrown.");
+            }
         } finally {
             UserSessionMock.setLoggedUser(testUser);
         }
@@ -183,16 +187,24 @@ public class TestServiceTest {
         try {
             testService.updateTest(createdTest);
             fail("TestService.updateTest should fail when trying to update a test with group that user doesn't belong to.");
-        } catch (UnauthorizedException ex) {
-            // expected
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof UnauthorizedException) {
+                // expected
+            } else {
+                fail("Unexpected exception thrown.");
+            }
         }
 
         // test unauthorized remove
         try {
             testService.removeTest(test);
             fail("TestService.removeTest should fail when trying to remove a test with group that user doesn't belong to.");
-        } catch (UnauthorizedException ex) {
-            // expected
+        } catch (EJBException ex) {
+            if (ex.getCause() instanceof UnauthorizedException) {
+                // expected
+            } else {
+                fail("Unexpected exception thrown.");
+            }
         }
     }
 

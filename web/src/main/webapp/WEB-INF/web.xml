@@ -9,24 +9,6 @@
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
 
-	<!-- deprecated REST api -->
-	<servlet>
-		<servlet-name>Resteasy</servlet-name>
-		<servlet-class>org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher</servlet-class>
-		<init-param>
-			<param-name>resteasy.servlet.mapping.prefix</param-name>
-			<param-value>/deprecated_rest</param-value>
-		</init-param>
-		<init-param>
-			<param-name>javax.ws.rs.Application</param-name>
-			<param-value>org.perfrepo.web.deprecated_rest.PerfRepoDeprecatedRESTApplication</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Resteasy</servlet-name>
-		<url-pattern>/deprecated_rest/*</url-pattern>
-	</servlet-mapping>
-
 	<!-- new REST api -->
 	<servlet>
 		<servlet-name>ResteasyFrontApi</servlet-name>
@@ -53,18 +35,6 @@
 		<servlet-name>ResteasyFrontApi</servlet-name>
 		<url-pattern>/rest/json/*</url-pattern>
 	</servlet-mapping>
-
-	<!-- filters for deprecated REST api -->
-	<filter>
-		<filter-name>DeprecatedRestAuthenticationFilter</filter-name>
-		<filter-class>org.perfrepo.web.deprecated_rest.security.DeprecatedRestAuthenticationFilter</filter-class>
-	</filter>
-	<filter-mapping>
-		<filter-name>DeprecatedRestAuthenticationFilter</filter-name>
-		<url-pattern>/deprecated_rest/*</url-pattern>
-		<dispatcher>REQUEST</dispatcher>
-		<dispatcher>FORWARD</dispatcher>
-	</filter-mapping>
 
 	<!-- filters for new REST api -->
 	<filter>
@@ -104,15 +74,6 @@
 			<url-pattern>/resources/js/*</url-pattern>
 			<url-pattern>/org.richfaces.resources/*</url-pattern>
 			<url-pattern>/javax.faces.resource/*</url-pattern>
-		</web-resource-collection>
-	</security-constraint>
-
-	<!-- security for deprecated REST api -->
-	<security-constraint>
-		<web-resource-collection>
-			<web-resource-name>Rest deprecated</web-resource-name>
-			<description>Web resources for REST Services</description>
-			<url-pattern>/deprecated_rest/*</url-pattern>
 		</web-resource-collection>
 	</security-constraint>
 

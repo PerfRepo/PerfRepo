@@ -84,13 +84,13 @@ public class Storage {
         groupStorage.create(group2);
 
         MetricDto metric1 = new MetricDto();
-        metric1.setComparator(MetricComparator.HB);
+        metric1.setComparator(MetricComparator.HIGHER_BETTER);
         metric1.setName("Throughput");
         metric1.setDescription("Amount of transactions produced over time during a test.");
         metricStorage.create(metric1);
 
         MetricDto metric2 = new MetricDto();
-        metric2.setComparator(MetricComparator.LB);
+        metric2.setComparator(MetricComparator.LOWER_BETTER);
         metric2.setName("Response time");
         metricStorage.create(metric2);
 

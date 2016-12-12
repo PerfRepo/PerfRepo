@@ -2,6 +2,5 @@
 	   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
 	<interceptors>
 		<class>org.perfrepo.web.security.SecurityInterceptor</class>
-		<class>org.perfrepo.web.deprecated_rest.logging.LoggingInterceptor</class>
 	</interceptors>
 </beans>

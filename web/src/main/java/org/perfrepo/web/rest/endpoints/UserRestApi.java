@@ -1,6 +1,5 @@
 package org.perfrepo.web.rest.endpoints;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.perfrepo.web.adapter.UserAdapter;
 
 import javax.enterprise.context.RequestScoped;
@@ -24,6 +23,6 @@ public class UserRestApi {
 
     @GET
     public Response getAllUsers() {
-        throw new NotImplementedException();
+        throw new UnsupportedOperationException();
     }
 }

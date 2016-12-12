@@ -62,7 +62,7 @@ public class TestExecutionServiceTest {
     }
 
     @Before
-    public void init() throws DuplicateEntityException, UnauthorizedException {
+    public void init() throws DuplicateEntityException {
         adminUser = createUser("admin");
         adminUser.setType(User.UserType.SUPER_ADMIN);
         UserSessionMock.setLoggedUser(adminUser); // hack, because we need some super admin to create a super admin :)
@@ -113,7 +113,7 @@ public class TestExecutionServiceTest {
     }
 
     @org.junit.Test
-    public void testTestExecutionBasicCRUDOperations() throws DuplicateEntityException, UnauthorizedException {
+    public void testTestExecutionBasicCRUDOperations() throws DuplicateEntityException {
         TestExecution testExecution = new TestExecution();
         fillTestExecution("exec1", tests.get(0), testExecution);
 

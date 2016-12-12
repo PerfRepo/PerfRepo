@@ -46,7 +46,7 @@ public class GroupServiceBean implements GroupService {
     private UserSession userSession;
 
     @Override
-    public Group createGroup(Group group) throws DuplicateEntityException, UnauthorizedException {
+    public Group createGroup(Group group) throws DuplicateEntityException {
         if (!userSession.getLoggedUser().isSuperAdmin()) {
             throw new UnauthorizedException("authorization.group.notAllowedToManageGroups", userSession.getLoggedUser().getUsername());
         }
@@ -59,7 +59,7 @@ public class GroupServiceBean implements GroupService {
     }
 
     @Override
-    public Group updateGroup(Group group) throws DuplicateEntityException, UnauthorizedException {
+    public Group updateGroup(Group group) throws DuplicateEntityException {
         if (!userSession.getLoggedUser().isSuperAdmin()) {
             throw new UnauthorizedException("authorization.group.notAllowedToManageGroups", userSession.getLoggedUser().getUsername());
         }
@@ -73,7 +73,7 @@ public class GroupServiceBean implements GroupService {
     }
 
     @Override
-    public void removeGroup(Group group) throws UnauthorizedException {
+    public void removeGroup(Group group) {
         if (!userSession.getLoggedUser().isSuperAdmin()) {
             throw new UnauthorizedException("authorization.group.notAllowedToManageGroups", userSession.getLoggedUser().getUsername());
         }
@@ -104,12 +104,12 @@ public class GroupServiceBean implements GroupService {
     }
 
     @Override
-    public void addUserToGroup(User user, Group group) throws UnauthorizedException {
+    public void addUserToGroup(User user, Group group) {
         addUserToGroup(user, group, MembershipType.REGULAR_USER);
     }
 
     @Override
-    public void addUserToGroup(User user, Group group, MembershipType membershipType) throws UnauthorizedException {
+    public void addUserToGroup(User user, Group group, MembershipType membershipType) {
         if (!userSession.getLoggedUser().isSuperAdmin() && !userService.isUserGroupAdmin(userSession.getLoggedUser(), group)) {
             throw new UnauthorizedException("authorization.group.notAllowedToManageGroups", userSession.getLoggedUser().getUsername());
         }
@@ -126,7 +126,7 @@ public class GroupServiceBean implements GroupService {
     }
 
     @Override
-    public void removeUserFromGroup(User user, Group group) throws UnauthorizedException {
+    public void removeUserFromGroup(User user, Group group) {
         if (!userSession.getLoggedUser().isSuperAdmin() && !userService.isUserGroupAdmin(userSession.getLoggedUser(), group)) {
             throw new UnauthorizedException("authorization.group.notAllowedToManageGroups", userSession.getLoggedUser().getUsername());
         }

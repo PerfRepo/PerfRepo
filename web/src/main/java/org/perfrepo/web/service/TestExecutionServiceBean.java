@@ -14,7 +14,6 @@ import org.perfrepo.web.dao.TestExecutionAttachmentDAO;
 import org.perfrepo.web.dao.TestExecutionDAO;
 import org.perfrepo.web.dao.TestExecutionParameterDAO;
 import org.perfrepo.web.service.exceptions.ServiceException;
-import org.perfrepo.web.service.exceptions.UnauthorizedException;
 import org.perfrepo.web.util.MultiValue;
 
 import javax.ejb.Stateless;
@@ -57,7 +56,7 @@ public class TestExecutionServiceBean implements TestExecutionService {
     private TagDAO tagDAO;
 
     @Override
-    public TestExecution createTestExecution(TestExecution testExecution) throws UnauthorizedException {
+    public TestExecution createTestExecution(TestExecution testExecution) {
         Test managedTest = testDAO.get(testExecution.getTest().getId());
         testExecution.setTest(managedTest);
 
@@ -123,14 +122,14 @@ public class TestExecutionServiceBean implements TestExecutionService {
     }
 
     @Override
-    public TestExecution updateTestExecution(TestExecution updatedTestExecution) throws UnauthorizedException {
+    public TestExecution updateTestExecution(TestExecution updatedTestExecution) {
         TestExecution managedTestExecution = testExecutionDAO.merge(updatedTestExecution);
 
         return managedTestExecution;
     }
 
     @Override
-    public void removeTestExecution(TestExecution testExecution) throws UnauthorizedException {
+    public void removeTestExecution(TestExecution testExecution) {
         TestExecution freshTestExecution = testExecutionDAO.get(testExecution.getId());
         /*if (freshTestExecution == null) {
             throw new ServiceException("serviceException.testExecutionNotFound", testExecution.getName());
@@ -188,7 +187,7 @@ public class TestExecutionServiceBean implements TestExecutionService {
     }
 
     @Override
-    public Long addAttachment(TestExecutionAttachment attachment) throws UnauthorizedException {
+    public Long addAttachment(TestExecutionAttachment attachment) {
         TestExecution exec = testExecutionDAO.get(attachment.getTestExecution().getId());
         /*if (exec == null) {
             throw new ServiceException("serviceException.addAttachment.testExecutionNotFound", attachment.getTestExecution().getName());
@@ -199,7 +198,7 @@ public class TestExecutionServiceBean implements TestExecutionService {
     }
 
     @Override
-    public void removeAttachment(TestExecutionAttachment attachment) throws UnauthorizedException {
+    public void removeAttachment(TestExecutionAttachment attachment) {
         TestExecution exec = testExecutionDAO.get(attachment.getTestExecution().getId());
         /*if (exec == null) {
             throw new ServiceException("serviceException.removeAttachment.testExecutionNotFound", attachment.getTestExecution().getName());
@@ -216,17 +215,17 @@ public class TestExecutionServiceBean implements TestExecutionService {
     }
 
     @Override
-    public TestExecutionParameter addParameter(TestExecutionParameter parameter) throws UnauthorizedException {
+    public TestExecutionParameter addParameter(TestExecutionParameter parameter) {
         return null;
     }
 
     @Override
-    public TestExecutionParameter updateParameter(TestExecutionParameter parameter) throws UnauthorizedException {
+    public TestExecutionParameter updateParameter(TestExecutionParameter parameter) {
         return null;
     }
 
     @Override
-    public void removeParameter(TestExecutionParameter parameter) throws UnauthorizedException {
+    public void removeParameter(TestExecutionParameter parameter) {
 
     }
 
@@ -241,32 +240,32 @@ public class TestExecutionServiceBean implements TestExecutionService {
     }
 
     @Override
-    public Value addValue(Value value) throws UnauthorizedException {
+    public Value addValue(Value value) {
         return null;
     }
 
     @Override
-    public Value updateValue(Value value) throws UnauthorizedException {
+    public Value updateValue(Value value) {
         return null;
     }
 
     @Override
-    public void removeValue(Value value) throws UnauthorizedException {
+    public void removeValue(Value value) {
 
     }
 
     @Override
-    public Tag addTag(Tag tag, TestExecution testExecution) throws UnauthorizedException {
+    public Tag addTag(Tag tag, TestExecution testExecution) {
         return null;
     }
 
     @Override
-    public Tag updateTag(Tag tag) throws UnauthorizedException {
+    public Tag updateTag(Tag tag) {
         return null;
     }
 
     @Override
-    public void removeTag(Tag tag) throws UnauthorizedException {
+    public void removeTag(Tag tag) {
 
     }
 
