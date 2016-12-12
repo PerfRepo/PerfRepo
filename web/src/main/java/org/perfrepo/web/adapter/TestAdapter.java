@@ -1,11 +1,8 @@
 package org.perfrepo.web.adapter;
 
-import org.perfrepo.dto.metric.MetricDto;
 import org.perfrepo.dto.util.SearchResult;
-import org.perfrepo.dto.alert.AlertDto;
 import org.perfrepo.dto.test.TestDto;
 import org.perfrepo.dto.test.TestSearchParams;
-import org.perfrepo.dto.user.UserDto;
 
 import java.util.List;
 
@@ -24,7 +21,7 @@ public interface TestAdapter {
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    TestDto getTestById(Long id);
+    TestDto getTest(Long id);
 
     /**
      * Return {@link TestDto} object by its uid.
@@ -34,7 +31,7 @@ public interface TestAdapter {
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    TestDto getTestByUid(String uid);
+    TestDto getTest(String uid);
 
     /**
      * Create new {@link TestDto} object.
@@ -58,13 +55,13 @@ public interface TestAdapter {
     TestDto updateTest(TestDto test);
 
     /**
-     * Delete a {@link TestDto} object.
+     * Remove a {@link TestDto} object.
      *
      * @param id The test identifier.
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    void deleteTest(Long id);
+    void removeTest(Long id);
 
     /**
      * Return all tests.
@@ -79,83 +76,6 @@ public interface TestAdapter {
      * @return List of {@link TestDto} tests.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    SearchResult searchTests(TestSearchParams searchParams);
-
-    /**
-     * Add a metric to existing test. If a metric does not exist, it will be created.
-     *
-     * @param metric Metric {@link org.perfrepo.dto.metric.MetricDto} that will be added to the test.
-     * @param testId Test {@link TestDto} identifier.
-     * @return Metric {@link MetricDto} that was added to test.
-     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test does not exist.
-     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
-     */
-    MetricDto addMetricToTest(MetricDto metric, Long testId);
-
-    /**
-     * Remove a metric from existing test.
-     *
-     * @param metricId Identifier of {@link org.perfrepo.dto.metric.MetricDto} metric that will be removed.
-     * @param testId Test {@link TestDto} identifier.
-     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test does not exist.
-     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
-     */
-    void removeMetricFromTest(Long metricId, Long testId);
-
-    /**
-     * Subscribe the user to the test alerts.
-     *
-     * @param testId Test {@link TestDto} identifier.
-     * @param userId User {@link UserDto} identifier.
-     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test or user does not exist.
-     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
-     */
-    void subscribeToTestAlerts(Long testId, Long userId);
-
-    /**
-     * Unsubscribe the user from the test alerts.
-     *
-     * @param testId Test {@link TestDto} identifier.
-     * @param userId User {@link UserDto} identifier.
-     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test or user does not exist.
-     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
-     */
-    void unsubscribeFromTestAlerts(Long testId, Long userId);
-
-    /**
-     * Create new {@link AlertDto} alert for the test.
-     *
-     * @param testId Test {@link TestDto} identifier.
-     * @param alert
-     * @return
-     */
-    AlertDto createTestAlert(Long testId, AlertDto alert);
-
-    /**
-     * Update the {@link AlertDto} alert of the test.
-     *
-     * @param testId Test {@link TestDto} identifier.
-     * @param alert Alert {@link AlertDto} parameters.
-     * @return
-     */
-    AlertDto updateTestAlert(Long testId, AlertDto alert);
-
-    /**
-     * Delete {@link AlertDto} alert from the test.
-     *
-     * @param testId Test {@link TestDto} identifier.
-     * @param alertId Alert {@link AlertDto} identifier.
-     */
-    void deleteTestAlert(Long testId, Long alertId);
-
-    /**
-     * Return subscribed users to test alerts.
-     *
-     * @param testId Test {@link TestDto} identifier.
-     * @return List of subscribed users to the test.
-     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test does not exist.
-     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
-     */
-    List<UserDto> getSubscribedUsersToTestAlerts(Long testId);
+    SearchResult<TestDto> searchTests(TestSearchParams searchParams);
 
 }

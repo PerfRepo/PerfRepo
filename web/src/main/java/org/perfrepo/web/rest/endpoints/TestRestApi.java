@@ -6,6 +6,7 @@ import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.dto.test.TestSearchParams;
 import org.perfrepo.dto.test.TestDto;
 import org.perfrepo.web.adapter.AlertAdapter;
+import org.perfrepo.web.adapter.MetricAdapter;
 import org.perfrepo.web.adapter.TestAdapter;
 
 import javax.enterprise.context.RequestScoped;
@@ -30,12 +31,15 @@ public class TestRestApi {
    private TestAdapter testAdapter;
 
    @Inject
+   private MetricAdapter metricAdapter;
+
+   @Inject
    private AlertAdapter alertAdapter;
 
    @GET
    @Path("/{id}")
    public Response get(@PathParam("id") Long testId) {
-      TestDto test = testAdapter.getTestById(testId);
+      TestDto test = testAdapter.getTest(testId);
 
       return Response.ok(test).build();
    }
@@ -57,7 +61,7 @@ public class TestRestApi {
    @GET
    @Path("/uid/{uid}")
    public Response getByUid(@PathParam("uid") String testUid) {
-      TestDto test = testAdapter.getTestByUid(testUid);
+      TestDto test = testAdapter.getTest(testUid);
 
       return Response.ok(test).build();
    }
@@ -81,7 +85,7 @@ public class TestRestApi {
    @POST
    @Path("/{id}/metric-addition")
    public Response addMetric(MetricDto metric, @PathParam("id") Long testId) {
-      testAdapter.addMetricToTest(metric, testId);
+      metricAdapter.addMetric(metric, testId);
 
       return Response.noContent().build();
    }
@@ -89,7 +93,7 @@ public class TestRestApi {
    @POST
    @Path("/{id}/metric-removal/{metricId}")
    public Response removeMetric(@PathParam("metricId") Long metricId, @PathParam("id") Long testId) {
-      testAdapter.removeMetricFromTest(metricId, testId);
+      metricAdapter.removeMetric(metricId, testId);
 
       return Response.noContent().build();
    }
@@ -97,7 +101,7 @@ public class TestRestApi {
    @DELETE
    @Path("/{id}")
    public Response delete(@PathParam("id") Long testId) {
-      testAdapter.deleteTest(testId);
+      testAdapter.removeTest(testId);
 
       return Response.noContent().build();
    }

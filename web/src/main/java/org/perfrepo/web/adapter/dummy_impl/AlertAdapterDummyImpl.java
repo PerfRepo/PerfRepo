@@ -1,7 +1,9 @@
 package org.perfrepo.web.adapter.dummy_impl;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.perfrepo.dto.alert.AlertDto;
 import org.perfrepo.dto.test.TestDto;
+import org.perfrepo.dto.user.UserDto;
 import org.perfrepo.web.adapter.AlertAdapter;
 import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
 import org.perfrepo.web.adapter.exceptions.BadRequestException;
@@ -23,7 +25,7 @@ public class AlertAdapterDummyImpl implements AlertAdapter {
     private Storage storage;
 
     @Override
-    public AlertDto getAlertById(Long id) {
+    public AlertDto getAlert(Long id) {
         AlertDto alert = storage.alert().getById(id);
 
         if (alert == null) {
@@ -58,7 +60,7 @@ public class AlertAdapterDummyImpl implements AlertAdapter {
     }
 
     @Override
-    public void deleteAlert(Long id) {
+    public void removeAlert(Long id) {
         AlertDto alert = storage.alert().getById(id);
         TestDto test = storage.test().getById(alert.getTestId());
 
@@ -77,5 +79,20 @@ public class AlertAdapterDummyImpl implements AlertAdapter {
         Set<AlertDto> alerts = test.getAlerts();
 
         return new ArrayList<>(alerts);
+    }
+
+    @Override
+    public void subscribeAlerts(Long alertId) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public void unsubscribeAlerts(Long alertId) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public List<UserDto> getAlertSubscribers(Long testId) {
+        throw new NotImplementedException();
     }
 }

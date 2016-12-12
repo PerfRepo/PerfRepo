@@ -18,7 +18,7 @@ public interface MetricAdapter {
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    MetricDto getMetricById(Long id);
+    MetricDto getMetric(Long id);
 
     /**
      * Update the {@link MetricDto} object.
@@ -30,6 +30,27 @@ public interface MetricAdapter {
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     MetricDto updateMetric(MetricDto metric);
+
+    /**
+     * Add a metric to existing test. If a metric does not exist, it will be created.
+     *
+     * @param metric Metric {@link org.perfrepo.dto.metric.MetricDto} that will be added to the test.
+     * @param testId Test {@link org.perfrepo.dto.test.TestDto} identifier.
+     * @return Metric {@link MetricDto} that was added to test.
+     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test does not exist.
+     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
+     */
+    MetricDto addMetric(MetricDto metric, Long testId);
+
+    /**
+     * Remove a metric from existing test.
+     *
+     * @param metricId Identifier of {@link org.perfrepo.dto.metric.MetricDto} metric that will be removed.
+     * @param testId Test {@link org.perfrepo.dto.test.TestDto} identifier.
+     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test does not exist.
+     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
+     */
+    void removeMetric(Long metricId, Long testId);
 
     /**
      * Return all stored {@link MetricDto} objects.

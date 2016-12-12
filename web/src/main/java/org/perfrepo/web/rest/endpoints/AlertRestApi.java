@@ -26,7 +26,7 @@ public class AlertRestApi {
     @GET
     @Path("/{id}")
     public Response get(@PathParam("id") Long alertId) {
-        AlertDto alert = alertAdapter.getAlertById(alertId);
+        AlertDto alert = alertAdapter.getAlert(alertId);
 
         return Response.ok(alert).build();
     }
@@ -50,7 +50,7 @@ public class AlertRestApi {
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long alertId) {
-        alertAdapter.deleteAlert(alertId);
+        alertAdapter.removeAlert(alertId);
 
         return Response.noContent().build();
     }

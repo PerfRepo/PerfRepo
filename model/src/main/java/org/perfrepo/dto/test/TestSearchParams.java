@@ -2,7 +2,6 @@ package org.perfrepo.dto.test;
 
 import org.perfrepo.model.to.OrderBy;
 
-import java.util.List;
 import java.util.Set;
 
 /**

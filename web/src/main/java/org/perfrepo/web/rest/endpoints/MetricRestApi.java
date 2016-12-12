@@ -26,7 +26,7 @@ public class MetricRestApi {
    @GET
    @Path("/{id}")
    public Response get(@PathParam("id") Long metricId) {
-      MetricDto metric = metricAdapter.getMetricById(metricId);
+      MetricDto metric = metricAdapter.getMetric(metricId);
 
       return Response.ok(metric).build();
    }

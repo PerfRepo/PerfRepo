@@ -10,13 +10,13 @@ package org.perfrepo.web.adapter;
 public interface TestExecutionAdapter {
 
     /*
-    TestExecutionDto getTestExecutionById(Long id);
+    TestExecutionDto getTestExecution(Long id);
 
     TestExecutionDto createTestExecution(TestExecutionDto testExecution);
 
     TestExecutionDto updateTestExecution(TestExecutionDto testExecution);
 
-    void deleteTestExecution(Long id);
+    void removeTestExecution(Long id);
 
     List<TestExecutionDto> getAllTestExecutions();
 

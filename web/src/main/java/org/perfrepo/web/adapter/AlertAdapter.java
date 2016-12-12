@@ -1,6 +1,7 @@
 package org.perfrepo.web.adapter;
 
 import org.perfrepo.dto.alert.AlertDto;
+import org.perfrepo.dto.user.UserDto;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface AlertAdapter {
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test alert does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    AlertDto getAlertById(Long id);
+    AlertDto getAlert(Long id);
 
     /**
      * Create new {@link AlertDto} test alert.
@@ -44,13 +45,40 @@ public interface AlertAdapter {
     AlertDto updateAlert(AlertDto alert);
 
     /**
-     * Delete the {@link AlertDto} test alert.
+     * Remove the {@link AlertDto} test alert.
      *
      * @param id The test alert identifier.
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test alert does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    void deleteAlert(Long id);
+    void removeAlert(Long id);
+
+    /**
+     * Subscribe the logged user to the test alerts.
+     *
+     * @param testId Test {@link org.perfrepo.dto.test.TestDto} identifier.
+     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test or user does not exist.
+     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
+     */
+    void subscribeAlerts(Long testId);
+
+    /**
+     * Unsubscribe the logged user from the test alerts.
+     *
+     * @param testId Test {@link org.perfrepo.dto.test.TestDto} identifier.
+     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
+     */
+    void unsubscribeAlerts(Long testId);
+
+    /**
+     * Return subscribed users to test alerts.
+     *
+     * @param testId Test {@link org.perfrepo.dto.test.TestDto} identifier.
+     * @return List of subscribed users to the test.
+     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test does not exist.
+     * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
+     */
+    List<UserDto> getAlertSubscribers(Long testId);
 
     /**
      * Return all test alerts for specific test.
