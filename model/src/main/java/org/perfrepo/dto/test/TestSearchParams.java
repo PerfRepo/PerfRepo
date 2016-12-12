@@ -3,6 +3,7 @@ package org.perfrepo.dto.test;
 import org.perfrepo.model.to.OrderBy;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Data transfer object that contains filter parameters for {@link TestDto} searching query.
@@ -11,11 +12,11 @@ import java.util.List;
  */
 public class TestSearchParams {
 
-    private List<String> nameFilters;
+    private Set<String> nameFilters;
 
-    private List<String> uidFilters;
+    private Set<String> uidFilters;
 
-    private List<Integer> groupIdFilters;
+    private Set<String> groupFilters;
 
     private int limit = 5;
 
@@ -24,57 +25,57 @@ public class TestSearchParams {
     private OrderBy orderBy;
 
     /**
-     * Returns list of filters for test {@link TestDto#getName() name}.
+     * Returns set of filters for test {@link TestDto#getName() name}.
      *
      * @return {@link TestDto#getName() Name} filters.
      */
-    public List<String> getNameFilters() {
+    public Set<String> getNameFilters() {
         return nameFilters;
     }
 
     /**
-     * Sets list of filters for test {@link TestDto#getName() name}.
+     * Sets set of filters for test {@link TestDto#getName() name}.
      *
      * @param nameFilters {@link TestDto#getName() Name} filters.
      */
-    public void setNameFilters(List<String> nameFilters) {
+    public void setNameFilters(Set<String> nameFilters) {
         this.nameFilters = nameFilters;
     }
 
     /**
-     * Returns list of filters for test {@link TestDto#getUid() uid}.
+     * Returns set of filters for test {@link TestDto#getUid() uid}.
      *
      * @return {@link TestDto#getUid() Uid} filters.
      */
-    public List<String> getUidFilters() {
+    public Set<String> getUidFilters() {
         return uidFilters;
     }
 
     /**
-     * Sets list of filters for test {@link TestDto#getUid() uid}.
+     * Sets set of filters for test {@link TestDto#getUid() uid}.
      *
      * @param uidFilters {@link TestDto#getUid() Uid} filters.
      */
-    public void setUidFilters(List<String> uidFilters) {
+    public void setUidFilters(Set<String> uidFilters) {
         this.uidFilters = uidFilters;
     }
 
     /**
-     * Returns list of filters for test {@link TestDto#getGroup() group}.
+     * Returns set of filters for test {@link TestDto#getGroup() group}.
      *
-     * @return  {@link TestDto#getGroup() Group} filters. Values are group identifiers.
+     * @return  {@link TestDto#getGroup() Group} filters.
      */
-    public List<Integer> getGroupIdFilters() {
-        return groupIdFilters;
+    public Set<String> getGroupIdFilters() {
+        return groupFilters;
     }
 
     /**
-     * Sets list of filters for test {@link TestDto#getGroup()}  group}.
+     * Sets set of filters for test {@link TestDto#getGroup()}  group}.
      *
-     * @param groupIdFilters {@link TestDto#getGroup() Group} filters. Values are group identifiers.
+     * @param groupFilters {@link TestDto#getGroup() Group} filters.
      */
-    public void setGroupIdFilters(List<Integer> groupIdFilters) {
-        this.groupIdFilters = groupIdFilters;
+    public void setGroupFilters(Set<String> groupFilters) {
+        this.groupFilters = groupFilters;
     }
 
     /**
