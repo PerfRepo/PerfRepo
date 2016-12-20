@@ -14,18 +14,17 @@ public class ComparisonItem {
    private Long executionId;
 
    // if Comparison.ChooseOption.SET_OF_TAGS
-   private Long testId;
+   private String testUid;
    private String tags;
 
-   // these are transient fields, only filled in once the report is being shown (they are not saved in db)
-   private List<TestExecution> testExecutions;
-   private Long comparedExecutionId; // the execution that is ultimately used for comparison
+   // this is a transient field, only filled in once the report is being shown (it is not saved in db)
+   private TestExecution testExecution;
 
    public ComparisonItem() {
       alias = "New item alias";
       baseline = false;
       executionId = -1L;
-      testId = -1L;
+      testUid = "";
       tags = "";
    }
 
@@ -53,12 +52,12 @@ public class ComparisonItem {
       this.executionId = executionId;
    }
 
-   public Long getTestId() {
-      return testId;
+   public String getTestUid() {
+      return testUid;
    }
 
-   public void setTestId(Long testId) {
-      this.testId = testId;
+   public void setTestUid(String testUid) {
+      this.testUid = testUid;
    }
 
    public String getTags() {
@@ -69,27 +68,12 @@ public class ComparisonItem {
       this.tags = tags;
    }
 
-   public List<TestExecution> getTestExecutions() {
-      return testExecutions;
+   public TestExecution getTestExecution() {
+      return testExecution;
    }
 
-   public void setTestExecutions(List<TestExecution> testExecutions) {
-      this.testExecutions = testExecutions;
+   public void setTestExecution(TestExecution testExecution) {
+      this.testExecution = testExecution;
    }
 
-   public void addTestExecution(TestExecution testExecution) {
-      if (testExecutions == null) {
-         testExecutions = new ArrayList<>();
-      }
-
-      testExecutions.add(testExecution);
-   }
-
-   public Long getComparedExecutionId() {
-      return comparedExecutionId;
-   }
-
-   public void setComparedExecutionId(Long comparedExecutionId) {
-      this.comparedExecutionId = comparedExecutionId;
-   }
 }

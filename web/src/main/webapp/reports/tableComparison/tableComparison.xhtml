@@ -291,9 +291,9 @@
                                                     </ui:fragment>
                                                     <ui:fragment rendered="#{comparison.chooseOption == 'SET_OF_TAGS'}" >
                                                         <td>
-                                                            <h:selectOneMenu value="#{comparisonItem.testId}" rendered="#{comparison.chooseOption == 'SET_OF_TAGS'}">
+                                                            <h:selectOneMenu value="#{comparisonItem.testUid}" rendered="#{comparison.chooseOption == 'SET_OF_TAGS'}">
                                                                 <f:selectItems value="#{tableComparisonReportBean.getTestsForSelection()}" var="test"
-                                                                               itemLabel="#{test.name}" itemValue="#{test.id}"/>
+                                                                               itemLabel="#{test.name}" itemValue="#{test.uid}"/>
                                                             </h:selectOneMenu>
                                                         </td>
                                                         <td>
@@ -339,7 +339,7 @@
                                     <tr class="rf-dt-shdr">
                                         <th class="rf-dt-shdr-c">Metric/Item</th>
                                         <a4j:repeat value="#{comparison.dataTable.items}" var="comparisonItem" >
-                                            <th class="rf-dt-shdr-c"><h:outputText value="#{comparisonItem.alias}" title="Test execution id: #{comparisonItem.comparedExecutionId}"/></th>
+                                            <th class="rf-dt-shdr-c"><h:outputText value="#{comparisonItem.alias}" title="Test execution id: #{comparisonItem.testExecution.id}"/></th>
                                         </a4j:repeat>
                                     </tr>
                                     </thead>

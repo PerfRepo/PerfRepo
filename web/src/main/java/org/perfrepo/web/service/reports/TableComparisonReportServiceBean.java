@@ -7,6 +7,8 @@ import org.perfrepo.model.Value;
 import org.perfrepo.model.auth.Permission;
 import org.perfrepo.model.report.Report;
 import org.perfrepo.model.report.ReportProperty;
+import org.perfrepo.model.to.OrderBy;
+import org.perfrepo.model.to.SearchResultWrapper;
 import org.perfrepo.model.to.TestExecutionSearchTO;
 import org.perfrepo.model.user.User;
 import org.perfrepo.web.controller.reports.tablecomparison.Comparison;
@@ -125,29 +127,41 @@ public class TableComparisonReportServiceBean {
     * @param comparisonItem
     */
    public void updateComparisonItem(Comparison comparison, ComparisonItem comparisonItem) {
-      // cleanup values from previous update
-      comparisonItem.setTestExecutions(null);
-      comparisonItem.setComparedExecutionId(null);
+      // cleanup value from previous update
+      comparisonItem.setTestExecution(null);
       switch (comparison.getChooseOption()) {
          case EXECUTION_ID:
             long executionId = comparisonItem.getExecutionId();
             TestExecution foundTestExecution = testService.getFullTestExecution(executionId);
             if (foundTestExecution != null) {
-               comparisonItem.addTestExecution(foundTestExecution);
+               comparisonItem.setTestExecution(foundTestExecution);
             }
             break;
          case SET_OF_TAGS:
-            if (comparisonItem.getTestId() == -1) {
+            if (comparisonItem.getTestUid().isEmpty()) {
                return;
             }
-            Test test = testDAO.get(comparisonItem.getTestId());
-            TestExecutionSearchTO searchCriteria = new TestExecutionSearchTO();
-            searchCriteria.setTestUID(test.getUid());
-            searchCriteria.setTags(comparisonItem.getTags());
-            List<TestExecution> preliminaryResult = testExecutionDAO.searchTestExecutions(searchCriteria, userService.getLoggedUserGroupNames()).getResult();
-            List<Long> executionIds = preliminaryResult.stream().map(TestExecution::getId).collect(Collectors.toList());
-            List<TestExecution> result = testService.getFullTestExecutions(executionIds);
-            comparisonItem.setTestExecutions(result);
+            switch (comparison.getSelectOption()) {
+               case LAST:
+                  TestExecutionSearchTO searchCriteria = new TestExecutionSearchTO();
+
+                  searchCriteria.setTestUID(comparisonItem.getTestUid());
+                  searchCriteria.setTags(comparisonItem.getTags());
+                  searchCriteria.setOrderBy(OrderBy.DATE_DESC);
+                  searchCriteria.setLimitFrom(0);
+                  searchCriteria.setLimitHowMany(1);
+
+                  SearchResultWrapper<TestExecution> resultWrapper = testService.searchTestExecutions(searchCriteria);
+                  if (!resultWrapper.getResult().isEmpty()) {
+                     TestExecution testExecution = testService.getFullTestExecution(resultWrapper.getResult().get(0).getId());
+                     comparisonItem.setTestExecution(testExecution);
+                  }
+                  break;
+               case BEST:
+                  throw new RuntimeException("unsupported");
+               case AVERAGE:
+                  throw new RuntimeException("unsupported");
+            }
             break;
       }
    }
@@ -156,24 +170,11 @@ public class TableComparisonReportServiceBean {
       Table dataTable = new Table();
       ArrayList<TestExecution> comparedTestExecutions = new ArrayList<>();
 
-      switch (comparison.getSelectOption()) {
-         case LAST:
-            for (ComparisonItem comparisonItem : comparison.getComparisonItems()) {
-               if (comparisonItem.getTestExecutions() != null && !comparisonItem.getTestExecutions().isEmpty()) {
-                  // sort by date
-                  comparisonItem.getTestExecutions().sort((o1, o2) -> o1.getStarted().compareTo(o2.getStarted()));
-                  // add the last one
-                  TestExecution executionToCompare = comparisonItem.getTestExecutions().get(comparisonItem.getTestExecutions().size() - 1);
-                  comparedTestExecutions.add(executionToCompare);
-                  comparisonItem.setComparedExecutionId(executionToCompare.getId());
-                  dataTable.addItem(comparisonItem); // we only compare items that have some test execution
-               }
-            }
-            break;
-         case BEST:
-            throw new RuntimeException("unsupported");
-         case AVERAGE:
-            throw new RuntimeException("unsupported");
+      for (ComparisonItem comparisonItem : comparison.getComparisonItems()) {
+         if (comparisonItem.getTestExecution() != null) {
+            comparedTestExecutions.add(comparisonItem.getTestExecution());
+            dataTable.addItem(comparisonItem);
+         }
       }
 
       if (comparedTestExecutions.isEmpty()) {
@@ -259,7 +260,7 @@ public class TableComparisonReportServiceBean {
       if (difference > threshold) {
          return Table.CellStyle.GOOD;
       }
-      if (difference < threshold) {
+      if (difference < (-1 * threshold)) {
          return Table.CellStyle.BAD;
       }
       return Table.CellStyle.NEUTRAL;
@@ -323,7 +324,7 @@ public class TableComparisonReportServiceBean {
    private void storeComparisonItem(Map<String, ReportProperty> properties, ComparisonItem comparisonItem, String comparisonItemPrefix, Report report) {
       ReportUtils.createOrUpdateReportPropertyInMap(properties, comparisonItemPrefix + "alias", comparisonItem.getAlias(), report);
       ReportUtils.createOrUpdateReportPropertyInMap(properties, comparisonItemPrefix + "baseline", Boolean.toString(comparisonItem.isBaseline()), report);
-      ReportUtils.createOrUpdateReportPropertyInMap(properties, comparisonItemPrefix + "testId", comparisonItem.getTestId().toString(), report);
+      ReportUtils.createOrUpdateReportPropertyInMap(properties, comparisonItemPrefix + "testUid", comparisonItem.getTestUid(), report);
       ReportUtils.createOrUpdateReportPropertyInMap(properties, comparisonItemPrefix + "executionId", comparisonItem.getExecutionId().toString(), report);
       ReportUtils.createOrUpdateReportPropertyInMap(properties, comparisonItemPrefix + "tags", comparisonItem.getTags(), report);
    }
@@ -393,7 +394,10 @@ public class TableComparisonReportServiceBean {
          ComparisonItem comparisonItem = new ComparisonItem();
          comparisonItem.setAlias(properties.get(comparisonItemPrefix + "alias").getValue());
          comparisonItem.setBaseline(Boolean.parseBoolean(properties.get(comparisonItemPrefix + "baseline").getValue()));
-         comparisonItem.setTestId(Long.parseLong(properties.get(comparisonItemPrefix + "testId").getValue()));
+         ReportProperty testUid = properties.get(comparisonItemPrefix + "testUid");
+         if (testUid != null) {
+            comparisonItem.setTestUid(testUid.getValue());
+         }
          comparisonItem.setExecutionId(Long.parseLong(properties.get(comparisonItemPrefix + "executionId").getValue()));
          ReportProperty tags = properties.get(comparisonItemPrefix + "tags");
          if (tags != null) {
