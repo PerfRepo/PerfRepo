@@ -184,6 +184,8 @@ public class TableComparisonReportServiceBean {
 
       // we only show metrics which all of the compared items have
       List<Metric> commonMetrics = findCommonMetrics(comparedTestExecutions);
+      // show the metrics in alphabetical order
+      commonMetrics.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
 
       // find the baseline, if none, mark the first compared item
       int baselineIndex = -1;
