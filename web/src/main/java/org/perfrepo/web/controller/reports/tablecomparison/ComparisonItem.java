@@ -2,9 +2,6 @@ package org.perfrepo.web.controller.reports.tablecomparison;
 
 import org.perfrepo.model.TestExecution;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ComparisonItem {
 
    private String alias;

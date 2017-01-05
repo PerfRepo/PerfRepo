@@ -13,12 +13,12 @@
             <f:event type="preRenderView" listener="#{tableComparisonReportBean.init()}"/>
         </f:metadata>
     </ui:define>
-    <ui:define name="title">#{tableComparisonReportBean.name}</ui:define>
+    <ui:define name="title">#{tableComparisonReportBean.reportTO.name}</ui:define>
     <ui:define name="content">
         <h:form id="tableComparisonReport">
             <div style=" overflow: hidden;">
                 <div id="control" style="text-align:right;float: left;opacity: 0.3;overflow: hidden;height:60px;">
-                     <h2 class="text-success"><h:outputText id="reportName" value="#{tableComparisonReportBean.name} "/><a4j:commandLink onclick="document.getElementById('tableComparisonReport:info').style.display='block'"
+                     <h2 class="text-success"><h:outputText id="reportName" value="#{tableComparisonReportBean.reportTO.name} "/><a4j:commandLink onclick="document.getElementById('tableComparisonReport:info').style.display='block'"
                                                                                                                                          title="Information"><i class="icon-info"/></a4j:commandLink></h2>
                 </div>
 
@@ -50,19 +50,29 @@
                 </div>
             </div>
             <hr/>
+            <h:outputText id="reportDescription" value="#{tableComparisonReportBean.reportTO.description}"/>
             <div class="tableComparisonTable">
                 <table>
                     <tr>
                         <th><h:outputText value="Report name" rendered="#{tableComparisonReportBean.showConfiguration}"/></th>
                         <td>
                             <h:inputText id="reportNameInput"
-                                         value="#{tableComparisonReportBean.name}"
+                                         value="#{tableComparisonReportBean.reportTO.name}"
                                          style="width: 350px;"
                                          validatorMessage="Report name cannot be empty!"
                                          rendered="#{tableComparisonReportBean.showConfiguration}">
                                 <f:ajax event="change" render="reportName"/>
                                 <f:validateRequired />
                             </h:inputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><h:outputText value="Report description" rendered="#{tableComparisonReportBean.showConfiguration}"/></th>
+                        <td>
+                            <h:inputTextarea styleClass="input-text" style="width: 650px; height: 60px;" value="#{tableComparisonReportBean.reportTO.description}"
+                                             rendered="#{tableComparisonReportBean.showConfiguration}">
+                                <f:ajax event="change" render="reportDescription"/>
+                            </h:inputTextarea>
                         </td>
                     </tr>
                 </table>
@@ -165,7 +175,7 @@
                 </p>
             </h:panelGroup>
 
-            <a4j:repeat value="#{tableComparisonReportBean.groups}" var="group" rowKeyVar="groupIndex" varStatus="groupRepeatStatus">
+            <a4j:repeat value="#{tableComparisonReportBean.reportTO.groups}" var="group" rowKeyVar="groupIndex" varStatus="groupRepeatStatus">
                 <h:panelGroup id="groupGroup">
                     <h2>
                         <h:outputText id="groupName" value="#{group.name}"/>&#xA0;

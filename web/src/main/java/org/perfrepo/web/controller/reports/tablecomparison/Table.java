@@ -61,16 +61,16 @@ public class Table {
    }
 
    public static class Cell {
-      private double value;
+      private String value;
       private String diffAgainstBaseline;
       private boolean baseline;
       private CellStyle cellStyle;
 
-      public double getValue() {
+      public String getValue() {
          return value;
       }
 
-      public void setValue(double value) {
+      public void setValue(String value) {
          this.value = value;
       }
 

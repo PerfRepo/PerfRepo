@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Controller for table comparison reports
@@ -57,8 +56,7 @@ public class TableComparisonReportController extends BaseController {
    private AuthorizationService authorizationService;
 
    //properties bound to specific report being displayed
-   private String name;
-   private List<Group> groups;
+   private TableComparisonReportTO reportTO;
    private boolean showConfiguration;
    private List<Test> testsForSelection;
    private boolean userAuthorized = false;
@@ -73,12 +71,12 @@ public class TableComparisonReportController extends BaseController {
    @PostConstruct
    public void postConstruct() {
       reloadSessionMessages();
-      if (name == null) {
+      if (reportTO == null) {
          if (getReportId() != null) {
             load();
          } else {
             showConfiguration = true;
-            name = "New table comparison report";
+            reportTO = new TableComparisonReportTO("New table comparison report", "", null);
             addNewGroup();
             userAuthorized = true;
          }
@@ -88,9 +86,9 @@ public class TableComparisonReportController extends BaseController {
    public void save() {
       Long reportId = getReportId();
       if (reportId == null) {
-         reportId = reportService.create(name, groups, reportPermissionController.getPermissions());
+         reportId = reportService.create(reportTO, reportPermissionController.getPermissions());
       } else {
-         reportId = reportService.update(reportId, name, groups, reportPermissionController.getPermissions());
+         reportId = reportService.update(reportId, reportTO, reportPermissionController.getPermissions());
       }
       redirect(reportId);
    }
@@ -101,11 +99,8 @@ public class TableComparisonReportController extends BaseController {
          throw new IllegalArgumentException("No report ID provided.");
       }
 
-      Map.Entry<String, List<Group>> loadedReport;
       try {
-         loadedReport = reportService.load(reportId);
-         name = loadedReport.getKey();
-         groups = loadedReport.getValue();
+         reportTO = reportService.load(reportId);
       } catch (IllegalArgumentException ex) {
          redirectWithMessage("/reports", ERROR, "page.report.error");
       } catch (Exception e) {
@@ -120,8 +115,8 @@ public class TableComparisonReportController extends BaseController {
    }
 
    public void cloneReport() {
-      setName("Clone of " + getName());
-      Long reportId = reportService.create(name, groups, copyPermissions());
+      reportTO.setName("Clone of " + reportTO.getName());
+      Long reportId = reportService.create(reportTO, copyPermissions());
       redirect(reportId);
    }
 
@@ -150,7 +145,7 @@ public class TableComparisonReportController extends BaseController {
    }
 
    public void updateGroups() {
-      for (Group group : groups) {
+      for (Group group : reportTO.getGroups()) {
          for (Comparison comparison : group.getComparisons()) {
             updateAllItemsInComparison(group, comparison);
          }
@@ -178,8 +173,8 @@ public class TableComparisonReportController extends BaseController {
    }
 
    public void addNewGroup() {
-      if (groups == null) {
-         groups = new ArrayList<>();
+      if (reportTO.getGroups() == null) {
+         reportTO.setGroups(new ArrayList<>());
       }
 
       Group newGroup = new Group();
@@ -187,11 +182,11 @@ public class TableComparisonReportController extends BaseController {
       newComparison.addComparisonItem(new ComparisonItem());
       newGroup.setName("New Group");
       newGroup.addComparison(newComparison);
-      groups.add(newGroup);
+      reportTO.getGroups().add(newGroup);
    }
 
    public void removeGroup(Group group) {
-      groups.remove(group);
+      reportTO.getGroups().remove(group);
    }
 
    public void addNewComparison(Group group) {
@@ -212,20 +207,12 @@ public class TableComparisonReportController extends BaseController {
       comparison.removeComparisonItem(comparisonItem);
    }
 
-   public String getName() {
-      return name;
+   public TableComparisonReportTO getReportTO() {
+      return reportTO;
    }
 
-   public void setName(String name) {
-      this.name = name;
-   }
-
-   public List<Group> getGroups() {
-      return groups;
-   }
-
-   public void setGroups(List<Group> groups) {
-      this.groups = groups;
+   public void setReportTO(TableComparisonReportTO reportTO) {
+      this.reportTO = reportTO;
    }
 
    public boolean isShowConfiguration() {

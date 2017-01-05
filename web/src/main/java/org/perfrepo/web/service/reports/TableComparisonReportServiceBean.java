@@ -1,7 +1,6 @@
 package org.perfrepo.web.service.reports;
 
 import org.perfrepo.model.Metric;
-import org.perfrepo.model.Test;
 import org.perfrepo.model.TestExecution;
 import org.perfrepo.model.Value;
 import org.perfrepo.model.auth.Permission;
@@ -15,6 +14,7 @@ import org.perfrepo.web.controller.reports.tablecomparison.Comparison;
 import org.perfrepo.web.controller.reports.tablecomparison.ComparisonItem;
 import org.perfrepo.web.controller.reports.tablecomparison.Group;
 import org.perfrepo.web.controller.reports.tablecomparison.Table;
+import org.perfrepo.web.controller.reports.tablecomparison.TableComparisonReportTO;
 import org.perfrepo.web.dao.TestDAO;
 import org.perfrepo.web.dao.TestExecutionDAO;
 import org.perfrepo.web.service.ReportService;
@@ -25,13 +25,11 @@ import org.perfrepo.web.util.ReportUtils;
 import javax.ejb.*;
 import javax.inject.Inject;
 import java.text.DecimalFormat;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Service bean for table comparison report. Contains all necessary methods to be able to work with table comparison reports.
@@ -63,20 +61,19 @@ public class TableComparisonReportServiceBean {
    /**
     * Creates new table comparison report
     *
-    * @param name   name of the report
-    * @param groups transfer object with all information about the report
+    * @param reportTO transfer object with all information about the report
     * @return ID of newly created report
     */
-   public Long create(String name, List<Group> groups, List<Permission> permissions) {
+   public Long create(TableComparisonReportTO reportTO, List<Permission> permissions) {
       Report report = new Report();
-      report.setName(name);
+      report.setName(reportTO.getName());
       report.setType(TABLE_COMPARISON_REPORT_TYPE);
       report.setPermissions(permissions);
 
       User user = userService.getLoggedUser();
       report.setUser(user);
 
-      Map<String, ReportProperty> properties = storeTOIntoReportProperties(groups, report);
+      Map<String, ReportProperty> properties = storeTOIntoReportProperties(reportTO, report);
       report.setProperties(properties);
 
       Report createdReport = reportService.createReport(report);
@@ -87,18 +84,17 @@ public class TableComparisonReportServiceBean {
     * Updates existing table comparison report.
     *
     * @param reportId
-    * @param name
-    * @param groups
+    * @param reportTO
     * @param permissions
     * @return ID of the updated report
     */
-   public Long update(Long reportId, String name, List<Group> groups, List<Permission> permissions) {
+   public Long update(Long reportId, TableComparisonReportTO reportTO, List<Permission> permissions) {
       Report report = reportService.getFullReport(new Report(reportId));
-      report.setName(name);
+      report.setName(reportTO.getName());
       report.setType(TABLE_COMPARISON_REPORT_TYPE);
       report.setPermissions(permissions);
 
-      Map<String, ReportProperty> properties = storeTOIntoReportProperties(groups, report);
+      Map<String, ReportProperty> properties = storeTOIntoReportProperties(reportTO, report);
       report.setProperties(properties);
 
       Report createdReport = reportService.updateReport(report);
@@ -111,13 +107,14 @@ public class TableComparisonReportServiceBean {
     * @param reportId
     * @return pair of report name and list of groups
     */
-   public Map.Entry<String, List<Group>> load(Long reportId) {
+   public TableComparisonReportTO load(Long reportId) {
       Report report = reportService.getFullReport(new Report(reportId));
       if (report == null) {
          throw new IllegalArgumentException("Report with ID=" + reportId + " doesn't exist");
       }
-
-      return new AbstractMap.SimpleEntry<>(report.getName(), loadTOFromReportProperties(report.getProperties()));
+      TableComparisonReportTO reportTO = loadTOFromReportProperties(report.getProperties());
+      reportTO.setName(report.getName());
+      return reportTO;
    }
 
    /**
@@ -199,6 +196,7 @@ public class TableComparisonReportServiceBean {
          baselineIndex = 0;
       }
 
+      DecimalFormat twoDecimalsFormat = new DecimalFormat("0.00");
       for (Metric commonMetric : commonMetrics) {
          Table.Row row = new Table.Row();
          row.setMetricName(commonMetric.getName());
@@ -207,29 +205,29 @@ public class TableComparisonReportServiceBean {
 
          for (int i = 0; i < comparedTestExecutions.size(); i++) {
             Table.Cell cell = new Table.Cell();
-            cell.setValue(getValueByMetric(comparedTestExecutions.get(i), commonMetric).getResultValue());
+            double cellValue = getValueByMetric(comparedTestExecutions.get(i), commonMetric).getResultValue();
             if (i == baselineIndex) {
                cell.setBaseline(true);
                cell.setDiffAgainstBaseline("0%");
                cell.setCellStyle(Table.CellStyle.NEUTRAL);
             } else {
                cell.setBaseline(false);
-               DecimalFormat FMT_PERCENT = new DecimalFormat("0.00");
                double diff = 0;
                switch (commonMetric.getComparator()) {
                   case HB:
-                     diff = (cell.getValue() / baselineValue) * 100d - 100;
+                     diff = (cellValue / baselineValue) * 100d - 100;
                      break;
                   case LB:
-                     diff = ((cell.getValue() / baselineValue) * 100d - 100) * -1;
+                     diff = ((cellValue / baselineValue) * 100d - 100) * -1;
                      break;
                }
-               cell.setDiffAgainstBaseline(FMT_PERCENT.format(diff) + " %");
+               cell.setDiffAgainstBaseline(twoDecimalsFormat.format(diff) + " %");
                if (diff > 0) { // add a plus sign to positive difference
                   cell.setDiffAgainstBaseline("+" + cell.getDiffAgainstBaseline());
                }
                cell.setCellStyle(getCellStyle(diff, group.getThreshold()));
             }
+            cell.setValue(twoDecimalsFormat.format(cellValue));
             row.addCell(cell);
          }
          dataTable.addRow(row);
@@ -271,14 +269,15 @@ public class TableComparisonReportServiceBean {
    /**
     * Denormalizes all group transfer objects of single report into report properties.
     *
-    * @param groups
+    * @param reportTO
     * @param report
     * @return
     */
-   private Map<String, ReportProperty> storeTOIntoReportProperties(List<Group> groups, Report report) {
+   private Map<String, ReportProperty> storeTOIntoReportProperties(TableComparisonReportTO reportTO, Report report) {
       Map<String, ReportProperty> properties = new HashMap<>();
-      for (int i = 0; i < groups.size(); i++) {
-         Group group = groups.get(i);
+      ReportUtils.createOrUpdateReportPropertyInMap(properties, "reportDescription", reportTO.getDescription(), report);
+      for (int i = 0; i < reportTO.getGroups().size(); i++) {
+         Group group = reportTO.getGroups().get(i);
          String groupPrefix = "group" + i + ".";
 
          ReportUtils.createOrUpdateReportPropertyInMap(properties, groupPrefix + "name", group.getName(), report);
@@ -337,7 +336,14 @@ public class TableComparisonReportServiceBean {
     * @param properties report properties
     * @return
     */
-   private List<Group> loadTOFromReportProperties(Map<String, ReportProperty> properties) {
+   private TableComparisonReportTO loadTOFromReportProperties(Map<String, ReportProperty> properties) {
+      TableComparisonReportTO reportTO = new TableComparisonReportTO(null, null, null);
+
+      ReportProperty reportDescription = properties.get("reportDescription");
+      if (reportDescription != null) {
+         reportTO.setDescription(reportDescription.getValue());
+      }
+
       List<Group> groups = new ArrayList<>();
 
       int groupIndex = 0;
@@ -379,7 +385,8 @@ public class TableComparisonReportServiceBean {
          groupPrefix = "group" + groupIndex + ".";
       }
 
-      return groups;
+      reportTO.setGroups(groups);
+      return reportTO;
    }
 
    /**
