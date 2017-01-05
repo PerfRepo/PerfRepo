@@ -6053,6 +6053,108 @@ td.rf-tab-hdr-inact.rf-tab-hdr-top:hover {
     background: #FFF58A;
 }
 
+.bad_cell {
+    background: #FF0000;
+}
+
+.good_cell {
+    background: #76F48B;
+}
+
+.tableComparisonReportComparisonHr {
+    margin: 20px 0 20px 0;
+    border: none;
+    height: 2px;
+    background-color: #BBBBBB;
+}
+
+.tableComparisonReportGroupHr {
+    margin: 20px 0 20px 0;
+    border: none;
+    height: 4px;
+    background-color: #707070;
+}
+
+div.tableComparisonTable {
+}
+
+div.tableComparisonTable hr {
+    margin: 20px 0 20px 0;
+    border-color: #BBBBBB;
+}
+
+div.tableComparisonTable table td {
+    padding: 5px;
+}
+
+div.tableComparisonTable table td.middleAlign {
+    padding: 5px;
+    text-align: center;
+}
+
+div.tableComparisonTable table th {
+    width: 200px;
+    vertical-align: middle;
+    padding-right: 5px;
+    text-align: left;
+}
+
+div.tableComparisonTable table th.middleAlign {
+    width: 200px;
+    vertical-align: middle;
+    padding-right: 5px;
+    text-align: center;
+}
+
+div.tableComparisonTable table td input[type=text] {
+    padding: 4px !important;
+    width: 250px !important;
+    margin-bottom: 0px;
+}
+
+div.tableComparisonTable table td input[type=radio] {
+    float: left;
+    margin-left: 20px;
+}
+
+div.tableComparisonTable table td table tr td:first-child input[type=radio] {
+    margin-left: 0px !important;
+}
+
+div.tableComparisonTable table td table {
+    float: left;
+}
+
+div.tableComparisonTable table td input[type=text].parameterValue {
+    float: left;
+    margin-left: 10px;
+}
+
+div.tableComparisonTable table td span.parameterValue input[disabled] {
+    background-color: #F5F5F5 !important;
+}
+
+div.tableComparisonTable table td label {
+    float: right;
+    margin-left: 10px;
+    margin-top: 3px;
+}
+
+div.tableComparisonTable table td select {
+    margin-bottom: 0px;
+    width: 260px !important;
+}
+
+div.comparisonsRepeat {
+   margin-left: 15px;
+   border-left: 2px solid #CCCCCC;
+   padding-left: 15px;
+}
+
+div.comparison {
+   margin-left: 9px;
+}
+
 .tetable_values td {
     text-align: right;
 }

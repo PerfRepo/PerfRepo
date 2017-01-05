@@ -1,0 +1,398 @@
+<ui:composition template="/layout/template.xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:a4j="http://richfaces.org/a4j"
+                xmlns:rich="http://richfaces.org/rich">
+    <ui:define name="head">
+        <link href="#{request.contextPath}/rfRes/datatable.ecss.jsf?ln=org.richfaces" rel="stylesheet"
+              type="text/css"></link>
+    </ui:define>
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:event type="preRenderView" listener="#{tableComparisonReportBean.init()}"/>
+        </f:metadata>
+    </ui:define>
+    <ui:define name="title">#{tableComparisonReportBean.reportTO.name}</ui:define>
+    <ui:define name="content">
+        <h:form id="tableComparisonReport">
+            <div style=" overflow: hidden;">
+                <div id="control" style="text-align:right;float: left;opacity: 0.3;overflow: hidden;height:60px;">
+                     <h2 class="text-success"><h:outputText id="reportName" value="#{tableComparisonReportBean.reportTO.name} "/><a4j:commandLink onclick="document.getElementById('tableComparisonReport:info').style.display='block'"
+                                                                                                                                         title="Information"><i class="icon-info"/></a4j:commandLink></h2>
+                </div>
+
+                <div id="control" style="test-align: right; float: right;line-height: 40px; margin: 10px 0; height:40px;">
+                    <span style="margin:5px;">
+                        <a4j:commandLink styleClass="text-success" render=":tableComparisonReport" rendered="#{tableComparisonReportBean.userAuthorized and not tableComparisonReportBean.showConfiguration}"
+                                         action="#{tableComparisonReportBean.setShowConfiguration(true)}">
+                            Show configuration
+                        </a4j:commandLink>
+                    </span>
+                    <span style="margin:5px;">
+                        <a4j:commandLink styleClass="text-success" render=":tableComparisonReport" rendered="#{tableComparisonReportBean.showConfiguration}"
+                                         action="#{tableComparisonReportBean.setShowConfiguration(false)}">
+                            Hide configuration
+                        </a4j:commandLink>
+                    </span>
+                    <span style="margin:5px;">
+                        <a4j:commandLink styleClass="text-success" render=":tableComparisonReport" rendered="#{tableComparisonReportBean.showConfiguration}"
+                                         action="#{tableComparisonReportBean.save()}">
+                            <i class="icon-save"></i> Save
+                        </a4j:commandLink>
+                    </span>
+                    <span style="margin:5px;">
+                        <a4j:commandLink styleClass="text-success" render=":tableComparisonReport" rendered="#{tableComparisonReportBean.showConfiguration}"
+                                         action="#{tableComparisonReportBean.cloneReport()}">
+                            <i class="icon-copy"/> Clone
+                        </a4j:commandLink>
+                    </span>
+                </div>
+            </div>
+            <hr/>
+            <h:outputText id="reportDescription" value="#{tableComparisonReportBean.reportTO.description}"/>
+            <div class="tableComparisonTable">
+                <table>
+                    <tr>
+                        <th><h:outputText value="Report name" rendered="#{tableComparisonReportBean.showConfiguration}"/></th>
+                        <td>
+                            <h:inputText id="reportNameInput"
+                                         value="#{tableComparisonReportBean.reportTO.name}"
+                                         style="width: 350px;"
+                                         validatorMessage="Report name cannot be empty!"
+                                         rendered="#{tableComparisonReportBean.showConfiguration}">
+                                <f:ajax event="change" render="reportName"/>
+                                <f:validateRequired />
+                            </h:inputText>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><h:outputText value="Report description" rendered="#{tableComparisonReportBean.showConfiguration}"/></th>
+                        <td>
+                            <h:inputTextarea styleClass="input-text" style="width: 650px; height: 60px;" value="#{tableComparisonReportBean.reportTO.description}"
+                                             rendered="#{tableComparisonReportBean.showConfiguration}">
+                                <f:ajax event="change" render="reportDescription"/>
+                            </h:inputTextarea>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <h:panelGroup id="permissions" rendered="#{tableComparisonReportBean.showConfiguration}">
+                <h3>
+                    Permissions
+                    <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{reportPermissionController.addPermission}"
+
+                                     render=":tableComparisonReport">
+                        <i class="icon-plus"></i>
+                    </a4j:commandLink>
+                </h3>
+
+                <h:outputText rendered="#{empty reportPermissionController.permissions}"
+                              value='There are currently no permissions. Add some with the "+" button above. IF NO PERMISSION IS ASSIGNED, THE REPORT WILL NOT BE ACCESSIBLE!' />
+
+                <h:dataTable styleClass="table table-bordered table-striped"
+                             columnClasses="inputCell,inputCell,inputCell,actionCell"
+                             value="#{reportPermissionController.permissions}"
+                             var="permission" id="permissionsTable"
+                             rendered="#{not empty reportPermissionController.permissions}">
+
+                    <h:column headerClass="width31Percent">
+                        <f:facet name="header">Access level</f:facet>
+                        <h:selectOneMenu value="#{permission.level}">
+                            <f:selectItems value="#{reportPermissionController.accessLevels}" var="accessLevel"
+                                           itemLabel="#{accessLevel}" itemValue="#{accessLevel}" />
+                            <a4j:ajax event="valueChange" render=":tableComparisonReport" execute="@this" />
+                        </h:selectOneMenu>
+                    </h:column>
+
+                    <h:column headerClass="width31Percent">
+                        <f:facet name="header">Access type</f:facet>
+                        <h:selectOneMenu value="#{permission.accessType}">
+                            <f:selectItems value="#{reportPermissionController.accessTypes}" var="accessType"
+                                           itemLabel="#{accessType}" itemValue="#{accessType}" />
+                        </h:selectOneMenu>
+                    </h:column>
+
+                    <h:column headerClass="width31Percent">
+                        <f:facet name="header">Group/user associated with the permission</f:facet>
+                        <h:selectOneMenu value="#{permission.groupId}" rendered="#{permission.level.toString().equalsIgnoreCase('group')}">
+                            <f:selectItems value="#{reportPermissionController.groupsForSelection}" var="group"
+                                           itemLabel="#{group.name}" itemValue="#{group.id}" />
+                        </h:selectOneMenu>
+
+                        <h:selectOneMenu value="#{permission.userId}" rendered="#{permission.level.toString().equalsIgnoreCase('user')}">
+                            <f:selectItems value="#{reportPermissionController.usersForSelection}" var="user"
+                                           itemLabel="#{user.username}" itemValue="#{user.id}"/>
+                        </h:selectOneMenu>
+                    </h:column>
+
+                    <h:column headerClass="width7Percent">
+                        <f:facet name="header"></f:facet>
+                        <a4j:commandLink styleClass="btn btn-primary btn-small"
+                                         action="#{reportPermissionController.removePermission(permission)}"
+                                         render=":tableComparisonReport">
+                            <i class="icon-minus"></i>
+                        </a4j:commandLink>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGroup>
+
+            <h:panelGroup id="info" layout="block" styleClass="alert alert-info" style="display:none;width:800px;overflow:auto;">
+                <p>
+                    The main purpose of this report is to compare a bunch of test executions against some other test execution, called a baseline.
+                    The report finds metrics which are common to all executions, and computes the percentage difference between the baseline and
+                    other executions for these metrics.
+                    <br />
+                    There can be multiple such comparisons, each with its own set of executions. Multiple comparisons can be grouped into groups.
+                </p>
+                <p>
+                    The test executions to compare can be selected in 2 ways:
+                    <ul>
+                        <li>directly by test execution ID</li>
+                        <li>chosing a test and a set of tags</li>
+                    </ul>
+                    Since the second option can match multiple executions, the latest one is selected. Other strategies for selecting the execution
+                    to compare are currently not implemented. Please note that the latest one is selected every time the report is shown, so if new
+                    executions that match the tags were added since the report was created, the report will update as well. Use the first option
+                    if you need fixed executions.
+                </p>
+                <p>
+                    There can be only 1 baseline (don't be fooled by the checkboxes, I suck at jsf).
+                </p>
+                <p>
+                    Multivalue executions are currently not supported.
+                </p>
+                <p>
+                    In the resulting comparison table, hover over the percentage difference to see the actual value. Hover over the aliases
+                    of the compared items to see which test execution id was selected for comparison (useful when defining the comparison
+                    items with tags).
+                </p>
+                <p>
+                    Threshold defines when the difference between an execution and baseline is considered bad or good. For example the default, 5,
+                    means that if an execution e1 (baseline) has metric1=100, and execution e2 has metric1=94, the difference -6% will be shown in red
+                    color to indicate significant regression in e2.
+                </p>
+            </h:panelGroup>
+
+            <a4j:repeat value="#{tableComparisonReportBean.reportTO.groups}" var="group" rowKeyVar="groupIndex" varStatus="groupRepeatStatus">
+                <h:panelGroup id="groupGroup">
+                    <h2>
+                        <h:outputText id="groupName" value="#{group.name}"/>&#xA0;
+                        <a4j:commandLink styleClass="btn btn-primary btn-small"
+                                         action="#{tableComparisonReportBean.removeGroup(group)}"
+                                         render=":tableComparisonReport" rendered="#{tableComparisonReportBean.showConfiguration}">
+                            <i class="icon-minus"></i>
+                        </a4j:commandLink>
+                    </h2>
+                    <h:outputText id="groupDescription" value="#{group.description}"/>
+                    <h:panelGroup rendered="#{tableComparisonReportBean.showConfiguration}">
+                        <div class="tableComparisonTable">
+                            <table>
+                                <tr>
+                                    <th><h:outputText value="Group name"/></th>
+                                    <td>
+                                        <h:inputText id="groupNameInput"
+                                                     value="#{group.name}"
+                                                     style="width: 350px;"
+                                                     validatorMessage="Group name cannot be empty!">
+                                            <f:validateRequired />
+                                            <f:ajax event="change" render="groupName"/>
+                                        </h:inputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><h:outputText value="Group description"/></th>
+                                    <td>
+                                        <h:inputTextarea styleClass="input-text" style="width: 650px; height: 60px;" value="#{group.description}">
+                                            <f:ajax event="change" render="groupDescription"/>
+                                        </h:inputTextarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><h:outputText value="Threshold"/></th>
+                                    <td>
+                                        <h:inputText id="groupThresholdInput" value="#{group.threshold}">
+                                            <f:ajax event="change" execute="@this" render=":tableComparisonReport" listener="#{tableComparisonReportBean.updateGroupsEvent}"/>
+                                        </h:inputText>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </h:panelGroup>
+                    <br />
+                    <div class="comparisonsRepeat">
+                        <a4j:repeat value="#{group.comparisons}" var="comparison" varStatus="comparisonRepeatStatus" >
+                            <h4>
+                                <h:outputText id="comparisonName" value="#{comparison.name}"/>&#xA0;
+                                <a4j:commandLink styleClass="btn btn-primary btn-small"
+                                                 action="#{group.removeComparison(comparison)}"
+                                                 render=":tableComparisonReport" rendered="#{tableComparisonReportBean.showConfiguration}">
+                                    <i class="icon-minus"></i>
+                                </a4j:commandLink>
+                            </h4>
+                            <h:outputText id="comparisonDescription" value="#{comparison.description}"/>
+                            <ui:fragment rendered="#{not empty comparison.description}">
+                                <br/>
+                                <br/>
+                            </ui:fragment>
+                            <div class="comparison">
+                                <h:panelGroup rendered="#{tableComparisonReportBean.showConfiguration}">
+                                    <div class="tableComparisonTable">
+                                        <table>
+                                            <tr>
+                                                <th><h:outputText value="Comparison name"/></th>
+                                                <td>
+                                                    <h:inputText id="comparisonNameInput"
+                                                                 value="#{comparison.name}"
+                                                                 style="width: 350px;"
+                                                                 validatorMessage="Comparison name cannot be empty!">
+                                                        <f:validateRequired />
+                                                        <f:ajax event="change" render="comparisonName"/>
+                                                    </h:inputText>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><h:outputText value="Comparison description"/></th>
+                                                <td>
+                                                    <h:inputTextarea styleClass="input-text" style="width: 650px; height: 60px;" value="#{comparison.description}">
+                                                        <f:ajax event="change" render="comparisonDescription"/>
+                                                    </h:inputTextarea>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th><h:outputText value="Select items by"/></th>
+                                                <td>
+                                                    <h:selectOneRadio value="#{comparison.chooseOption}">
+                                                        <f:selectItem itemValue="#{'EXECUTION_ID'}" itemLabel="execution id" />
+                                                        <f:selectItem itemValue="#{'SET_OF_TAGS'}" itemLabel="tags" />
+                                                        <f:ajax event="click" render="itemsRepeat" execute="itemsRepeat" />
+                                                    </h:selectOneRadio>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </h:panelGroup>
+
+                                <h:panelGroup id="itemsRepeat" rendered="#{tableComparisonReportBean.showConfiguration}">
+                                    <div class="tableComparisonTable">
+                                        <table>
+                                            <tr>
+                                                <th class="middleAlign">Item alias</th>
+                                                <ui:fragment rendered="#{comparison.chooseOption == 'EXECUTION_ID'}" >
+                                                    <th class="middleAlign">Execution id</th>
+                                                </ui:fragment>
+                                                <ui:fragment rendered="#{comparison.chooseOption == 'SET_OF_TAGS'}" >
+                                                    <th class="middleAlign">Test</th>
+                                                    <th class="middleAlign">Tags</th>
+                                                </ui:fragment>
+                                                <th class="middleAlign">Baseline</th>
+                                                <th></th>
+                                            </tr>
+                                            <a4j:repeat id="comparisonItemsRepeat" value="#{comparison.comparisonItems}" var="comparisonItem">
+                                                <tr>
+                                                    <td>
+                                                        <h:inputText value="#{comparisonItem.alias}"/>
+                                                    </td>
+                                                    <ui:fragment rendered="#{comparison.chooseOption == 'EXECUTION_ID'}" >
+                                                        <td>
+                                                            <h:inputText value="#{comparisonItem.executionId}" rendered="#{comparison.chooseOption == 'EXECUTION_ID'}"/>
+                                                        </td>
+                                                    </ui:fragment>
+                                                    <ui:fragment rendered="#{comparison.chooseOption == 'SET_OF_TAGS'}" >
+                                                        <td>
+                                                            <h:selectOneMenu value="#{comparisonItem.testUid}" rendered="#{comparison.chooseOption == 'SET_OF_TAGS'}">
+                                                                <f:selectItems value="#{tableComparisonReportBean.getTestsForSelection()}" var="test"
+                                                                               itemLabel="#{test.name}" itemValue="#{test.uid}"/>
+                                                            </h:selectOneMenu>
+                                                        </td>
+                                                        <td>
+                                                            <rich:autocomplete mode="cachedAjax" minChars="2" autofill="false"
+                                                                               style="width: 100%;"
+                                                                               styleClass="input-xlarge"
+                                                                               tokens=" "
+                                                                               autocompleteMethod="#{testExecutionSearchController.autocompleteTags}"
+                                                                               value="#{comparisonItem.tags}"
+                                                                               rendered="#{comparison.chooseOption == 'SET_OF_TAGS'}"/>
+                                                        </td>
+                                                    </ui:fragment>
+                                                    <td class="middleAlign">
+                                                        <h:selectBooleanCheckbox value="#{comparisonItem.baseline}">
+                                                            <a4j:ajax event="change" render="itemsRepeat" execute="itemsRepeat" listener="#{comparison.setBaseline(comparisonItem)}"/>
+                                                        </h:selectBooleanCheckbox>
+                                                    </td>
+                                                    <td class="middleAlign">
+                                                        <a4j:commandLink styleClass="btn btn-primary btn-small"
+                                                                         action="#{comparison.removeComparisonItem(comparisonItem)}"
+                                                                         render="itemsRepeat">
+                                                            <i class="icon-minus"></i>
+                                                        </a4j:commandLink>
+                                                    </td>
+                                                </tr>
+                                            </a4j:repeat>
+                                        </table>
+                                    </div>
+                                    <br/>
+                                    <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{tableComparisonReportBean.addNewComparisonItem(comparison)}"
+                                                     render=":tableComparisonReport">
+                                        Add new item
+                                    </a4j:commandLink>
+                                    <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{tableComparisonReportBean.updateAllItemsInComparison(group, comparison)}"
+                                                     render=":tableComparisonReport">
+                                        Update table
+                                    </a4j:commandLink>
+                                    <br/>
+                                    <br/>
+                                </h:panelGroup>
+                                <table class="rf-dt tetable_values">
+                                    <thead class="rf-dt-thd">
+                                    <tr class="rf-dt-shdr">
+                                        <th class="rf-dt-shdr-c">Metric/Item</th>
+                                        <a4j:repeat value="#{comparison.dataTable.items}" var="comparisonItem" >
+                                            <th class="rf-dt-shdr-c"><h:outputText value="#{comparisonItem.alias}" title="Test execution id: #{comparisonItem.testExecution.id}"/></th>
+                                        </a4j:repeat>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="rf-dt-b">
+                                    <a4j:repeat value="#{comparison.dataTable.rows}" var="row" >
+                                        <tr class="rf-dt-r rf-dt-fst-r">
+                                            <td class="rf-dt-c">#{row.metricName}</td>
+                                            <a4j:repeat value="#{row.cells}" var="cell" >
+                                                <td class="rf-dt-c #{cell.cellStyle == 'BAD' ? 'bad_cell' : '' } #{cell.cellStyle == 'GOOD' ? 'good_cell' : '' }">
+                                                    <h:outputText value="#{cell.value}" rendered="#{cell.baseline}" />
+                                                    <h:outputText value="#{cell.diffAgainstBaseline}" rendered="#{not cell.baseline}" title="#{cell.value}"/>
+                                                </td>
+                                            </a4j:repeat>
+                                        </tr>
+                                    </a4j:repeat>
+                                    </tbody>
+                                </table>
+                                <ui:fragment rendered="#{group.comparisons.indexOf(comparison) &lt; (group.comparisons.size() - 1)}">
+                                    <hr class="tableComparisonReportComparisonHr" />
+                                </ui:fragment>
+                            </div>
+                        </a4j:repeat>
+                    </div>
+                    <ui:fragment rendered="#{tableComparisonReportBean.showConfiguration}">
+                        <br />
+                        <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{tableComparisonReportBean.addNewComparison(group)}"
+                                         render=":tableComparisonReport">
+                            Add new comparison
+                        </a4j:commandLink>
+                    </ui:fragment>
+                </h:panelGroup>
+                <hr class="tableComparisonReportGroupHr" />
+            </a4j:repeat>
+            <a4j:commandLink styleClass="btn btn-primary btn-small" action="#{tableComparisonReportBean.addNewGroup}"
+                             render=":tableComparisonReport" rendered="#{tableComparisonReportBean.showConfiguration}">
+                Add new group
+            </a4j:commandLink>
+            <br />
+            <br />
+            <br />
+        </h:form>
+
+
+
+    </ui:define>
+</ui:composition>

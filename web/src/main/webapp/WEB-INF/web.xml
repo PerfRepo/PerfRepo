@@ -135,6 +135,7 @@
 			<description>Reports with public access</description>
 			<url-pattern>/reports/metric/*</url-pattern>
 			<url-pattern>/reports/testGroupReport/*</url-pattern>
+			<url-pattern>/reports/tableComparisonReport/*</url-pattern>
 			<url-pattern>/reports/boxplot/*</url-pattern>
 		</web-resource-collection>
 	</security-constraint>

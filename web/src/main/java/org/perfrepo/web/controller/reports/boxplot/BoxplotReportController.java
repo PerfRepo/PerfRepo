@@ -102,7 +102,7 @@ public class BoxplotReportController extends BaseController {
          if (e.getCause() instanceof SecurityException) {
             redirectWithMessage("/reports", ERROR, "page.report.permissionDenied");
          } else {
-            redirectWithMessage("/reports", ERROR, "page.report.erro");
+            redirectWithMessage("/reports", ERROR, "page.report.error");
          }
       }
    }

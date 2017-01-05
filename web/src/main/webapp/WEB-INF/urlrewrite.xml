@@ -105,6 +105,18 @@
 	</rule>
 
 	<rule>
+		<from>^/reports/tableComparisonReport$</from>
+		<to type="forward" last="true">/reports/tableComparison/tableComparison.jsf</to>
+		<set name="formActionURL">/reports/tableComparisonReport</set>
+	</rule>
+
+	<rule>
+		<from>^/reports/tableComparisonReport/([\d]+)$</from>
+		<to type="forward" last="true">/reports/tableComparison/tableComparison.jsf?reportId=$1</to>
+		<set name="formActionURL">/reports/tableComparisonReport/$1</set>
+	</rule>
+
+	<rule>
 		<!-- /param/{paramId} -->
 		<from>^/param/([\d]+)$</from>
 		<to type="forward" last="true">/testExecutionParameter/show.jsf?paramId=$1</to>
