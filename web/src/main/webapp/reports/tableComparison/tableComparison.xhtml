@@ -50,7 +50,7 @@
                 </div>
             </div>
             <hr/>
-            <h:outputText id="reportDescription" value="#{tableComparisonReportBean.reportTO.description}"/>
+            <h:outputText id="reportDescription" value="#{tableComparisonReportBean.reportTO.description}" escape="false" />
             <div class="tableComparisonTable">
                 <table>
                     <tr>
@@ -202,7 +202,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><h:outputText value="Group description"/></th>
+                                    <th><h:outputText value="Group description" escape="false" /></th>
                                     <td>
                                         <h:inputTextarea styleClass="input-text" style="width: 650px; height: 60px;" value="#{group.description}">
                                             <f:ajax event="change" render="groupDescription"/>
@@ -253,7 +253,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th><h:outputText value="Comparison description"/></th>
+                                                <th><h:outputText value="Comparison description" escape="false" /></th>
                                                 <td>
                                                     <h:inputTextarea styleClass="input-text" style="width: 650px; height: 60px;" value="#{comparison.description}">
                                                         <f:ajax event="change" render="comparisonDescription"/>
