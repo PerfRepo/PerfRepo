@@ -53,22 +53,27 @@ public class AlertAdapterDummyImpl implements AlertAdapter {
         validate(alert);
 
         AlertDto origin = storage.alert().getById(alert.getId());
+        if (origin == null) {
+            throw new NotFoundException("Alert does not exist.");
+        }
 
-        if (!origin.getTestId().equals(alert.getTestId())) {
+        AlertDto updated = storage.alert().update(alert);
+
+        if (!origin.getTestId().equals(updated.getTestId())) {
             throw new BadRequestException("Change ownership of the alert to another test is not possible.");
         }
 
-        if (!origin.getName().equals(alert.getName())
-                || !origin.getCondition().equals(alert.getCondition())) {
+        if (!origin.getName().equals(updated.getName())
+                || !origin.getCondition().equals(updated.getCondition())) {
             storage.test().getAll().forEach(test -> {
                 if (test.getAlerts().remove(origin)) {
-                    test.getAlerts().add(alert);
+                    test.getAlerts().add(updated);
                 }
             });
 
         }
 
-        return storage.alert().update(alert);
+        return updated;
     }
 
     @Override

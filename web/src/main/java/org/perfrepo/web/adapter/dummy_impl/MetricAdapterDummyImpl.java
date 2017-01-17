@@ -38,17 +38,22 @@ public class MetricAdapterDummyImpl implements MetricAdapter {
         validate(metric);
 
         MetricDto origin = storage.metric().getById(metric.getId());
+        if (origin == null) {
+            throw new NotFoundException("Metric does not exist.");
+        }
 
-        if (!origin.getName().equals(metric.getName())) {
+        MetricDto updated = storage.metric().update(metric);
+
+        if (!origin.getName().equals(updated.getName())) {
             storage.test().getAll().forEach(test -> {
                 if (test.getMetrics().remove(origin)) {
-                    test.getMetrics().add(metric);
+                    test.getMetrics().add(updated);
                 }
             });
 
         }
 
-        return storage.metric().update(metric);
+        return updated;
     }
 
     @Override

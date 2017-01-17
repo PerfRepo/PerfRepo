@@ -28,15 +28,19 @@ public class AlertStorage {
     }
 
     public AlertDto update(AlertDto dto) {
-        boolean removed = data.removeIf(alert -> alert.getId().equals(dto.getId()));
+        AlertDto alert = getById(dto.getId());
 
-        if (removed) {
-            data.add(dto);
+        if (alert != null) {
+            alert.setName(dto.getName());
+            alert.setTags(dto.getTags());
+            alert.setDescription(dto.getDescription());
+            alert.setMetric(dto.getMetric());
+            alert.setCondition(dto.getCondition());
+            alert.setLinks(dto.getLinks());
+            return alert;
         } else {
             return null;
         }
-
-        return dto;
     }
 
     public boolean delete(Long id) {
