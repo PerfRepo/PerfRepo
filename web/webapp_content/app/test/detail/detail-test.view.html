@@ -24,54 +24,46 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <h3>{{vm.test.name}}</h3>
+        <div class="test-detail-info">
+            <dl class="dl-horizontal">
+                <dt>Name</dt>
+                <dd>{{vm.test.name}}</dd>
 
-        <dl class="dl-horizontal">
-            <dt>UID</dt>
-            <dd>{{vm.test.uid}}</dd>
+                <dt>UID</dt>
+                <dd>{{vm.test.uid}}</dd>
 
-            <dt>Group</dt>
-            <dd>{{vm.test.group.name}}</dd>
+                <dt>Group</dt>
+                <dd>{{vm.test.group.name}}</dd>
 
-            <dt>Description</dt>
-            <dd ng-bind-html="vm.test.description"></dd>
-        </dl>
-
-        <div class="panel panel-default">
+                <dt>Description</dt>
+                <dd ng-bind-html="vm.test.description"></dd>
+            </dl>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default panel-metrics">
             <div class="panel-heading">
                 <h3 class="panel-title">Metrics</h3>
+                <a ng-click="vm.addMetric()" class="btn btn-primary panel-btn-action">Add metric</a>
             </div>
             <div class="panel-body">
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="metric in vm.test.metrics">
-                        <div>
-                            <strong>{{metric.name}}</strong>
-                        </div>
-                        <a ng-click="vm.editMetric(metric)" class="btn btn-default">Edit</a>
-                        <a ng-click="vm.removeMetric(metric)" class="btn btn-danger">Remove</a>
-                    </li>
-                </ul>
-                <a ng-click="vm.addMetric()" class="btn btn-primary">Add metric</a>
+                <metric-list-view items="vm.test.metrics" test-id="vm.test.id" on-update-list="vm.updateDetail()"></metric-list-view>
             </div>
         </div>
-
-        <div class="panel panel-default">
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="panel panel-default panel-alerts">
             <div class="panel-heading">
                 <h3 class="panel-title">Alerts</h3>
+                <a ng-click="vm.addAlert()" class="btn btn-primary panel-btn-action">Add alert</a>
             </div>
             <div class="panel-body">
-                <ul class="list-group">
-                    <li class="list-group-item" ng-repeat="alert in vm.test.alerts">
-                        <div>
-                            <strong>{{alert.name}}</strong>
-                        </div>
-                        <a ng-click="vm.editAlert(alert)" class="btn btn-default">Edit</a>
-                        <a ng-click="vm.removeAlert(alert)" class="btn btn-danger">Remove</a>
-                    </li>
-                </ul>
-                <a ng-click="vm.addAlert()" class="btn btn-primary">Add alert</a>
+                <alert-list-view items="vm.test.alerts" test-metrics="vm.test.metrics" on-update-list="vm.updateDetail()"></alert-list-view>
             </div>
         </div>
-
     </div>
 </div>

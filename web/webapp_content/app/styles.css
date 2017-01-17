@@ -158,3 +158,26 @@ span.ui-select-placeholder {
 .search-test-wrapper, .search-test-execution-wrapper {
     margin-left: -20px;
 }
+
+/* test detail */
+div.panel-metrics div.panel-body, div.panel-alerts div.panel-body {
+    padding: 0;
+}
+
+div.panel-metrics div.panel-body .list-group, div.panel-alerts div.panel-body .list-group {
+    border-top: none;
+    margin-bottom: 0;
+}
+
+div.panel-metrics h3, div.panel-alerts h3 {
+    display: inline;
+}
+
+div.panel-metrics .panel-btn-action, div.panel-alerts .panel-btn-action {
+    float: right;
+    margin-top: -3px;
+}
+
+div.test-detail-info {
+   margin-top: 20px;
+}

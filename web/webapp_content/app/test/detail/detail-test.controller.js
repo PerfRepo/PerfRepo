@@ -23,11 +23,10 @@
         vm.subscribeAlerts = subscribeAlerts;
         vm.unsubscribeAlerts = unsubscribeAlerts;
         vm.addMetric = addMetric;
-        vm.editMetric = editMetric;
-        vm.removeMetric = removeMetric;
         vm.addAlert = addAlert;
         vm.editAlert = editAlert;
         vm.removeAlert = removeAlert;
+        vm.updateDetail = updateDetail;
 
         function createTestExecution() {
             alert("Not yet implemented.");
@@ -79,22 +78,6 @@
 
         function addMetric() {
             var modalInstance = metricModalService.addOrCreateMetric(vm.test.id);
-
-            modalInstance.result.then(function () {
-                updateDetail();
-            });
-        }
-
-        function editMetric(metric) {
-            var modalInstance = metricModalService.editMetric(metric.id);
-
-            modalInstance.result.then(function () {
-                updateDetail();
-            });
-        }
-
-        function removeMetric(metric) {
-            var modalInstance = metricModalService.removeMetric(metric, vm.test.id);
 
             modalInstance.result.then(function () {
                 updateDetail();

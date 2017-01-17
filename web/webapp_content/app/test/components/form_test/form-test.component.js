@@ -14,14 +14,10 @@
             templateUrl: 'app/test/components/form_test/form-test.view.html'
         });
 
-    function FormTestController($scope) {
+    function FormTestController() {
         var vm = this;
         vm.save = save;
         vm.submitButtonText = vm.test.id != undefined ? 'Update' : 'Create';
-
-        $scope.$watch('vm.test.group', function() {
-
-        });
 
         function save(form) {
             if (form.$invalid) {

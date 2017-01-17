@@ -1,0 +1,13 @@
+<div pf-list-view
+     config="vm.config"
+     items="vm.items"
+     action-buttons="vm.actionButtons">
+
+    <div class="list-view-pf-description">
+        <div class="list-group-item-heading">
+            {{item.name}}
+        </div>
+        <div class="list-group-item-text" ng-bind-html="item.description">
+        </div>
+    </div>
+</div>
