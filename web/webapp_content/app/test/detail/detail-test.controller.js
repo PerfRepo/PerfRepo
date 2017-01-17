@@ -12,7 +12,7 @@
         .controller('DetailTestController', DetailTestController);
 
     function DetailTestController(_test, _isUserAlertsSubscriber, testService, testModalService,
-                                  metricModalService, alertModalService) {
+                                  metricModalService, alertModalService, testExecutionModalService, $state) {
         var vm = this;
         vm.test = _test;
         vm.isUserAlertsSubscriber = _isUserAlertsSubscriber;
@@ -29,7 +29,11 @@
         vm.updateDetail = updateDetail;
 
         function createTestExecution() {
-            alert("Not yet implemented.");
+            var modalInstance = testExecutionModalService.createTestExecution(vm.test.id);
+
+            modalInstance.result.then(function (id) {
+                $state.go('app.testExecutionDetail', {id: id});
+            });
         }
 
         function showTestExecutions() {
