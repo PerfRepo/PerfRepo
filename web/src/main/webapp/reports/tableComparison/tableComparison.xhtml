@@ -185,7 +185,7 @@
                             <i class="icon-minus"></i>
                         </a4j:commandLink>
                     </h2>
-                    <h:outputText id="groupDescription" value="#{group.description}"/>
+                    <h:outputText id="groupDescription" value="#{group.description}" escape="false" />
                     <h:panelGroup rendered="#{tableComparisonReportBean.showConfiguration}">
                         <div class="tableComparisonTable">
                             <table>
@@ -202,7 +202,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <th><h:outputText value="Group description" escape="false" /></th>
+                                    <th><h:outputText value="Group description"/></th>
                                     <td>
                                         <h:inputTextarea styleClass="input-text" style="width: 650px; height: 60px;" value="#{group.description}">
                                             <f:ajax event="change" render="groupDescription"/>
@@ -231,7 +231,7 @@
                                     <i class="icon-minus"></i>
                                 </a4j:commandLink>
                             </h4>
-                            <h:outputText id="comparisonDescription" value="#{comparison.description}"/>
+                            <h:outputText id="comparisonDescription" value="#{comparison.description}" escape="false" />
                             <ui:fragment rendered="#{not empty comparison.description}">
                                 <br/>
                                 <br/>
@@ -253,7 +253,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th><h:outputText value="Comparison description" escape="false" /></th>
+                                                <th><h:outputText value="Comparison description"/></th>
                                                 <td>
                                                     <h:inputTextarea styleClass="input-text" style="width: 650px; height: 60px;" value="#{comparison.description}">
                                                         <f:ajax event="change" render="comparisonDescription"/>
