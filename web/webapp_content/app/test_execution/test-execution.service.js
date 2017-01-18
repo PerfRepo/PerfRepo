@@ -5,7 +5,7 @@
         .module('org.perfrepo.testExecution')
         .service('testExecutionService', TestExecutionService);
 
-    function TestExecutionService($http, $resource, API_TEST_EXECUTION_URL) {
+    function TestExecutionService($http, $resource, API_TEST_EXECUTION_URL, testExecutionSearchService) {
 
         var testExecutionResource = $resource(API_TEST_EXECUTION_URL + '/:id',
             {
@@ -49,8 +49,15 @@
             });
         }
 
-        function defaultSearch() {
-            return search(getDefaultSearchParams());
+        function defaultSearch(defaultFilters) {
+            var defaultSearchParams =  getDefaultSearchParams();
+
+            if (defaultFilters) {
+                var filters = testExecutionSearchService.convertFiltersToCriteriaParams(defaultFilters);
+                angular.extend(defaultSearchParams, filters);
+            }
+
+            return search(defaultSearchParams);
         }
 
         function getDefaultSearchParams() {

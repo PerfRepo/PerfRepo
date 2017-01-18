@@ -16,7 +16,6 @@
 
     function MetricListViewController($templateCache, metricModalService) {
         var vm = this;
-        vm.testId = this.testId;
         $templateCache.put('metric-edit-button-template', '<span class="pficon pficon-edit"></span> {{actionButton.name}}');
         $templateCache.put('metric-delete-button-template', '<span class="pficon-delete"></span> {{actionButton.name}}');
 

@@ -16,7 +16,6 @@
 
     function AlertListViewController($templateCache, alertModalService) {
         var vm = this;
-        vm.testMetrics = this.testMetrics;
         $templateCache.put('alert-edit-button-template', '<span class="pficon pficon-edit"></span> {{actionButton.name}}');
         $templateCache.put('alert-delete-button-template', '<span class="pficon-delete"></span> {{actionButton.name}}');
 

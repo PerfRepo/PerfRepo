@@ -9,7 +9,8 @@
 
         return {
             getToolbarConfig: getToolbarConfig,
-            getSearchOffset: getSearchOffset
+            getSearchOffset: getSearchOffset,
+            convertFiltersToCriteriaParams: convertFiltersToCriteriaParams
         };
 
         function getToolbarConfig(onFilterChange, onSortChange) {
@@ -28,7 +29,7 @@
                 },
                 {
                     id: 'uid',
-                    title: 'Test uid',
+                    title: 'Test UID',
                     sortType: 'alpha'
                 },
                 {
@@ -56,8 +57,8 @@
                 },
                 {
                     id: 'uid',
-                    title:  'Test uid',
-                    placeholder: 'Filter by Test uid...',
+                    title:  'Test UID',
+                    placeholder: 'Filter by Test UID...',
                     filterType: 'text'
                 },
                 {
@@ -73,6 +74,26 @@
                 appliedFilters: [],
                 onFilterChange: onFilterChange
             }
+        }
+
+        function convertFiltersToCriteriaParams(filters) {
+            var params = {
+                testNameFilters: [],
+                testUidFilters: [],
+                tagFilters: []
+            };
+
+            filters.forEach(function(filter) {
+                if(filter.id == 'name') {
+                    params.testNameFilters.push(filter.value);
+                } else if(filter.id == 'uid') {
+                    params.testUidFilters.push(filter.value);
+                } else if(filter.id == 'tag') {
+                    params.tagFilters.push(filter.value);
+                }
+            });
+
+            return params;
         }
 
         function getSearchOffset(currentPage, limit) {

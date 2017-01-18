@@ -5,7 +5,8 @@
         .module('org.perfrepo.testExecution.search')
         .component('searchTestExecution', {
             bindings: {
-                initialSearchResult: '='
+                initialSearchResult: '=',
+                initialFilters: '='
             },
             controller: SearchTestExecutionController,
             controllerAs: 'vm',
@@ -24,7 +25,7 @@
         vm.updateSearch = updateSearch;
 
         // apply initial search
-        applySearchResult(vm.initialSearchResult);
+        applySearchInitialResult(vm.initialSearchResult, vm.initialFilters);
 
         function paginationChanged() {
             vm.searchParams.offset = testExecutionSearchService.getSearchOffset(vm.currentPage, vm.searchParams.limit);
@@ -32,19 +33,9 @@
         }
 
         function filterChanged(filters) {
-            vm.searchParams.testNameFilters = [];
-            vm.searchParams.testUidFilters = [];
-            vm.searchParams.tagFilters = [];
+            var searchFilterParams = testExecutionSearchService.convertFiltersToCriteriaParams(filters);
+            angular.extend(vm.searchParams, searchFilterParams);
 
-            filters.forEach(function(filter) {
-                if(filter.id == 'name') {
-                    vm.searchParams.testNameFilters.push(filter.value);
-                } else if(filter.id == 'uid') {
-                    vm.searchParams.testUidFilters.push(filter.value);
-                } else if(filter.id == 'tag') {
-                    vm.searchParams.tagFilters.push(filter.value);
-                }
-            });
             updateSearch();
         }
 
@@ -60,6 +51,11 @@
                 applySearchResult(searchResult);
                 $rootScope.ngProgress.complete();
             });
+        }
+
+        function applySearchInitialResult(searchResult, initialFilters) {
+            applySearchResult(searchResult);
+            vm.toolbarConfig.filterConfig.appliedFilters = initialFilters;
         }
 
         function applySearchResult(searchResult) {

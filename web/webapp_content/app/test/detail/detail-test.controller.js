@@ -37,7 +37,7 @@
         }
 
         function showTestExecutions() {
-            alert("Not yet implemented.");
+            $state.go('app.testExecutionOverview', {initialFilters: [{id: 'uid', value: vm.test.uid, title: 'Test UID'}]});
         }
 
         function subscribeAlerts() {

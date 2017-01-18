@@ -24,9 +24,15 @@
                 templateUrl: 'app/test_execution/overview/test-execution-overview.view.html',
                 controller: 'TestExecutionOverviewController',
                 controllerAs: 'vm',
+                params: {
+                    initialFilters: null
+                },
                 resolve: {
-                    _initialSearchResult: function(testExecutionService) {
-                        return testExecutionService.defaultSearch();
+                    _initialSearchResult: function(testExecutionService, $stateParams) {
+                        return testExecutionService.defaultSearch($stateParams.initialFilters);
+                    },
+                    _initialFilters: function($stateParams) {
+                        return $stateParams.initialFilters;
                     }
                 }
             });

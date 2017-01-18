@@ -83,7 +83,7 @@
         }
 
         function showTestExecutionsAction(action, item) {
-            alert('Not yet implemented.');
+            $state.go('app.testExecutionOverview', {initialFilters: [{id: 'uid', value: item.uid, title: 'Test UID'}]});
         }
 
         function editTestAction(action, item) {
