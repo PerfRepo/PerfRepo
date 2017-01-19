@@ -90,6 +90,10 @@ public class TestUtils {
         group.setName("testuser");
         searchCriteria.setGroups(new HashSet<>(Arrays.asList(group)));
 
+        Group group2 = new Group();
+        group.setName("testuser");
+        searchCriteria.setGroups(new HashSet<>(Arrays.asList(group2)));
+
         return searchCriteria;
     }
 

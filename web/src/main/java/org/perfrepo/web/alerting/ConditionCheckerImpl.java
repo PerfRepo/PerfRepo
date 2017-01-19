@@ -11,8 +11,8 @@ import org.perfrepo.web.model.Metric;
 import org.perfrepo.web.model.TestExecution;
 import org.perfrepo.web.model.Value;
 import org.perfrepo.web.model.ValueParameter;
-import org.perfrepo.web.service.search.TestExecutionSearchCriteria;
 import org.perfrepo.web.service.UserService;
+import org.perfrepo.web.service.search.TestExecutionSearchCriteria;
 import org.perfrepo.web.util.MultiValue;
 
 import javax.ejb.Stateless;
