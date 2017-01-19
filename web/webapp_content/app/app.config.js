@@ -41,6 +41,10 @@
         ngProgress.setHeight('5px');
         ngProgress.setColor('#39a5dc');
 
+        if (!authenticationService.isAuthenticated()) {
+            $state.go('login');
+        }
+
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             ngProgress.start();
             var requireLogin = toState.data.requireLogin;
