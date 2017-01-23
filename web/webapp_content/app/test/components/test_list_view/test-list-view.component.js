@@ -58,8 +58,8 @@
         function getMenuActions() {
             return [
                 {
-                    name: 'Create test execution',
-                    title: 'Create test execution',
+                    name: 'New test execution',
+                    title: 'Create new test execution',
                     actionFn: createTestExecutionAction
                 },
                 {

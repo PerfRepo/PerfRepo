@@ -7,7 +7,8 @@
             bindings: {
                 metric: '=',
                 comparators: '=',
-                onSave: '&'
+                onSave: '&',
+                onCancel: '&'
             },
 
             controller: FormMetricController,
@@ -18,7 +19,6 @@
     function FormMetricController() {
         var vm = this;
         vm.save = save;
-        vm.submitButtonText = vm.metric.id != undefined ? 'Update' : 'Add to test';
 
         function save(form) {
             if (form.$invalid) {

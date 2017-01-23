@@ -7,7 +7,8 @@
             bindings: {
                 alert: '=alertParam',
                 metrics: '=',
-                onSave: '&'
+                onSave: '&',
+                onCancel: '&'
             },
             controller: FormAlertController,
             controllerAs: 'vm',
@@ -17,7 +18,6 @@
     function FormAlertController($scope) {
         var vm = this;
         vm.save = save;
-        vm.submitButtonText = vm.alert.id != undefined ? 'Update' : 'Add to test';
 
         if (vm.alert.tags != undefined) {
             vm.tagsObject = [];

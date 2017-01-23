@@ -27,6 +27,7 @@
 trix-editor {
     border-radius: 0;
     background-color: white;
+    min-height: 160px;
 }
 
 trix-toolbar .button_group {
@@ -181,3 +182,32 @@ div.panel-metrics .panel-btn-action, div.panel-alerts .panel-btn-action {
 div.test-detail-info {
    margin-top: 20px;
 }
+
+dl.dl-detail {
+    margin-top: 20px;
+    margin-bottom: 35px;
+}
+
+dl.dl-detail dt{
+    text-align: left;
+    margin-left: 15px;
+    width: 100px;
+    line-height: 2.4em;
+}
+
+dl.dl-detail dd{
+    margin-left: 120px;
+    line-height: 2.4em;
+}
+
+div.form-group.form-bottom {
+    margin-top: 30px;
+    margin-bottom: 0;
+    text-align: right;
+}
+
+div.form-group.form-bottom .btn+.btn {
+    margin-left: 5px;
+}
+
+

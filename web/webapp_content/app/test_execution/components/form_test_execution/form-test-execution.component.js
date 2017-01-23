@@ -6,7 +6,8 @@
         .component('testExecutionForm', {
             bindings: {
                 testExecution: '=',
-                onSave: '&'
+                onSave: '&',
+                onCancel: '&'
             },
             controller: FormTestExecutionController,
             controllerAs: 'vm',
@@ -16,7 +17,6 @@
     function FormTestExecutionController($scope) {
         var vm = this;
         vm.save = save;
-        vm.submitButtonText = vm.testExecution.id != undefined ? 'Update' : 'Create';
 
         if (vm.testExecution.tags != undefined) {
             vm.tagsObject = [];

@@ -8,7 +8,7 @@
                 <span class="pficon pficon-edit" aria-hidden="true"></span> Edit
             </button>
             <button class="btn btn-default" ng-click="vm.createTestExecution()">
-                <span class="pficon-add-circle-o" aria-hidden="true"></span> Create test execution
+                <span class="pficon-add-circle-o" aria-hidden="true"></span> New test execution
             </button>
             <button class="btn btn-default" ng-click="vm.showTestExecutions()">
                 <span class="fa fa-list" aria-hidden="true"></span> Show test executions
@@ -24,8 +24,7 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
-        <div class="test-detail-info">
-            <dl class="dl-horizontal">
+            <dl class="dl-horizontal dl-detail">
                 <dt>Name</dt>
                 <dd>{{vm.test.name}}</dd>
 
@@ -46,7 +45,9 @@
         <div class="panel panel-default panel-metrics">
             <div class="panel-heading">
                 <h3 class="panel-title">Metrics</h3>
-                <a ng-click="vm.addMetric()" class="btn btn-primary panel-btn-action">Add metric</a>
+                <a ng-click="vm.addMetric()" class="btn btn-primary panel-btn-action">
+                    <span class="pficon-add-circle-o" aria-hidden="true"></span> New metric
+                </a>
             </div>
             <div class="panel-body">
                 <metric-list-view items="vm.test.metrics" test-id="vm.test.id" on-update-list="vm.updateDetail()"></metric-list-view>
@@ -59,7 +60,9 @@
         <div class="panel panel-default panel-alerts">
             <div class="panel-heading">
                 <h3 class="panel-title">Alerts</h3>
-                <a ng-click="vm.addAlert()" class="btn btn-primary panel-btn-action">Add alert</a>
+                <a ng-click="vm.addAlert()" class="btn btn-primary panel-btn-action">
+                    <span class="pficon-add-circle-o" aria-hidden="true"></span> New alert
+                </a>
             </div>
             <div class="panel-body">
                 <alert-list-view items="vm.test.alerts" test-metrics="vm.test.metrics" on-update-list="vm.updateDetail()"></alert-list-view>

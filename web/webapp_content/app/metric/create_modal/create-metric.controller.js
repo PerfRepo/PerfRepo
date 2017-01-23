@@ -17,7 +17,6 @@
             metricService.create(metric, vm.testId).then(function () {
                 $modalInstance.close(metric);
             }, function(errorResponse) {
-                console.log(form);
                 validationHelper.setFormErrors(errorResponse, form);
             });
         }

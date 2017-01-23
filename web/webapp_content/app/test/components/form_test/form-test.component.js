@@ -7,7 +7,8 @@
             bindings: {
                 groups: '=',
                 test: '=',
-                onSave: '&'
+                onSave: '&',
+                onCancel: '&'
             },
             controller: FormTestController,
             controllerAs: 'vm',
@@ -17,7 +18,6 @@
     function FormTestController() {
         var vm = this;
         vm.save = save;
-        vm.submitButtonText = vm.test.id != undefined ? 'Update' : 'Create';
 
         function save(form) {
             if (form.$invalid) {
