@@ -9,12 +9,12 @@
             <a ui-sref="app.testDetail({id: item.id})">{{item.name}}</a>
         </div>
         <div class="list-group-item-text">
-            {{item.uid}}
+            <span tooltip="UID">{{item.uid}}</span>
         </div>
     </div>
     <div class="list-view-pf-additional-info">
         <div class="list-view-pf-additional-info-item">
-            {{item.group.name}}
+            <span tooltip="Group">{{item.group.name}}</span>
         </div>
     </div>
 </div>
