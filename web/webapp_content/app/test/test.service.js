@@ -76,8 +76,8 @@
             return testResource.update(test).$promise;
         }
 
-        function remove(test) {
-            return testResource.delete(test).$promise;
+        function remove(id) {
+            return testResource.delete({id: id}).$promise;
         }
 
         function isUserAlertsSubscriber(testId) {

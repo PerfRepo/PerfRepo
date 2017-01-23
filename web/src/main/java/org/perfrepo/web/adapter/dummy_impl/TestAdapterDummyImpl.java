@@ -1,5 +1,6 @@
 package org.perfrepo.web.adapter.dummy_impl;
 
+import org.perfrepo.dto.alert.AlertDto;
 import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.dto.test.TestDto;
 import org.perfrepo.dto.test.TestSearchCriteria;
@@ -14,6 +15,7 @@ import org.perfrepo.web.adapter.exceptions.ValidationException;
 import javax.inject.Inject;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Temporary implementation of {@link TestAdapter} for development purpose.
@@ -87,6 +89,12 @@ public class TestAdapterDummyImpl implements TestAdapter {
 
         if (test == null) {
             throw new NotFoundException("Test does not exist.");
+        }
+
+        // remove alerts
+        Set<AlertDto> alerts = test.getAlerts();
+        if (alerts != null) {
+            alerts.forEach(alert -> storage.alert().delete(alert.getId()));
         }
 
         boolean removed = storage.test().delete(test.getId());

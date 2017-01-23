@@ -18,6 +18,7 @@
         vm.isUserAlertsSubscriber = _isUserAlertsSubscriber;
         vm.alertButtonEnabled = true;
         vm.editTest = editTest;
+        vm.removeTest = removeTest;
         vm.createTestExecution = createTestExecution;
         vm.showTestExecutions = showTestExecutions;
         vm.subscribeAlerts = subscribeAlerts;
@@ -93,6 +94,14 @@
 
             modalInstance.result.then(function () {
                 updateDetail();
+            });
+        }
+
+        function removeTest() {
+            var modalInstance = testModalService.removeTest(vm.test);
+
+            modalInstance.result.then(function () {
+                $state.go('app.testOverview');
             });
         }
 

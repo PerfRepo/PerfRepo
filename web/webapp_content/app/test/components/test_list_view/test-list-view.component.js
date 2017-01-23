@@ -95,7 +95,11 @@
         }
 
         function deleteTestAction(action, item) {
-            alert('Delete test - not yet implemented.');
+            var modalInstance = testModalService.removeTest(item);
+
+            modalInstance.result.then(function () {
+                vm.onUpdateList();
+            });
         }
     }
 })();

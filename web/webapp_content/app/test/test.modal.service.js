@@ -50,8 +50,21 @@
             });
         }
 
-        function removeTest(id) {
-
+        function removeTest(test) {
+            return $modal.open({
+                animation: true,
+                backdrop: 'static',
+                keyboard: false,
+                templateUrl: 'app/test/remove/remove-test.view.html',
+                controller: 'RemoveTestController',
+                controllerAs: 'vm',
+                size: 'sm',
+                resolve : {
+                    _test: function () {
+                        return test;
+                    }
+                }
+            });
         }
     }
 })();
