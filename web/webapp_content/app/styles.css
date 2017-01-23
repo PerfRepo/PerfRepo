@@ -21,7 +21,11 @@
 
 .header-controls {
     margin-top: 20px;
-    margin-bottom: 10px;
+    text-align: right;
+}
+
+.header-controls button {
+    margin-bottom: 5px;
 }
 
 trix-editor {
