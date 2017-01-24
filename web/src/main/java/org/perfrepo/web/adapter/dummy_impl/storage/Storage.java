@@ -1,11 +1,10 @@
 package org.perfrepo.web.adapter.dummy_impl.storage;
 
-import org.perfrepo.dto.test_execution.ValueGroupDto;
+import org.apache.commons.lang.time.DateUtils;
 import org.perfrepo.model.MetricComparator;
 import org.perfrepo.web.adapter.dummy_impl.builders.*;
 
 import javax.inject.Singleton;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -118,7 +117,7 @@ public class Storage {
         testStorage.create(new TestDtoBuilder()
                 .name("Echo socket test")
                 .uid("echo_socket_test")
-                .description("Bla bla")
+                .description("This is echo socket test")
                 .group(groupStorage.getById(1L))
                 .metric(metricStorage.getById(1L))
                 .metric(metricStorage.getById(2L))
@@ -185,65 +184,90 @@ public class Storage {
     }
 
     private void initializeTestExecutions() {
-        //TODO
-        ValueGroupDto g = new ValueGroupDto();
+        initializeTestExecutionsMultiValue();
+        initializeTestExecutionsSingleValue();
+    }
 
-        g.setMetricId(1L);
-        g.setValues(new ArrayList<>());
-        g.getValues().add(new ValueDtoBuilder()
-                .value(10.0)
-                .parameter("time", "1")
-                .build());
-        g.getValues().add(new ValueDtoBuilder()
-                .value(15.0)
-                .parameter("time", "2")
-                .build());
-        g.getValues().add(new ValueDtoBuilder()
-                .value(17.0)
-                .parameter("time", "3")
-                .build());
+    private void initializeTestExecutionsSingleValue() {
+        // test execution 2 - single-value
+        for (int i = 0; i < 10; i++) {
+            testExecutionStorage.create(new TestExecutionDtoBuilder()
+                    .name("Execution " + i + " of " + testStorage.getById(2L).getName())
+                    .test(testStorage.getById(2L))
+                    .tag("test")
+                    .tag("example")
+                    .tag(i + ".0")
+                    .started(DateUtils.addDays(new Date(), -(9 - i)))
+                    .executionParameter("environment", "test")
+                    .executionValue(new ValueGroupDtoBuilder()
+                            .metric(metricStorage.getById(2L))
+                            .value(new ValueDtoBuilder()
+                                    .value(10.0 + i)
+                                    .build())
+                            .build())
+                    .comment("Execution comment...")
+                    .build());
+        }
 
-        ValueGroupDto g2 = new ValueGroupDto();
+        // test execution 3 - single-value
+        for (int i = 0; i < 10; i++) {
+            testExecutionStorage.create(new TestExecutionDtoBuilder()
+                    .name("Execution " + i + " of " + testStorage.getById(3L).getName())
+                    .test(testStorage.getById(3L))
+                    .tag("test")
+                    .tag("example")
+                    .tag(i + ".0")
+                    .started(DateUtils.addDays(new Date(), -(9 - i)))
+                    .executionParameter("environment", "test")
+                    .executionValue(new ValueGroupDtoBuilder()
+                            .metric(metricStorage.getById(1L))
+                            .value(new ValueDtoBuilder()
+                                    .value(10.0 + i)
+                                    .build())
+                            .build())
+                    .executionValue(new ValueGroupDtoBuilder()
+                            .metric(metricStorage.getById(2L))
+                            .value(new ValueDtoBuilder()
+                                    .value(600.0 - i)
+                                    .build())
+                            .build())
+                    .comment("Execution comment...")
+                    .build());
+        }
+    }
 
-        g2.setMetricId(1L);
-        g2.setValues(new ArrayList<>());
-        g2.getValues().add(new ValueDtoBuilder()
-                .value(11.0)
-                .parameter("time", "1")
-                .build());
-        g2.getValues().add(new ValueDtoBuilder()
-                .value(16.0)
-                .parameter("time", "2")
-                .build());
-        g2.getValues().add(new ValueDtoBuilder()
-                .value(23.0)
-                .parameter("time", "3")
-                .build());
-        // test execution 1
-        testExecutionStorage.create(new TestExecutionDtoBuilder()
-                .name("Execution 1 of Echo socket test")
-                .test(testStorage.getById(1L))
-                .tag("echo")
-                .tag("socket")
-                .tag("1.0")
-                .started(new Date())
-                .executionParameter("environment", "test")
-                .executionValue(g)
-                .executionValue(g2)
-                .comment("Bla bla")
-                .build());
-        // test execution 2
-        testExecutionStorage.create(new TestExecutionDtoBuilder()
-                .name("Execution 2 of Echo socket test")
-                .test(testStorage.getById(1L))
-                .tag("echo")
-                .tag("socket")
-                .tag("1.1")
-                .started(new Date())
-                .executionParameter("environment", "test")
-                .executionValue(g2)
-                .comment("Bla bla")
-                .build());
+    private void initializeTestExecutionsMultiValue() {
+        // multi-value test execution for test id 1
+        for (int i = 0; i < 10; i++) {
+            testExecutionStorage.create(new TestExecutionDtoBuilder()
+                    .name("Execution " + i + " of " + testStorage.getById(1L).getName())
+                    .test(testStorage.getById(1L))
+                    .tag("echo")
+                    .tag("socket")
+                    .tag(i + ".0")
+                    .started(DateUtils.addDays(new Date(), -(9 - i)))
+                    .executionParameter("environment", "test")
+                    .executionValue(new ValueGroupDtoBuilder()
+                            .metric(metricStorage.getById(1L))
+                            .value(new ValueDtoBuilder()
+                                    .value(10.0 + i)
+                                    .parameter("time", "10")
+                                    .parameter("percent", "30")
+                                    .build())
+                            .value(new ValueDtoBuilder()
+                                    .value(15.0 + i)
+                                    .parameter("time", "20")
+                                    .parameter("percent", "60")
+                                    .build())
+                            .value(new ValueDtoBuilder()
+                                    .value(17.0 + i)
+                                    .parameter("time", "30")
+                                    .parameter("percent", "90")
+                                    .build())
+                            .build())
+                    .comment("Nightly build of Echo socket test, version: " + i + ".0")
+                    .build());
+        }
     }
 }
 
