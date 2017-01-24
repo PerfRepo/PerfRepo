@@ -1,0 +1,13 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="extended-content">
+            <h5><span ng-class='{"invisible": vm.testExecutions}' class="spinner spinner-xs spinner-inline"></span> The latest test executions:</h5>
+            <p class="no-results" ng-show="vm.testExecutions.totalCount == 0">No test executions exist</p>
+            <ul class="list-extended-content">
+                <li ng-repeat="testExecution in vm.testExecutions.data">
+                    <a ui-sref="app.testExecutionDetail({id: testExecution.id})">{{testExecution.name}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

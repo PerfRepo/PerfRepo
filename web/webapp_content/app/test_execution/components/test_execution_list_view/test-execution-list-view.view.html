@@ -9,7 +9,7 @@
             <a ui-sref="app.testExecutionDetail({id: item.id})">{{item.name}}</a>
         </div>
         <div class="list-group-item-text">
-            {{item.started}}
+            {{item.started | date}}
         </div>
     </div>
 </div>

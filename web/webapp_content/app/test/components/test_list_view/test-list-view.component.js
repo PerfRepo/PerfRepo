@@ -13,7 +13,7 @@
             templateUrl: 'app/test/components/test_list_view/test-list-view.view.html'
         });
 
-    function TestListViewController($state,  $templateCache, testModalService, testExecutionModalService) {
+    function TestListViewController($state, $templateCache, testModalService, testExecutionModalService) {
         var vm = this;
         $templateCache.put('test-detail-button-template', '<span class="fa fa-th-list"></span> {{actionButton.name}}');
         $templateCache.put('test-edit-button-template', '<span class="pficon pficon-edit"></span> {{actionButton.name}}');
@@ -27,6 +27,7 @@
             return {
                 showSelectBox: false,
                 selectItems: true,
+                useExpandingRows: true,
                 selectionMatchProp: 'id'
             };
         }

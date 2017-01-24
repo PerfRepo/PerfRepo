@@ -35,10 +35,11 @@
             save: save,
             update: update,
             remove: remove,
-            getDefaultSearchParams: getDefaultSearchParams
+            getDefaultSearchParams: getDefaultSearchParams,
+            searchLastForTest: searchLastForTest
         };
 
-        function search(searchParams){
+        function search(searchParams) {
             return $http.post(API_TEST_EXECUTION_URL + '/search', searchParams).then(function(response) {
                 return {
                     data : response.data,
@@ -47,6 +48,17 @@
                     currentPage : parseInt(response.headers('X-Pagination-Current-Page'))
                 };
             });
+        }
+
+        function searchLastForTest(testUID) {
+             var searchParams = {
+                 limit: 3,
+                 offset: 0,
+                 orderBy: 'DATE_DESC',
+                 testUidFilters: [testUID]
+             };
+
+             return search(searchParams);
         }
 
         function defaultSearch(defaultFilters) {
