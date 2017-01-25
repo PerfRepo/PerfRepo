@@ -6155,6 +6155,11 @@ div.comparison {
    margin-left: 9px;
 }
 
+.tetable_values th a {
+    color: #000 !important;
+    text-decoration: underline !important;
+}
+
 .tetable_values td {
     text-align: right;
 }

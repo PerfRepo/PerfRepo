@@ -349,7 +349,9 @@
                                     <tr class="rf-dt-shdr">
                                         <th class="rf-dt-shdr-c">Metric/Item</th>
                                         <a4j:repeat value="#{comparison.dataTable.items}" var="comparisonItem" >
-                                            <th class="rf-dt-shdr-c"><h:outputText value="#{comparisonItem.alias}" title="Test execution id: #{comparisonItem.testExecution.id}"/></th>
+                                            <th class="rf-dt-shdr-c">
+                                                <a href="#{request.contextPath}/exec/#{comparisonItem.testExecution.id}">#{comparisonItem.alias}</a>
+                                            </th>
                                         </a4j:repeat>
                                     </tr>
                                     </thead>
