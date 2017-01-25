@@ -239,3 +239,35 @@ div.extended-content h5 {
 .toolbar-pf {
     border-bottom: none;
 }
+
+/* test listing */
+@media (min-width: 992px) {
+    div.test-list div.list-view-pf-description {
+        width: 75%;
+    }
+}
+
+@media (min-width: 992px) {
+    div.test-list div.list-view-pf-additional-info {
+        width: 25%;
+    }
+}
+
+@media (min-width: 992px) {
+    div.test-list div.list-view-pf .list-group-item-heading {
+        width: calc(65% - 20px);
+    }
+}
+
+@media (min-width: 992px) {
+    div.test-list div.list-view-pf .list-group-item-text {
+        width: calc(35% - 20px);
+    }
+}
+
+@media (min-width: 992px) {
+    div.test-list div.list-view-pf-expand {
+        margin-bottom: 24px;
+        margin-top: 16px;
+    }
+}
