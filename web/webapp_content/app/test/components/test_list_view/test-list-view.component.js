@@ -28,7 +28,8 @@
                 showSelectBox: false,
                 selectItems: true,
                 useExpandingRows: true,
-                selectionMatchProp: 'id'
+                selectionMatchProp: 'id',
+                onDblClick: expandItemContentHandler
             };
         }
 
@@ -101,6 +102,10 @@
             modalInstance.result.then(function () {
                 vm.onUpdateList();
             });
+        }
+
+        function expandItemContentHandler(item) {
+            item.isExpanded = !item.isExpanded ;
         }
     }
 })();
