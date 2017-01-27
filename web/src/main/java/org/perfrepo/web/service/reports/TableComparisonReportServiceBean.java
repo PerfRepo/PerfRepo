@@ -1,6 +1,7 @@
 package org.perfrepo.web.service.reports;
 
 import org.perfrepo.model.Metric;
+import org.perfrepo.model.MetricComparator;
 import org.perfrepo.model.TestExecution;
 import org.perfrepo.model.Value;
 import org.perfrepo.model.auth.Permission;
@@ -212,20 +213,12 @@ public class TableComparisonReportServiceBean {
                cell.setCellStyle(Table.CellStyle.NEUTRAL);
             } else {
                cell.setBaseline(false);
-               double diff = 0;
-               switch (commonMetric.getComparator()) {
-                  case HB:
-                     diff = (cellValue / baselineValue) * 100d - 100;
-                     break;
-                  case LB:
-                     diff = ((cellValue / baselineValue) * 100d - 100) * -1;
-                     break;
-               }
+               double diff = (cellValue / baselineValue) * 100d - 100;
                cell.setDiffAgainstBaseline(twoDecimalsFormat.format(diff) + " %");
                if (diff > 0) { // add a plus sign to positive difference
                   cell.setDiffAgainstBaseline("+" + cell.getDiffAgainstBaseline());
                }
-               cell.setCellStyle(getCellStyle(diff, group.getThreshold()));
+               cell.setCellStyle(getCellStyle(diff, group.getThreshold(), commonMetric.getComparator()));
             }
             cell.setValue(twoDecimalsFormat.format(cellValue));
             row.addCell(cell);
@@ -256,11 +249,11 @@ public class TableComparisonReportServiceBean {
       return commonMetrics;
    }
 
-   private Table.CellStyle getCellStyle(double difference, int threshold) {
-      if (difference > threshold) {
+   private Table.CellStyle getCellStyle(double difference, int threshold, MetricComparator comparator) {
+      if ((difference > threshold && comparator == MetricComparator.HB) || (difference < (-1 * threshold) && comparator == MetricComparator.LB)) {
          return Table.CellStyle.GOOD;
       }
-      if (difference < (-1 * threshold)) {
+      if ((difference < (-1 * threshold) && comparator == MetricComparator.HB) || (difference > threshold && comparator == MetricComparator.LB)) {
          return Table.CellStyle.BAD;
       }
       return Table.CellStyle.NEUTRAL;
