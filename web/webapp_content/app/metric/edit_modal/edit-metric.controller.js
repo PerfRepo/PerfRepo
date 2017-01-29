@@ -5,10 +5,11 @@
         .module('org.perfrepo.metric.edit')
         .controller('EditMetricController', EditMetricController);
 
-    function EditMetricController(_metric, _comparators, metricService, validationHelper, $modalInstance) {
+    function EditMetricController(_metric, _metrics, _comparators, metricService, validationHelper, $modalInstance) {
         var vm = this;
         vm.comparators = _comparators;
         vm.metric = _metric;
+        vm.metrics = _metrics;
         vm.save = save;
         vm.cancel = cancel;
 

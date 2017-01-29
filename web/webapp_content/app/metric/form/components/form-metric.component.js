@@ -6,7 +6,8 @@
         .component('metricForm', {
             bindings: {
                 metric: '=',
-                comparators: '=',
+                comparators: '<',
+                metrics: '<',
                 onSave: '&',
                 onCancel: '&'
             },
@@ -18,7 +19,13 @@
 
     function FormMetricController() {
         var vm = this;
+        vm.metricOnSelect = metricOnSelect;
         vm.save = save;
+
+        function metricOnSelect(item) {
+            vm.metric.description = item.description;
+            vm.metric.comparator = item.comparator;
+        }
 
         function save(form) {
             if (form.$invalid) {

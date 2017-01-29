@@ -48,6 +48,9 @@
                     },
                     _testId: function () {
                         return testId;
+                    },
+                    _metrics: function (metricService) {
+                        return metricService.getAll();
                     }
                 }
             });
@@ -68,6 +71,9 @@
                     },
                     _metric: function (metricService) {
                         return metricService.getById(metricId);
+                    },
+                    _metrics: function (metricService) {
+                        return metricService.getAll();
                     }
                 }
             });

@@ -5,10 +5,11 @@
         .module('org.perfrepo.metric.create')
         .controller('CreateMetricController', CreateMetricController);
 
-    function CreateMetricController(_testId, _comparators, metricService, validationHelper, $modalInstance) {
+    function CreateMetricController(_testId, _metrics, _comparators, metricService, validationHelper, $modalInstance) {
         var vm = this;
         vm.comparators = _comparators;
         vm.metric = {};
+        vm.metrics = _metrics;
         vm.testId = _testId;
         vm.save = save;
         vm.cancel = cancel;

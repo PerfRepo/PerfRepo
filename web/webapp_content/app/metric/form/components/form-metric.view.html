@@ -4,7 +4,10 @@
             <div class="form-group">
                 <label class="col-sm-2 control-label" for="metricName">Name</label>
                 <div class="col-sm-10">
-                    <input type="text" id="metricName" name="name" ng-model="vm.metric.name" class="form-control" pr-server-validation>
+                    <input type="text" id="metricName" name="name" ng-model="vm.metric.name" autocomplete="off" typeahead-min-length="0"
+                           typeahead="metric.name for metric in vm.metrics | filter:$viewValue | limitTo:8"
+                           typeahead-on-select="vm.metricOnSelect($item)"
+                           class="form-control" pr-server-validation>
                 </div>
             </div>
 
