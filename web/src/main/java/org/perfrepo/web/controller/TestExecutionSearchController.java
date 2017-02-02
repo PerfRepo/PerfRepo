@@ -89,7 +89,7 @@ public class TestExecutionSearchController extends BaseController {
    public void search() {
       TestExecutionSearchTO criteria = criteriaSession.getExecutionSearchCriteria();
       criteria.setGroupFilter(userSession.getGroupFilter());
-      criteria.setLimitHowMany(criteria.getLimitHowMany() <= 0 ? null : criteria.getLimitHowMany());
+      criteria.setLimitHowMany((criteria.getLimitHowMany() == null || criteria.getLimitHowMany() <= 0) ? null : criteria.getLimitHowMany());
       criteria.setLimitFrom(criteria.getLimitHowMany() == null ? null : (resultsPageNumber - 1) * criteria.getLimitHowMany());
 
       SearchResultWrapper<TestExecution> searchResult = testService.searchTestExecutions(criteria);
