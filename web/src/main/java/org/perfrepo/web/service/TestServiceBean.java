@@ -744,7 +744,8 @@ public class TestServiceBean implements TestService {
             continue;
          }
 
-         for (Tag tag : testExecution.getTags()) {
+         List<Tag> tagList = new ArrayList<>(testExecution.getTags());
+         for (Tag tag : tagList) {
             if (tags.contains(tag.getName())) {
                testExecution.getTags().remove(tag);
             }
