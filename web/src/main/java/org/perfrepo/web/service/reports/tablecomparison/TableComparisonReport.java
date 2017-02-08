@@ -1,5 +1,7 @@
 package org.perfrepo.web.service.reports.tablecomparison;
 
+import org.perfrepo.web.service.reports.tablecomparison.model.Table;
+
 import java.util.ArrayList;
 import java.util.List;
 

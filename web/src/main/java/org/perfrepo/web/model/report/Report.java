@@ -29,10 +29,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents a report entity.
@@ -78,18 +80,10 @@ public class Report implements Entity<Report>, Comparable<Report> {
 
    @OneToMany(mappedBy = "report")
    @MapKey(name = "name")
-   private Map<String, ReportProperty> properties;
+   private Map<String, ReportProperty> properties = new HashMap<>();
 
-   @Transient
-   private String username;
-
-   public Report() {
-      super();
-   }
-
-   public Report(Long id) {
-      this.id = id;
-   }
+   @OneToMany(mappedBy = "report")
+   private Set<Permission> permissions = new HashSet<>();
 
    public Long getId() {
       return id;
@@ -131,12 +125,12 @@ public class Report implements Entity<Report>, Comparable<Report> {
       this.properties = properties;
    }
 
-   public String getUsername() {
-      return username;
+   public Set<Permission> getPermissions() {
+      return permissions;
    }
 
-   public void setUsername(String username) {
-      this.username = username;
+   public void setPermissions(Set<Permission> permissions) {
+      this.permissions = permissions;
    }
 
    @Override

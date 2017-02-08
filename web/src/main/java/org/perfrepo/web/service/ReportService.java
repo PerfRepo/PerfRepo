@@ -14,27 +14,53 @@
  */
 package org.perfrepo.web.service;
 
-import org.perfrepo.web.model.auth.Permission;
+import org.perfrepo.web.model.report.Permission;
 import org.perfrepo.web.model.report.Report;
-import org.perfrepo.web.model.to.MetricReportTO;
 import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.service.search.ReportSearchCriteria;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Service layer for all operations related to reports.
+ * TODO: document this and review methods documentation
+ * TODO: add validation
+ * TODO: add authorization
  *
  * @author Jiri Holusa <jholusa@redhat.com>
  */
 public interface ReportService {
 
    /**
-    * Get all reports that associated (visible) with currently logged user.
+    * Create new report.
     *
-    * @return List of {@link Report}
+    * @param report
+    * @return
     */
-   List<Report> getAllUsersReports();
+   Report createReport(Report report);
+
+   /**
+    * Update existing report.
+    *
+    * @param report
+    * @return
+    */
+   Report updateReport(Report report);
+
+   /**
+    * Removes report
+    *
+    * @param report
+    */
+   void removeReport(Report report);
+
+   /**
+    * Get report with all properties
+    *
+    * @param id
+    * @return {@link Report} with all attributes fetched
+    */
+   Report getReport(Long id);
 
    /**
     * Get all reports for which exists any (READ, WRITE or PUBLIC) permission to logged user or user group.
@@ -43,66 +69,21 @@ public interface ReportService {
    List<Report> getAllReports();
 
    /**
-    * Get all reports for which exists WRITE permission to any user group.
-    * @return List of {@link Report}
-    */
-   List<Report> getAllGroupReports();
-
-   /**
-    * Removes report
+    * TODO: document this
     *
-    * @param report
-    * @throws org.perfrepo.web.service.exceptions.ServiceException
-    */
-   void removeReport(Report report);
-
-   /**
-    * Create new report
-    *
-    * @param report
-    * @return created {@link Report}
-    */
-   Report createReport(Report report);
-
-   /**
-    * Update existing report
-    *
-    * @param report
-    * @return updated {@link Report}
-    */
-   Report updateReport(Report report);
-
-   /**
-    * Computes metric report.
-    *
-    * @param request
-    * @return response TO
-    */
-   MetricReportTO.Response computeMetricReport(MetricReportTO.Request request);
-
-   /**
-    * Get report with all properties
-    *
-    * @param report
-    * @return {@link Report} with all attributes fetched
-    */
-   Report getFullReport(Report report);
-
-
-   /**
-    * Returns all permission to report. If the permissions are not assigned, returns default permission.
-    *
-    * @param report
+    * @param criteria
     * @return
     */
-   Collection<Permission> getReportPermissions(Report report);
+   List<Report> searchReports(ReportSearchCriteria criteria);
 
-    /**
-     * Adds permission to provided report.
-     *
-     * @param permission
-     */
-    void addPermission(Permission permission) throws ServiceException;
+   /******** Methods related to permissions ********/
+
+   /**
+    * Adds permission to provided report.
+    *
+    * @param permission
+    */
+   void addPermission(Permission permission) throws ServiceException;
 
    /**
     * Updates permission to provided report.
@@ -117,4 +98,12 @@ public interface ReportService {
     * @param permission
     */
    void deletePermission(Permission permission) throws ServiceException;
+
+   /**
+    * Returns all permission to report. If the permissions are not assigned, returns default permission.
+    *
+    * @param report
+    * @return
+    */
+   Set<Permission> getReportPermissions(Report report);
 }

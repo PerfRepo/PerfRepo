@@ -1,4 +1,4 @@
-package org.perfrepo.web.service.reports.tablecomparison;
+package org.perfrepo.web.service.reports.tablecomparison.model;
 
 import org.perfrepo.web.model.TestExecution;
 

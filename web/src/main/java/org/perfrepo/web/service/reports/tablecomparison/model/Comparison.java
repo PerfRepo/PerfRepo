@@ -1,4 +1,4 @@
-package org.perfrepo.web.service.reports.tablecomparison;
+package org.perfrepo.web.service.reports.tablecomparison.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,8 +7,8 @@ public class Comparison {
 
    private String name;
    private String description;
-   private ChooseOption chooseOption;
-   private SelectOption selectOption;
+   private ChooseOption chooseOption = ChooseOption.SET_OF_TAGS;
+   private SelectOption selectOption = SelectOption.LAST;
    private List<ComparisonItem> comparisonItems = new ArrayList<>();
 
    public String getName() {

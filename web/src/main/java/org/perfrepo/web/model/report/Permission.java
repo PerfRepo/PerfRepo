@@ -12,12 +12,12 @@
  * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations under the License.
  */
-package org.perfrepo.web.model.auth;
+package org.perfrepo.web.model.report;
 
 import org.perfrepo.enums.AccessLevel;
 import org.perfrepo.enums.AccessType;
 import org.perfrepo.web.model.Entity;
-import org.perfrepo.web.model.report.Report;
+import org.perfrepo.web.model.user.Group;
 import org.perfrepo.web.model.user.User;
 
 import javax.persistence.Column;
@@ -31,7 +31,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @javax.persistence.Entity
 @Table(name = "permission")
@@ -52,14 +51,11 @@ public class Permission implements Entity<Permission> {
    @Enumerated(EnumType.STRING)
    private AccessLevel level;
 
-   @Column(name = "group_id")
-   private Long groupId;
+   @JoinColumn(name = "group_id", referencedColumnName = "id", nullable = true, updatable = true)
+   private Group group;
 
-   @Column(name = "user_id")
-   private Long userId;
-
-   @Transient
-   private Long reportId; //used for REST API
+   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true, updatable = true)
+   private User user;
 
    @ManyToOne(fetch = FetchType.LAZY, optional = false)
    @JoinColumn(name = "report_id", referencedColumnName = "id")
@@ -90,20 +86,20 @@ public class Permission implements Entity<Permission> {
       return id;
    }
 
-   public Long getGroupId() {
-      return groupId;
+   public Group getGroup() {
+      return group;
    }
 
-   public void setGroupId(Long groupId) {
-      this.groupId = groupId;
+   public void setGroup(Group group) {
+      this.group = group;
    }
 
-   public Long getUserId() {
-      return userId;
+   public User getUser() {
+      return user;
    }
 
-   public void setUserId(Long userId) {
-      this.userId = userId;
+   public void setUser(User user) {
+      this.user = user;
    }
 
    public Report getReport() {
@@ -112,18 +108,6 @@ public class Permission implements Entity<Permission> {
 
    public void setReport(Report report) {
       this.report = report;
-   }
-
-   public void setUser(User user) {
-      this.userId = user.getId();
-   }
-
-   public Long getReportId() {
-      return reportId;
-   }
-
-   public void setReportId(Long reportId) {
-      this.reportId = reportId;
    }
 
    @Override
@@ -135,16 +119,16 @@ public class Permission implements Entity<Permission> {
 
       if (getAccessType() != that.getAccessType()) return false;
       if (getLevel() != that.getLevel()) return false;
-      if (getGroupId() != null ? !getGroupId().equals(that.getGroupId()) : that.getGroupId() != null) return false;
-      return getUserId() != null ? getUserId().equals(that.getUserId()) : that.getUserId() == null;
+      if (getGroup() != null ? !getGroup().equals(that.getGroup()) : that.getGroup() != null) return false;
+      return getUser() != null ? getUser().equals(that.getUser()) : that.getUser() == null;
    }
 
    @Override
    public int hashCode() {
       int result = getAccessType() != null ? getAccessType().hashCode() : 0;
       result = 31 * result + (getLevel() != null ? getLevel().hashCode() : 0);
-      result = 31 * result + (getGroupId() != null ? getGroupId().hashCode() : 0);
-      result = 31 * result + (getUserId() != null ? getUserId().hashCode() : 0);
+      result = 31 * result + (getGroup() != null ? getGroup().hashCode() : 0);
+      result = 31 * result + (getUser() != null ? getUser().hashCode() : 0);
       return result;
    }
 
@@ -152,11 +136,11 @@ public class Permission implements Entity<Permission> {
    public String toString() {
       return "Permission{" +
               "accessType=" + accessType +
-              ", groupId=" + groupId +
+              ", group=" + group +
               ", id=" + id +
               ", level=" + level +
-              ", reportId=" + reportId +
-              ", userId=" + userId +
+              ", reportId=" + report.getId() +
+              ", user=" + user +
               '}';
    }
 }

@@ -1,4 +1,4 @@
-package org.perfrepo.web.service.reports.tablecomparison;
+package org.perfrepo.web.service.reports.tablecomparison.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,14 +45,6 @@ public class Group {
 
    public void setComparisons(List<Comparison> comparisons) {
       this.comparisons = comparisons;
-   }
-
-   public void addComparison(Comparison comparison) {
-      comparisons.add(comparison);
-   }
-
-   public void removeComparison(Comparison comparison) {
-      comparisons.remove(comparison);
    }
 
 }

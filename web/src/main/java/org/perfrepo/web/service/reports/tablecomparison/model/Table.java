@@ -1,4 +1,4 @@
-package org.perfrepo.web.service.reports.tablecomparison;
+package org.perfrepo.web.service.reports.tablecomparison.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +20,6 @@ public class Table {
 
    public void setItems(List<ComparisonItem> items) {
       this.items = items;
-   }
-
-   public void addItem(ComparisonItem item) {
-      items.add(item);
    }
 
    public List<Row> getRows() {

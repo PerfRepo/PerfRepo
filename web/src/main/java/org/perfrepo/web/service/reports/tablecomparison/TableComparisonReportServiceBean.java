@@ -4,7 +4,7 @@
 //import org.perfrepo.web.model.Test;
 //import org.perfrepo.web.model.TestExecution;
 //import org.perfrepo.web.model.Value;
-//import org.perfrepo.web.model.auth.Permission;
+//import org.perfrepo.web.model.report.Permission;
 //import org.perfrepo.web.model.report.Report;
 //import org.perfrepo.web.model.report.ReportProperty;
 //import org.perfrepo.web.model.user.User;

@@ -106,12 +106,12 @@
 
                     <h:column headerClass="width31Percent">
                         <f:facet name="header">Group/user associated with the permission</f:facet>
-                        <h:selectOneMenu value="#{permission.groupId}" rendered="#{permission.level.toString().equalsIgnoreCase('group')}">
+                        <h:selectOneMenu value="#{permission.group}" rendered="#{permission.level.toString().equalsIgnoreCase('group')}">
                             <f:selectItems value="#{reportPermissionController.groupsForSelection}" var="group"
                                            itemLabel="#{group.name}" itemValue="#{group.id}" />
                         </h:selectOneMenu>
 
-                        <h:selectOneMenu value="#{permission.userId}" rendered="#{permission.level.toString().equalsIgnoreCase('user')}">
+                        <h:selectOneMenu value="#{permission.user}" rendered="#{permission.level.toString().equalsIgnoreCase('user')}">
                             <f:selectItems value="#{reportPermissionController.usersForSelection}" var="user"
                                            itemLabel="#{user.username}" itemValue="#{user.id}"/>
                         </h:selectOneMenu>

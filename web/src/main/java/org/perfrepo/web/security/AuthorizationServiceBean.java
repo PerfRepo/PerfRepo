@@ -18,7 +18,7 @@ import org.perfrepo.web.model.Entity;
 import org.perfrepo.web.model.Test;
 import org.perfrepo.enums.AccessLevel;
 import org.perfrepo.enums.AccessType;
-import org.perfrepo.web.model.auth.Permission;
+import org.perfrepo.web.model.report.Permission;
 import org.perfrepo.web.model.report.Report;
 import org.perfrepo.web.model.user.User;
 import org.perfrepo.web.dao.PermissionDAO;
@@ -65,14 +65,14 @@ public class AuthorizationServiceBean implements AuthorizationService {
                if (permission.getLevel().equals(AccessLevel.PUBLIC)) {
                   //Public permission, the access is granted
                   return true;
-               } else if (permission.getUserId() != null && permission.getLevel().equals(AccessLevel.USER)) {
+               } else if (permission.getUser() != null && permission.getLevel().equals(AccessLevel.USER)) {
                   //USER permission, the permission userId should be same as user, who require the access
-                  if (userId != null && userId.equals(permission.getUserId())) {
+                  if (userId != null && userId.equals(permission.getUser())) {
                      return true;
                   }
-               } else if (permission.getGroupId() != null && permission.getLevel().equals(AccessLevel.GROUP)) {
+               } else if (permission.getGroup() != null && permission.getLevel().equals(AccessLevel.GROUP)) {
                   //GROUP permission, user must be assigned in permission group
-                  if (groupService.isUserInGroup(userService.getUser(userId), groupService.getGroup(permission.getGroupId()))) {
+                  if (groupService.isUserInGroup(userService.getUser(userId), groupService.getGroup(permission.getGroup().getId()))) {
                      return true;
                   }
                }

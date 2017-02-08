@@ -14,13 +14,13 @@
  */
 package org.perfrepo.web.dao;
 
-import org.perfrepo.web.model.auth.Permission;
+import org.perfrepo.web.model.report.Permission;
 import org.perfrepo.web.model.report.Report;
 
 import java.util.List;
 
 /**
- * DAO for {@link org.perfrepo.web.model.auth.Permission}
+ * DAO for {@link Permission}
  *
  * @author Jiri Holusa (jholusa@redhat.com)
  */
@@ -33,7 +33,8 @@ public class PermissionDAO extends DAO<Permission, Long> {
     * @return
     */
    public List<Permission> getByReport(Long reportId) {
-      Report report = new Report(reportId);
+      Report report = new Report();
+      report.setId(reportId);
       return getAllByProperty("report", report);
    }
 

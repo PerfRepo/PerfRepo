@@ -14,24 +14,22 @@
  */
 package org.perfrepo.web.service;
 
-import org.perfrepo.web.model.Metric;
-import org.perfrepo.web.model.Test;
 import org.perfrepo.enums.AccessLevel;
 import org.perfrepo.enums.AccessType;
-import org.perfrepo.web.model.auth.Permission;
-import org.perfrepo.web.model.report.Report;
-import org.perfrepo.web.model.report.ReportProperty;
-import org.perfrepo.web.model.to.MetricReportTO;
-import org.perfrepo.web.model.user.Group;
-import org.perfrepo.web.model.user.User;
+import org.perfrepo.web.dao.GroupDAO;
 import org.perfrepo.web.dao.MetricDAO;
 import org.perfrepo.web.dao.PermissionDAO;
 import org.perfrepo.web.dao.ReportDAO;
 import org.perfrepo.web.dao.ReportPropertyDAO;
 import org.perfrepo.web.dao.TestDAO;
 import org.perfrepo.web.dao.TestExecutionDAO;
-import org.perfrepo.web.security.Secured;
-import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.dao.UserDAO;
+import org.perfrepo.web.model.report.Permission;
+import org.perfrepo.web.model.report.Report;
+import org.perfrepo.web.model.report.ReportProperty;
+import org.perfrepo.web.model.user.Group;
+import org.perfrepo.web.model.user.User;
+import org.perfrepo.web.service.search.ReportSearchCriteria;
 import org.perfrepo.web.session.UserSession;
 
 import javax.ejb.Stateless;
@@ -40,17 +38,14 @@ import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
- * Implements @link{ReportService}.
+ * TODO: document this
  *
  * @author Jiri Holusa <jholusa@redhat.com>
  */
@@ -78,42 +73,98 @@ public class ReportServiceBean implements ReportService {
    private UserService userService;
 
    @Inject
+   private GroupDAO groupDAO;
+
+   @Inject
+   private UserDAO userDAO;
+
+   @Inject
    private ReportPropertyDAO reportPropertyDAO;
 
    @Inject
    private UserSession userSession;
 
    @Override
-   public List<Report> getAllUsersReports() {
-      return getAllReports(userSession.getLoggedUser().getUsername());
+   public Report createReport(Report report) {
+      User managedUser = userService.getUser(report.getUser().getId());
+      report.setUser(managedUser);
+
+      Report createdReport = reportDAO.create(report);
+
+      Set<Permission> permissions = report.getPermissions();
+      for (Permission permission: permissions) {
+         permission.setReport(createdReport);
+         addPermission(permission);
+      }
+
+      return createdReport;
+   }
+
+   @Override
+   public Report updateReport(Report report) {
+      return reportDAO.merge(report);
+   }
+
+   @Override
+   public void removeReport(Report report) {
+      Report managedReport = reportDAO.get(report.getId());
+      reportDAO.remove(managedReport);
+   }
+
+   @Override
+   public Report getReport(Long id) {
+      Report managedReport = reportDAO.get(id);
+      Set<Permission> reportPermissions = getReportPermissions(managedReport);
+      managedReport.setPermissions(reportPermissions);
+
+      return managedReport;
    }
 
    @Override
    public List<Report> getAllReports() {
-      User user = userSession.getLoggedUser();
-      List<Long> groupIds = userService.getUserGroups(user).stream().map(Group::getId).collect(Collectors.toList());
-
-      return reportDAO.getByAnyPermission(user.getId(), groupIds);
+      return reportDAO.getAll();
    }
 
    @Override
-   public List<Report> getAllGroupReports() {
-      User user = userSession.getLoggedUser();
-      List<Long> groupIds = userService.getUserGroups(user).stream().map(Group::getId).collect(Collectors.toList());
+   public List<Report> searchReports(ReportSearchCriteria criteria) {
+      return null;
+   }
 
-      return reportDAO.getByGroupPermission(user.getId(), groupIds);
+   /******** Methods related to permissions ********/
+
+   @Override
+   public void addPermission(Permission permission) {
+      Report managedReport = reportDAO.get(permission.getReport().getId());
+      Group managedGroup = null;
+      if (permission.getGroup() != null) {
+         managedGroup = groupDAO.get(permission.getGroup().getId());
+      }
+      User managedUser = null;
+      if (permission.getUser() != null) {
+         managedUser = userDAO.get(permission.getUser().getId());
+      }
+
+      permission.setReport(managedReport);
+      permission.setGroup(managedGroup);
+      permission.setUser(managedUser);
+
+      permissionDAO.create(permission);
    }
 
    @Override
-   @Secured
-   public void removeReport(Report report) {
-      Report r = reportDAO.get(report.getId());
-      permissionDAO.removeReportPermissions(report.getId());
-      reportDAO.remove(r);
+   public void updatePermission(Permission permission) {
+      permissionDAO.merge(permission);
    }
 
    @Override
-   public Collection<Permission> getReportPermissions(Report report) {
+   public void deletePermission(Permission permission) {
+      Permission managedPermission = permissionDAO.get(permission.getId());
+      permissionDAO.remove(managedPermission);
+   }
+
+   @Override
+   public Set<Permission> getReportPermissions(Report report) {
+
       //TODO: solve this
       /*
       if (report != null && report.getId() != null) {
@@ -124,160 +175,6 @@ public class ReportServiceBean implements ReportService {
          return report.getPermissions();
       }*/
       return getDefaultPermission();
-   }
-
-   @Override
-   public Report createReport(Report report) {
-      Report r = reportDAO.create(report);
-      //TODO: solve this
-      //saveReportPermissions(r, report.getPermissions());
-      return r;
-   }
-
-   @Override
-   @Secured
-   public Report updateReport(Report report) {
-      //TODO: verify rights
-      // somebody is able to read report
-      // somebody is able to write report
-      // the updater is able to write report
-      //TODO: solve this
-      //saveReportPermissions(report, report.getPermissions());
-      updateReportProperties(report, report.getProperties());
-      return reportDAO.merge(report);
-   }
-
-   @Override
-   @Secured
-   public Report getFullReport(Report report) {
-      Report freshReport = reportDAO.get(report.getId());
-      if (freshReport == null) {
-         return null;
-      }
-
-      Map<String, ReportProperty> clonedReportProperties = new HashMap<String, ReportProperty>();
-
-      for (String propertyKey : freshReport.getProperties().keySet()) {
-         clonedReportProperties.put(propertyKey, freshReport.getProperties().get(propertyKey));
-      }
-      List<Permission> clonedPermission = new ArrayList<Permission>();
-      //TODO: solve this
-      /*
-      for (Permission perm : freshReport.getPermissions()) {
-         clonedPermission.add(perm);
-      }*/
-
-      Report result = freshReport;
-      result.setProperties(clonedReportProperties);
-      return result;
-   }
-
-   @Override
-   public MetricReportTO.Response computeMetricReport(MetricReportTO.Request request) {
-      MetricReportTO.Response response = new MetricReportTO.Response();
-      for (MetricReportTO.ChartRequest chartRequest : request.getCharts()) {
-         MetricReportTO.ChartResponse chartResponse = new MetricReportTO.ChartResponse();
-         response.addChart(chartResponse);
-         if (chartRequest.getTestUid() == null) {
-            continue;
-         } else {
-            Test freshTest = testDAO.findByUid(chartRequest.getTestUid());
-            if (freshTest == null) {
-               // test uid supplied but doesn't exist - pick another test
-               response.setSelectionTests(testDAO.getAll());
-               continue;
-            } else {
-               freshTest = freshTest;
-               chartResponse.setSelectedTest(freshTest);
-               if (chartRequest.getSeries() == null || chartRequest.getSeries().isEmpty()) {
-                  continue;
-               }
-               for (MetricReportTO.SeriesRequest seriesRequest : chartRequest.getSeries()) {
-                  if (seriesRequest.getName() == null) {
-                     throw new IllegalArgumentException("series has null name");
-                  }
-                  MetricReportTO.SeriesResponse seriesResponse = new MetricReportTO.SeriesResponse(seriesRequest.getName());
-                  chartResponse.addSeries(seriesResponse);
-                  if (seriesRequest.getMetricName() == null) {
-                     continue;
-                  }
-                  Metric metric = freshTest.getMetrics().stream().filter(m -> m.getName().equals(seriesRequest.getMetricName())).findFirst().get();
-                  if (metric == null) {
-                     chartResponse.setSelectionMetrics(new ArrayList<>(freshTest.getMetrics()));
-                     continue;
-                  }
-                  seriesResponse.setSelectedMetric(metric);
-                  List<MetricReportTO.DataPoint> datapoints = null;
-                  //TODO: fix this
-                  //List<MetricReportTO.DataPoint> datapoints = testExecutionDAO.searchValues(freshTest.getId(), seriesRequest.getMetricName(), seriesRequest.getTags(), request.getLimitSize());
-                  if (datapoints.isEmpty()) {
-                     continue;
-                  }
-                  Collections.reverse(datapoints);
-                  seriesResponse.setDatapoints(datapoints);
-               }
-
-               for (MetricReportTO.BaselineRequest baselineRequest : chartRequest.getBaselines()) {
-                  if (baselineRequest.getName() == null) {
-                     throw new IllegalArgumentException("baseline has null name");
-                  }
-                  MetricReportTO.BaselineResponse baselineResponse = new MetricReportTO.BaselineResponse(baselineRequest.getName());
-                  chartResponse.addBaseline(baselineResponse);
-                  if (baselineRequest.getMetricName() == null) {
-                     continue;
-                  }
-                  Metric metric = freshTest.getMetrics().stream().filter(m -> m.getName().equals(baselineRequest.getMetricName())).findFirst().get();
-                  if (metric == null) {
-                     chartResponse.setSelectionMetrics(new ArrayList<>(freshTest.getMetrics()));
-                     continue;
-                  }
-                  baselineResponse.setSelectedMetric(metric);
-                  baselineResponse.setExecId(baselineRequest.getExecId());
-                  //TODO: fix this
-                  //baselineResponse.setValue(testExecutionDAO.getValueForMetric(baselineRequest.getExecId(), baselineRequest.getMetricName()));
-               }
-            }
-         }
-      }
-      return response;
-   }
-
-   @Override
-   public void addPermission(Permission permission) throws ServiceException {
-      if (permission.getReportId() == null) {
-         throw new ServiceException("serviceException.reportIdNotSet");
-      }
-
-      Report report = reportDAO.get(permission.getReportId());
-      List<Permission> oldPermissions = permissionDAO.getByReport(report.getId());
-      oldPermissions.add(permission);
-      saveReportPermissions(report, oldPermissions);
-   }
-
-   @Override
-   public void updatePermission(Permission permission) throws ServiceException {
-      if (permission.getReportId() == null) {
-         throw new ServiceException("serviceException.reportIdNotSet");
-      }
-
-      Report report = reportDAO.get(permission.getReportId());
-      List<Permission> oldPermissions = permissionDAO.getByReport(report.getId());
-      oldPermissions.stream().filter(oldPermission -> oldPermission.getLevel().equals(permission.getLevel()))
-              .forEach(oldPermission -> oldPermission.setAccessType(permission.getAccessType())
-      );
-      saveReportPermissions(report, oldPermissions);
-   }
-
-   @Override
-   public void deletePermission(Permission permission) throws ServiceException {
-      if (permission.getReportId() == null) {
-         throw new ServiceException("serviceException.reportIdNotSet");
-      }
-
-      Report report = reportDAO.get(permission.getReportId());
-      List<Permission> oldPermissions = permissionDAO.getByReport(report.getId());
-      oldPermissions.remove(permission);
-      saveReportPermissions(report, oldPermissions);
    }
 
    /**
@@ -343,8 +240,8 @@ public class ReportServiceBean implements ReportService {
    private boolean isContained(Permission permission, Collection<Permission> permissions) {
       for (Permission p : permissions) {
          if (p.getAccessType().equals(permission.getAccessType()) && p.getLevel().equals(permission.getLevel())) {
-            if ((permission.getUserId() != null && permission.getUserId().equals(p.getUserId())) || (permission.getUserId() == null && p.getUserId() == null)) {
-               if ((permission.getGroupId() != null && permission.getGroupId().equals(p.getGroupId())) || (permission.getGroupId() == null && p.getGroupId() == null)) {
+            if ((permission.getUser() != null && permission.getUser().equals(p.getUser())) || (permission.getUser() == null && p.getUser() == null)) {
+               if ((permission.getGroup() != null && permission.getGroup().equals(p.getGroup())) || (permission.getGroup() == null && p.getGroup() == null)) {
                   return true;
                }
             }
@@ -354,34 +251,22 @@ public class ReportServiceBean implements ReportService {
    }
 
    /**
-    * Return all users reports
-    *
-    * @param username
-    * @return
-    */
-   private List<Report> getAllReports(String username) {
-      List<Report> result = new ArrayList<Report>();
-      result.addAll(reportDAO.getByUser(username));
-      return result;
-   }
-
-   /**
     * Returns the default permissions WRITE group
     *
     * @return
     */
-   private Collection<Permission> getDefaultPermission() {
-      List<Permission> defaultPermissions = new ArrayList<Permission>();
+   private Set<Permission> getDefaultPermission() {
+      Set<Permission> defaultPermissions = new HashSet<>();
       Permission write = new Permission();
       write.setAccessType(AccessType.WRITE);
       write.setLevel(AccessLevel.GROUP);
       User user = userSession.getLoggedUser();
       Set<Group> userGroups = userService.getUserGroups(user);
-      if (userGroups != null && userGroups.size() > 0) {
-         write.setGroupId(userGroups.iterator().next().getId());
-      } else {
-         throw new IllegalStateException("User is not assigned in any group");
-      }
+//      if (userGroups != null && userGroups.size() > 0) {
+//         write.setGroup(userGroups.iterator().next().getId());
+//      } else {
+//         throw new IllegalStateException("User is not assigned in any group");
+//      }
       defaultPermissions.add(write);
       return defaultPermissions;
    }
