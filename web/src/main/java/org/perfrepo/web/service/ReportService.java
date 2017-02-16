@@ -16,6 +16,7 @@ package org.perfrepo.web.service;
 
 import org.perfrepo.web.model.report.Permission;
 import org.perfrepo.web.model.report.Report;
+import org.perfrepo.web.model.report.ReportProperty;
 import org.perfrepo.web.service.exceptions.ServiceException;
 import org.perfrepo.web.service.search.ReportSearchCriteria;
 
@@ -75,6 +76,14 @@ public interface ReportService {
     * @return
     */
    List<Report> searchReports(ReportSearchCriteria criteria);
+
+    /**
+     * Retrieves report properties.
+     *
+     * @param report
+     * @return
+     */
+   List<ReportProperty> getReportProperties(Report report);
 
    /******** Methods related to permissions ********/
 

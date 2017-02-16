@@ -18,14 +18,14 @@ import org.perfrepo.web.model.Entity;
 import org.perfrepo.web.model.user.User;
 
 import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -43,20 +43,9 @@ import java.util.Set;
  */
 @javax.persistence.Entity
 @Table(name = "report")
-@NamedQueries({
-    @NamedQuery(name = Report.GET_BY_USERNAME, query = "SELECT distinct report from Report report join report.user user where user.username = :username"),
-    @NamedQuery(name = Report.GET_BY_GROUP_PERMISSION, query = "SELECT distinct report FROM Permission permission INNER JOIN permission.report report WHERE permission.groupId in (:groupIds) or permission.userId= :userId"),
-    @NamedQuery(name = Report.GET_BY_ANY_PERMISSION, query = "SELECT distinct report FROM Permission permission INNER JOIN permission.report report WHERE permission.level = 'PUBLIC' or permission.groupId in (:groupIds) or permission.userId = :userId"),
-    @NamedQuery(name = Report.FIND_MAX_ID, query = "SELECT max(report.id) from Report report")
-})
 public class Report implements Entity<Report>, Comparable<Report> {
 
    private static final long serialVersionUID = -2188625358440509257L;
-
-   public static final String GET_BY_USERNAME = "Report.findByUserName";
-   public static final String GET_BY_GROUP_PERMISSION = "Report.getByGroupPermission";
-   public static final String GET_BY_ANY_PERMISSION = "Report.getByAnyPermission";
-   public static final String FIND_MAX_ID = "Report.findMaxId";
 
    @Id
    @SequenceGenerator(name = "REPORT_ID_GENERATOR", sequenceName = "REPORT_SEQUENCE", allocationSize = 1)
@@ -70,8 +59,8 @@ public class Report implements Entity<Report>, Comparable<Report> {
 
    @Column(name = "type")
    @NotNull
-   @Size(max = 255)
-   private String type;
+   @Enumerated(EnumType.STRING)
+   private ReportType type;
 
    @ManyToOne
    @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -101,11 +90,11 @@ public class Report implements Entity<Report>, Comparable<Report> {
       this.name = name;
    }
 
-   public String getType() {
+   public ReportType getType() {
       return type;
    }
 
-   public void setType(String type) {
+   public void setType(ReportType type) {
       this.type = type;
    }
 

@@ -51,9 +51,11 @@ public class Permission implements Entity<Permission> {
    @Enumerated(EnumType.STRING)
    private AccessLevel level;
 
+   @ManyToOne
    @JoinColumn(name = "group_id", referencedColumnName = "id", nullable = true, updatable = true)
    private Group group;
 
+   @ManyToOne
    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true, updatable = true)
    private User user;
 

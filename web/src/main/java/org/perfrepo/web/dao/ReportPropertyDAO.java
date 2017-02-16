@@ -16,11 +16,22 @@ package org.perfrepo.web.dao;
 
 import org.perfrepo.web.model.report.ReportProperty;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * DAO for {@link ReportProperty}
  *
  * @author Jiri Holusa (jholusa@redhat.com)
  */
 public class ReportPropertyDAO extends DAO<ReportProperty, Long> {
+
+    public List<ReportProperty> findByReport(Long reportId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("reportId", reportId);
+        return findByNamedQuery(ReportProperty.FIND_BY_REPORT, params);
+    }
+
 
 }

@@ -22,6 +22,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -29,9 +31,14 @@ import javax.validation.constraints.Size;
 
 @javax.persistence.Entity
 @Table(name = "report_property")
+@NamedQueries({
+        @NamedQuery(name = ReportProperty.FIND_BY_REPORT, query = "SELECT property FROM ReportProperty property WHERE property.report.id = :reportId")
+})
 public class ReportProperty implements Entity<ReportProperty>, Comparable<ReportProperty> {
 
    private static final long serialVersionUID = -2862333826616822888L;
+
+   public static final String FIND_BY_REPORT = "ReportProperty.findByReport";
 
    @Id
    @SequenceGenerator(name = "REPORT_PROPERTY_ID_GENERATOR", sequenceName = "REPORT_PROPERTY_SEQUENCE", allocationSize = 1)
@@ -94,18 +101,16 @@ public class ReportProperty implements Entity<ReportProperty>, Comparable<Report
       if (this == o) return true;
       if (!(o instanceof ReportProperty)) return false;
 
-      ReportProperty that = (ReportProperty) o;
+      ReportProperty property = (ReportProperty) o;
 
-      if (getName() != null ? !getName().equals(that.getName()) : that.getName() != null) return false;
-      if (getValue() != null ? !getValue().equals(that.getValue()) : that.getValue() != null) return false;
-      return getReport() != null ? getReport().equals(that.getReport()) : that.getReport() == null;
+      if (getName() != null ? !getName().equals(property.getName()) : property.getName() != null) return false;
+      return getValue() != null ? getValue().equals(property.getValue()) : property.getValue() == null;
    }
 
    @Override
    public int hashCode() {
       int result = getName() != null ? getName().hashCode() : 0;
       result = 31 * result + (getValue() != null ? getValue().hashCode() : 0);
-      result = 31 * result + (getReport() != null ? getReport().hashCode() : 0);
       return result;
    }
 

@@ -17,7 +17,8 @@ package org.perfrepo.web.dao;
 import org.perfrepo.web.model.report.Permission;
 import org.perfrepo.web.model.report.Report;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * DAO for {@link Permission}
@@ -27,26 +28,15 @@ import java.util.List;
 public class PermissionDAO extends DAO<Permission, Long> {
 
    /**
-    * Returns all report permission.
+    * Returns all report permissions.
     *
     * @param reportId
     * @return
     */
-   public List<Permission> getByReport(Long reportId) {
+   public Set<Permission> getByReport(Long reportId) {
       Report report = new Report();
       report.setId(reportId);
-      return getAllByProperty("report", report);
+      return new HashSet<>(getAllByProperty("report", report));
    }
 
-   /**
-    * Removes report permissions
-    *
-    * @param reportId
-    */
-   public void removeReportPermissions(Long reportId) {
-      List<Permission> permissions = getByReport(reportId);
-      for (Permission p : permissions) {
-         this.remove(p);
-      }
-   }
 }
