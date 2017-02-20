@@ -6,6 +6,8 @@
         .service('testExecutionSearchService', TestExecutionModalService);
 
     function TestExecutionModalService() {
+        var vm = this;
+        vm.filterParamsMapping = getFilterParamsMapping();
 
         return {
             getToolbarConfig: getToolbarConfig,
@@ -51,20 +53,56 @@
             var fields = [
                 {
                     id: 'name',
+                    title:  'Name',
+                    placeholder: 'Filter by Name...',
+                    filterType: 'text'
+                },
+                {
+                    id: 'tagQuery',
+                    title:  'Tag query',
+                    placeholder: 'Filter by Tag query...',
+                    filterType: 'text'
+                },
+                {
+                    id: 'parameterQuery',
+                    title:  'Parameter query',
+                    placeholder: 'Filter by Parameter query...',
+                    filterType: 'text'
+                },
+                {
+                    id: 'id',
+                    title:  'ID',
+                    placeholder: 'Filter by ID...',
+                    filterType: 'number'
+                },
+                {
+                    id: 'startedAfter',
+                    title:  'Started after',
+                    placeholder: 'Filter by Started after...',
+                    filterType: 'datetime-local'
+                },
+                {
+                    id: 'startedBefore',
+                    title:  'Started before',
+                    placeholder: 'Filter by Started before...',
+                    filterType: 'datetime-local'
+                },
+                {
+                    id: 'testName',
                     title:  'Test name',
                     placeholder: 'Filter by Test name...',
                     filterType: 'text'
                 },
                 {
-                    id: 'uid',
+                    id: 'testUID',
                     title:  'Test UID',
                     placeholder: 'Filter by Test UID...',
                     filterType: 'text'
                 },
                 {
-                    id: 'tag',
-                    title:  'Tag',
-                    placeholder: 'Filter by Tag...',
+                    id: 'group',
+                    title:  'Test group',
+                    placeholder: 'Filter by Test group...',
                     filterType: 'text'
                 }
             ];
@@ -76,24 +114,36 @@
             }
         }
 
-        function convertFiltersToCriteriaParams(filters) {
-            var params = {
-                testNameFilters: [],
-                testUidFilters: [],
-                tagFilters: []
-            };
+        function getFilterParamsMapping() {
+            return {
+                id: 'idsFilter',
+                name: 'namesFilter',
+                testName: 'testNamesFilter',
+                testUID: 'testUIDsFilter',
+                group: 'groupsFilter',
+                tagQuery: 'tagQueriesFilter',
+                parameterQuery: 'parameterQueriesFilter',
+                startedAfter: 'startedAfterFilter',
+                startedBefore: 'startedBeforeFilter'
+            }
+        }
 
-            filters.forEach(function(filter) {
-                if(filter.id == 'name') {
-                    params.testNameFilters.push(filter.value);
-                } else if(filter.id == 'uid') {
-                    params.testUidFilters.push(filter.value);
-                } else if(filter.id == 'tag') {
-                    params.tagFilters.push(filter.value);
+        function convertFiltersToCriteriaParams(filters) {
+            var searchParams = {};
+            angular.forEach(vm.filterParamsMapping, function(filterName) {
+                searchParams[filterName] = [];
+            });
+
+            angular.forEach(filters, function(filter) {
+                var filterName = vm.filterParamsMapping[filter.id];
+                if (filterName == 'startedAfterFilter' || filterName == 'startedBeforeFilter') {
+                    searchParams[filterName].push(moment(filter.value).format());
+                } else {
+                    searchParams[filterName].push(filter.value);
                 }
             });
 
-            return params;
+            return searchParams;
         }
 
         function getSearchOffset(currentPage, limit) {

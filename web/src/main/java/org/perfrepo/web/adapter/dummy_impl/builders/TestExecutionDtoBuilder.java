@@ -1,10 +1,15 @@
 package org.perfrepo.web.adapter.dummy_impl.builders;
 
 import org.perfrepo.dto.test.TestDto;
+import org.perfrepo.dto.test_execution.AttachmentDto;
+import org.perfrepo.dto.test_execution.ParameterDto;
 import org.perfrepo.dto.test_execution.TestExecutionDto;
-import org.perfrepo.dto.test_execution.ValueGroupDto;
+import org.perfrepo.dto.test_execution.ValuesGroupDto;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashSet;
+
 
 /**
  * @author Jiri Grunwald (grunwjir@gmail.com)
@@ -15,9 +20,10 @@ public class TestExecutionDtoBuilder {
 
     public TestExecutionDtoBuilder() {
         testExecutionDto = new TestExecutionDto();
-        testExecutionDto.setTags(new HashSet<>());
-        testExecutionDto.setExecutionParameters(new HashMap<>());
-        testExecutionDto.setExecutionValues(new HashSet<>());
+        testExecutionDto.setTags(new LinkedHashSet<>());
+        testExecutionDto.setExecutionParameters(new LinkedHashSet<>());
+        testExecutionDto.setExecutionValuesGroups(new LinkedHashSet<>());
+        testExecutionDto.setExecutionAttachments(new ArrayList<>());
     }
 
     public TestExecutionDtoBuilder name(String name) {
@@ -46,12 +52,20 @@ public class TestExecutionDtoBuilder {
     }
 
     public TestExecutionDtoBuilder executionParameter(String name, String value) {
-        testExecutionDto.getExecutionParameters().put(name, value);
+        ParameterDto parameterDto = new ParameterDto();
+        parameterDto.setName(name);
+        parameterDto.setValue(value);
+        testExecutionDto.getExecutionParameters().add(parameterDto);
         return this;
     }
 
-    public TestExecutionDtoBuilder executionValue(ValueGroupDto valueGroup) {
-        testExecutionDto.getExecutionValues().add(valueGroup);
+    public TestExecutionDtoBuilder executionAttachment(AttachmentDto attachment) {
+        testExecutionDto.getExecutionAttachments().add(attachment);
+        return this;
+    }
+
+    public TestExecutionDtoBuilder executionValuesGroup(ValuesGroupDto valuesGroup) {
+        testExecutionDto.getExecutionValuesGroups().add(valuesGroup);
         return this;
     }
 

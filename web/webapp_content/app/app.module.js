@@ -3,16 +3,14 @@
 
     angular
         .module('org.perfrepo', [
-            'patternfly.navigation',
             'ui.router',
             'ngProgress',
 
+            'org.perfrepo.base',
             'org.perfrepo.authentication',
-            'org.perfrepo.login',
-            'org.perfrepo.group',
-            'org.perfrepo.common',
-            'org.perfrepo.utils',
             'org.perfrepo.dashboard',
+            'org.perfrepo.group',
+            'org.perfrepo.login',
             'org.perfrepo.test',
             'org.perfrepo.testExecution',
             'org.perfrepo.report'

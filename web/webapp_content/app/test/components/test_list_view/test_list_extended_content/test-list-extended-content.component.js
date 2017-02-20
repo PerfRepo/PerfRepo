@@ -15,18 +15,8 @@
     function TestListExtendedContentController(testExecutionService) {
         var vm = this;
 
-        /*
-        $scope.$watch('vm.item.isExpanded', function(value) {
-
-        });
-        */
-
-
         testExecutionService.searchLastForTest(vm.item.uid).then(function(response) {
             vm.testExecutions = response;
         });
-
-
-
     }
 })();

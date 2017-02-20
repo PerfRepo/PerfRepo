@@ -2,6 +2,7 @@ package org.perfrepo.dto.test_execution;
 
 import org.perfrepo.enums.OrderBy;
 
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -11,40 +12,100 @@ import java.util.Set;
  */
 public class TestExecutionSearchCriteria {
 
-    private Set<String> testNameFilters;
+    private Set<Long> idsFilter;
 
-    private Set<String> testUidFilters;
+    private Set<String> namesFilter;
 
-    private Set<String> tagFilters;
+    private Set<String> testNamesFilter;
 
-    private int limit = 5;
+    private Set<String> testUIDsFilter;
+
+    private Set<String> groupsFilter;
+
+    private Set<String> tagQueriesFilter;
+
+    private Set<String> parameterQueriesFilter;
+
+    private Set<Date> startedAfterFilter;
+
+    private Set<Date> startedBeforeFilter;
+
+    private int limit = 10;
 
     private int offset = 0;
 
     private OrderBy orderBy;
 
-    public Set<String> getTestNameFilters() {
-        return testNameFilters;
+    public Set<Long> getIdsFilter() {
+        return idsFilter;
     }
 
-    public void setTestNameFilters(Set<String> testNameFilters) {
-        this.testNameFilters = testNameFilters;
+    public void setIdsFilter(Set<Long> idsFilter) {
+        this.idsFilter = idsFilter;
     }
 
-    public Set<String> getTestUidFilters() {
-        return testUidFilters;
+    public Set<String> getNamesFilter() {
+        return namesFilter;
     }
 
-    public void setTestUidFilters(Set<String> testUidFilters) {
-        this.testUidFilters = testUidFilters;
+    public void setNamesFilter(Set<String> namesFilter) {
+        this.namesFilter = namesFilter;
     }
 
-    public Set<String> getTagFilters() {
-        return tagFilters;
+    public Set<String> getTestNamesFilter() {
+        return testNamesFilter;
     }
 
-    public void setTagFilters(Set<String> tagFilters) {
-        this.tagFilters = tagFilters;
+    public void setTestNamesFilter(Set<String> testNamesFilter) {
+        this.testNamesFilter = testNamesFilter;
+    }
+
+    public Set<String> getTestUIDsFilter() {
+        return testUIDsFilter;
+    }
+
+    public void setTestUIDsFilter(Set<String> testUIDsFilter) {
+        this.testUIDsFilter = testUIDsFilter;
+    }
+
+    public Set<String> getGroupsFilter() {
+        return groupsFilter;
+    }
+
+    public void setGroupsFilter(Set<String> groupsFilter) {
+        this.groupsFilter = groupsFilter;
+    }
+
+    public Set<String> getTagQueriesFilter() {
+        return tagQueriesFilter;
+    }
+
+    public void setTagQueriesFilter(Set<String> tagQueriesFilter) {
+        this.tagQueriesFilter = tagQueriesFilter;
+    }
+
+    public Set<String> getParameterQueriesFilter() {
+        return parameterQueriesFilter;
+    }
+
+    public void setParameterQueriesFilter(Set<String> parameterQueriesFilter) {
+        this.parameterQueriesFilter = parameterQueriesFilter;
+    }
+
+    public Set<Date> getStartedAfterFilter() {
+        return startedAfterFilter;
+    }
+
+    public void setStartedAfterFilter(Set<Date> startedAfterFilter) {
+        this.startedAfterFilter = startedAfterFilter;
+    }
+
+    public Set<Date> getStartedBeforeFilter() {
+        return startedBeforeFilter;
+    }
+
+    public void setStartedBeforeFilter(Set<Date> startedBeforeFilter) {
+        this.startedBeforeFilter = startedBeforeFilter;
     }
 
     public int getLimit() {

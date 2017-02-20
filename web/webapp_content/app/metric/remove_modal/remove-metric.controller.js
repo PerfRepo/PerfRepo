@@ -5,7 +5,7 @@
         .module('org.perfrepo.metric.remove')
         .controller('RemoveMetricController', RemoveMetricController);
 
-    function RemoveMetricController(_testId, _metric, metricService, $modalInstance) {
+    function RemoveMetricController(_testId, _metric, metricService, $uibModalInstance) {
         var vm = this;
         vm.metric = _metric;
         vm.testId = _testId;
@@ -14,12 +14,12 @@
 
         function remove() {
             metricService.remove(vm.metric.id, vm.testId).then(function () {
-                $modalInstance.close(vm.metric);
+                $uibModalInstance.close(vm.metric);
             });
         }
 
         function cancel() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         }
     }
 })();

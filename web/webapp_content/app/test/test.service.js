@@ -58,7 +58,7 @@
 
         function getDefaultSearchParams() {
             return {
-                limit: 5,
+                limit: 10,
                 offset: 0,
                 orderBy: 'NAME_ASC'
             };

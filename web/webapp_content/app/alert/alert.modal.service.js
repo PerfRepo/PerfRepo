@@ -5,7 +5,7 @@
         .module('org.perfrepo.alert')
         .service('alertModalService', AlertModalService);
 
-    function AlertModalService($modal) {
+    function AlertModalService($uibModal) {
 
         return {
             createAlert: createAlert,
@@ -14,7 +14,7 @@
         };
 
         function removeAlert(alert) {
-            return $modal.open({
+            return $uibModal.open({
                 animation: true,
                 backdrop: 'static',
                 keyboard: false,
@@ -31,7 +31,7 @@
         }
 
         function createAlert(testMetrics, testId) {
-            return $modal.open({
+            return $uibModal.open({
                 animation: true,
                 backdrop: 'static',
                 keyboard: false,
@@ -51,7 +51,7 @@
         }
 
         function editAlert(testMetrics, alertId) {
-            return $modal.open({
+            return $uibModal.open({
                 animation: true,
                 backdrop: 'static',
                 keyboard: false,

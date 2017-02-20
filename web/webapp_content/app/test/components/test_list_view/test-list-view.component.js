@@ -29,7 +29,7 @@
                 selectItems: true,
                 useExpandingRows: true,
                 selectionMatchProp: 'id',
-                onDblClick: expandItemContentHandler
+                onClick: expandItemContentHandler
             };
         }
 

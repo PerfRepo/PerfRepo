@@ -13,7 +13,7 @@ import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
 import org.perfrepo.web.adapter.exceptions.ValidationException;
 
 import javax.inject.Inject;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -53,8 +53,8 @@ public class TestAdapterDummyImpl implements TestAdapter {
     public TestDto createTest(TestDto test) {
         validate(test);
         // it is not possible to set it, metrics and alerts can be added in test detail
-        test.setMetrics(new HashSet<>());
-        test.setAlerts(new HashSet<>());
+        test.setMetrics(new LinkedHashSet<>());
+        test.setAlerts(new LinkedHashSet<>());
 
         return storage.test().create(test);
     }

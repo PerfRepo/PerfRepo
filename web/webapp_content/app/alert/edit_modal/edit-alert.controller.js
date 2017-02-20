@@ -5,7 +5,7 @@
         .module('org.perfrepo.alert.edit')
         .controller('EditAlertController', EditAlertController);
 
-    function EditAlertController(_alert, _metrics, alertService, validationHelper, $modalInstance) {
+    function EditAlertController(_alert, _metrics, alertService, validationHelper, $uibModalInstance) {
         var vm = this;
         vm.metrics = _metrics;
         vm.alert = _alert;
@@ -14,14 +14,14 @@
 
         function save(alert, form) {
             alertService.update(alert).then(function () {
-                $modalInstance.close(alert);
+                $uibModalInstance.close(alert);
             }, function(errorResponse) {
                 validationHelper.setFormErrors(errorResponse, form);
             });
         }
 
         function cancel() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         }
     }
 })();

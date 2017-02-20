@@ -3,6 +3,5 @@
 
     angular
         .module('org.perfrepo.utils', [
-
         ]);
 })();

@@ -5,7 +5,7 @@
         .module('org.perfrepo.metric.create')
         .controller('CreateMetricController', CreateMetricController);
 
-    function CreateMetricController(_testId, _metrics, _comparators, metricService, validationHelper, $modalInstance) {
+    function CreateMetricController(_testId, _metrics, _comparators, metricService, validationHelper, $uibModalInstance) {
         var vm = this;
         vm.comparators = _comparators;
         vm.metric = {};
@@ -16,14 +16,14 @@
 
         function save(metric, form) {
             metricService.create(metric, vm.testId).then(function () {
-                $modalInstance.close(metric);
+                $uibModalInstance.close(metric);
             }, function(errorResponse) {
                 validationHelper.setFormErrors(errorResponse, form);
             });
         }
 
         function cancel() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         }
     }
 })();

@@ -1,0 +1,29 @@
+// ########################################################################### remove blue 2px line from the top of page
+nav.navbar-pf-vertical {
+  border-top: 2px solid #1d1d1d;
+
+  span.user-name {
+    font-size: smaller;
+    letter-spacing: 0.05em;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  }
+}
+
+// ######################################################################################################## page content
+div.content-container {
+  padding-top: 40px;
+
+  div.header {
+    background-color: rgb(245, 245, 245);
+    border-bottom: 1px #ddd solid;
+
+    div.header-controls {
+      margin-top: 20px;
+      text-align: right;
+
+      button {
+        margin-bottom: 5px;
+      }
+    }
+  }
+}

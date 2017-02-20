@@ -6,13 +6,11 @@
     'use strict';
 
     angular
-        .module('org.perfrepo.test.detail', [
-
-        ])
+        .module('org.perfrepo.test.detail')
         .controller('DetailTestController', DetailTestController);
 
     function DetailTestController(_test, _isUserAlertsSubscriber, testService, testModalService,
-                                  metricModalService, alertModalService, testExecutionModalService, $state) {
+                                  testExecutionModalService, $state) {
         var vm = this;
         vm.test = _test;
         vm.isUserAlertsSubscriber = _isUserAlertsSubscriber;
@@ -23,10 +21,6 @@
         vm.showTestExecutions = showTestExecutions;
         vm.subscribeAlerts = subscribeAlerts;
         vm.unsubscribeAlerts = unsubscribeAlerts;
-        vm.addMetric = addMetric;
-        vm.addAlert = addAlert;
-        vm.editAlert = editAlert;
-        vm.removeAlert = removeAlert;
         vm.updateDetail = updateDetail;
 
         function createTestExecution() {
@@ -54,38 +48,6 @@
             testService.unsubscribeAlerts(vm.test.id).then(function() {
                 vm.isUserAlertsSubscriber = false;
                 vm.alertButtonEnabled = true;
-            });
-        }
-
-        function addAlert() {
-            var modalInstance = alertModalService.createAlert(vm.test.metrics, vm.test.id);
-
-            modalInstance.result.then(function () {
-                updateDetail();
-            });
-        }
-
-        function editAlert(alert) {
-            var modalInstance = alertModalService.editAlert(vm.test.metrics, alert.id);
-
-            modalInstance.result.then(function () {
-                updateDetail();
-            });
-        }
-
-        function removeAlert(alert) {
-            var modalInstance = alertModalService.removeAlert(alert);
-
-            modalInstance.result.then(function () {
-                updateDetail();
-            });
-        }
-
-        function addMetric() {
-            var modalInstance = metricModalService.addOrCreateMetric(vm.test.id);
-
-            modalInstance.result.then(function () {
-                updateDetail();
             });
         }
 

@@ -5,7 +5,19 @@
             <p class="no-results" ng-show="vm.testExecutions.totalCount == 0">No test executions exist</p>
             <ul class="list-extended-content">
                 <li ng-repeat="testExecution in vm.testExecutions.data">
-                    <a ui-sref="app.testExecutionDetail({id: testExecution.id})">{{testExecution.name}}</a>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <a uib-tooltip="Name" ui-sref="app.testExecutionDetail({id: testExecution.id})">{{testExecution.name}}</a>
+                        </div>
+                        <div class="col-sm-2">
+                            <span uib-tooltip="Started">{{testExecution.started | date}}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <span uib-tooltip="Tags">
+                                <span ng-repeat="tag in testExecution.tags" class="label label-info tag-label">{{tag}}</span>
+                            </span>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </div>

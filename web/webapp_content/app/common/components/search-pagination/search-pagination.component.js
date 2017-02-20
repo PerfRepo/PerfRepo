@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('org.perfrepo.common')
+        .module('org.perfrepo.base')
         .component('prSearchPagination', {
             bindings: {
                 itemsCount: '=',

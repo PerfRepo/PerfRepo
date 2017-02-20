@@ -1,10 +1,10 @@
 package org.perfrepo.web.adapter;
 
-import org.perfrepo.dto.test_execution.TestExecutionDto;
-import org.perfrepo.dto.test_execution.TestExecutionSearchCriteria;
+import org.perfrepo.dto.test_execution.*;
 import org.perfrepo.dto.util.SearchResult;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * Service adapter for {@link org.perfrepo.dto.test_execution.TestExecutionDto} object.
@@ -21,9 +21,17 @@ public interface TestExecutionAdapter {
 
     TestExecutionDto updateTestExecution(TestExecutionDto testExecution);
 
+    TestExecutionDto updateTestExecutionParameters(Long testExecutionId, Set<ParameterDto> testExecutionParameters);
+
     void removeTestExecution(Long id);
 
     List<TestExecutionDto> getAllTestExecutions();
 
     SearchResult<TestExecutionDto> searchTestExecutions(TestExecutionSearchCriteria searchParams);
+
+    AttachmentDto getTestExecutionAttachment(Long attachmentId);
+
+    TestExecutionDto addExecutionValues(Long testExecutionId, Long metricId, List<ValueDto> executionValues);
+
+    TestExecutionDto setExecutionValues(Long testExecutionId, Long metricId, List<ValueDto> executionValues);
 }

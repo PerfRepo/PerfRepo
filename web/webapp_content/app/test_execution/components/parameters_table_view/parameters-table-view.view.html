@@ -1,0 +1,30 @@
+<table class="table table-hover table-bordered pr-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Value</th>
+            <th class="table-actions">
+                <a ng-click="vm.addParameterAction()" class="cursor-pointer">
+                    <span class="pficon-add-circle-o" aria-hidden="true"></span> New parameter
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="parameter in vm.parameters">
+            <td>{{parameter.name}}</td>
+            <td>{{parameter.value}}</td>
+            <td class="table-actions">
+                <a ng-click="vm.editParameterAction(parameter)" class="cursor-pointer action-link" title="Edit parameter">
+                    <span class="pficon-edit" aria-hidden="true"></span>Edit
+                </a>
+                <a ng-click="vm.removeParameterAction(parameter)" class="cursor-pointer action-link" title="Remove parameter">
+                    <span class="pficon-delete" aria-hidden="true"></span>Delete
+                </a>
+            </td>
+        </tr>
+        <tr class="table-no-data" ng-show="!vm.parameters || vm.parameters.length == 0">
+            <td colspan="3">No parameters</td>
+        </tr>
+    </tbody>
+</table>

@@ -5,7 +5,7 @@
         .module('org.perfrepo.metric.edit')
         .controller('EditMetricController', EditMetricController);
 
-    function EditMetricController(_metric, _metrics, _comparators, metricService, validationHelper, $modalInstance) {
+    function EditMetricController(_metric, _metrics, _comparators, metricService, validationHelper, $uibModalInstance) {
         var vm = this;
         vm.comparators = _comparators;
         vm.metric = _metric;
@@ -15,14 +15,14 @@
 
         function save(metric, form) {
             metricService.update(metric).then(function () {
-                $modalInstance.close(metric);
+                $uibModalInstance.close(metric);
             }, function(errorResponse) {
                 validationHelper.setFormErrors(errorResponse, form);
             });
         }
 
         function cancel() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         }
     }
 })();

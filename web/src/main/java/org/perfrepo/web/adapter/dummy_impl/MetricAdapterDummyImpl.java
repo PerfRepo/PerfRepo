@@ -10,6 +10,7 @@ import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
 import org.perfrepo.web.adapter.exceptions.ValidationException;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,25 +36,29 @@ public class MetricAdapterDummyImpl implements MetricAdapter {
 
     @Override
     public MetricDto updateMetric(MetricDto metric) {
-        validate(metric);
+        validate(metric, true);
 
         MetricDto origin = storage.metric().getById(metric.getId());
         if (origin == null) {
             throw new NotFoundException("Metric does not exist.");
         }
-
-        MetricDto updated = storage.metric().update(metric);
-
-        if (!origin.getName().equals(updated.getName())) {
+        // metric name was changed
+        List<TestDto> tests = new ArrayList<>();
+        if (!metric.getName().equals(origin.getName())) {
             storage.test().getAll().forEach(test -> {
                 if (test.getMetrics().remove(origin)) {
-                    test.getMetrics().add(updated);
+                    tests.add(test);
                 }
             });
-
         }
+        // update existing metric
+        storage.metric().update(metric);
 
-        return updated;
+        tests.forEach(test -> {
+            test.getMetrics().add(origin);
+        });
+
+        return origin;
     }
 
     @Override
@@ -67,7 +72,7 @@ public class MetricAdapterDummyImpl implements MetricAdapter {
             throw new BadRequestException("Test does not exist.");
         }
 
-        validate(metric);
+        validate(metric, false);
 
         MetricDto metricToAdd = storage.metric().getByName(metric.getName());
 
@@ -110,7 +115,7 @@ public class MetricAdapterDummyImpl implements MetricAdapter {
         return storage.metric().getAll();
     }
 
-    private void validate(MetricDto metric) {
+    private void validate(MetricDto metric, boolean edit) {
         ValidationErrors validation = new ValidationErrors();
 
         // metric name
@@ -118,7 +123,7 @@ public class MetricAdapterDummyImpl implements MetricAdapter {
             validation.addFieldError("name", "Metric name is a required field");
         } else if (metric.getName().trim().length() < 3) {
             validation.addFieldError("name", "Metric name must be at least three characters.");
-        } else {
+        } else if (edit) {
             MetricDto existing = storage.metric().getByName(metric.getName());
             if (existing != null && !existing.getId().equals(metric.getId())) {
                 validation.addFieldError("name", "Metric with this name already exists.");

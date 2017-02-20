@@ -25,51 +25,57 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-sm-12">
-            <dl class="dl-horizontal dl-detail">
-                <dt>Name</dt>
-                <dd>{{vm.test.name}}</dd>
 
-                <dt>UID</dt>
-                <dd>{{vm.test.uid}}</dd>
+<div class="row detail-list">
+    <div class="detail-item">
+        <div class="col-xs-2 col-lg-1 item-property">Name</div>
+        <div class="col-xs-10 col-lg-11 item-value">{{vm.test.name}}</div>
+    </div>
 
-                <dt>Group</dt>
-                <dd>{{vm.test.group.name}}</dd>
+    <div class="detail-item">
+        <div class="col-xs-2 col-lg-1 item-property">UID</div>
+        <div class="col-xs-10 col-lg-11 item-value">{{vm.test.uid}}</div>
+    </div>
 
-                <dt>Description</dt>
-                <dd ng-bind-html="vm.test.description"></dd>
-            </dl>
+    <div class="detail-item">
+        <div class="col-xs-2 col-lg-1 item-property">Group</div>
+        <div class="col-xs-10 col-lg-11 item-value">{{vm.test.group.name}}</div>
+    </div>
+
+    <div class="detail-item">
+        <div class="col-xs-2 col-lg-1 item-property">Description</div>
+        <div class="col-xs-10 col-lg-11 item-value">
+            <p ng-bind-html="vm.test.description"></p>
         </div>
     </div>
 </div>
+
 <div class="row">
-    <div class="col-sm-12">
-        <div class="panel panel-default panel-metrics">
-            <div class="panel-heading">
-                <h3 class="panel-title">Metrics</h3>
-                <a ng-click="vm.addMetric()" class="btn btn-primary panel-btn-action">
-                    <span class="pficon-add-circle-o" aria-hidden="true"></span> New metric
-                </a>
-            </div>
-            <div class="panel-body">
-                <metric-list-view items="vm.test.metrics" test-id="vm.test.id" on-update-list="vm.updateDetail()"></metric-list-view>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col-sm-12">
-        <div class="panel panel-default panel-alerts">
-            <div class="panel-heading">
-                <h3 class="panel-title">Alerts</h3>
-                <a ng-click="vm.addAlert()" class="btn btn-primary panel-btn-action">
-                    <span class="pficon-add-circle-o" aria-hidden="true"></span> New alert
-                </a>
-            </div>
-            <div class="panel-body">
-                <alert-list-view items="vm.test.alerts" test-metrics="vm.test.metrics" on-update-list="vm.updateDetail()"></alert-list-view>
-            </div>
-        </div>
+    <div class="col-sm-12 detail-tabs">
+        <uib-tabset>
+            <!-- metrics -->
+            <uib-tab>
+                <uib-tab-heading>
+                    <i class="fa fa-bar-chart"></i> Metrics
+                </uib-tab-heading>
+                <metrics-table-view
+                        metrics="vm.test.metrics"
+                        test-id="vm.test.id"
+                        on-update="vm.updateDetail()">
+                </metrics-table-view>
+            </uib-tab>
+            <!-- alerts-->
+            <uib-tab>
+                <uib-tab-heading>
+                    <i class="fa fa-bullhorn"></i> Alerts
+                </uib-tab-heading>
+                <alerts-table-view
+                        alerts="vm.test.alerts"
+                        test-metrics="vm.test.metrics"
+                        test-id="vm.test.id"
+                        on-update="vm.updateDetail()">
+                </alerts-table-view>
+            </uib-tab>
+        </uib-tabset>
     </div>
 </div>

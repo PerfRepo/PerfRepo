@@ -1,6 +1,6 @@
 package org.perfrepo.dto.test_execution;
 
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Represents one value of test execution {@link TestExecutionDto}.
@@ -11,7 +11,7 @@ public class ValueDto {
 
     private double value;
 
-    private Map<String, String> parameters;
+    private Set<ValueParameterDto> parameters;
 
     public double getValue() {
         return value;
@@ -21,11 +21,11 @@ public class ValueDto {
         this.value = value;
     }
 
-    public Map<String, String> getParameters() {
+    public Set<ValueParameterDto> getParameters() {
         return parameters;
     }
 
-    public void setParameters(Map<String, String> parameters) {
+    public void setParameters(Set<ValueParameterDto> parameters) {
         this.parameters = parameters;
     }
 }

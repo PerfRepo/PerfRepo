@@ -3,6 +3,6 @@
 
     angular
         .module('org.perfrepo.report', [
-            'ui.router'
+            'org.perfrepo.base'
         ])
 })();

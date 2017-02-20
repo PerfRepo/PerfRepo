@@ -7,15 +7,15 @@
 
     <div class="list-view-pf-description">
         <div class="list-group-item-heading">
-            <a ui-sref="app.testDetail({id: item.id})">{{item.name}}</a>
+            <a uib-tooltip="Name" ui-sref="app.testDetail({id: item.id})">{{item.name}}</a>
         </div>
         <div class="list-group-item-text">
-            <span tooltip="UID">{{item.uid}}</span>
+            <span uib-tooltip="UID">{{item.uid}}</span>
         </div>
     </div>
     <div class="list-view-pf-additional-info">
         <div class="list-view-pf-additional-info-item">
-            <span tooltip="Group">{{item.group.name}}</span>
+            <span uib-tooltip="Group">{{item.group.name}}</span>
         </div>
     </div>
 

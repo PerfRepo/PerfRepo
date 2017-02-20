@@ -5,98 +5,13 @@
     <title>PerfRepo</title>
 
     <!-- inject:css -->
-    <link rel="stylesheet" href="vendor/css/lib.min.css">
-    <link rel="stylesheet" href="app/styles.css">
+
     <!-- endinject -->
 </head>
 <body>
     <ui-view></ui-view>
     <!-- inject:js -->
-    <script src="vendor/js/lib.min.js"></script>
-    <script src="app/app.module.js"></script>
-    <script src="app/alert/alert.module.js"></script>
-    <script src="app/common/common.module.js"></script>
-    <script src="app/dashboard/dashboard.module.js"></script>
-    <script src="app/authentication/authentication.module.js"></script>
-    <script src="app/group/group.module.js"></script>
-    <script src="app/login/login.module.js"></script>
-    <script src="app/test/test.module.js"></script>
-    <script src="app/report/report.module.js"></script>
-    <script src="app/metric/metric.module.js"></script>
-    <script src="app/test_execution/test-execution.module.js"></script>
-    <script src="app/utils/utils.module.js"></script>
-    <script src="app/alert/create_modal/create-alert.module.js"></script>
-    <script src="app/alert/edit_modal/edit-alert.module.js"></script>
-    <script src="app/alert/remove_modal/remove-alert.module.js"></script>
-    <script src="app/alert/form/form-alert.module.js"></script>
-    <script src="app/test/edit/edit-test.module.js"></script>
-    <script src="app/test/create/create-test.module.js"></script>
-    <script src="app/test/detail/detail-test.module.js"></script>
-    <script src="app/test/overview/test-overview.module.js"></script>
-    <script src="app/metric/create_modal/create-metric.module.js"></script>
-    <script src="app/metric/form/form-metric.module.js"></script>
-    <script src="app/metric/edit_modal/edit-metric.module.js"></script>
-    <script src="app/metric/remove_modal/remove-metric.module.js"></script>
-    <script src="app/test_execution/create/create-test-execution.module.js"></script>
-    <script src="app/test_execution/overview/test-execution-overview.module.js"></script>
-    <script src="app/test_execution/detail/detail-test-execution.module.js"></script>
-    <script src="app/test_execution/edit/edit-test-execution.module.js"></script>
-    <script src="app/test/components/form_test/form-test.module.js"></script>
-    <script src="app/test/components/search_test/search-test.module.js"></script>
-    <script src="app/test_execution/components/form_test_execution/form-test-execution.module.js"></script>
-    <script src="app/test_execution/components/search_test_execution/search-test-execution.module.js"></script>
-    <script src="app/app.config.js"></script>
-    <script src="app/app.controller.js"></script>
-    <script src="app/alert/alert.modal.service.js"></script>
-    <script src="app/alert/alert.service.js"></script>
-    <script src="app/dashboard/dashboard.config.js"></script>
-    <script src="app/dashboard/dashboard.controller.js"></script>
-    <script src="app/authentication/authentication.service.js"></script>
-    <script src="app/authentication/token.interceptor.js"></script>
-    <script src="app/authentication/unauthorized.interceptor.js"></script>
-    <script src="app/group/group.service.js"></script>
-    <script src="app/login/login.controller.js"></script>
-    <script src="app/login/login.service.js"></script>
-    <script src="app/test/test.config.js"></script>
-    <script src="app/test/test.modal.service.js"></script>
-    <script src="app/test/test.service.js"></script>
-    <script src="app/report/report.config.js"></script>
-    <script src="app/report/report.controller.js"></script>
-    <script src="app/metric/metric.modal.service.js"></script>
-    <script src="app/metric/metric.service.js"></script>
-    <script src="app/test_execution/test-execution.config.js"></script>
-    <script src="app/test_execution/test-execution.modal.service.js"></script>
-    <script src="app/test_execution/test-execution.service.js"></script>
-    <script src="app/alert/create_modal/create-alert.controller.js"></script>
-    <script src="app/alert/edit_modal/edit-alert.controller.js"></script>
-    <script src="app/alert/remove_modal/remove-alert.controller.js"></script>
-    <script src="app/common/directives/server-error.directive.js"></script>
-    <script src="app/common/directives/ui-select-extension.directive.js"></script>
-    <script src="app/test/edit/edit-test.controller.js"></script>
-    <script src="app/test/create/create-test.controller.js"></script>
-    <script src="app/test/detail/detail-test.controller.js"></script>
-    <script src="app/test/overview/test-overview.controller.js"></script>
-    <script src="app/metric/create_modal/create-metric.controller.js"></script>
-    <script src="app/metric/edit_modal/edit-metric.controller.js"></script>
-    <script src="app/metric/remove_modal/remove-metric.controller.js"></script>
-    <script src="app/test_execution/create/create-test-execution.controller.js"></script>
-    <script src="app/test_execution/overview/test-execution-overview.controller.js"></script>
-    <script src="app/test_execution/detail/detail-test-execution.controller.js"></script>
-    <script src="app/test_execution/edit/edit-test-execution.controller.js"></script>
-    <script src="app/utils/validation/validation-helper.service.js"></script>
-    <script src="app/alert/form/components/form-alert.component.js"></script>
-    <script src="app/common/components/search-pagination/search-pagination.component.js"></script>
-    <script src="app/test/components/form_test/form-test.component.js"></script>
-    <script src="app/test/components/search_test/search-test.component.js"></script>
-    <script src="app/test/components/search_test/search-test.service.js"></script>
-    <script src="app/test/components/test_card_view/test-card-view.component.js"></script>
-    <script src="app/test/components/test_list_view/test-list-view.component.js"></script>
-    <script src="app/metric/form/components/form-metric.component.js"></script>
-    <script src="app/test_execution/components/form_test_execution/form-test-execution.component.js"></script>
-    <script src="app/test_execution/components/search_test_execution/search-test-execution.component.js"></script>
-    <script src="app/test_execution/components/search_test_execution/search-test-execution.service.js"></script>
-    <script src="app/test_execution/components/test_execution_card_view/test-execution-card-view.component.js"></script>
-    <script src="app/test_execution/components/test_execution_list_view/test-execution-list-view.component.js"></script>
+
     <!-- endinject -->
 </body>
 </html>

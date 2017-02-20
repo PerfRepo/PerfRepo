@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <button ng-click="vm.cancel()" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title">New file attachment</h3>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-12">
+            <form role="form" name="attachmentForm" ng-submit="vm.save(attachmentForm)" class="form-horizontal" novalidate>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label" for="fileAttachment">File</label>
+                    <div class="col-sm-10">
+                        <input type="file" pr-file-upload id="fileAttachment" name="file" ng-model="vm.executionAttachment.content" class="form-control">
+                    </div>
+                </div>
+
+                Data: {{vm.formData}}
+
+                <div class="form-group form-bottom">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="button" ng-click="vm.onCancel()" class="btn btn-default">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

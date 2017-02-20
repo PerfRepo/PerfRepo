@@ -2,12 +2,11 @@ package org.perfrepo.dto.test_execution;
 import org.perfrepo.dto.test.TestDto;
 
 import java.util.Date;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 /**
  * Data transfer object for {@link org.perfrepo.web.model.TestExecution} entity that represents a execution of the test.
- * TODO add file attachments property
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
@@ -25,9 +24,11 @@ public class TestExecutionDto {
 
     private Date started;
 
-    private Map<String, String> executionParameters;
+    private Set<ParameterDto> executionParameters;
 
-    private Set<ValueGroupDto> executionValues;
+    private Set<ValuesGroupDto> executionValuesGroups;
+
+    private List<AttachmentDto> executionAttachments;
 
     public Long getId() {
         return id;
@@ -77,20 +78,28 @@ public class TestExecutionDto {
         this.started = started;
     }
 
-    public Map<String, String> getExecutionParameters() {
+    public Set<ParameterDto> getExecutionParameters() {
         return executionParameters;
     }
 
-    public void setExecutionParameters(Map<String, String> executionParameters) {
+    public void setExecutionParameters(Set<ParameterDto> executionParameters) {
         this.executionParameters = executionParameters;
     }
 
-    public Set<ValueGroupDto> getExecutionValues() {
-        return executionValues;
+    public Set<ValuesGroupDto> getExecutionValuesGroups() {
+        return executionValuesGroups;
     }
 
-    public void setExecutionValues(Set<ValueGroupDto> executionValues) {
-        this.executionValues = executionValues;
+    public void setExecutionValuesGroups(Set<ValuesGroupDto> executionValuesGroups) {
+        this.executionValuesGroups = executionValuesGroups;
+    }
+
+    public List<AttachmentDto> getExecutionAttachments() {
+        return executionAttachments;
+    }
+
+    public void setExecutionAttachments(List<AttachmentDto> executionAttachments) {
+        this.executionAttachments = executionAttachments;
     }
 
     @Override

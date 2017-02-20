@@ -1,6 +1,6 @@
 {
-  "name": "PerfRepo",
-  "description": "PerfRepo",
+  "name": "perfrepo",
+  "description": "Performance repository",
   "main": "index.js",
   "authors": [
     "Jiří Grunwald"
@@ -17,17 +17,19 @@
   ],
   "dependencies": {
     "jquery": "~2.1.4",
-    "angular": "1.5.8",
-    "angular-patternfly": "3.15.0",
+    "angular": "1.5.11",
+    "angular-patternfly": "3.19.0",
+    "angular-drag-and-drop-lists": "2.0.0",
     "angular-ui-router": "^0.3.2",
-    "angular-resource": "1.5.8",
+    "angular-resource": "1.5.11",
     "angular-trix": "^1.0.2",
     "trix": "^0.9.9",
     "ng-tags-input": "^3.1.1",
     "ngprogress": "^1.1.3",
-    "angular-ui-select": "^0.19.6"
+    "angular-ui-select": "^0.19.6",
+    "angular-nvd3": "^1.0.9"
   },
   "resolutions": {
-    "angular": "1.5.10"
+    "angular": "1.5.11"
   }
 }

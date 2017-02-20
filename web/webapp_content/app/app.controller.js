@@ -23,7 +23,7 @@
             },
             {
                 title: "Test executions",
-                iconClass : "fa fa-cogs",
+                iconClass : "fa fa-flash",
                 href: $state.href('app.testExecutionOverview')
 
             },

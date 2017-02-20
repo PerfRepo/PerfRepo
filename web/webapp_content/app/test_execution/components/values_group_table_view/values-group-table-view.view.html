@@ -1,0 +1,44 @@
+<table class="table table-hover table-bordered pr-table">
+    <thead>
+        <tr>
+            <th>Metric name</th>
+            <th>Metric value</th>
+            <th class="table-actions">
+                <a ng-click="vm.addValueObject()" class="cursor-pointer">
+                    <span class="pficon-add-circle-o" aria-hidden="true"></span> New value
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="valuesGroup in vm.executionValuesGroups">
+            {{valuesGroup}}
+            <td>{{vm.getMetricById(valuesGroup.metricId).name}}</td>
+            <td>
+                <span ng-if="valuesGroup.valueType == 'SINGLE_VALUE'">{{valuesGroup.values[0].value}}</span>
+                <span ng-if="valuesGroup.valueType == 'MULTI_VALUE'">
+                    <a ng-click="vm.showMultiValueData(valuesGroup)" class="cursor-pointer action-link multi-value-data">
+                        <span class="fa fa-table" aria-hidden="true"></span>Multi value data
+                    </a>
+                </span>
+                <span ng-if="valuesGroup.valueType == 'INVALID_VALUE'">
+                    <a ng-click="vm.showMultiValueData(valuesGroup)" class="cursor-pointer action-link invalid-data">
+                        <span class="pficon-warning-triangle-o" aria-hidden="true"></span>Invalid value data
+                    </a>
+                </span>
+            </td>
+            <td class="table-actions">
+                <a ng-show="valuesGroup.valueType == 'SINGLE_VALUE'" ng-click="vm.editValuesGroup(valuesGroup)" class="cursor-pointer action-link">
+                    <span class="pficon-edit" aria-hidden="true"></span>Edit
+                </a>
+                <a ng-click="vm.deleteValuesGroup(valuesGroup)" class="cursor-pointer action-link">
+                    <span class="pficon-delete" aria-hidden="true"></span>Delete
+                </a>
+            </td>
+        </tr>
+        <tr class="table-no-data" ng-show="!vm.executionValuesGroups.length > 0">
+            <td colspan="3">No values</td>
+        </tr>
+    </tbody>
+</table>
+

@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-md-12">
+        <form role="form" name="parameterForm" ng-submit="vm.save(parameterForm)" class="form-horizontal" novalidate>
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="parameterName">Name</label>
+                <div class="col-sm-10">
+                    <input type="text" id="parameterName" name="name" ng-model="vm.executionParameter.name" class="form-control" pr-server-validation>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-sm-2 control-label" for="parameterValue">Value</label>
+                <div class="col-sm-10">
+                    <input type="text" id="parameterValue" name="value" ng-model="vm.executionParameter.value" class="form-control" pr-server-validation>
+                </div>
+            </div>
+
+            <div class="form-group form-bottom">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" ng-click="vm.onCancel()" class="btn btn-default">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

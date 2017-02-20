@@ -1,0 +1,32 @@
+<table class="table table-hover table-bordered pr-table">
+    <thead>
+        <tr>
+            <th>Filename</th>
+            <th>Type</th>
+            <th>Size</th>
+            <th class="table-actions">
+                <a ng-click="vm.addAttachmentAction()" class="cursor-pointer">
+                    <span class="pficon-add-circle-o" aria-hidden="true"></span> New attachment
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="attachment in vm.attachments">
+            <td><a href="#">{{attachment.filename}}</a></td>
+            <td>{{attachment.mimeType}}</td>
+            <td>{{attachment.size | fileSize}}</td>
+            <td class="table-actions">
+                <a ng-click="vm.downloadAttachmentAction(attachment)" class="cursor-pointer action-link" title="Download attachment">
+                    <span class="fa fa-download" aria-hidden="true"></span>Download
+                </a>
+                <a ng-click="vm.removeAttachmentAction(attachment)" class="cursor-pointer action-link" title="Remove attachment">
+                    <span class="pficon-delete" aria-hidden="true"></span>Delete
+                </a>
+            </td>
+        </tr>
+        <tr class="table-no-data" ng-show="!vm.attachments || vm.attachments.length == 0">
+            <td colspan="4">No attachments</td>
+        </tr>
+    </tbody>
+</table>

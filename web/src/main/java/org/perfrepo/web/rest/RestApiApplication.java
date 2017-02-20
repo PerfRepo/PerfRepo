@@ -24,6 +24,7 @@ public class RestApiApplication extends Application {
       classes.add(GroupRestApi.class);
       classes.add(AuthenticationRestApi.class);
       classes.add(TestExecutionRestApi.class);
+      classes.add(JacksonConfig.class);
    }
 
    @Override
