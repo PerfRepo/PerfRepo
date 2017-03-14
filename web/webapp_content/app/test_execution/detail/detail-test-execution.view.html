@@ -1,26 +1,89 @@
 <div class="row header">
     <div class="col-sm-12 col-md-4">
-        <h1>Test execution detail</h1>
+        <span class="header-title">Test execution detail</span>
     </div>
     <div class="col-sm-12 col-md-8">
         <div class="header-controls">
             <button class="btn btn-default" ng-click="vm.editTestExecution()">
                 <span class="pficon pficon-edit" aria-hidden="true"></span> Edit
             </button>
+            <button class="btn btn-default" ng-click="vm.removeTestExecution()">
+                <span class="pficon pficon-delete" aria-hidden="true"></span> Remove
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="row detail-list">
+    <div class="detail-item">
+        <div class="col-xs-2 col-lg-1 item-property">Name</div>
+        <div class="col-xs-10 col-lg-11 item-value">{{vm.testExecution.name}}</div>
+    </div>
+
+    <div class="detail-item">
+        <div class="col-xs-2 col-lg-1 item-property">Test</div>
+        <div class="col-xs-10 col-lg-11 item-value">
+            <a class="cursor-pointer" ui-sref="app.testDetail({id: vm.testExecution.test.id})">{{vm.testExecution.test.name}}</a>
+        </div>
+    </div>
+
+    <div class="detail-item">
+        <div class="col-xs-2 col-lg-1 item-property">Started</div>
+        <div class="col-xs-10 col-lg-11 item-value">{{vm.testExecution.started | date: 'MMM dd, yyyy HH:mm'}}</div>
+    </div>
+
+    <div class="detail-item">
+        <div class="col-xs-2 col-lg-1 item-property">Tags</div>
+        <div class="col-xs-10 col-lg-11 item-value">
+            <span ng-repeat="tag in vm.testExecution.tags" class="label label-info tag-label">{{tag}}</span>
+        </div>
+    </div>
+
+    <div class="detail-item">
+        <div class="col-xs-2 col-lg-1 item-property">Comment</div>
+        <div class="col-xs-10 col-lg-11 item-value">
+            <p ng-bind-html="vm.testExecution.comment"></p>
         </div>
     </div>
 </div>
 
 <div class="row">
-    <div class="col-sm-12">
-        <h3>{{vm.testExecution.name}}</h3>
-
-        <dl class="dl-horizontal">
-            <dt>UID</dt>
-            <dd>{{vm.testExecution.created}}</dd>
-
-            <dt>Description</dt>
-            <dd ng-bind-html="vm.testExecution.description"></dd>
-        </dl>
+    <div class="col-sm-12 detail-tabs">
+        <uib-tabset>
+            <!-- values -->
+            <uib-tab>
+                <uib-tab-heading>
+                    <i class="fa fa-th"></i> Values
+                </uib-tab-heading>
+                <test-execution-values-group-table-view
+                        execution-values-groups="vm.testExecution.executionValuesGroups"
+                        test-execution-metrics="vm.testExecution.test.metrics"
+                        test-execution-id="vm.testExecution.id"
+                        on-update-table="vm.updateDetail()">
+                </test-execution-values-group-table-view>
+            </uib-tab>
+            <!-- parameters-->
+            <uib-tab>
+                <uib-tab-heading>
+                    <i class="fa fa-th-list"></i> Parameters
+                </uib-tab-heading>
+                <test-execution-parameters-table-view
+                        parameters="vm.testExecution.executionParameters"
+                        test-execution-id="vm.testExecution.id"
+                        on-update="vm.updateDetail()">
+                </test-execution-parameters-table-view>
+            </uib-tab>
+            <!-- attachments-->
+            <uib-tab>
+                <uib-tab-heading>
+                    <i class="fa fa-file"></i> Attachments
+                </uib-tab-heading>
+                <test-execution-attachments-table-view
+                        attachments="vm.testExecution.executionAttachments"
+                        test-execution-id="vm.testExecution.id"
+                        on-update="vm.updateDetail()">
+                </test-execution-attachments-table-view>
+            </uib-tab>
+        </uib-tabset>
     </div>
 </div>

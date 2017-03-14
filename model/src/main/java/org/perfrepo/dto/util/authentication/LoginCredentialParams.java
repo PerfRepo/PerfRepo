@@ -1,6 +1,8 @@
 package org.perfrepo.dto.util.authentication;
 
 /**
+ * Parameters for user authentication.
+ *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
 public class LoginCredentialParams {

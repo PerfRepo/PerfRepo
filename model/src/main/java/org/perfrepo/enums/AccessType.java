@@ -17,7 +17,7 @@ package org.perfrepo.enums;
 /**
  * AccessType represents a type of permission, it's its property. If the permission is READ, the user (or group) can only
  * read the entity, therefore cannot modify it.
- * <p/>
+ * <p>
  * If the permission is WRITE, user (or group) can also modify the entity.
  */
 public enum AccessType {

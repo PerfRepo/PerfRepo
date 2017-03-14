@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Maps {@link NotFoundException} exception to HTTP response. Sets 404 status code.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */

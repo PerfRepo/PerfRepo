@@ -8,17 +8,29 @@
     function ValidationHelper() {
 
         return {
-            setFormErrors: setFormErrors
+            setFormErrors: setFormErrors,
+            prepareGlobalFormErrors: prepareGlobalFormErrors
         };
 
-        function setFormErrors(response, form){
-            // TODO only 422 status
+        function setFormErrors(response, form) {
+            // better solution? reset whole form
+            angular.forEach(form.$error.server, function (ctrl) {
+                ctrl.$setValidity('server', true);
+            });
+
             angular.forEach(response.data.fieldErrors, function (error) {
-                form[error.field].$setValidity('server', false);
-                form[error.field].$serverValidationMessage = error.message;
+                form[error.name].$setValidity('server', false);
+                form[error.name].$serverValidationMessage = error.message;
             });
         }
 
+        function prepareGlobalFormErrors(response) {
+            var errors = {};
+            angular.forEach(response.data.formErrors, function (error) {
+                errors[error.name] = error.message;
+            });
 
+            return errors;
+        }
     }
 })();

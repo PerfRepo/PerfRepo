@@ -1,0 +1,13 @@
+<div ng-repeat="group in vm.groups">
+
+    <h2 class="report-title" title="Group name">{{group.name}}</h2>
+    <p class="report-description" ng-bind-html="group.description"></p>
+
+    <div ng-repeat="table in group.tables">
+
+        <h3 class="report-title" title="Comparison name">{{table.name}}</h3>
+        <p class="report-description" ng-bind-html="table.description"></p>
+
+        <table-comparison-report-table table="table"></table-comparison-report-table>
+    </div>
+</div>

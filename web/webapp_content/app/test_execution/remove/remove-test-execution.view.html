@@ -1,0 +1,11 @@
+<div class="modal-header">
+    <button ng-click="vm.cancel()" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title">Are you sure?</h3>
+</div>
+<div class="modal-body">
+    Remove test execution <strong>{{vm.testExecution.name}}</strong>?
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="vm.cancel()">Cancel</button>
+    <button class="btn btn-primary" type="button" ng-click="vm.remove()">Remove</button>
+</div>

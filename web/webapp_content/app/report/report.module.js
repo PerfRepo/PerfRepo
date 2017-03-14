@@ -3,6 +3,8 @@
 
     angular
         .module('org.perfrepo.report', [
-            'ui.router'
+            'org.perfrepo.report.overview',
+            'org.perfrepo.report.detail',
+            'org.perfrepo.report.wizard'
         ])
 })();

@@ -1,0 +1,30 @@
+<table class="table table-hover table-bordered pr-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th class="table-actions">
+                <a ng-click="vm.addMetricAction()" class="cursor-pointer">
+                    <span class="pficon-add-circle-o" aria-hidden="true"></span> New metric
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="metric in vm.metrics">
+            <td>{{metric.name}}</td>
+            <td ng-bind-html="metric.description"></td>
+            <td class="table-actions">
+                <a ng-click="vm.editMetricAction(metric)" class="cursor-pointer action-link" title="Edit metric">
+                    <span class="pficon-edit" aria-hidden="true"></span>Edit
+                </a>
+                <a ng-click="vm.removeMetricAction(metric)" class="cursor-pointer action-link" title="Remove metric">
+                    <span class="pficon-delete" aria-hidden="true"></span>Delete
+                </a>
+            </td>
+        </tr>
+        <tr class="table-no-data" ng-show="!vm.metrics || vm.metrics.length == 0">
+            <td colspan="3">No metrics</td>
+        </tr>
+    </tbody>
+</table>

@@ -2,7 +2,6 @@ package org.perfrepo.web.adapter.dummy_impl;
 
 import org.perfrepo.dto.alert.AlertDto;
 import org.perfrepo.dto.test.TestDto;
-import org.perfrepo.dto.user.UserDto;
 import org.perfrepo.dto.util.validation.ValidationErrors;
 import org.perfrepo.web.adapter.AlertAdapter;
 import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
@@ -98,11 +97,6 @@ public class AlertAdapterDummyImpl implements AlertAdapter {
         return new ArrayList<>(alerts);
     }
 
-    @Override
-    public List<UserDto> getAlertSubscribers(Long testId) {
-        throw new UnsupportedOperationException();
-    }
-
     private void validate(AlertDto alert) {
         ValidationErrors validation = new ValidationErrors();
 
@@ -128,7 +122,7 @@ public class AlertAdapterDummyImpl implements AlertAdapter {
             validation.addFieldError("description", "Alert description must not be more than 500 characters.");
         }
 
-        if (validation.hasFieldErrors()) {
+        if (validation.hasErrors()) {
             throw new ValidationException("Test contains validation errors, please fix it.", validation);
         }
     }

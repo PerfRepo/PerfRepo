@@ -5,7 +5,7 @@
         .module('org.perfrepo.test')
         .service('testModalService', TestModalService);
 
-    function TestModalService($modal) {
+    function TestModalService($uibModal) {
 
         return {
             createTest: createTest,
@@ -14,7 +14,7 @@
         };
 
         function createTest() {
-            return $modal.open({
+            return $uibModal.open({
                 animation: true,
                 backdrop: 'static',
                 keyboard: false,
@@ -31,7 +31,7 @@
         }
 
         function editTest(id) {
-            return $modal.open({
+            return $uibModal.open({
                 animation: true,
                 backdrop: 'static',
                 keyboard: false,
@@ -51,7 +51,7 @@
         }
 
         function removeTest(test) {
-            return $modal.open({
+            return $uibModal.open({
                 animation: true,
                 backdrop: 'static',
                 keyboard: false,

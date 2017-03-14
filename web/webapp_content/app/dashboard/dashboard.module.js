@@ -3,6 +3,6 @@
 
     angular
         .module('org.perfrepo.dashboard', [
-            'ui.router'
+            'org.perfrepo.base'
         ]);
 })();

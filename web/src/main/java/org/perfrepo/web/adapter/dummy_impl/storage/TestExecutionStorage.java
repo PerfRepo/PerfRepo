@@ -67,19 +67,18 @@ public class TestExecutionStorage {
         }
 
         Predicate<TestExecutionDto> testNameFilterPredicate =
-                testExecution -> searchParams.getTestNameFilters() == null
-                        || searchParams.getTestNameFilters()
+                testExecution -> searchParams.getTestNamesFilter() == null
+                        || searchParams.getTestNamesFilter()
                         .stream().allMatch(testNameFilter -> StringUtils.containsIgnoreCase(testExecution.getTest().getName(), testNameFilter));
 
         Predicate<TestExecutionDto> testUidFilterPredicate =
-                testExecution -> searchParams.getTestUidFilters() == null
-                        || searchParams.getTestUidFilters()
+                testExecution -> searchParams.getTestUIDsFilter() == null
+                        || searchParams.getTestUIDsFilter()
                         .stream().allMatch(testUidFilter -> StringUtils.containsIgnoreCase(testExecution.getTest().getUid(), testUidFilter));
 
-        // TODO case insensitive, no tags = NPE
         Predicate<TestExecutionDto> tagFilterPredicate =
-                testExecution -> searchParams.getTagFilters() == null
-                        || searchParams.getTagFilters()
+                testExecution -> searchParams.getTagQueriesFilter() == null
+                        || searchParams.getTagQueriesFilter()
                         .stream().allMatch(tagFilter -> testExecution.getTags().contains(tagFilter));
 
         Supplier<Stream<TestExecutionDto>> testExecutionStream = () ->  data.stream()

@@ -1,33 +1,32 @@
 package org.perfrepo.dto.util.validation;
 
 /**
- * Represents validation error for specified field name.
+ * Represents validation error for specified name name.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
 public class FieldError {
 
-    private String field;
+    private String name;
 
     private String message;
 
     /**
      *
-     *
-     * @param field Field name of validation item.
+     * @param name Field name of validation item.
      * @param message Subscribing validation error.
      */
-    public FieldError(String field, String message) {
-        this.field = field;
+    public FieldError(String name, String message) {
+        this.name = name;
         this.message = message;
     }
 
     /**
      * Returns the field name of validation item.
-     * @return Unique field.
+     * @return Unique name.
      */
-    public String getField() {
-        return field;
+    public String getName() {
+        return name;
     }
 
     /**

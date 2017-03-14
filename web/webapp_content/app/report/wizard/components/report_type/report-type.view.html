@@ -1,0 +1,19 @@
+<div class="wizard-container">
+    <h1>Select report type...</h1>
+    <ng-form name="vm.wizardTypeStep">
+        <div class="row">
+            <div class="col-sm-4 report-type" ng-repeat="type in vm.reportTypes">
+                <label class="cursor-pointer">
+                    <span>
+                        <input type="radio" name="type" value="{{type.type}}"
+                               ng-disabled="!vm.newReport"
+                               ng-model="vm.data.type" pr-server-validation>
+                        {{type.name}}
+                    </span>
+                    <p>{{type.description}}</p>
+                    <img ng-src="/images/{{type.image}}" class="img-responsive" alt="Responsive image">
+                </label>
+            </div>
+        </div>
+    </ng-form>
+</div>

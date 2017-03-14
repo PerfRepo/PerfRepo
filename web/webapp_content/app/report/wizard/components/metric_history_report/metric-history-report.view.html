@@ -1,0 +1,179 @@
+<div class="wizard-container metric-history-report-step">
+    <h1>Configure groups of history charts...</h1>
+    <ng-form name="vm.wizardMetricHistoryStep">
+        <!-- chart accordion -->
+        <v-accordion multiple class="vAccordion--default">
+            <v-pane ng-repeat="(chartIndex, chart) in vm.data.charts" expanded="true">
+                <!-- table header-->
+                <v-pane-header>
+                    <h3 class="item-title-pane">{{chart.name}}</h3>
+                    <a class="cursor-pointer pull-right" ng-click="vm.removeChart(chartIndex)">
+                        <span class="pficon-delete" aria-hidden="true"></span> Remove chart
+                    </a>
+                </v-pane-header>
+                <!-- table content-->
+                <v-pane-content>
+                    <div class="form-group">
+                        <label>Chart name</label>
+                        <input type="text" name="charts[{{chartIndex}}].name"
+                               ng-model="chart.name" class="form-control" pr-server-validation>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Chart description</label>
+                        <div class="wysiwyg-editor-wrap form-control-border">
+                            <trix-editor ng-if="true" angular-trix name="charts[{{chartIndex}}].description"
+                                         ng-model="chart.description" class="trix-content" pr-server-validation></trix-editor>
+                        </div>
+                    </div>
+
+                    <!-- series -->
+                    <h3 class="item-title">Series</h3>
+
+                    <div ng-show="vm.formErrors['charts[' + chartIndex + '].series'] && (chart.series == undefined || chart.series.length == 0)"
+                         class="alert alert-danger form-validation-error"><span class="pficon pficon-error-circle-o"></span>
+                        {{vm.formErrors['charts[' + chartIndex + '].series']}}
+                    </div>
+
+                    <div class="row series-item-row" ng-repeat="(seriesIndex, series) in chart.series">
+                        <div class="col-md-2 form-group">
+                            <label>Series name</label>
+                            <input type="text" name="charts[{{chartIndex}}].series[{{seriesIndex}}].name"
+                                   ng-model="series.name" class="form-control" placeholder="Series name" pr-server-validation>
+                        </div>
+
+                        <div class="col-md-2 form-group">
+                            <label>Test</label>
+                            <ui-select ng-model="series.testId" title="Choose a test"
+                                       ng-change="vm.seriesTestSelected($select.selected, chartIndex, seriesIndex)"
+                                       name="charts[{{chartIndex}}].series[{{seriesIndex}}].testId"
+                                       pr-server-validation>
+                                <ui-select-match placeholder="Select a test...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="test.id as test in vm.testsList"
+                                                   refresh="vm.refreshTestsList($select.search)"
+                                                   refresh-delay="0">
+                                    <span ng-bind-html="test.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                        <div class="col-md-2 form-group">
+                            <label>Metric</label>
+                            <ui-select ng-model="series.metricId" title="Choose a metric"
+                                       ng-disabled="series.testId == undefined"
+                                       name="charts[{{chartIndex}}].series[{{seriesIndex}}].metricId" pr-server-validation>
+                                <ui-select-match placeholder="Select a metric...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="metric.id as metric in vm.testMetrics[series.testId] | filter: $select.search">
+                                    <span ng-bind-html="metric.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                        <div class="col-md-2 form-group">
+                            <label>Filter by</label>
+                            <select pf-select ng-model="series.filter" class="form-control"
+                                    name="charts[{{chartIndex}}].series[{{seriesIndex}}].filter"
+                                    ng-options="executionFilterOption.name as executionFilterOption.text for executionFilterOption in vm.executionFilterOptions"
+                                    pr-server-validation>
+                            </select>
+                        </div>
+
+                        <div ng-if="series.filter == 'TAG_QUERY'" class="col-md-3 form-group">
+                            <label>Tag query</label>
+                            <input type="text"
+                                   name="charts[{{chartIndex}}].series[{{seriesIndex}}].tagQuery"
+                                   ng-model="series.tagQuery" class="form-control" pr-server-validation>
+                        </div>
+
+                        <div ng-if="series.filter == 'PARAMETER_QUERY'" class="col-md-3 form-group">
+                            <label>Parameter query</label>
+                            <input type="text"
+                                   name="charts[{{chartIndex}}].series[{{seriesIndex}}].parameterQuery"
+                                   ng-model="series.parameterQuery" class="form-control" pr-server-validation>
+                        </div>
+
+                        <div class="col-md-1 form-group">
+                            <label>Action</label>
+                            <a class="cursor-pointer action-link"
+                               ng-click="vm.removeSeries(chartIndex, seriesIndex)">
+                                <span class="pficon-delete" aria-hidden="true"></span> Remove
+                            </a>
+                        </div>
+                    </div>
+
+                    <p class="no-data" ng-show="chart.series == undefined || chart.series.length == 0">No series</p>
+
+                    <div class="add-link item-link">
+                        <a class="cursor-pointer" ng-click="vm.addSeries(chartIndex)">
+                            <span class="pficon pficon-add-circle-o" aria-hidden="true"></span> Add series
+                        </a>
+                    </div>
+
+                    <!-- baselines -->
+                    <h3 class="item-title">Baselines</h3>
+
+                    <div ng-show="vm.formErrors['charts[' + chartIndex + '].baselines'] && (chart.baselines == undefined || chart.baselines.length == 0)"
+                         class="alert alert-danger form-validation-error"><span class="pficon pficon-error-circle-o"></span>
+                        {{vm.formErrors['charts[' + chartIndex + '].baselines']}}
+                    </div>
+
+                    <div class="row baseline-item-row" ng-repeat="(baselineIndex, baseline) in chart.baselines">
+                        <div class="col-md-3 form-group">
+                            <label>Baseline name</label>
+                            <input type="text" name="charts[{{chartIndex}}].baselines[{{baselineIndex}}].name"
+                                   ng-model="baseline.name" class="form-control" placeholder="Baseline name" pr-server-validation>
+                        </div>
+
+                        <div class="col-md-5 form-group">
+                            <label>Test execution ID</label>
+                            <input type="number"
+                                   ng-change="vm.baselineTestExecutionChanged(baseline.executionId, chartIndex, baselineIndex)"
+                                   name="charts[{{chartIndex}}].baselines[{{baselineIndex}}].executionId"
+                                   ng-model="baseline.executionId" class="form-control" pr-server-validation>
+                        </div>
+
+                        <div class="col-md-3 form-group">
+                            <label>Metric</label>
+                            <ui-select ng-model="baseline.metricId" title="Choose a metric"
+                                       ng-disabled="baseline.executionId == undefined"
+                                       name="charts[{{chartIndex}}].baselines[{{baselineIndex}}].metricId" pr-server-validation>
+                                <ui-select-match placeholder="Select a metric...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="metric.id as metric in vm.testExecutionMetrics[baseline.executionId] | filter: $select.search">
+                                    <span ng-bind-html="metric.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                        <div class="col-md-1 form-group">
+                            <label>Action</label>
+                            <a class="cursor-pointer action-link"
+                               ng-click="vm.removeBaseline(chartIndex, baselineIndex)">
+                                <span class="pficon-delete" aria-hidden="true"></span> Remove
+                            </a>
+                        </div>
+                    </div>
+
+                    <p class="no-data" ng-show="chart.baselines == undefined || chart.baselines.length == 0">No baseline</p>
+
+                    <div class="add-link item-link">
+                        <a class="cursor-pointer" ng-click="vm.addBaseline(chartIndex)">
+                            <span class="pficon pficon-add-circle-o" aria-hidden="true"></span> Add baseline
+                        </a>
+                    </div>
+
+                </v-pane-content>
+            </v-pane>
+
+            <div ng-show="vm.formErrors['charts'] && (vm.data.charts == undefined || vm.data.charts.length == 0)"
+                 class="alert alert-danger form-validation-error"><span class="pficon pficon-error-circle-o"></span>{{vm.formErrors['charts']}}</div>
+
+            <p class="no-data" ng-show="vm.data.charts == undefined || vm.data.charts.length == 0">No charts</p>
+
+            <div class="add-link comparison-link">
+                <a class="cursor-pointer" ng-click="vm.addChart()">
+                    <span class="pficon pficon-add-circle-o" aria-hidden="true"> </span>Add chart
+                </a>
+            </div>
+        </v-accordion>
+    </ng-form>
+</div>

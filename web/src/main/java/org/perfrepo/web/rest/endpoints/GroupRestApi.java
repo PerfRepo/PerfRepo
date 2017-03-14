@@ -14,6 +14,7 @@ import javax.ws.rs.core.Response;
 import java.util.List;
 
 /**
+ * Service endpoint for test alerts.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */

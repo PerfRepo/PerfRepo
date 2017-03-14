@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Maps {@link AdapterException} exception to HTTP response. Sets 500 status code.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
@@ -19,7 +20,7 @@ public class AdapterExceptionMapper implements ExceptionMapper<AdapterException>
     public Response toResponse(AdapterException exception) {
         Map<String, Object> message = new HashMap<>();
         message.put("message", exception.getMessage());
-        message.put("source", "ADAPTER EXCEPTION");
+        message.put("source", "SERVICE EXCEPTION");
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(message).build();
     }
 }

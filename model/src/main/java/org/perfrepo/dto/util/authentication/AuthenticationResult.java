@@ -5,6 +5,8 @@ import org.perfrepo.dto.user.UserDto;
 import java.util.Date;
 
 /**
+ * Represents success authentication request.
+ *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
 public class AuthenticationResult {

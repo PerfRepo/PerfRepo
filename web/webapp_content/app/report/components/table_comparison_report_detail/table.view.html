@@ -1,0 +1,23 @@
+<table class="table table-hover table-bordered pr-table comparison-table">
+    <thead>
+        <tr>
+            <th>Metric/Test execution</th>
+            <th ng-repeat="cell in vm.table.tableHeaderCells"><a ui-sref="app.testExecutionDetail({id: cell.testExecutionId})">{{cell.name}}</a></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="row in vm.table.tableRows">
+            <td>{{row.metricName}}</td>
+            <!-- single value -->
+            <td ng-if="row.valueType == 'SINGLE_VALUE'" ng-repeat="cell in row.cells" ng-class="[cell.style, {'baseline': cell.baseline}]">
+                <span ng-if="cell.baseline">{{cell.value}}</span>
+                <span ng-if="!cell.baseline" uib-tooltip="{{cell.value}}">{{(cell.valueDifferenceFromBaseline | number:2)*1}}%</span>
+            </td>
+            <!-- multi value -->
+            <td ng-if="row.valueType == 'MULTI_VALUE'" ng-repeat="(cellIndex, cell) in row.cells">
+                <a ng-if="cell.baseline" ng-click="vm.showChartComparison(row.cells, undefined,  row.metricName)" class="cursor-pointer"><span class="fa fa-line-chart" aria-hidden="true"></span> Compare all</a>
+                <a ng-if="!cell.baseline" ng-click="vm.showChartComparison(row.cells, cellIndex, row.metricName)" class="cursor-pointer"><span class="fa fa-line-chart" aria-hidden="true"></span> Compare to baseline</a>
+            </td>
+        </tr>
+    </tbody>
+</table>

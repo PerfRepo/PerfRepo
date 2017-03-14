@@ -1,0 +1,41 @@
+<h4>{{vm.metric.name}}</h4>
+<table class="table table-hover table-bordered pr-table">
+    <thead>
+        <tr>
+            <th rowspan="2">Metric value</th>
+            <th ng-if="vm.executionValuesGroup.parameterNames.length > 0"
+                colspan="{{vm.executionValuesGroup.parameterNames.length}}">X-axis value</th>
+            <th rowspan="2">
+                <a ng-click="vm.addValueObject()" class="cursor-pointer action-link">
+                    <span class="pficon-add-circle-o" aria-hidden="true"></span>New value
+                </a>
+            </th>
+        </tr>
+        <tr ng-if="vm.executionValuesGroup.parameterNames.length > 0">
+            <th ng-repeat="parameterName in vm.executionValuesGroup.parameterNames">{{parameterName}}
+                <a ng-click="vm.showChart(parameterName)" class="cursor-pointer action-link">
+                    <span class="fa fa-line-chart" aria-hidden="true"></span>Show chart
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="valueObject in vm.executionValuesGroup.values">
+            <td>{{valueObject.value}}</td>
+            <td ng-repeat="parameterName in vm.executionValuesGroup.parameterNames">
+                {{vm.getValueObjectParameter(parameterName, valueObject.parameters).value}}
+            </td>
+            <td class="table-actions">
+                <a ng-click="vm.editValueObject($index)" class="cursor-pointer action-link">
+                    <span class="pficon-edit" aria-hidden="true"></span>Edit
+                </a>
+                <a ng-click="vm.deleteValueObject($index)" class="cursor-pointer action-link">
+                    <span class="pficon-delete" aria-hidden="true"></span>Delete
+                </a>
+            </td>
+        </tr>
+        <tr class="table-no-data" ng-show="!vm.executionValuesGroup.values || vm.executionValuesGroup.values.length == 0">
+            <td colspan="{{2 + vm.executionValuesGroup.parameterNames.length}}">No values</td>
+        </tr>
+    </tbody>
+</table>

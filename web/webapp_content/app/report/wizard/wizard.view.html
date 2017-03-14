@@ -1,0 +1,66 @@
+<div class="row header">
+    <div class="col-sm-12 col-md-4">
+        <span class="header-title">{{vm.pageTitle}}</span>
+    </div>
+    <div class="col-sm-12 col-md-8">
+        <div class="header-controls">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div pf-wizard
+         class="report-wizard"
+         next-title="vm.nextButtonTitle"
+         back-callback="vm.backCallback"
+         next-callback="vm.nextCallback"
+         current-step="vm.currentStep"
+         embed-in-page="true">
+
+        <form role="form" name="vm.wizardForm" novalidate>
+            <!-- select type of report -->
+            <div pf-wizard-step step-title="Type" step-id="type" step-priority="0">
+                <pr-report-type-step
+                        data="vm.data"
+                        current-step="vm.currentStep">
+                </pr-report-type-step>
+            </div>
+
+            <!-- select name and description of report -->
+            <div pf-wizard-step step-title="Info" step-id="information" step-priority="1" allow-click-nav="vm.currentStep == 'Permissions' || vm.currentStep == 'Configuration'">
+                <pr-report-information-step
+                        data="vm.data"
+                        current-step="vm.currentStep">
+                </pr-report-information-step>
+            </div>
+
+            <!-- set configuration of report -->
+            <div pf-wizard-step step-title="Configuration" step-id="configuration" step-priority="2" allow-click-nav="vm.currentStep == 'Permissions'">
+                <!-- table comparison report-->
+                <pr-table-comparison-report-configuration
+                        ng-if="vm.data.type == 'TABLE_COMPARISON'"
+                        data="vm.data"
+                        current-step="vm.currentStep">
+                </pr-table-comparison-report-configuration>
+                <!-- metric history report-->
+                <pr-metric-history-report-configuration
+                        ng-if="vm.data.type =='METRIC_HISTORY'"
+                        data="vm.data"
+                        current-step="vm.currentStep">
+                </pr-metric-history-report-configuration>
+            </div>
+
+            <!-- set permissions of report -->
+            <div pf-wizard-step step-title="Permissions" step-id="permissions" step-priority="3" allow-click-nav="false">
+                <pr-report-permissions-step
+                        data="vm.data"
+                        groups="vm.groups"
+                        users="vm.users"
+                        current-step="vm.currentStep">
+                </pr-report-permissions-step>
+            </div>
+        </form>
+
+    </div>
+
+</div>

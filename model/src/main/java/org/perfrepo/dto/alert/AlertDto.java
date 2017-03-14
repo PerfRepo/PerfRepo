@@ -5,7 +5,7 @@ import org.perfrepo.dto.metric.MetricDto;
 import java.util.Set;
 
 /**
- * Data transfer object for {@link org.perfrepo.web.model.Alert} that represents a alert condition defined on a test.
+ * Data transfer object that represents a alert condition defined on a test.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */

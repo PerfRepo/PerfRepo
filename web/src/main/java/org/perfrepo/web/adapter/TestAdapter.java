@@ -7,17 +7,18 @@ import org.perfrepo.dto.test.TestSearchCriteria;
 import java.util.List;
 
 /**
- * Service adapter for {@link TestDto} object. Adapter supports CRUD and another operations over this object.
+ * Service adapter for test definitions. Adapter provides operations for {@link TestDto} object.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
 public interface TestAdapter {
-
     /**
      * Return {@link TestDto} object by its id.
      *
      * @param id The test identifier.
-     * @return Found {@link TestDto} object.
+     *
+     * @return The found {@link TestDto} object.
+     *
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
@@ -27,7 +28,9 @@ public interface TestAdapter {
      * Return {@link TestDto} object by its uid.
      *
      * @param uid The test string unique identifier.
-     * @return Found {@link TestDto} object.
+     *
+     * @return The found {@link TestDto} object.
+     *
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
@@ -36,29 +39,55 @@ public interface TestAdapter {
     /**
      * Create new {@link TestDto} object.
      *
+     * <br>
+     * <strong>Validation fields:</strong>
+     * <ul>
+     *  <li><strong>name</strong> - Name of test</li>
+     *  <li><strong>uid</strong> - Uid of test</li>
+     *  <li><strong>description</strong> - Description of test</li>
+     *  <li><strong>group</strong> - Group of test</li>
+     * <ul/>
+     *
      * @param test Parameters of the test that will be created.
-     * @return Created {@link TestDto} object.
+     *
+     * @return The created {@link TestDto} object.
+     *
+     * @throws org.perfrepo.web.adapter.exceptions.BadRequestException If the request is bad.
      * @throws org.perfrepo.web.adapter.exceptions.ValidationException If the input parameters are not valid.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     TestDto createTest(TestDto test);
 
     /**
-     * Update a {@link TestDto} object.
+     * Update the {@link TestDto} object.
+     *
+     * <br>
+     * <strong>Validation fields:</strong>
+     * <ul>
+     *  <li><strong>name</strong> - Name of test</li>
+     *  <li><strong>uid</strong> - Uid of test</li>
+     *  <li><strong>description</strong> - Description of test</li>
+     *  <li><strong>group</strong> - Group of test</li>
+     * <ul/>
      *
      * @param test Parameters of the test that will be updated.
-     * @return Updated {@link TestDto} object.
+     *
+     * @return The updated {@link TestDto} object.
+     *
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
+     * @throws org.perfrepo.web.adapter.exceptions.BadRequestException If the request is bad.
      * @throws org.perfrepo.web.adapter.exceptions.ValidationException If the input parameters are not valid.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     TestDto updateTest(TestDto test);
 
     /**
-     * Remove a {@link TestDto} object.
+     * Remove the {@link TestDto} object.
      *
      * @param id The test identifier.
+     *
      * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the object does not exist.
+     * @throws org.perfrepo.web.adapter.exceptions.BadRequestException If the request is bad.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     void removeTest(Long id);
@@ -73,7 +102,11 @@ public interface TestAdapter {
     /**
      * Return all {@link TestDto} tests that satisfy search conditions.
      *
+     * @param searchParams The test search criteria params.
+     *
      * @return List of {@link TestDto} tests.
+     *
+     * @throws org.perfrepo.web.adapter.exceptions.BadRequestException If the request is bad.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     SearchResult<TestDto> searchTests(TestSearchCriteria searchParams);
@@ -81,16 +114,18 @@ public interface TestAdapter {
     /**
      * Return true if logged user subscribes the test alerts.
      *
-     * @param testId Test id.
-     * @return true if logged user subscribes the test alerts.
+     * @param testId The test identifier.
+     *
+     * @return True if logged user subscribes the alerts of the test.
      */
     boolean isSubscriber(Long testId);
 
     /**
      * Subscribe the logged user to the test alerts.
      *
-     * @param testId Test {@link org.perfrepo.dto.test.TestDto} identifier.
-     * @throws org.perfrepo.web.adapter.exceptions.NotFoundException If the test or user does not exist.
+     * @param testId Test {@link TestDto} identifier.
+     *
+     * @throws org.perfrepo.web.adapter.exceptions.BadRequestException If the request is bad.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     void addSubscriber(Long testId);
@@ -98,9 +133,10 @@ public interface TestAdapter {
     /**
      * Unsubscribe the logged user from the test alerts.
      *
-     * @param testId Test {@link org.perfrepo.dto.test.TestDto} identifier.
+     * @param testId Test {@link TestDto} identifier.
+     *
+     * @throws org.perfrepo.web.adapter.exceptions.BadRequestException If the request is bad.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     void removeSubscriber(Long testId);
-
 }

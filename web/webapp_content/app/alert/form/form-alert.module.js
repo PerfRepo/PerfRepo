@@ -3,7 +3,6 @@
 
     angular
         .module('org.perfrepo.alert.form', [
-            'ngTagsInput',
-            'angularTrix'
+            'org.perfrepo.base'
         ]);
 })();

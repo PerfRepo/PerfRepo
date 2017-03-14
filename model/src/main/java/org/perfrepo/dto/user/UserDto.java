@@ -1,7 +1,7 @@
 package org.perfrepo.dto.user;
 
 /**
- * Data transfer object for {@link org.perfrepo.web.model.user.User} entity that represents a user.
+ * Data transfer object that represents a user.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */

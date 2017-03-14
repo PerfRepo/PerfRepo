@@ -5,7 +5,7 @@
         .module('org.perfrepo.alert.remove')
         .controller('RemoveAlertController', RemoveAlertController);
 
-    function RemoveAlertController(_alert, alertService, $modalInstance) {
+    function RemoveAlertController(_alert, alertService, $uibModalInstance) {
         var vm = this;
         vm.alert = _alert;
         vm.remove = remove;
@@ -13,12 +13,12 @@
 
         function remove() {
             alertService.remove(vm.alert.id).then(function () {
-                $modalInstance.close(vm.alert);
+                $uibModalInstance.close(vm.alert);
             });
         }
 
         function cancel() {
-            $modalInstance.dismiss('cancel');
+            $uibModalInstance.dismiss('cancel');
         }
     }
 })();

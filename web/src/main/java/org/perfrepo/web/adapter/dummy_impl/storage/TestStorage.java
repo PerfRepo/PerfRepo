@@ -117,6 +117,10 @@ public class TestStorage {
                 sortComparator = (test1, test2) -> test1.getName().compareToIgnoreCase(test2.getName());
         }
 
+        Predicate<TestDto> generalSearchPredicate =
+                test -> searchParams.getGeneralSearch() == null
+                        || StringUtils.containsIgnoreCase(test.getName(), searchParams.getGeneralSearch());
+
         Predicate<TestDto> nameFilterPredicate =
                 test -> searchParams.getNameFilters() == null
                         || searchParams.getNameFilters()
@@ -128,11 +132,12 @@ public class TestStorage {
                                 .stream().allMatch(uidFilter -> StringUtils.containsIgnoreCase(test.getUid(), uidFilter));
 
         Predicate<TestDto> groupFilterPredicate =
-                test -> searchParams.getGroupIdFilters() == null
-                        || searchParams.getGroupIdFilters()
+                test -> searchParams.getGroupFilters() == null
+                        || searchParams.getGroupFilters()
                         .stream().allMatch(groupFilter -> StringUtils.containsIgnoreCase(test.getGroup().getName(), groupFilter));
 
         Supplier<Stream<TestDto>> testStream = () ->  data.stream()
+                .filter(generalSearchPredicate)
                 .filter(nameFilterPredicate)
                 .filter(uidFilterPredicate)
                 .filter(groupFilterPredicate)

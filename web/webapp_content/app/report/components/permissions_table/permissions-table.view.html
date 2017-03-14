@@ -1,0 +1,22 @@
+<table class="table table-hover table-bordered pr-table">
+    <thead>
+    <tr>
+        <th>Access level</th>
+        <th>Access type</th>
+        <th>Associated user/group</th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="permission in vm.permissions">
+            <td>{{permission.level}}</td>
+            <td>{{permission.type}}</td>
+            <td>
+                <span ng-if="permission.level == 'GROUP'">{{permission.groupName}}</span>
+                <span ng-if="permission.level == 'USER'">{{permission.userFullName}}</span>
+            </td>
+        </tr>
+        <tr class="table-no-data" ng-show="!vm.permissions || vm.permissions.length == 0">
+            <td colspan="4">No permissions</td>
+        </tr>
+    </tbody>
+</table>

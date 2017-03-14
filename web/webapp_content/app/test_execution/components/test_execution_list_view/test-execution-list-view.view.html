@@ -2,14 +2,22 @@
      config="vm.config"
      items="vm.items"
      action-buttons="vm.actionButtons"
-     menu-actions="vm.menuActions">
+     menu-actions="vm.menuActions"
+     class="test-execution-list">
 
     <div class="list-view-pf-description">
         <div class="list-group-item-heading">
-            <a ui-sref="app.testExecutionDetail({id: item.id})">{{item.name}}</a>
+            <a uib-tooltip="Name" ui-sref="app.testExecutionDetail({id: item.id})">{{item.name}}</a>
         </div>
         <div class="list-group-item-text">
-            {{item.started | date}}
+            <span uib-tooltip="Started">{{item.started | date}}</span>
+        </div>
+    </div>
+    <div class="list-view-pf-additional-info">
+        <div uib-tooltip="Tags" class="list-view-pf-additional-info-item">
+            <span ng-repeat="tag in item.tags" class="label label-info tag-label">{{tag}}</span>
         </div>
     </div>
 </div>
+
+

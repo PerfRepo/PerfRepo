@@ -1,7 +1,7 @@
 package org.perfrepo.web.adapter.exceptions;
 
 /**
- * This unchecked exception is thrown when service adapter could not perform action,
+ * This unchecked exception is thrown if service adapter could not perform action,
  * because the user has not permission to perform the action.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)

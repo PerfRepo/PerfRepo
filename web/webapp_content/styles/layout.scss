@@ -1,0 +1,69 @@
+// ########################################################################### remove blue 2px line from the top of page
+nav.navbar-pf-vertical {
+  border-top: 2px solid #1d1d1d;
+
+  span.user-name {
+    font-size: smaller;
+    letter-spacing: 0.05em;
+    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  }
+}
+
+// ######################################################################################################## page content
+div.content-container {
+  padding-top: 40px;
+
+  div.header {
+    background-color: rgb(245, 245, 245);
+    border-bottom: 1px #ddd solid;
+
+    span.header-title {
+      font-size: 19px;
+      margin: 10px 0 5px -10px;
+      display: block;
+      font-weight: 300;
+    }
+
+    div.header-controls {
+      margin-top: 12px;
+      text-align: right;
+
+      button {
+        margin-bottom: 5px;
+      }
+    }
+  }
+}
+
+// ################################################################################################### notification list
+div.pr-notification-list {
+  position: fixed;
+  width: 25%;
+  z-index: 2000;
+  top: 10px;
+  right: 10px;
+}
+
+// ################################################################################################################ menu
+
+.nav-pf-vertical.nav-pf-vertical-with-badges, .nav-pf-vertical.nav-pf-vertical-with-badges .list-group-item>a {
+  width: 200px;
+}
+
+.nav-pf-vertical.collapsed, .nav-pf-vertical.collapsed .list-group-item.secondary-nav-item-pf.active>a,
+.nav-pf-vertical.collapsed .list-group-item.secondary-nav-item-pf>a, .nav-pf-vertical.collapsed .list-group-item>a {
+  width: 75px;
+}
+
+.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.nav-pf-vertical-with-badges {
+  margin-left: 200px;
+}
+
+.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav {
+  margin-left: 75px;
+}
+
+.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.collapsed-nav.hidden-icons-pf,
+.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical.hidden-nav {
+  margin-left: 0;
+}

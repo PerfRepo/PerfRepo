@@ -11,6 +11,9 @@ import java.util.Set;
  */
 public class TestSearchCriteria {
 
+    /** Used in reports to search test in select component */
+    private String generalSearch;
+
     private Set<String> nameFilters;
 
     private Set<String> uidFilters;
@@ -22,6 +25,14 @@ public class TestSearchCriteria {
     private int offset = 0;
 
     private OrderBy orderBy;
+
+    public String getGeneralSearch() {
+        return generalSearch;
+    }
+
+    public void setGeneralSearch(String generalSearch) {
+        this.generalSearch = generalSearch;
+    }
 
     /**
      * Returns set of filters for test {@link TestDto#getName() name}.
@@ -64,7 +75,7 @@ public class TestSearchCriteria {
      *
      * @return  {@link TestDto#getGroup() Group} filters.
      */
-    public Set<String> getGroupIdFilters() {
+    public Set<String> getGroupFilters() {
         return groupFilters;
     }
 

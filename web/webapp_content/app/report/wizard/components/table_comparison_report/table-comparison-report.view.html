@@ -1,0 +1,180 @@
+<div class="wizard-container table-comparison-report-step">
+    <h1>Configure groups of comparisons...</h1>
+    <ng-form name="vm.wizardTableComparisonStep">
+    <!-- group accordion-->
+        <v-accordion multiple id="group-accordion" class="vAccordion--default">
+            <v-pane ng-repeat="(groupIndex, group) in vm.data.groups" expanded="true">
+                <!-- group header -->
+                <v-pane-header>
+                    <h3 class="item-title-pane">{{group.name}}</h3>
+                    <a class="cursor-pointer pull-right" ng-click="vm.removeGroup(groupIndex)">
+                        <span class="pficon-delete" aria-hidden="true"></span> Remove group
+                    </a>
+                </v-pane-header>
+                <!-- group content-->
+                <v-pane-content>
+                    <div class="form-group">
+                        <label>Group name</label>
+                        <input type="text" name="groups[{{groupIndex}}].name"
+                               ng-model="group.name" class="form-control" pr-server-validation>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Group description</label>
+                        <div class="wysiwyg-editor-wrap form-control-border">
+                            <trix-editor ng-if="true" angular-trix name="groups[{{groupIndex}}].description"
+                                         ng-model="group.description" class="trix-content" pr-server-validation>
+                            </trix-editor>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Threshold</label>
+                        <input type="number" name="groups[{{groupIndex}}].threshold"
+                               ng-model="group.threshold" class="form-control" pr-server-validation>
+                    </div>
+                    <!-- comparison accordion -->
+                    <v-accordion multiple class="vAccordion--default">
+                        <v-pane ng-repeat="(tableIndex, table) in group.tables" expanded="true">
+                            <!-- table header-->
+                            <v-pane-header>
+                                <h3 class="item-title-pane">{{table.name}}</h3>
+                                <a class="cursor-pointer pull-right" ng-click="vm.removeComparison(groupIndex, tableIndex)">
+                                    <span class="pficon-delete" aria-hidden="true"></span> Remove comparison
+                                </a>
+                            </v-pane-header>
+                            <!-- table content-->
+                            <v-pane-content>
+                                <div class="form-group">
+                                    <label>Table name</label>
+                                    <input type="text" name="groups[{{groupIndex}}].tables[{{tableIndex}}].name"
+                                           ng-model="table.name" class="form-control" pr-server-validation>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Table description</label>
+                                    <div class="wysiwyg-editor-wrap form-control-border">
+                                        <trix-editor ng-if="true" angular-trix name="groups[{{groupIndex}}].tables[{{tableIndex}}].description"
+                                                     ng-model="table.description" class="trix-content" pr-server-validation></trix-editor>
+                                    </div>
+                                </div>
+
+                                <!-- comparison items -->
+                                <h3 class="item-title">Comparison items</h3>
+
+                                <div ng-show="vm.formErrors['groups[' + groupIndex + '].tables[' + tableIndex + '].items'] && (table.items == undefined || table.items.length == 0)"
+                                     class="alert alert-danger form-validation-error"><span class="pficon pficon-error-circle-o"></span>
+                                    {{vm.formErrors['groups[' + groupIndex + '].tables[' + tableIndex + '].items']}}
+                                </div>
+
+                                <div ng-show="vm.formErrors['groups[' + groupIndex + '].tables[' + tableIndex + '].baseline'] && (!vm.hasBaselineChecked(groupIndex, tableIndex))"
+                                     class="alert alert-danger form-validation-error"><span class="pficon pficon-error-circle-o"></span>
+                                    {{vm.formErrors['groups[' + groupIndex + '].tables[' + tableIndex + '].baseline']}}
+                                </div>
+
+                                <div class="row comparison-item-row" ng-repeat="(itemIndex, item) in table.items">
+                                    <div class="col-md-3 form-group">
+                                        <label>Item alias</label>
+                                        <input type="text" name="groups[{{groupIndex}}].tables[{{tableIndex}}].items[{{itemIndex}}].alias"
+                                               ng-model="item.alias" class="form-control" placeholder="Test execution alias" pr-server-validation>
+                                    </div>
+
+                                    <div class="col-md-2 form-group">
+                                        <label>Item selector</label>
+                                        <select pf-select ng-model="item.selector" class="form-control"
+                                                name="groups[{{groupIndex}}].tables[{{tableIndex}}].items[{{itemIndex}}].selector"
+                                                ng-options="itemSelector.name as itemSelector.text for itemSelector in vm.itemSelectors"
+                                                pr-server-validation>
+                                        </select>
+                                    </div>
+
+                                    <div ng-if="item.selector == 'PARAMETER_QUERY' || item.selector == 'TAG_QUERY'" class="col-md-2 form-group">
+                                        <label>Test</label>
+                                        <ui-select ng-model="item.testId" title="Choose a test"
+                                                   name="groups[{{groupIndex}}].tables[{{tableIndex}}].items[{{itemIndex}}].testId"
+                                                   pr-server-validation>
+                                            <ui-select-match placeholder="Select or search a test...">{{$select.selected.name}}</ui-select-match>
+                                            <ui-select-choices repeat="test.id as test in vm.testsList"
+                                                               refresh="vm.refreshTestsList($select.search)"
+                                                               refresh-delay="0">
+                                                <span ng-bind-html="test.name | highlight: $select.search"></span>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+
+                                    <div ng-if="item.selector == 'TAG_QUERY'" class="col-md-3 form-group">
+                                        <label>Tag query</label>
+                                        <input type="text"
+                                               name="groups[{{groupIndex}}].tables[{{tableIndex}}].items[{{itemIndex}}].tagQuery"
+                                               ng-model="item.tagQuery" class="form-control" pr-server-validation>
+                                    </div>
+
+                                    <div ng-if="item.selector == 'PARAMETER_QUERY'" class="col-md-3 form-group">
+                                        <label>Parameter query</label>
+                                        <input type="text"
+                                               name="groups[{{groupIndex}}].tables[{{tableIndex}}].items[{{itemIndex}}].parameterQuery"
+                                               ng-model="item.parameterQuery" class="form-control" pr-server-validation>
+                                    </div>
+
+                                    <div ng-if="item.selector == 'TEST_EXECUTION_ID'" class="col-md-5 form-group">
+                                        <label>Test execution ID</label>
+                                        <input type="number"
+                                               name="groups[{{groupIndex}}].tables[{{tableIndex}}].items[{{itemIndex}}].executionId"
+                                               ng-model="item.executionId" class="form-control" pr-server-validation>
+                                    </div>
+
+                                    <div class="col-md-1 form-group">
+                                        <label>Baseline</label>
+                                        <input type="checkbox"
+                                               name="groups[{{groupIndex}}].tables[{{tableIndex}}].items[{{itemIndex}}]"
+                                               ng-model="item.baseline"
+                                               ng-change="vm.onBaselineChecked(groupIndex, tableIndex, itemIndex)"
+                                               pr-server-validation>
+                                    </div>
+
+                                    <div class="col-md-1 form-group">
+                                        <label>Action</label>
+                                        <a class="cursor-pointer action-link"
+                                           ng-click="vm.removeItem(groupIndex, tableIndex, itemIndex)">
+                                            <span class="pficon-delete" aria-hidden="true"></span> Remove
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <p class="no-data" ng-show="table.items == undefined || table.items.length == 0">No comparison items</p>
+
+                                <div class="add-link item-link">
+                                    <a class="cursor-pointer" ng-click="vm.addItem(groupIndex, tableIndex)">
+                                        <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>Add item
+                                    </a>
+                                </div>
+                            </v-pane-content>
+                        </v-pane>
+
+                        <div ng-show="vm.formErrors['groups[' + groupIndex + '].tables'] && (group.tables == undefined || group.tables.length == 0)"
+                             class="alert alert-danger form-validation-error"><span class="pficon pficon-error-circle-o"></span>{{vm.formErrors['groups[' + groupIndex + '].tables']}}</div>
+
+                        <p class="no-data" ng-show="group.tables == undefined || group.tables.length == 0">No comparison tables</p>
+
+                        <div class="add-link comparison-link">
+                            <a class="cursor-pointer" ng-click="vm.addComparison(groupIndex)">
+                                <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>Add comparison
+                            </a>
+                        </div>
+                    </v-accordion>
+                </v-pane-content>
+            </v-pane>
+
+            <div ng-show="vm.formErrors.groups && (vm.data.groups == undefined || vm.data.groups.length == 0)"
+                 class="alert alert-danger form-validation-error"><span class="pficon pficon-error-circle-o"></span>{{vm.formErrors.groups}}</div>
+
+            <p class="no-data" ng-show="vm.data.groups == undefined || vm.data.groups.length == 0">No groups</p>
+
+            <div class="add-link group-link">
+                <a class="cursor-pointer" ng-click="vm.addGroup()">
+                    <span class="pficon pficon-add-circle-o" aria-hidden="true"></span>Add group
+                </a>
+            </div>
+        </v-accordion>
+    </ng-form>
+</div>

@@ -1,0 +1,15 @@
+<div class="modal-header">
+    <button ng-click="vm.cancel()" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title">Metric values</h3>
+</div>
+<div class="modal-body">
+    <test-execution-multi-value-data-table-view
+            execution-values-group="vm.valuesGroup"
+            test-execution-id="vm.testExecutionId"
+            metric="vm.metric"
+            on-update-table = "vm.onUpdateTable()">
+    </test-execution-multi-value-data-table-view>
+</div>
+<div class="modal-footer">
+    <button type="button" ng-click="vm.cancel()" class="btn btn-default">Close</button>
+</div>

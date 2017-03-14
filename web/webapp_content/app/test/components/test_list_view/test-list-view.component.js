@@ -29,7 +29,7 @@
                 selectItems: true,
                 useExpandingRows: true,
                 selectionMatchProp: 'id',
-                onDblClick: expandItemContentHandler
+                onClick: expandItemContentHandler
             };
         }
 
@@ -85,7 +85,7 @@
         }
 
         function showTestExecutionsAction(action, item) {
-            $state.go('app.testExecutionOverview', {initialFilters: [{id: 'uid', value: item.uid, title: 'Test UID'}]});
+            $state.go('app.testExecutionOverview', {initialFilters: [{id: 'testUID', value: item.uid, title: 'Test UID'}]});
         }
 
         function editTestAction(action, item) {

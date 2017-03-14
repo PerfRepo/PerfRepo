@@ -23,14 +23,14 @@
             },
             {
                 title: "Test executions",
-                iconClass : "fa fa-cogs",
+                iconClass : "fa fa-flash",
                 href: $state.href('app.testExecutionOverview')
 
             },
             {
                 title: "Reports",
                 iconClass : "fa fa-line-chart",
-                href: $state.href('app.report')
+                href: $state.href('app.reportOverview')
             }
         ];
 

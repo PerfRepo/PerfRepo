@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('org.perfrepo.common')
+        .module('org.perfrepo.base')
         .directive('prServerValidation', ServerValidation);
 
     function ServerValidation() {
@@ -22,11 +22,11 @@
                     setFieldValid();
                 });
 
-                scope.$watch(ctrl.$$parentForm.$name + '.' + ctrl.$name + '.$valid', function(valid) {
-                    if (valid) {
-                        setFieldValid();
-                    } else {
+                scope.$watch(ctrl.$$parentForm.$name + '["' + ctrl.$name + '"].$valid', function(valid) {
+                    if (valid === false) {
                         setFieldInvalid();
+                    } else {
+                        setFieldValid();
                     }
                 });
 

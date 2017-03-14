@@ -3,7 +3,6 @@
 
     angular
         .module('org.perfrepo.metric.form', [
-            'ui.bootstrap',
-            'angularTrix'
+            'org.perfrepo.base'
         ]);
 })();

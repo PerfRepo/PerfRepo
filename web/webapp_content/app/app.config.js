@@ -64,6 +64,7 @@
                 event.preventDefault();
                 $state.go('login', {'toState': toState.name, 'toParams': toParams});
             }
+            ngProgress.complete();
         });
     }
 })();

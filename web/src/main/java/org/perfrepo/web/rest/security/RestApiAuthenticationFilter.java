@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- *
+ * TODO
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
 @WebFilter(filterName = "RestApiAuthenticationFilter", urlPatterns = {"/rest/json/*"})

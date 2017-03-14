@@ -11,6 +11,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
+ * Service endpoint for authentication of users.
+ *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
 @Path("/")

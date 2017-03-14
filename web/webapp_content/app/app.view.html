@@ -5,7 +5,9 @@
             <ul class="nav navbar-nav navbar-right navbar-iconic">
                 <li class="dropdown">
                     <a class="dropdown-toggle nav-item-iconic" id="dropdown-menu-logout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <span title="{{app.user.username}}" class="fa pficon-user"></span>
+                        <span title="{{app.user.username}}" class="fa pficon-user">
+                            <span class="user-name">{{app.user.firstName}} {{app.user.lastName}}</span>
+                        </span>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown-menu-logout">
@@ -14,6 +16,9 @@
                 </li>
             </ul>
         </div>
+    </div>
+    <div class="pr-notification-list">
+        <pf-notification-list></pf-notification-list>
     </div>
     <div id="container-repo" class="content-container container-fluid container-cards-pf container-pf-nav-pf-vertical">
         <ui-view>

@@ -1,7 +1,7 @@
 package org.perfrepo.web.adapter.exceptions;
 
 /**
- * This unchecked exception is thrown when service adapter could not find requested resource.
+ * This unchecked exception is thrown if service adapter could not find requested resource.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */

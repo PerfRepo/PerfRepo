@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Rest api endpoints, configuration registration.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
@@ -24,6 +25,8 @@ public class RestApiApplication extends Application {
       classes.add(GroupRestApi.class);
       classes.add(AuthenticationRestApi.class);
       classes.add(TestExecutionRestApi.class);
+      classes.add(ReportRestApi.class);
+      classes.add(JacksonConfig.class);
    }
 
    @Override

@@ -3,7 +3,7 @@
 
     angular
         .module('org.perfrepo.test.create', [
-            'org.perfrepo.test.form',
-            'patternfly.notification'
+            'org.perfrepo.base',
+            'org.perfrepo.test.form'
         ]);
 })();

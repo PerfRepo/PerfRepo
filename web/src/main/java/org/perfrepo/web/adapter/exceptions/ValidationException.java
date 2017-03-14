@@ -3,8 +3,8 @@ package org.perfrepo.web.adapter.exceptions;
 import org.perfrepo.dto.util.validation.ValidationErrors;
 
 /**
- * This unchecked exception is thrown when service adapter performed validation
- * and it was not successful. The exception contains {@link ValidationErrors} object
+ * This unchecked exception is thrown when if the validation of data was not successful.
+ * The exception contains {@link ValidationErrors} object
  * which contains the list of particular validation
  * errors ({@link org.perfrepo.dto.util.validation.FieldError}).
  *

@@ -1,0 +1,68 @@
+<div class="wizard-container">
+    <h1>Access permissions setup...</h1>
+    <ng-form name="vm.wizardPermissionStep">
+        <div class="row" ng-repeat="(permissionIndex, permission) in vm.data.permissions">
+            <div class="col-md-3 form-group">
+                <label>Access level</label>
+                <select pf-select ng-model="permission.level"
+                        name="permissions[{{permissionIndex}}].level" class="form-control"
+                        ng-options="option.level as option.level for option in vm.options" pr-server-validation>
+                </select>
+            </div>
+
+            <div class="col-md-3 form-group">
+                <label>Access type</label>
+                <select pf-select ng-disabled="permission.level == undefined" ng-model="permission.type"
+                        name="permissions[{{permissionIndex}}].type" class="form-control"
+                        ng-options="type for type in vm.permissionTypes(permission.level)" pr-server-validation>
+                </select>
+            </div>
+
+            <div ng-if="permission.level == 'USER'" class="col-md-3 form-group">
+                <label>Associated user</label>
+                <ui-select ng-model="permission.userId" title="Choose a user" pr-server-validation
+                           name="permissions[{{permissionIndex}}].userId">
+                    <ui-select-match placeholder="Select or search a user...">
+                        {{$select.selected.firstName + ' ' + $select.selected.lastName + ' (' + $select.selected.username + ')'}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="user.id as user in vm.users | filter: $select.search">
+                        <span ng-bind-html="user.firstName + ' ' + user.lastName + ' (' + user.username + ')'| highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+            <div ng-if="permission.level == 'GROUP'" class="col-md-3 form-group">
+                <label>Associated group</label>
+                <ui-select ng-model="permission.groupId" title="Choose a group" pr-server-validation
+                           name="permissions[{{permissionIndex}}].groupId">
+                    <ui-select-match placeholder="Select or search a group...">
+                        {{$select.selected.name}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="group.id as group in vm.groups | filter: $select.search">
+                        <span ng-bind-html="group.name | highlight: $select.search"></span>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+            <div class="col-md-3 form-group"
+                 ng-class="{'col-md-offset-3': permission.level == undefined || permission.level == 'PUBLIC'}">
+                <label>Action</label>
+                <a class="cursor-pointer action-link"
+                   ng-click="vm.removePermission(permissionIndex)">
+                    <span class="pficon-delete" aria-hidden="true"></span> Remove
+                </a>
+            </div>
+        </div>
+    </ng-form>
+
+    <div ng-show="vm.formErrors.permissions && (vm.data.permissions == undefined || vm.data.permissions.length == 0)"
+         class="alert alert-danger form-validation-error"><span class="pficon pficon-error-circle-o"></span>{{vm.formErrors.permissions}}</div>
+
+    <p class="no-data" ng-show="vm.data.permissions == undefined || vm.data.permissions.length == 0">No permissions</p>
+
+    <div class="add-link item-link">
+        <a class="cursor-pointer" ng-click="vm.addPermission()">
+            <span class="pficon pficon-add-circle-o" aria-hidden="true"></span> Add permission
+        </a>
+    </div>
+</div>

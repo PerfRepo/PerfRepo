@@ -1,7 +1,7 @@
 package org.perfrepo.web.adapter.exceptions;
 
 /**
- * This unchecked exception is thrown when service adapter could not perform action for any reason.
+ * This unchecked exception is thrown if service adapter could not perform action for any reason.
  * A fatal error occurred, for example NPE, lost database connection, constraint violation  ...
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)

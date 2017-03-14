@@ -20,7 +20,7 @@
                 {'username': username, 'password': password})
                 .then(function(response) {
                     var authData = response.data;
-                    $window.sessionStorage.authData = JSON.stringify(authData);
+                    $window.localStorage.authData = JSON.stringify(authData);
                     deferred.resolve(authData);
                 }, function(error) {
                     deferred.reject(error);
@@ -32,25 +32,25 @@
         function logout() {
             $http.post(API_URL + '/logout')
                 .then(function(response) {
-                    delete $window.sessionStorage.authData;
+                    delete $window.localStorage.authData;
                     $state.go('login');
                     return response.data;
                 });
         }
 
         function isAuthenticated() {
-            return $window.sessionStorage.authData != undefined;
+            return $window.localStorage.authData != undefined;
         }
 
         function getToken() {
             if (vm.isAuthenticated()) {
-                return JSON.parse($window.sessionStorage.authData).token;
+                return JSON.parse($window.localStorage.authData).token;
             }
         }
 
         function getUser() {
             if (vm.isAuthenticated()) {
-                return JSON.parse($window.sessionStorage.authData).user;
+                return JSON.parse($window.localStorage.authData).user;
             }
         }
     }

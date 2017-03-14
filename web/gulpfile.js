@@ -1,14 +1,15 @@
 var gulp           = require('gulp');
-var gulpSequence = require('gulp-sequence')
+var gulpSequence   = require('gulp-sequence');
 var concat         = require('gulp-concat');
 var concatVendor   = require('gulp-concat-vendor');
 var uglify         = require('gulp-uglify');
-var minify         = require('gulp-minify-css')
+var minify         = require('gulp-minify-css');
 var mainBowerFiles = require('main-bower-files');
 var inject         = require('gulp-inject');
 var series         = require('stream-series');
-var flatten = require('gulp-flatten');
-var watch = require('gulp-watch');
+var flatten        = require('gulp-flatten');
+var watch          = require('gulp-watch');
+var sass           = require('gulp-sass');
 
 var vendorScripts;
 var vendorStyles;
@@ -17,31 +18,30 @@ gulp.task('lib-scripts', function () {
     vendorScripts = gulp.src(mainBowerFiles('**/*.js'),{ base: 'bower_components' })
         .pipe(concatVendor('lib.min.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('webapp_content/vendor/js'));
+        .pipe(gulp.dest('src/main/webapp/vendor/js'));
 });
 
 gulp.task('lib-styles', function () {
     vendorStyles = gulp.src(mainBowerFiles('**/*.css'), {base: 'bower_components'})
         .pipe(concat('lib.min.css'))
         .pipe(minify())
-        .pipe(gulp.dest('webapp_content/vendor/css'));
+        .pipe(gulp.dest('src/main/webapp/vendor/css'));
 });
 
 gulp.task('lib-fonts', function() {
     gulp.src('webapp_content/bower_components/**/dist/fonts/*.{ttf,woff,woff2,eof,svg}')
         .pipe(flatten())
-        .pipe(gulp.dest('webapp_content/vendor/fonts'));
+        .pipe(gulp.dest('src/main/webapp/vendor/fonts'));
 });
 
 gulp.task('copy-app', function() {
     gulp.src('webapp_content/app/**/*')
         .pipe(gulp.dest('src/main/webapp/app'));
+    gulp.src('webapp_content/styles/**/*.scss')
+        .pipe(sass())
+        .pipe(gulp.dest('src/main/webapp/styles'));
 });
 
-gulp.task('copy-vendor', function() {
-    gulp.src('webapp_content/vendor/**/*')
-        .pipe(gulp.dest('src/main/webapp/vendor'));
-});
 
 gulp.task('copy-index', function() {
     gulp.src('webapp_content/index.html')
@@ -50,21 +50,23 @@ gulp.task('copy-index', function() {
 
 
 gulp.task('index', function () {
-    var target = gulp.src("webapp_content/index.html");
+    var target = gulp.src("src/main/webapp/index.html");
 
-    var angularModules = gulp.src(['webapp_content/app/**/*.module.js'], {read: false});
-    var sources = gulp.src(['webapp_content/app/**/*.js', '!webapp_content/app/**/*.module.js', 'webapp_content/app/**/*.css'], {read: false});
+    var angularModules = gulp.src(['src/main/webapp/app/**/*.module.js'], {read: false});
+    var sources = gulp.src(['src/main/webapp/app/**/*.js', '!src/main/webapp/app/**/*.module.js', 'src/main/webapp/styles/**/*.css'], {read: false});
 
     return target.pipe(inject(series(vendorScripts, vendorStyles, angularModules, sources), {relative: true}))
-        .pipe(gulp.dest('webapp_content'));
+        .pipe(gulp.dest('src/main/webapp'));
 });
 
 
 gulp.task('watcher', function () {
-    return watch('webapp_content/app/**/*')
-        .pipe(gulp.dest('src/main/webapp/app'));
+     watch('webapp_content/app/**/*')
+         .pipe(gulp.dest('src/main/webapp/app'));
+     watch('webapp_content/styles/**/*.scss')
+         .pipe(sass())
+         .pipe(gulp.dest('src/main/webapp/styles'));
 });
 
 // Default Task
-gulp.task('default', gulpSequence('lib-scripts', 'lib-styles', 'lib-fonts', 'index',
-    ['copy-app', 'copy-vendor', 'copy-index']));
+gulp.task('default', gulpSequence('lib-scripts', 'lib-styles', 'lib-fonts', 'copy-app', 'copy-index', 'index'));

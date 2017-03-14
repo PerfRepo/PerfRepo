@@ -1,0 +1,432 @@
+// ###################################################################################################### wysiwyg editor
+div.wysiwyg-editor-wrap {
+  border: 1px solid #bbb;
+  padding: 3px;
+  background-color: #f8f8f8;
+}
+
+trix-editor {
+  border-radius: 0;
+  background-color: white;
+  min-height: 160px;
+}
+
+// wysiwyg editor - toolbar
+trix-toolbar {
+  .button_group {
+    border-radius: 0;
+    border-bottom: 0;
+    margin: 0 10px 0 0;
+
+    button {
+      border-color: #bbb;
+      height: 20px;
+      width: 25px;
+    }
+
+    button::before {
+      background-size: 90% 90%;
+    }
+  }
+}
+
+// ########################################################################################################## tags input
+tags-input {
+  .tags {
+    background-color: white;
+    border: 1px solid #bbb;
+    border-radius: 1px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+
+    .input {
+      height: 20px;
+    }
+
+    .tag-item {
+      background: #00659c;
+      border: none;
+      border-radius: 0;
+      color: white;
+      padding: .2em .6em .3em;
+      height: 20px;
+      font: 12px "Open Sans",Helvetica,Arial,sans-serif;
+
+      .remove-button {
+        font-weight: normal;
+        color: white;
+      }
+    }
+  }
+}
+
+// #################################################################### test and text execution search listing component
+div.toolbar-pf {
+  div.toolbar-pf-results ul.list-inline {
+    margin-left: 0;
+  }
+
+  div.filter-pf.filter-fields .form-group {
+    width: 500px;
+  }
+}
+
+@media (min-width: 992px) {
+  div.test-list, div.test-execution-list, div.report-list {
+
+    div.list-view-pf-description {
+      width: 75%;
+    }
+
+    div.list-view-pf-additional-info {
+      width: 25%;
+    }
+
+    div.list-view-pf {
+
+      .list-group-item-heading {
+        width: calc(65% - 20px);
+      }
+
+      .list-group-item-text {
+        width: calc(35% - 20px);
+      }
+    }
+
+    div.list-view-pf-expand {
+      margin-bottom: 12px;
+      margin-top: 6px;
+    }
+
+    div.list-view-pf-actions {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    div.list-view-pf-main-info {
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+  }
+}
+
+// ######################################################################### search listing component - extended content
+list-expanded-content {
+  div.extended-content {
+
+    p.no-results {
+      padding-left: 40px;
+      margin-top: 10px;
+    }
+
+    h5 {
+      font-weight: lighter;
+      margin: 5px 0 0 0;
+      color: #bbb;
+    }
+
+    ul.list-extended-content {
+      list-style: none;
+      margin-bottom: 0;
+
+      li {
+        padding-top: 5px;
+        padding-bottom: 5px;
+      }
+
+      li + li {
+        border-top: 1px solid #f5f5f5;
+      }
+    }
+  }
+}
+
+// ##################################################################################################### list pagination
+pr-search-pagination {
+  float: right;
+  display: flex;
+
+  .pagination {
+    margin: 0;
+  }
+
+  .pagination > li > a {
+    cursor: pointer;
+  }
+
+  .pagination + .page-limit {
+    margin-left: 10px;
+  }
+
+  .page-limit .bootstrap-select {
+    width: 50px !important;
+  }
+}
+
+// ######################################################################################################## panel detail
+div.panel-detail {
+
+  div.panel-body {
+    padding: 0;
+
+    .list-group {
+      border-top: none;
+      margin-bottom: 0;
+    }
+  }
+
+  h3 {
+    display: inline;
+  }
+
+  .panel-btn-action {
+    float: right;
+    margin-top: -3px;
+  }
+}
+
+// ################################################################################################## patternfly toolbar
+div.toolbar-pf {
+  border-bottom: none;
+}
+
+// ################################################################################################# bootstrap ui select
+div.ui-select-container {
+
+  span.ui-select-toggle > .caret {
+    font-style: normal;
+  }
+
+  div.ui-select-match.btn-default-focus {
+    outline: none;
+  }
+
+  input.ui-select-search {
+    width: 100% !important;
+  }
+
+  span.ui-select-placeholder {
+    font-weight: normal;
+  }
+}
+
+// ############################################################################################# table comparison report
+table.comparison-table {
+  border: 1px solid #8c8c8c;
+
+  th, td {
+    border: 1px solid #8c8c8c !important;
+  }
+
+  td.BAD {
+    background-color: #fcd9d9;
+  }
+
+  td.GOOD {
+    background-color: #D8EBD6;
+  }
+
+  td.NEUTRAL {
+    background-color: #ebebeb;
+  }
+
+  td.baseline {
+    background-color: #fff;
+  }
+
+  tr:hover {
+
+    td.NEUTRAL {
+      background-color: #ddd !important;
+    }
+
+    td.GOOD {
+      background-color: #cbe4c8 !important;
+    }
+
+    td.BAD {
+      background-color: #fac6c6 !important;
+    }
+
+    td.baseline {
+      background-color: #def3ff !important;
+    }
+  }
+
+}
+
+div.chart-parameter-select {
+  margin-bottom: 20px;
+
+  label {
+    padding-right: 5px;
+  }
+}
+
+// ####################################################################################################### wizard report
+
+div.report-wizard {
+
+  div.wizard-pf-main.wizard-pf-singlestep {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 300px;
+    padding: 10px 20px;
+  }
+
+  div.modal-header {
+    display: none;
+  }
+
+  div.wizard-pf-steps ul.wizard-pf-steps-indicator {
+    height: 85px;
+    padding: 20px 0 0;
+  }
+
+  div.modal-footer button.wizard-pf-cancel {
+    display: none;
+  }
+
+  span.label-accordion {
+    padding: .15em 0.6em .15em;
+    margin-left: 5px;
+  }
+
+  p.form-label {
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+
+  div.wizard-container {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+
+    h1 {
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    p.no-data {
+      font-size: 13px;
+      color: lightgray;
+      margin-bottom: 5px
+    }
+
+    div.add-link {
+
+      border-top: 2px solid #2196f3;
+
+      &.group-link {
+        font-size: 15px;
+      }
+
+      &.comparison-link {
+        font-size: 14px;
+      }
+
+      &.item-link {
+        font-size: 13px;
+      }
+    }
+
+    a.action-link {
+      display: block;
+    }
+  }
+
+  v-pane-header {
+    margin-bottom: 10px;
+  }
+
+  v-pane-header::after, .vAccordion--default v-pane-header::before {
+    display: none;
+  }
+
+  v-pane-content {
+    padding-left: 10px;
+    border-left: 2px solid #ededed;
+    margin-bottom: 40px;
+  }
+
+  div.report-type {
+
+    label {
+      border: 1px solid #ddd;
+
+      &:hover {
+        border: 1px solid #bbb;
+
+        span {
+          border-bottom: 1px solid #bbb;
+        }
+      }
+    }
+
+    span {
+      padding: 5px;
+      display: block;
+      background: #f5f5f2;
+      border-bottom: 1px solid #ddd;
+    }
+
+    p {
+      padding: 5px 10px 0 10px;
+      font-weight: normal;
+    }
+
+    img {
+      padding: 5px;
+    }
+  }
+
+  div.table-comparison-report-step {
+    div.comparison-item-row {
+      margin-left: -5px;
+      margin-right: -5px;
+
+      div.form-group {
+        padding-left: 5px;
+        padding-right: 5px;
+
+        input[type="checkbox"] {
+          display: block;
+        }
+      }
+    }
+
+    h3.item-title {
+      font-weight: lighter;
+    }
+
+    h3.item-title-pane {
+      font-weight: lighter;
+      margin-bottom: 0;
+      margin-top: 0;
+      display: inline;
+    }
+  }
+
+  div.metric-history-report-step {
+    div.series-item-row, div.baseline-item-row {
+      margin-left: -5px;
+      margin-right: -5px;
+
+      div.form-group {
+        padding-left: 5px;
+        padding-right: 5px;
+      }
+    }
+
+    h3.item-title {
+      font-weight: lighter;
+    }
+
+    h3.item-title-pane {
+      font-weight: lighter;
+      margin-bottom: 0;
+      margin-top: 0;
+      display: inline;
+    }
+  }
+}

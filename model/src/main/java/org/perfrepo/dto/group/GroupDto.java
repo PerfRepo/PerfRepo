@@ -1,7 +1,7 @@
 package org.perfrepo.dto.group;
 
 /**
- * Data transfer object for {@link org.perfrepo.web.model.user.Group} entity that represents a user group.
+ * Data transfer object that represents a user group.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */

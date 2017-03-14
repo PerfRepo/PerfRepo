@@ -33,6 +33,13 @@
         }
 
         function filterChanged(filters) {
+            angular.forEach(filters, function (filter) {
+                if (filter.id == 'startedAfter' || filter.id == 'startedBefore') {
+                    // TODO
+                    filter.value = moment(filter.value).format('MMM DD, YYYY HH:mm');
+                }
+            });
+
             var searchFilterParams = testExecutionSearchService.convertFiltersToCriteriaParams(filters);
             angular.extend(vm.searchParams, searchFilterParams);
 
@@ -40,7 +47,7 @@
         }
 
         function sortChanged(sortFiled, isAscending) {
-            vm.searchParams.orderBy = sortFiled.id.toUpperCase() + (isAscending ? "_ASC" : "_DESC");
+            vm.searchParams.orderBy = sortFiled.id.toUpperCase() + (isAscending ? '_ASC' : '_DESC');
             updateSearch();
         }
 

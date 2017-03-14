@@ -1,0 +1,86 @@
+.cursor-pointer {
+  cursor: pointer;
+}
+
+span.tag-label {
+  margin-right: 4px;
+  margin-bottom: 3px;
+  display: inline-block;
+  padding-bottom: 4px;
+  padding-top: 4px;
+  font-size: 12px;
+}
+
+a.action-link {
+  display: inline-block;
+  padding-left: 5px;
+  padding-right: 5px;
+
+  &:hover {
+    text-decoration: underline !important;
+  }
+
+  span {
+    padding-right: 3px;
+    font-size: smaller;
+  }
+}
+
+a.action-link {
+  &.multi-value-data, &.invalid-data {
+    padding-left: 0;
+    padding-right: 0;
+
+    span {
+      font-size: small;
+    }
+  }
+
+  &.invalid-data {
+    color: #ec7a08;
+
+    &:hover {
+      color: #cb6907;
+    }
+  }
+
+}
+
+.report-title {
+  font-weight: 300;
+  color: #39a5dc;
+}
+
+.report-description {
+  padding-left: 10px;
+}
+
+div.form-validation-error {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 5px 10px 5px 30px;
+
+  span.pficon {
+    font-size: 16px;
+    left: 10px;
+    top: 7px;
+  }
+
+}
+
+// ##################################################################################################### ng-progress bar
+#ngProgress {
+  box-shadow: none;
+}
+
+// ############################################################################################## placeholder font style
+*::-webkit-input-placeholder, *:-moz-placeholder,
+*::-moz-placeholder, *:-ms-input-placeholder {
+  font: 12px "Open Sans", Helvetica, Arial, sans-serif;
+}
+
+// ############################################################################################### validation red border
+.has-error.form-control-border {
+  border-color: #c00;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+}

@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <button ng-click="vm.cancel()" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title">{{vm.metric}} chart</h3>
+</div>
+<div class="modal-body">
+    <div ng-if="vm.showChart">
+        <nvd3 options='vm.options' data='vm.data'></nvd3>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" ng-click="vm.cancel()" class="btn btn-default">Close</button>
+</div>

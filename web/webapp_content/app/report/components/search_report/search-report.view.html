@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-md-12">
+        <div pf-toolbar config="vm.toolbarConfig">
+        </div>
+    </div>
+
+    <div class="col-md-12 list-view-container">
+        <report-list-view
+                items="vm.items"
+                on-update-list="vm.updateSearch()">
+        </report-list-view>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <hr>
+        <pr-search-pagination
+                items-count="vm.toolbarConfig.filterConfig.resultsCount"
+                current-page="vm.currentPage"
+                page-size="vm.searchParams.limit"
+                on-change="vm.paginationChanged()">
+        </pr-search-pagination>
+    </div>
+</div>

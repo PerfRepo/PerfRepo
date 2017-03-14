@@ -3,9 +3,6 @@
 
     angular
         .module('org.perfrepo.testExecution.form', [
-            'ui.bootstrap',
-            'angularTrix',
-            'ngSanitize',
-            'ngTagsInput'
+            'org.perfrepo.base'
         ]);
 })();

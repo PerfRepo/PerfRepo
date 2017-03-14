@@ -18,9 +18,16 @@
             </div>
 
             <div class="form-group">
+                <label class="col-sm-2 control-label">Started</label>
+                <div class="col-sm-10">
+                    <div onkeydown="return false" pf-date-timepicker options="vm.dateOptions" date="vm.testExecution.started"></div>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <label class="col-sm-2 control-label">Comment</label>
                 <div class="col-sm-10">
-                    <div class="editor-wrap form-control-border">
+                    <div class="wysiwyg-editor-wrap form-control-border">
                         <trix-editor ng-if="true" angular-trix ng-model="vm.testExecution.comment" name="comment" class="trix-content" pr-server-validation>
                         </trix-editor>
                     </div>
