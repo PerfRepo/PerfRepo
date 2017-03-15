@@ -15,7 +15,7 @@ public class AttachmentDto {
 
     private long size;
 
-    private byte [] content;
+    private byte[] content;
 
     private String hash;
 
