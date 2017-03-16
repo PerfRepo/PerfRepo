@@ -17,7 +17,7 @@ package org.perfrepo.web.service;
 import org.perfrepo.web.model.report.Permission;
 import org.perfrepo.web.model.report.Report;
 import org.perfrepo.web.model.report.ReportProperty;
-import org.perfrepo.web.service.exceptions.ServiceException;
+import org.perfrepo.web.model.to.SearchResultWrapper;
 import org.perfrepo.web.service.search.ReportSearchCriteria;
 
 import java.util.List;
@@ -75,7 +75,7 @@ public interface ReportService {
     * @param criteria
     * @return
     */
-   List<Report> searchReports(ReportSearchCriteria criteria);
+   SearchResultWrapper<Report> searchReports(ReportSearchCriteria criteria);
 
     /**
      * Retrieves report properties.
@@ -92,21 +92,21 @@ public interface ReportService {
     *
     * @param permission
     */
-   void addPermission(Permission permission) throws ServiceException;
+   void addPermission(Permission permission);
 
    /**
     * Updates permission to provided report.
     *
     * @param permission
     */
-   void updatePermission(Permission permission) throws ServiceException;
+   void updatePermission(Permission permission);
 
    /**
     * Deletes permission from provided report.
     *
     * @param permission
     */
-   void deletePermission(Permission permission) throws ServiceException;
+   void deletePermission(Permission permission);
 
    /**
     * Returns all permission to report. If the permissions are not assigned, returns default permission.

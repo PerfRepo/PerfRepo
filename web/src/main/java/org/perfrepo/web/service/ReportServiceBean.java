@@ -24,6 +24,7 @@ import org.perfrepo.web.dao.UserDAO;
 import org.perfrepo.web.model.report.Permission;
 import org.perfrepo.web.model.report.Report;
 import org.perfrepo.web.model.report.ReportProperty;
+import org.perfrepo.web.model.to.SearchResultWrapper;
 import org.perfrepo.web.model.user.Group;
 import org.perfrepo.web.model.user.User;
 import org.perfrepo.web.service.search.ReportSearchCriteria;
@@ -91,6 +92,7 @@ public class ReportServiceBean implements ReportService {
       }
 
       saveReportProperties(report.getProperties(), createdReport);
+      createdReport.setPermissions(getReportPermissions(createdReport));
 
       return createdReport;
    }
@@ -127,8 +129,8 @@ public class ReportServiceBean implements ReportService {
    }
 
    @Override
-   public List<Report> searchReports(ReportSearchCriteria criteria) {
-      return null;
+   public SearchResultWrapper<Report> searchReports(ReportSearchCriteria criteria) {
+      return reportDAO.searchReports(criteria, userSession.getLoggedUser());
    }
 
    @Override

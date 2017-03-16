@@ -29,6 +29,10 @@ public enum OrderBy {
 
    GROUP_ASC,
 
-   GROUP_DESC;
+   GROUP_DESC,
+
+   TYPE_ASC,
+
+   TYPE_DESC;
 
 }

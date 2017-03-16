@@ -5,21 +5,31 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
+import org.perfrepo.enums.AccessLevel;
+import org.perfrepo.enums.AccessType;
+import org.perfrepo.enums.OrderBy;
+import org.perfrepo.enums.ReportFilter;
 import org.perfrepo.web.model.Test;
+import org.perfrepo.web.model.report.Permission;
 import org.perfrepo.web.model.report.Report;
 import org.perfrepo.web.model.report.ReportProperty;
 import org.perfrepo.web.model.report.ReportType;
 import org.perfrepo.web.model.to.SearchResultWrapper;
 import org.perfrepo.web.model.user.Group;
 import org.perfrepo.web.model.user.User;
+import org.perfrepo.web.service.search.ReportSearchCriteria;
 import org.perfrepo.web.util.TestUtils;
 import org.perfrepo.web.util.UserSessionMock;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 import static org.junit.Assert.assertEquals;
@@ -45,6 +55,7 @@ public class ReportServiceTest {
     private ReportService reportService;
 
     private Group testGroup1;
+    private Group testGroup2;
     private User testUser1;
     private User testUser2;
     private User adminUser;
@@ -67,7 +78,7 @@ public class ReportServiceTest {
         testGroup1 = group1;
         Group group2 = createGroup("test_group2");
         groupService.createGroup(group2);
-        testGroup1 = group2;
+        testGroup2 = group2;
 
         User user1 = createUser("test_user1");
         userService.createUser(user1);
@@ -157,6 +168,243 @@ public class ReportServiceTest {
         assertTrue(removedProperties.isEmpty());
     }
 
+    @org.junit.Test
+    public void testPermissionsCRUDOperations() {
+        Report report = new Report();
+        fillReport("report1", report);
+        report.setUser(testUser1);
+        Report createdReport = reportService.createReport(report);
+
+        // check if default permissions are assigned
+        Permission defaultPermission = new Permission();
+        defaultPermission.setAccessType(AccessType.WRITE);
+        defaultPermission.setLevel(AccessLevel.GROUP);
+        defaultPermission.setGroup(testGroup1);
+        Set<Permission> permissions = createdReport.getPermissions();
+        Permission createdPermission = permissions.stream().findFirst().get();
+
+        assertEquals(1, permissions.size());
+        assertEquals(defaultPermission, createdPermission);
+
+        Permission permissionToUpdate = createdPermission;
+        permissionToUpdate.setLevel(AccessLevel.USER);
+        permissionToUpdate.setUser(testUser1);
+        reportService.updatePermission(permissionToUpdate);
+
+        Set<Permission> updatedPermissions = reportService.getReportPermissions(createdReport);
+        Permission updatedPermission = updatedPermissions.stream().findFirst().get();
+
+        assertEquals(1, permissions.size());
+        assertEquals(permissionToUpdate, updatedPermission);
+
+        Permission permissionToDelete = permissionToUpdate;
+        reportService.deletePermission(permissionToDelete);
+
+        assertTrue(reportService.getReportPermissions(createdReport).isEmpty());
+    }
+
+    @org.junit.Test
+    public void testReportSearchEmptyCriteria() {
+        Report report1 = new Report();
+        fillReport("aa_report", report1);
+        report1.setUser(testUser1);
+        Report createdReport1 = reportService.createReport(report1);
+
+        Report report2 = new Report();
+        fillReport("ab_report", report2);
+        report2.setUser(testUser1);
+        Report createdReport2 = reportService.createReport(report2);
+
+        Report report3 = new Report();
+        fillReport("report3", report3);
+        report3.setUser(testUser2);
+        Report createdReport3 = reportService.createReport(report3);
+
+        ReportSearchCriteria criteria = new ReportSearchCriteria();
+
+        List<Report> expectedResult = Arrays.asList(createdReport1, createdReport2, createdReport3);
+        SearchResultWrapper<Report> actualResult = reportService.searchReports(criteria);
+        assertSearchResultWithOrdering(expectedResult, actualResult);
+    }
+
+    @org.junit.Test
+    public void testReportSearchByName() {
+        Report report1 = new Report();
+        fillReport("aa_report", report1);
+        report1.setUser(testUser1);
+        Report createdReport1 = reportService.createReport(report1);
+
+        Report report2 = new Report();
+        fillReport("ab_report", report2);
+        report2.setUser(testUser1);
+        Report createdReport2 = reportService.createReport(report2);
+
+        Report report3 = new Report();
+        fillReport("report3", report3);
+        report3.setUser(testUser2);
+        Report createdReport3 = reportService.createReport(report3);
+
+        ReportSearchCriteria criteria = new ReportSearchCriteria();
+        criteria.setName(report1.getName());
+
+        List<Report> expectedResult = Arrays.asList(createdReport1);
+        SearchResultWrapper<Report> actualResult = reportService.searchReports(criteria);
+        assertSearchResultWithOrdering(expectedResult, actualResult);
+
+        ReportSearchCriteria criteriaWithWildcard = new ReportSearchCriteria();
+        criteriaWithWildcard.setName("a*");
+
+        List<Report> expectedResult2 = Arrays.asList(createdReport1, createdReport2);
+        SearchResultWrapper<Report> actualResult2 = reportService.searchReports(criteriaWithWildcard);
+        assertSearchResultWithOrdering(expectedResult2, actualResult2);
+    }
+
+    @org.junit.Test
+    public void testReportSearchMyFilter() {
+        Report report1 = new Report();
+        fillReport("aa_report", report1);
+        report1.setUser(testUser1);
+        Report createdReport1 = reportService.createReport(report1);
+
+        Report report2 = new Report();
+        fillReport("ab_report", report2);
+        report2.setUser(testUser1);
+        Report createdReport2 = reportService.createReport(report2);
+
+        UserSessionMock.setLoggedUser(testUser2);
+        Report report3 = new Report();
+        fillReport("report3", report3);
+        report3.setUser(testUser2);
+        Report createdReport3 = reportService.createReport(report3);
+
+        ReportSearchCriteria criteria = new ReportSearchCriteria();
+        criteria.setFilter(ReportFilter.MY);
+
+        List<Report> expectedResult = Arrays.asList(createdReport3);
+        SearchResultWrapper<Report> actualResult = reportService.searchReports(criteria);
+        assertSearchResultWithOrdering(expectedResult, actualResult);
+
+        UserSessionMock.setLoggedUser(testUser1);
+    }
+
+    @org.junit.Test
+    public void testReportSearchTeamFilter() {
+        Report report1 = new Report();
+        fillReport("aa_report", report1);
+        report1.setUser(testUser1);
+        Report createdReport1 = reportService.createReport(report1);
+
+        Report report2 = new Report();
+        fillReport("ab_report", report2);
+        report2.setUser(testUser1);
+        Report createdReport2 = reportService.createReport(report2);
+
+        Report report3 = new Report();
+        fillReport("report3", report3);
+        report3.setUser(testUser2);
+        UserSessionMock.setLoggedUser(testUser2);
+        Report createdReport3 = reportService.createReport(report3);
+        UserSessionMock.setLoggedUser(testUser1);
+
+        ReportSearchCriteria criteria = new ReportSearchCriteria();
+        criteria.setFilter(ReportFilter.TEAM);
+
+        List<Report> expectedResult = Arrays.asList(createdReport1, createdReport2);
+        SearchResultWrapper<Report> actualResult = reportService.searchReports(criteria);
+        assertSearchResultWithOrdering(expectedResult, actualResult);
+    }
+
+    @org.junit.Test
+    public void testReportSearchAllFilter() {
+        Report report1 = new Report();
+        fillReport("aa_report", report1);
+        report1.setUser(testUser1);
+        Report createdReport1 = reportService.createReport(report1);
+
+        Report report2 = new Report();
+        fillReport("ab_report", report2);
+        report2.setUser(testUser1);
+        Permission publicPermission = new Permission();
+        publicPermission.setLevel(AccessLevel.PUBLIC);
+        publicPermission.setAccessType(AccessType.READ);
+        report2.getPermissions().add(publicPermission);
+        Report createdReport2 = reportService.createReport(report2);
+
+        Report report3 = new Report();
+        fillReport("report3", report3);
+        report3.setUser(testUser2);
+        UserSessionMock.setLoggedUser(testUser2);
+        Report createdReport3 = reportService.createReport(report3);
+
+        ReportSearchCriteria criteria = new ReportSearchCriteria();
+        criteria.setFilter(ReportFilter.ALL);
+
+        List<Report> expectedResult = Arrays.asList(createdReport2, createdReport3);
+        SearchResultWrapper<Report> actualResult = reportService.searchReports(criteria);
+        assertSearchResultWithOrdering(expectedResult, actualResult);
+
+        UserSessionMock.setLoggedUser(testUser1);
+    }
+
+    @org.junit.Test
+    public void testReportSearchPagination() {
+        Report report1 = new Report();
+        fillReport("aa_report", report1);
+        report1.setUser(testUser1);
+        Report createdReport1 = reportService.createReport(report1);
+
+        Report report2 = new Report();
+        fillReport("ab_report", report2);
+        report2.setUser(testUser1);
+        Report createdReport2 = reportService.createReport(report2);
+
+        Report report3 = new Report();
+        fillReport("report3", report3);
+        report3.setUser(testUser2);
+        Report createdReport3 = reportService.createReport(report3);
+
+        ReportSearchCriteria criteria = new ReportSearchCriteria();
+        criteria.setLimitFrom(1);
+        criteria.setLimitHowMany(1);
+
+        List<Report> expectedResult = Arrays.asList(createdReport2);
+        SearchResultWrapper<Report> actualResult = reportService.searchReports(criteria);
+        assertSearchResultWithOrdering(expectedResult, actualResult, 3);
+    }
+
+    @org.junit.Test
+    public void testReportSearchOrdering() {
+        Report report1 = new Report();
+        fillReport("aa_report", report1);
+        report1.setUser(testUser1);
+        Report createdReport1 = reportService.createReport(report1);
+
+        Report report2 = new Report();
+        fillReport("ab_report", report2);
+        report2.setType(ReportType.TABLE_COMPARISON);
+        report2.setUser(testUser1);
+        Report createdReport2 = reportService.createReport(report2);
+
+        Report report3 = new Report();
+        fillReport("report3", report3);
+        report3.setUser(testUser2);
+        Report createdReport3 = reportService.createReport(report3);
+
+        ReportSearchCriteria criteria = new ReportSearchCriteria();
+        criteria.setOrderBy(OrderBy.NAME_DESC);
+
+        List<Report> expectedResult = Arrays.asList(createdReport3, createdReport2, createdReport1);
+        SearchResultWrapper<Report> actualResult = reportService.searchReports(criteria);
+        assertSearchResultWithOrdering(expectedResult, actualResult);
+
+        criteria = new ReportSearchCriteria();
+        criteria.setOrderBy(OrderBy.TYPE_ASC);
+
+        List<Report> expectedResult2 = Arrays.asList(createdReport1, createdReport3, createdReport2);
+        SearchResultWrapper<Report> actualResult2 = reportService.searchReports(criteria);
+        assertSearchResultWithOrdering(expectedResult2, actualResult2);
+    }
+
     /*** HELPER METHODS ***/
 
     private void assertReport(Report expected, Report actual) {
@@ -200,18 +448,18 @@ public class ReportServiceTest {
         return group;
     }
     
-    private void assertSearchResultWithoutOrdering(List<Test> expectedResult, SearchResultWrapper<Test> actualResult) {
+    private void assertSearchResultWithoutOrdering(List<Report> expectedResult, SearchResultWrapper<Report> actualResult) {
         assertEquals(expectedResult.size(), actualResult.getTotalSearchResultsCount());
         assertEquals(expectedResult.size(), actualResult.getResult().size());
         assertTrue(expectedResult.stream().allMatch(expected -> actualResult.getResult().stream()
                 .anyMatch(actual -> expected.getId().equals(actual.getId()))));
     }
 
-    private void assertSearchResultWithOrdering(List<Test> expectedResult, SearchResultWrapper<Test> actualResult) {
+    private void assertSearchResultWithOrdering(List<Report> expectedResult, SearchResultWrapper<Report> actualResult) {
         assertSearchResultWithOrdering(expectedResult, actualResult, expectedResult.size());
     }
 
-    private void assertSearchResultWithOrdering(List<Test> expectedResult, SearchResultWrapper<Test> actualResult, int expectedTotalCount) {
+    private void assertSearchResultWithOrdering(List<Report> expectedResult, SearchResultWrapper<Report> actualResult, int expectedTotalCount) {
         assertEquals(expectedTotalCount, actualResult.getTotalSearchResultsCount());
         assertEquals(expectedResult.size(), actualResult.getResult().size());
 

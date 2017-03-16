@@ -141,7 +141,7 @@ public class Permission implements Entity<Permission> {
               ", group=" + group +
               ", id=" + id +
               ", level=" + level +
-              ", reportId=" + report.getId() +
+              (report != null ? ", reportId=" + report.getId() : "") +
               ", user=" + user +
               '}';
    }

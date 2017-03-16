@@ -129,19 +129,12 @@ public class Report implements Entity<Report>, Comparable<Report> {
 
       Report report = (Report) o;
 
-      if (getName() != null ? !getName().equals(report.getName()) : report.getName() != null) return false;
-      if (getType() != null ? !getType().equals(report.getType()) : report.getType() != null) return false;
-      if (getUser() != null ? !getUser().equals(report.getUser()) : report.getUser() != null) return false;
-      return getProperties() != null ? getProperties().equals(report.getProperties()) : report.getProperties() == null;
+      return getId() != null ? getId().equals(report.getId()) : report.getId() == null;
    }
 
    @Override
    public int hashCode() {
-      int result = getName() != null ? getName().hashCode() : 0;
-      result = 31 * result + (getType() != null ? getType().hashCode() : 0);
-      result = 31 * result + (getUser() != null ? getUser().hashCode() : 0);
-      result = 31 * result + (getProperties() != null ? getProperties().hashCode() : 0);
-      return result;
+      return getId() != null ? getId().hashCode() : 0;
    }
 
    @Override
