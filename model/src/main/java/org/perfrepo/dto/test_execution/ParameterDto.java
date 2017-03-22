@@ -12,6 +12,8 @@ public class ParameterDto {
 
     private String value;
 
+    private boolean favourite;
+
     public String getName() {
         return name;
     }
@@ -26,6 +28,14 @@ public class ParameterDto {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 
     @Override
