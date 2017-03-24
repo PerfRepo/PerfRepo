@@ -5,20 +5,23 @@
         .module('org.perfrepo.testExecution.detail.value')
         .controller('CreateTestExecutionValueController', CreateTestExecutionValueController);
 
-    function CreateTestExecutionValueController(_valuesGroups, _metrics, _testExecutionId, _multiValue, testExecutionService,
+    function CreateTestExecutionValueController(_valuesGroups, _metricsName, _testExecutionId, _multiValue, testExecutionService,
                                                     validationHelper, $uibModalInstance) {
         var vm = this;
         vm.valuesGroups = _valuesGroups;
-        vm.metrics = _metrics;
+        vm.metricsName = _metricsName;
         vm.testExecutionId = _testExecutionId;
         vm.multiValue = _multiValue;
-        vm.selectedMetricId = _metrics[0].id;
+        vm.selectedMetricName = _metricsName[0];
         vm.valueObject = {};
         vm.save = save;
         vm.cancel = cancel;
 
-        function save(valueObject, metricId, form) {
-            testExecutionService.addExecutionValues(vm.testExecutionId, metricId, [valueObject]).then(function () {
+        function save(valueObject, form) {
+            testExecutionService.addExecutionValues(vm.testExecutionId, {
+                metricName: vm.selectedMetricName,
+                values: [valueObject]
+            }).then(function () {
                 $uibModalInstance.close(valueObject);
             }, function(errorResponse) {
                 validationHelper.setFormErrors(errorResponse, form);

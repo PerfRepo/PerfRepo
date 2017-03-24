@@ -7,7 +7,6 @@
             bindings: {
                 executionValuesGroup: '<',
                 testExecutionId: '<',
-                metric: '<',
                 onUpdateTable: '&'
             },
             controller: TestExecutionMultiValueDataTableViewController,
@@ -25,12 +24,12 @@
         vm.getValueObjectParameter = getValueObjectParameter;
 
         function showChart(parameterName) {
-            testExecutionValueModalService.showChart(vm.executionValuesGroup.values, parameterName, vm.metric.name);
+            testExecutionValueModalService.showChart(vm.executionValuesGroup.values, parameterName, vm.executionValuesGroup.metricName);
         }
 
         function addValueObject() {
             var modalInstance = testExecutionValueModalService.createValue([vm.executionValuesGroup],
-                [vm.metric], vm.testExecutionId, true);
+                [vm.executionValuesGroup.metricName], vm.testExecutionId, true);
 
             modalInstance.result.then(function () {
                 updateMultiValueTable();
@@ -38,7 +37,7 @@
         }
 
         function editValueObject(index) {
-            var modalInstance = testExecutionValueModalService.editValue(vm.executionValuesGroup, vm.metric, vm.testExecutionId, index);
+            var modalInstance = testExecutionValueModalService.editValue(vm.executionValuesGroup, vm.testExecutionId, index);
 
             modalInstance.result.then(function () {
                 updateMultiValueTable();
@@ -55,7 +54,7 @@
 
         function updateMultiValueTable() {
             testExecutionService.getById(vm.testExecutionId).then(function(response) {
-                vm.executionValuesGroup = getValuesGroupByMetricId(vm.metric.id,
+                vm.executionValuesGroup = getValuesGroupByMetricName(vm.executionValuesGroup.metricName,
                     response.executionValuesGroups);
             });
         }
@@ -64,8 +63,8 @@
             return $filter('getByProperty')('name', parameterName, parameters);
         }
 
-        function getValuesGroupByMetricId(metricId, valuesGroups) {
-            return $filter('getByProperty')('metricId', metricId, valuesGroups);
+        function getValuesGroupByMetricName(metricName, valuesGroups) {
+            return $filter('getByProperty')('metricName', metricName, valuesGroups);
         }
     }
 })();

@@ -7,8 +7,8 @@
             bindings: {
                 valueObject: '<',
                 valuesGroups: '<',
-                metrics: '<',
-                selectedMetricId: '<',
+                metricsName: '<',
+                selectedMetricName: '<',
                 disableMetric: '<',
                 onSave: '&',
                 onCancel: '&'
@@ -20,32 +20,31 @@
 
     function FormTestExecutionValueController($filter) {
         var vm = this;
-        vm.getValuesGroupByMetricId = getValuesGroupByMetricId;
         vm.removeParameter = removeParameter;
         vm.addParameter = addParameter;
         vm.save = save;
         vm.groupsParameters = getGroupsParameters();
 
         function save(form) {
-            vm.valueObject.parameters = vm.groupsParameters[vm.selectedMetricId];
+            vm.valueObject.parameters = vm.groupsParameters[vm.selectedMetricName];
 
             if (form.$invalid) {
                 return;
             }
 
-            this.onSave({valueObject: vm.valueObject, metricId: vm.selectedMetricId, form: form});
+            this.onSave({valueObject: vm.valueObject, metricName: vm.selectedMetricName, form: form});
         }
 
         function removeParameter(index) {
-            vm.groupsParameters[vm.selectedMetricId].splice(index, 1);
+            vm.groupsParameters[vm.selectedMetricName].splice(index, 1);
         }
 
         function addParameter() {
             // values group parameters are missing for this metric
-            if (vm.groupsParameters[vm.selectedMetricId] == undefined) {
-                vm.groupsParameters[vm.selectedMetricId] = [];
+            if (vm.groupsParameters[vm.selectedMetricName] == undefined) {
+                vm.groupsParameters[vm.selectedMetricName] = [];
             }
-            vm.groupsParameters[vm.selectedMetricId].push({});
+            vm.groupsParameters[vm.selectedMetricName].push({});
         }
 
         function getGroupsParameters() {
@@ -66,13 +65,9 @@
                         groupParameters.push({name: parameterName, value: parameterObject.value});
                     }
                 });
-                parameters[valuesGroup.metricId] = groupParameters;
+                parameters[valuesGroup.metricName] = groupParameters;
             });
             return parameters;
-        }
-
-        function getValuesGroupByMetricId(metricId) {
-            return $filter('getByProperty')('metricId', metricId, vm.valuesGroups);
         }
     }
 })();

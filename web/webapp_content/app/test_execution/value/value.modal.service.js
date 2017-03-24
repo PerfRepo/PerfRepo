@@ -29,9 +29,6 @@
                     _executionValuesGroup: function() {
                         return executionValuesGroup;
                     },
-                    _metric: function(metricService) {
-                        return metricService.getById(executionValuesGroup.metricId);
-                    },
                     _testExecutionId: function() {
                         return testExecutionId;
                     },
@@ -55,9 +52,6 @@
                     _executionValuesGroup: function() {
                         return executionValuesGroup;
                     },
-                    _metric: function(metricService) {
-                        return metricService.getById(executionValuesGroup.metricId);
-                    },
                     _testExecutionId: function() {
                         return testExecutionId;
                     }
@@ -65,7 +59,7 @@
             });
         }
 
-        function createValue(valuesGroups, metrics, testExecutionId, multiValue) {
+        function createValue(valuesGroups, metricsName, testExecutionId, multiValue) {
             return $uibModal.open({
                 animation: true,
                 backdrop: 'static',
@@ -78,8 +72,8 @@
                     _valuesGroups: function() {
                         return valuesGroups;
                     },
-                    _metrics: function() {
-                        return metrics;
+                    _metricsName: function() {
+                        return metricsName;
                     },
                     _testExecutionId: function() {
                         return testExecutionId;
@@ -91,7 +85,7 @@
             });
         }
 
-        function editValue(valuesGroup, metric, testExecutionId, index) {
+        function editValue(valuesGroup, testExecutionId, index) {
             return $uibModal.open({
                 animation: true,
                 backdrop: 'static',
@@ -103,9 +97,6 @@
                 resolve : {
                     _valuesGroup: function() {
                         return valuesGroup;
-                    },
-                    _metric: function() {
-                        return metric;
                     },
                     _testExecutionId: function() {
                         return testExecutionId;
@@ -121,7 +112,7 @@
             });
         }
 
-        function showChart(values, parameter, metric) {
+        function showChart(values, parameter, metricName) {
             return $uibModal.open({
                 animation: true,
                 backdrop: 'static',
@@ -137,14 +128,14 @@
                     _parameter: function () {
                         return parameter;
                     },
-                    _metric: function() {
-                        return metric;
+                    _metricName: function() {
+                        return metricName;
                     }
                 }
             });
         }
 
-        function showMultiValueData(valuesGroup, metric, testExecutionId, onUpdateTable) {
+        function showMultiValueData(valuesGroup, testExecutionId, onUpdateTable) {
             return $uibModal.open({
                 animation: true,
                 backdrop: 'static',
@@ -156,9 +147,6 @@
                 resolve : {
                     _valuesGroup: function() {
                         return valuesGroup;
-                    },
-                    _metric: function() {
-                        return metric;
                     },
                     _testExecutionId: function () {
                         return testExecutionId;

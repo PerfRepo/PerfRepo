@@ -5,11 +5,11 @@
         .module('org.perfrepo.testExecution.detail.value')
         .controller('ShowValueChartController', ShowValueChartController);
 
-    function ShowValueChartController(_values, _parameter, _metric, $uibModalInstance, $filter) {
+    function ShowValueChartController(_values, _parameter, _metricName, $uibModalInstance, $filter) {
         var vm = this;
         vm.groupValues = _values;
         vm.parameter = _parameter;
-        vm.metric = _metric;
+        vm.metricName = _metricName;
         vm.cancel = cancel;
 
         $uibModalInstance.rendered.then(function () {
@@ -49,7 +49,7 @@
         }
 
         vm.data = [{
-            key: vm.metric,
+            key: vm.metricName,
             values: getChartValues()
         }];
 
@@ -73,7 +73,7 @@
                     axisLabel: vm.parameter
                 },
                 yAxis: {
-                    axisLabel: vm.metric,
+                    axisLabel: vm.metricName,
                     tickFormat: function(d){
                         return d3.format('.02f')(d);
                     },

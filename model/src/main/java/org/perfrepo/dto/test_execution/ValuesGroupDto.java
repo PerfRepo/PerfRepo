@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class ValuesGroupDto {
 
-    private Long metricId;
+    private String metricName;
 
     private Set<String> parameterNames;
 
@@ -20,12 +20,12 @@ public class ValuesGroupDto {
 
     private MeasuredValueType valueType;
 
-    public Long getMetricId() {
-        return metricId;
+    public String getMetricName() {
+        return metricName;
     }
 
-    public void setMetricId(Long metricId) {
-        this.metricId = metricId;
+    public void setMetricName(String metricName) {
+        this.metricName = metricName;
     }
 
     public Set<String> getParameterNames() {

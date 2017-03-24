@@ -121,12 +121,12 @@
             });
         }
 
-        function addExecutionValues(testExecutionId, metricId, valueObjects) {
-            return $http.post(API_TEST_EXECUTION_URL + '/' + testExecutionId + '/values/' + metricId, valueObjects);
+        function addExecutionValues(testExecutionId, valuesGroup) {
+            return $http.post(API_TEST_EXECUTION_URL + '/' + testExecutionId + '/values', valuesGroup);
         }
 
-        function setExecutionValues(testExecutionId, metricId, valueObjects) {
-            return $http.put(API_TEST_EXECUTION_URL + '/' + testExecutionId + '/values/' + metricId, valueObjects);
+        function setExecutionValues(testExecutionId, valuesGroup) {
+            return $http.put(API_TEST_EXECUTION_URL + '/' + testExecutionId + '/values', valuesGroup);
         }
     }
 })();

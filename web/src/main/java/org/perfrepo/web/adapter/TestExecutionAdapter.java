@@ -94,8 +94,7 @@ public interface TestExecutionAdapter {
      * Add measured values to the test execution. The old values are preserved.
      *
      * @param testExecutionId The test execution identifier.
-     * @param metricId The associated metric to the measured values.
-     * @param executionValues The sets of new execution measured values.
+     * @param valuesGroup The sets of new execution measured values.
      *
      * @return The updated {@link TestExecutionDto} object.
      *
@@ -103,14 +102,13 @@ public interface TestExecutionAdapter {
      * @throws org.perfrepo.web.adapter.exceptions.ValidationException If the input parameters are not valid.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    TestExecutionDto addExecutionValues(Long testExecutionId, Long metricId, List<ValueDto> executionValues);
+    TestExecutionDto addExecutionValues(Long testExecutionId, ValuesGroupDto valuesGroup);
 
     /**
      * Set measured values to the test execution. The old values are removed.
      *
      * @param testExecutionId The test execution identifier.
-     * @param metricId The associated metric to the measured values.
-     * @param executionValues The sets of new execution measured values.
+     * @param valuesGroup The sets of new execution measured values.
      *
      * @return The updated {@link TestExecutionDto} object.
      *
@@ -118,7 +116,7 @@ public interface TestExecutionAdapter {
      * @throws org.perfrepo.web.adapter.exceptions.ValidationException If the input parameters are not valid.
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
-    TestExecutionDto setExecutionValues(Long testExecutionId, Long metricId, List<ValueDto> executionValues);
+    TestExecutionDto setExecutionValues(Long testExecutionId, ValuesGroupDto valuesGroup);
 
     /**
      * Remove the {@link TestExecutionDto} object.

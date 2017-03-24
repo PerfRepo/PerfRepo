@@ -4,10 +4,10 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label" for="valueMetric">Metric</label>
                 <div class="col-sm-9" id="valueMetric">
-                    <ui-select ng-disabled="vm.disableMetric" ng-model="vm.selectedMetricId" name="metricId" title="Choose a metric">
-                        <ui-select-match placeholder="Select or search a metric...">{{$select.selected.name}}</ui-select-match>
-                        <ui-select-choices repeat="metric.id as metric in vm.metrics | filter: $select.search">
-                            <span ng-bind-html="metric.name | highlight: $select.search"></span>
+                    <ui-select ng-disabled="vm.disableMetric" ng-model="vm.selectedMetricName" name="metricName" title="Choose a metric">
+                        <ui-select-match placeholder="Select or search a metric...">{{$select.selected}}</ui-select-match>
+                        <ui-select-choices repeat="metricName as metricName in vm.metricsName | filter: $select.search">
+                            <span ng-bind-html="metricName | highlight: $select.search"></span>
                         </ui-select-choices>
                     </ui-select>
                 </div>
@@ -28,13 +28,13 @@
                 </div>
             </div>
 
-            <div ng-show="vm.groupsParameters[vm.selectedMetricId].length > 0" class="form-group">
+            <div ng-show="vm.groupsParameters[vm.selectedMetricName].length > 0" class="form-group">
                 <div class="col-xs-12">
                     <h4>X-axes</h4>
                 </div>
             </div>
 
-            <div class="form-group parameter-value" ng-repeat="parameter in vm.groupsParameters[vm.selectedMetricId]">
+            <div class="form-group parameter-value" ng-repeat="parameter in vm.groupsParameters[vm.selectedMetricName]">
                 <label class="col-sm-2 control-label">Name</label>
                 <div class="col-sm-3">
                     <input type="text" ng-model="parameter.name" class="form-control">

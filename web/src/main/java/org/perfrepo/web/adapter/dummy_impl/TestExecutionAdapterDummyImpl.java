@@ -128,13 +128,13 @@ public class TestExecutionAdapterDummyImpl implements TestExecutionAdapter {
     }
 
     @Override
-    public TestExecutionDto addExecutionValues(Long testExecutionId, Long metricId, List<ValueDto> executionValues) {
-        return updateExecutionValues(testExecutionId, metricId, executionValues, true);
+    public TestExecutionDto addExecutionValues(Long testExecutionId, ValuesGroupDto valuesGroup) {
+        return updateExecutionValues(testExecutionId, valuesGroup, true);
     }
 
     @Override
-    public TestExecutionDto setExecutionValues(Long testExecutionId, Long metricId, List<ValueDto> executionValues) {
-        return updateExecutionValues(testExecutionId, metricId, executionValues, false);
+    public TestExecutionDto setExecutionValues(Long testExecutionId, ValuesGroupDto valuesGroup) {
+        return updateExecutionValues(testExecutionId, valuesGroup, false);
     }
 
     private void validate(TestExecutionDto testExecution) {
@@ -184,19 +184,19 @@ public class TestExecutionAdapterDummyImpl implements TestExecutionAdapter {
         }
     }
 
-    private void validateValues(Long testExecutionId, Long metricId, List<ValueDto> executionValues) {
+    private void validateValues(Long testExecutionId, ValuesGroupDto valuesGroup) {
         if (testExecutionId == null || storage.testExecution().getById(testExecutionId) == null) {
             throw new BadRequestException("Not existing test execution.");
         }
 
-        if (metricId == null || storage.metric().getById(metricId) == null) {
+        if (valuesGroup == null || storage.metric().getByName(valuesGroup.getMetricName()) == null) {
             throw new BadRequestException("Not existing metric.");
         }
     }
 
-    private TestExecutionDto updateExecutionValues(Long testExecutionId, Long metricId, List<ValueDto> executionValues,
+    private TestExecutionDto updateExecutionValues(Long testExecutionId,  ValuesGroupDto valuesGroup,
                                                    boolean appendValues) {
-        validateValues(testExecutionId, metricId, executionValues);
+        validateValues(testExecutionId, valuesGroup);
 
         TestExecutionDto testExecution = storage.testExecution().getById(testExecutionId);
 
@@ -206,14 +206,14 @@ public class TestExecutionAdapterDummyImpl implements TestExecutionAdapter {
             // find existing values group
             Optional<ValuesGroupDto> valuesGroupOptional = testExecution.getExecutionValuesGroups()
                     .stream()
-                    .filter(valuesGroupDto -> valuesGroupDto.getMetricId().equals(metricId)).findFirst();
+                    .filter(valuesGroupDto -> valuesGroupDto.getMetricName().equals(valuesGroup.getMetricName())).findFirst();
             valueGroupDto = valuesGroupOptional.isPresent() ? valuesGroupOptional.get() : null;
         }
 
         if (valueGroupDto == null) {
             // values group doesn't exist
             valueGroupDto = new ValuesGroupDto();
-            valueGroupDto.setMetricId(metricId);
+            valueGroupDto.setMetricName(valuesGroup.getMetricName());
             if (testExecution.getExecutionValuesGroups() == null) {
                 testExecution.setExecutionValuesGroups(new LinkedHashSet<>());
             }
@@ -228,7 +228,7 @@ public class TestExecutionAdapterDummyImpl implements TestExecutionAdapter {
             valueGroupDto.getValues().clear();
         }
         // add values
-        valueGroupDto.getValues().addAll(executionValues);
+        valueGroupDto.getValues().addAll(valuesGroup.getValues());
 
         // update parameter names
         Set<String> parameterNames = valueGroupDto.getValues()
@@ -264,10 +264,10 @@ public class TestExecutionAdapterDummyImpl implements TestExecutionAdapter {
         }
 
 
-        if (!appendValues && (executionValues == null || executionValues.size() == 0)) {
+        if (!appendValues && (valuesGroup.getValues() == null || valueGroupDto.getValues().size() == 0)) {
             // remove empty values group
             if (testExecution.getExecutionValuesGroups() != null) {
-                testExecution.getExecutionValuesGroups().removeIf(group -> group.getMetricId().equals(metricId));
+                testExecution.getExecutionValuesGroups().removeIf(group -> group.getMetricName().equals(valuesGroup.getMetricName()));
             }
         }
 

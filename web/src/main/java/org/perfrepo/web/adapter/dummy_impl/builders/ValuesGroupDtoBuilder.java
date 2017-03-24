@@ -22,7 +22,7 @@ public class ValuesGroupDtoBuilder {
     }
 
     public ValuesGroupDtoBuilder metric(MetricDto metric) {
-        valuesGroupDto.setMetricId(metric.getId());
+        valuesGroupDto.setMetricName(metric.getName());
         return this;
     }
 

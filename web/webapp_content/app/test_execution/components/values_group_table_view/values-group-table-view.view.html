@@ -12,8 +12,7 @@
     </thead>
     <tbody>
         <tr ng-repeat="valuesGroup in vm.executionValuesGroups">
-            {{valuesGroup}}
-            <td>{{vm.getMetricById(valuesGroup.metricId).name}}</td>
+            <td>{{valuesGroup.metricName}}</td>
             <td>
                 <span ng-if="valuesGroup.valueType == 'SINGLE_VALUE'">{{valuesGroup.values[0].value}}</span>
                 <span ng-if="valuesGroup.valueType == 'MULTI_VALUE'">

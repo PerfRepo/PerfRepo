@@ -5,11 +5,11 @@
 <div class="modal-body">
     <test-execution-value-form
             values-groups="vm.valuesGroups"
-            metrics="vm.metrics"
+            metrics-name="vm.metricsName"
             value-object="vm.valueObject"
-            selected-metric-id="vm.selectedMetricId"
+            selected-metric-name="vm.selectedMetricName"
             disable-metric=true
-            on-save="vm.save(valueObject, metricId, form)"
+            on-save="vm.save(valueObject, metricName, form)"
             on-cancel="vm.cancel()">
     </test-execution-value-form>
 </div>

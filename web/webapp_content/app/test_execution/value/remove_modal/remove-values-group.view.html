@@ -4,11 +4,11 @@
 </div>
 <div class="modal-body">
     <span ng-if="vm.executionValuesGroup.valueType == 'SINGLE_VALUE'">
-        Remove value of metric <strong>{{vm.metric.name}}</strong>?
+        Remove value of metric <strong>{{vm.executionValuesGroup.metricName}}</strong>?
     </span>
     <span ng-if="vm.executionValuesGroup.valueType == 'MULTI_VALUE'
               || vm.executionValuesGroup.valueType == 'INVALID_VALUE'">
-        Remove all values of metric <strong>{{vm.metric.name}}</strong>?
+        Remove all values of metric <strong>{{vm.executionValuesGroup.metricName}}</strong>?
     </span>
 </div>
 <div class="modal-footer">

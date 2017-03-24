@@ -105,15 +105,13 @@ public class TestExecutionRestApi {
     * Add measured values to the test execution. The old values of the metric are preserved.
     *
     * @param testExecutionId The test execution identifier.
-    * @param metricId The metric identifier.
-    * @param executionValues The sets of new execution measured values.
+    * @param valuesGroup The sets of new execution measured values.
     * @return No content if the request is successful.
     */
    @POST
-   @Path("/{id}/values/{metricId}")
-   public Response addExecutionValues(@PathParam("id") Long testExecutionId, @PathParam("metricId") Long metricId,
-                                      List<ValueDto> executionValues) {
-      testExecutionAdapter.addExecutionValues(testExecutionId, metricId, executionValues);
+   @Path("/{id}/values")
+   public Response addExecutionValues(@PathParam("id") Long testExecutionId, ValuesGroupDto valuesGroup) {
+      testExecutionAdapter.addExecutionValues(testExecutionId, valuesGroup);
 
       return Response.noContent().build();
    }
@@ -122,15 +120,13 @@ public class TestExecutionRestApi {
     * Set measured values to the test execution. The old values of the metric are removed.
     *
     * @param testExecutionId The test execution identifier.
-    * @param metricId The metric identifier.
-    * @param executionValues The sets of new execution measured values.
+    * @param valuesGroup The sets of new execution measured values.
     * @return No content if the request is successful.
     */
    @PUT
-   @Path("/{id}/values/{metricId}")
-   public Response setExecutionValues(@PathParam("id") Long testExecutionId, @PathParam("metricId") Long metricId,
-                                      List<ValueDto> executionValues) {
-      testExecutionAdapter.setExecutionValues(testExecutionId, metricId, executionValues);
+   @Path("/{id}/values")
+   public Response setExecutionValues(@PathParam("id") Long testExecutionId, ValuesGroupDto valuesGroup) {
+      testExecutionAdapter.setExecutionValues(testExecutionId, valuesGroup);
 
       return Response.noContent().build();
    }

@@ -12,6 +12,11 @@
     function DetailTestExecutionController(_testExecution, testExecutionService, testExecutionModalService, $state, Page) {
         var vm = this;
         vm.testExecution = _testExecution;
+        vm.metricsName = [];
+        angular.forEach(vm.testExecution.test.metrics, function(metric) {
+            vm.metricsName.push(metric.name);
+        });
+
         vm.editTestExecution = editTestExecution;
         vm.updateDetail = updateDetail;
         vm.removeTestExecution = removeTestExecution;

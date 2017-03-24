@@ -6,7 +6,7 @@
         .component('testExecutionValuesGroupTableView', {
             bindings: {
                 executionValuesGroups: '<',
-                testExecutionMetrics: '<',
+                testExecutionMetricsName: '<',
                 testExecutionId: '<',
                 onUpdateTable: '&'
             },
@@ -22,12 +22,11 @@
         vm.deleteValuesGroup = deleteValuesGroup;
         vm.editValuesGroup = editValuesGroup;
         vm.showMultiValueData = showMultiValueData;
-        vm.getMetricById = getMetricById;
         vm.getValueObjectParameter = getValueObjectParameter;
 
         function addValueObject() {
             var modalInstance = testExecutionValueModalService.createValue(vm.executionValuesGroups,
-                vm.testExecutionMetrics, vm.testExecutionId, false);
+                vm.testExecutionMetricsName, vm.testExecutionId, false);
 
             modalInstance.result.then(function () {
                 vm.onUpdateTable();
@@ -35,15 +34,13 @@
         }
 
         function showMultiValueData(valuesGroup) {
-            testExecutionValueModalService.showMultiValueData(valuesGroup, getMetricById(valuesGroup.metricId),
-                vm.testExecutionId,  vm.onUpdateTable);
+            testExecutionValueModalService.showMultiValueData(valuesGroup, vm.testExecutionId,  vm.onUpdateTable);
         }
 
         function editValuesGroup(valuesGroup) {
             if (valuesGroup.valueType == 'SINGLE_VALUE') {
                 // single value
-                var modalInstance = testExecutionValueModalService.editValue(valuesGroup,
-                    getMetricById(valuesGroup.metricId), vm.testExecutionId);
+                var modalInstance = testExecutionValueModalService.editValue(valuesGroup, vm.testExecutionId);
 
                 modalInstance.result.then(function () {
                     vm.onUpdateTable();
@@ -61,10 +58,6 @@
 
         function getValueObjectParameter(parameterName, parameters) {
             return $filter('getByProperty')('name', parameterName, parameters);
-        }
-
-        function getMetricById(metricId) {
-            return $filter('getByProperty')('id', metricId, vm.testExecutionMetrics);
         }
     }
 })();
