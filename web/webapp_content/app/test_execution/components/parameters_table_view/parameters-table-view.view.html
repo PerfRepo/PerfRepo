@@ -13,7 +13,7 @@
     <tbody>
         <tr ng-repeat="parameter in vm.parameters">
             <td>{{parameter.name}} <span ng-show="parameter.favourite" uib-tooltip="Favourite parameter" class="fa fa-star-o" aria-hidden="true"></span></td>
-            <td>{{parameter.value}}</td>
+            <td><pr-execution-parameter-value value="{{parameter.value}}"></pr-execution-parameter-value></td>
             <td class="table-actions">
                 <a ng-click="vm.editParameterAction(parameter)" class="cursor-pointer action-link" title="Edit parameter">
                     <span class="pficon-edit" aria-hidden="true"></span>Edit

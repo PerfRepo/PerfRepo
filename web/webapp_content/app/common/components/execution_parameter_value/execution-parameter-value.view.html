@@ -1,0 +1,6 @@
+<span ng-if="vm.value.length <= 50">{{vm.value}}</span>
+<div ng-if="vm.value.length > 50" class="execution-value-popover">
+    <a tabindex='0' class="cursor-pointer" uib-popover="{{vm.value}}" popover-trigger="focus">
+        <span class="fa fa-file-text-o">&nbsp;</span>Show value
+    </a>
+</div>

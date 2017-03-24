@@ -45,6 +45,8 @@ public class Storage {
 
     private final AttachmentStorage attachmentStorage;
 
+    private String longText;
+
     public Storage() {
         testStorage = new TestStorage();
         metricStorage = new MetricStorage();
@@ -56,6 +58,14 @@ public class Storage {
         testExecutionStorage = new TestExecutionStorage();
         attachmentStorage = new AttachmentStorage();
         reportStorage = new ReportStorage();
+        longText = "It is a long established fact that a reader will be " +
+                "distracted by the readable content of a page when looking at its layout. The point of us" +
+                "ing Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed" +
+                " to using 'Content here, content here', making it look like readable English. Many deskt" +
+                "op publishing packages and web page editors now use Lorem Ipsum as their default model t" +
+                "ext, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. " +
+                "Various versions have evolved over the years, sometimes by accident, sometimes on purpos" +
+                "e (injected humour and the like).";
         initialize();
         initializeTests();
         initializeTestExecutions();
@@ -230,6 +240,7 @@ public class Storage {
                     .tag(i + ".0")
                     .started(DateUtils.addDays(new Date(), -(9 - i)))
                     .executionParameter("environment", "test")
+                    .executionParameter("text", longText)
                     .executionValuesGroup(new ValuesGroupDtoBuilder()
                             .metric(metricStorage.getById(2L))
                             .value(new ValueDtoBuilder()
@@ -251,6 +262,7 @@ public class Storage {
                     .tag(i + ".0")
                     .started(DateUtils.addDays(new Date(), -(9 - i)))
                     .executionParameter("environment", "test")
+                    .executionParameter("text", longText)
                     .executionValuesGroup(new ValuesGroupDtoBuilder()
                             .metric(metricStorage.getById(1L))
                             .value(new ValueDtoBuilder()
@@ -290,6 +302,7 @@ public class Storage {
                     .executionParameter("environment", "test")
                     .executionParameter("server", "technecium")
                     .executionParameter("lib-version", "1.0.3")
+                    .executionParameter("text", longText)
                     .executionValuesGroup(new ValuesGroupDtoBuilder()
                             .metric(metricStorage.getById(1L))
                             .value(new ValueDtoBuilder()
