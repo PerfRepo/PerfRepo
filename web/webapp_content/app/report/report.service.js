@@ -32,6 +32,7 @@
             defaultSearch: defaultSearch,
             getById: getById,
             getDefaultSearchParams: getDefaultSearchParams,
+            getDefaultPermissions: getDefaultPermissions,
             create: create,
             remove: remove,
             update: update
@@ -58,6 +59,12 @@
                 offset: 0,
                 orderBy: 'NAME_ASC'
             };
+        }
+
+        function getDefaultPermissions() {
+            return $http.get(API_REPORT_URL + '/wizard/default-permissions').then(function(response) {
+                return response.data;
+            });
         }
 
         function getById(id) {

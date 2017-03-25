@@ -60,6 +60,9 @@
                     },
                     _groups: function(groupService) {
                         return groupService.getUserGroups();
+                    },
+                    _permissions: function (reportService) {
+                        return reportService.getDefaultPermissions();
                     }
                 }
             })
@@ -83,6 +86,9 @@
                     },
                     _groups: function(groupService) {
                         return groupService.getUserGroups();
+                    },
+                    _permissions: function (reportService) {
+                        return reportService.getDefaultPermissions();
                     }
                 }
             })

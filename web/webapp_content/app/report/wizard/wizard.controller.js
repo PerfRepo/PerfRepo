@@ -5,7 +5,7 @@
         .module('org.perfrepo.report.wizard')
         .controller('WizardReportController', WizardReportController);
 
-    function WizardReportController(_data, _state, _groups, _users, $scope, Page) {
+    function WizardReportController(_data, _state, _groups, _users, _permissions, $scope, Page) {
         var vm = this;
         vm.newReport = (_data.id == undefined);
         vm.backCallback = backCallback;
@@ -17,6 +17,7 @@
         vm.state = _state;
         vm.users = _users;
         vm.groups = _groups;
+        vm.defaultPermissions = _permissions;
 
         initialize();
 
@@ -24,7 +25,8 @@
             if (vm.newReport) {
                 vm.pageTitle = 'New report wizard';
                 vm.data = {
-                    type: 'TABLE_COMPARISON'
+                    type: 'TABLE_COMPARISON',
+                    permissions: vm.defaultPermissions
                 };
                 Page.setTitle('New report');
             } else {

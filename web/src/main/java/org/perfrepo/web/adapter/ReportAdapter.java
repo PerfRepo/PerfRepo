@@ -1,5 +1,6 @@
 package org.perfrepo.web.adapter;
 
+import org.perfrepo.dto.report.PermissionDto;
 import org.perfrepo.dto.report.ReportDto;
 import org.perfrepo.dto.report.ReportSearchCriteria;
 import org.perfrepo.dto.util.SearchResult;
@@ -81,6 +82,13 @@ public interface ReportAdapter {
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     SearchResult<ReportDto> searchReports(ReportSearchCriteria searchParams);
+
+    /**
+     * Return default permissions for new report.
+     *
+     * @return List of access permissions.
+     */
+    List<PermissionDto> getDefaultReportPermissions();
 
     /**
      * Validate report wizard step - report information (name, description...).

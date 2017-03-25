@@ -1,5 +1,6 @@
 package org.perfrepo.web.rest.endpoints;
 
+import org.perfrepo.dto.report.PermissionDto;
 import org.perfrepo.dto.report.ReportDto;
 import org.perfrepo.dto.report.ReportSearchCriteria;
 import org.perfrepo.dto.util.SearchResult;
@@ -78,6 +79,14 @@ public class ReportRestApi {
       List<ReportDto> allReports = reportAdapter.getAllReports();
 
       return Response.ok().entity(allReports).build();
+   }
+
+   @GET
+   @Path("/wizard/default-permissions")
+   public Response getDefaultPermissions() {
+      List<PermissionDto> permissions = reportAdapter.getDefaultReportPermissions();
+
+      return Response.ok().entity(permissions).build();
    }
 
    @POST

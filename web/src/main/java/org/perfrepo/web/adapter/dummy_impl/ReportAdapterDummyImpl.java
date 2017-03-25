@@ -19,14 +19,15 @@ import org.perfrepo.dto.test_execution.TestExecutionSearchCriteria;
 import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.dto.util.validation.ValidationErrors;
 import org.perfrepo.enums.AccessLevel;
+import org.perfrepo.enums.AccessType;
 import org.perfrepo.enums.report.ComparisonItemSelector;
 import org.perfrepo.web.adapter.ReportAdapter;
 import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
 import org.perfrepo.web.adapter.exceptions.NotFoundException;
 import org.perfrepo.web.adapter.exceptions.ValidationException;
 
-
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ReportAdapterDummyImpl implements ReportAdapter {
@@ -67,6 +68,16 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
     @Override
     public SearchResult<ReportDto> searchReports(ReportSearchCriteria searchParams) {
         return storage.report().search(searchParams);
+    }
+
+    @Override
+    public List<PermissionDto> getDefaultReportPermissions() {
+        List<PermissionDto> permissions = new ArrayList<>();
+        PermissionDto permission = new PermissionDto();
+        permission.setType(AccessType.READ);
+        permission.setLevel(AccessLevel.PUBLIC);
+        permissions.add(permission);
+        return permissions;
     }
 
     @Override
