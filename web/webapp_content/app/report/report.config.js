@@ -99,8 +99,11 @@
                 controller: 'ReportOverviewController',
                 controllerAs: 'vm',
                 resolve: {
-                    _initialSearchResult: function(reportService) {
-                        return reportService.defaultSearch();
+                    _searchCriteria: function(reportService) {
+                        return reportService.getSearchCriteria();
+                    },
+                    _initialSearchResult: function(reportService, _searchCriteria) {
+                        return reportService.search(_searchCriteria);
                     }
                 }
             });

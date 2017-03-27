@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.perfrepo.dto.test_execution.TestExecutionDto;
 import org.perfrepo.dto.test_execution.TestExecutionSearchCriteria;
 import org.perfrepo.dto.util.SearchResult;
+import org.perfrepo.enums.OrderBy;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -20,6 +21,17 @@ public class TestExecutionStorage {
 
     private Long key = 1L;
     private List<TestExecutionDto> data = new ArrayList<>();
+    private TestExecutionSearchCriteria testExecutionSearchCriteria;
+
+    public TestExecutionStorage() {
+        testExecutionSearchCriteria = new TestExecutionSearchCriteria();
+        testExecutionSearchCriteria.setLimit(20);
+        testExecutionSearchCriteria.setOrderBy(OrderBy.NAME_ASC);
+    }
+
+    public TestExecutionSearchCriteria getSearchCriteria() {
+        return testExecutionSearchCriteria;
+    }
 
     public TestExecutionDto getById(Long id) {
         Optional<TestExecutionDto> testExecution = data.stream().filter(dto -> dto.getId().equals(id)).findFirst();
@@ -41,6 +53,7 @@ public class TestExecutionStorage {
     }
 
     public SearchResult<TestExecutionDto> search(TestExecutionSearchCriteria searchParams) {
+        testExecutionSearchCriteria = searchParams;
         Comparator<TestExecutionDto> sortComparator;
 
         switch (searchParams.getOrderBy()) {

@@ -33,6 +33,9 @@ public enum OrderBy {
 
    TYPE_ASC,
 
-   TYPE_DESC;
+   TYPE_DESC,
 
+   REPORT_TYPE_ASC,
+
+   REPORT_TYPE_DESC
 }

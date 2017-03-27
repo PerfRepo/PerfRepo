@@ -1,5 +1,6 @@
 package org.perfrepo.dto.test;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.perfrepo.enums.OrderBy;
 
 import java.util.Set;
@@ -14,11 +15,12 @@ public class TestSearchCriteria {
     /** Used in reports to search test in select component */
     private String generalSearch;
 
-    private Set<String> nameFilters;
+    private Set<String> namesFilter;
 
-    private Set<String> uidFilters;
+    @JsonProperty("UIDsFilter")
+    private Set<String> UIDsFilter;
 
-    private Set<String> groupFilters;
+    private Set<String> groupsFilter;
 
     private int limit = 5;
 
@@ -39,17 +41,17 @@ public class TestSearchCriteria {
      *
      * @return {@link TestDto#getName() Name} filters.
      */
-    public Set<String> getNameFilters() {
-        return nameFilters;
+    public Set<String> getNamesFilter() {
+        return namesFilter;
     }
 
     /**
      * Sets set of filters for test {@link TestDto#getName() name}.
      *
-     * @param nameFilters {@link TestDto#getName() Name} filters.
+     * @param namesFilter {@link TestDto#getName() Name} filters.
      */
-    public void setNameFilters(Set<String> nameFilters) {
-        this.nameFilters = nameFilters;
+    public void setNamesFilter(Set<String> namesFilter) {
+        this.namesFilter = namesFilter;
     }
 
     /**
@@ -57,8 +59,8 @@ public class TestSearchCriteria {
      *
      * @return {@link TestDto#getUid() Uid} filters.
      */
-    public Set<String> getUidFilters() {
-        return uidFilters;
+    public Set<String> getUIDsFilter() {
+        return UIDsFilter;
     }
 
     /**
@@ -66,8 +68,8 @@ public class TestSearchCriteria {
      *
      * @param uidFilters {@link TestDto#getUid() Uid} filters.
      */
-    public void setUidFilters(Set<String> uidFilters) {
-        this.uidFilters = uidFilters;
+    public void setUIDsFilterX(Set<String> uidFilters) {
+        this.UIDsFilter = uidFilters;
     }
 
     /**
@@ -75,17 +77,17 @@ public class TestSearchCriteria {
      *
      * @return  {@link TestDto#getGroup() Group} filters.
      */
-    public Set<String> getGroupFilters() {
-        return groupFilters;
+    public Set<String> getGroupsFilter() {
+        return groupsFilter;
     }
 
     /**
      * Sets set of filters for test {@link TestDto#getGroup()}  group}.
      *
-     * @param groupFilters {@link TestDto#getGroup() Group} filters.
+     * @param groupsFilter {@link TestDto#getGroup() Group} filters.
      */
-    public void setGroupFilters(Set<String> groupFilters) {
-        this.groupFilters = groupFilters;
+    public void setGroupsFilter(Set<String> groupsFilter) {
+        this.groupsFilter = groupsFilter;
     }
 
     /**

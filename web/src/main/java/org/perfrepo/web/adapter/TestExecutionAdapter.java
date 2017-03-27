@@ -2,6 +2,7 @@ package org.perfrepo.web.adapter;
 
 import org.perfrepo.dto.test_execution.*;
 import org.perfrepo.dto.util.SearchResult;
+import org.perfrepo.web.model.TestExecution;
 
 import java.util.List;
 import java.util.Set;
@@ -147,6 +148,13 @@ public interface TestExecutionAdapter {
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     SearchResult<TestExecutionDto> searchTestExecutions(TestExecutionSearchCriteria searchParams);
+
+    /**
+     * Return saved test execution search params.
+     *
+     * @return Search criteria params.
+     */
+    TestExecutionSearchCriteria getSearchCriteria();
 
     /**
      * Return the attachment of the test execution.

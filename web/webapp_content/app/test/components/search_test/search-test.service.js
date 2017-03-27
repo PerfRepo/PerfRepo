@@ -5,74 +5,127 @@
         .module('org.perfrepo.test.search')
         .service('testSearchService', TestModalService);
 
-    function TestModalService() {
+    function TestModalService($filter) {
+        var filterFields = [
+            {
+                id: 'namesFilter',
+                title:  'Name',
+                placeholder: 'Filter by Name...',
+                filterType: 'text'
+            },
+            {
+                id: 'UIDsFilter',
+                title:  'Uid',
+                placeholder: 'Filter by Uid...',
+                filterType: 'text'
+            },
+            {
+                id: 'groupsFilter',
+                title:  'Group',
+                placeholder: 'Filter by Group...',
+                filterType: 'text'
+            }
+        ];
+
+        var sortFields = [
+            {
+                id: 'NAME',
+                title:  'Name',
+                sortType: 'alpha'
+            },
+            {
+                id: 'UID',
+                title: 'Uid',
+                sortType: 'alpha'
+            },
+            {
+                id: 'GROUP',
+                title: 'Group',
+                sortType: 'alpha'
+            }
+        ];
 
         return {
             getToolbarConfig: getToolbarConfig,
-            getSearchOffset: getSearchOffset
+            getSearchOffset: getSearchOffset,
+            convertCriteriaParamsToSearchParams: convertCriteriaParamsToSearchParams,
+            convertSearchParamsToCriteriaParams: convertSearchParamsToCriteriaParams
         };
 
-        function getToolbarConfig(onFilterChange, onSortChange) {
+        function getToolbarConfig(onFilterChange, onSortChange, defaultSearchParams) {
             return {
-                filterConfig: prepareFilterConfig(onFilterChange),
-                sortConfig: prepareSortConfig(onSortChange)
+                filterConfig: prepareFilterConfig(onFilterChange, defaultSearchParams),
+                sortConfig: prepareSortConfig(onSortChange, defaultSearchParams)
             };
         }
 
-        function prepareSortConfig(onSortChange) {
-            var sortFields = [
-                {
-                    id: 'name',
-                    title:  'Name',
-                    sortType: 'alpha'
-                },
-                {
-                    id: 'uid',
-                    title: 'Uid',
-                    sortType: 'alpha'
-                },
-                {
-                    id: 'group',
-                    title: 'Group',
-                    sortType: 'alpha'
-                }
-            ];
-
+        function prepareSortConfig(onSortChange, defaultSearchParams) {
             return  {
                 fields: sortFields,
                 onSortChange: onSortChange,
-                currentField: sortFields[0],
-                isAscending: true
+                currentField: defaultSearchParams.sortField,
+                isAscending: defaultSearchParams.isAscending
             };
         }
 
-        function prepareFilterConfig(onFilterChange) {
-            var fields = [
-                {
-                    id: 'name',
-                    title:  'Name',
-                    placeholder: 'Filter by Name...',
-                    filterType: 'text'
-                },
-                {
-                    id: 'uid',
-                    title:  'Uid',
-                    placeholder: 'Filter by Uid...',
-                    filterType: 'text'
-                },
-                {
-                    id: 'group',
-                    title:  'Group',
-                    placeholder: 'Filter by Group...',
-                    filterType: 'text'
-                }
-            ];
-
+        function prepareFilterConfig(onFilterChange, defaultSearchParams) {
             return {
-                fields: fields,
-                appliedFilters: [],
+                fields: filterFields,
+                appliedFilters: defaultSearchParams.filters,
                 onFilterChange: onFilterChange
             }
+        }
+
+        function convertSearchParamsToCriteriaParams(searchParams) {
+            var criteriaParams = {};
+
+            angular.forEach(searchParams.filters, function(filter) {
+                if (criteriaParams[filter.id] == undefined) {
+                    criteriaParams[filter.id] = [];
+                }
+
+                criteriaParams[filter.id].push(filter.value);
+            });
+
+            criteriaParams.orderBy =  searchParams.sortField.id + (searchParams.isAscending ? '_ASC' : '_DESC');
+            criteriaParams.limit = searchParams.limit;
+            criteriaParams.offset = searchParams.offset;
+
+            return criteriaParams;
+        }
+
+        function convertCriteriaParamsToSearchParams(criteriaParams) {
+            var searchParams = {
+                filters: [],
+                limit: criteriaParams.limit,
+                offset: criteriaParams.offset
+            };
+
+            angular.forEach(filterFields, function(filter) {
+                if (criteriaParams[filter.id] != undefined) {
+                    angular.forEach(criteriaParams[filter.id], function(filterValue) {
+                        searchParams.filters.push({id: filter.id, title: filter.title, value: filterValue});
+                    });
+                }
+            });
+
+            // sort
+            var sortName;
+            var orderBy = criteriaParams.orderBy;
+
+            if (orderBy.endsWith('_ASC')) {
+                searchParams.isAscending = true;
+                sortName = searchParams.sortField = orderBy.substr(0, orderBy.length - 4);
+                searchParams.sortField = $filter('getByProperty')('id', sortName,  sortFields);
+            }
+
+            if (orderBy.endsWith('_DESC')) {
+                searchParams.isAscending = false;
+                sortName = searchParams.sortField = orderBy.substr(0, orderBy.length - 5);
+                searchParams.sortField = $filter('getByProperty')('id', sortName,  sortFields);
+            }
+
+            return searchParams;
         }
 
         function getSearchOffset(currentPage, limit) {

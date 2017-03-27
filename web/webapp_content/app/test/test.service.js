@@ -30,7 +30,6 @@
 
         return {
             search: search,
-            defaultSearch: defaultSearch,
             asyncSelectSearch: asyncSelectSearch,
             getById: getById,
             save: save,
@@ -39,7 +38,7 @@
             isUserAlertsSubscriber: isUserAlertsSubscriber,
             subscribeAlerts: subscribeAlerts,
             unsubscribeAlerts: unsubscribeAlerts,
-            getDefaultSearchParams: getDefaultSearchParams
+            getSearchCriteria: getSearchCriteria
         };
 
         function search(searchParams){
@@ -53,8 +52,10 @@
             });
         }
 
-        function defaultSearch() {
-            return search(getDefaultSearchParams());
+        function getSearchCriteria() {
+            return $http.get(API_TEST_URL + '/search-criteria').then(function(response) {
+                return response.data;
+            });
         }
 
         function getDefaultSearchParams() {

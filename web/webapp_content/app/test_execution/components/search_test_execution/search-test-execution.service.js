@@ -5,143 +5,169 @@
         .module('org.perfrepo.testExecution.search')
         .service('testExecutionSearchService', TestExecutionModalService);
 
-    function TestExecutionModalService() {
-        var vm = this;
-        vm.filterParamsMapping = getFilterParamsMapping();
+    function TestExecutionModalService($filter) {
+        var filterFields = [
+            {
+                id: 'namesFilter',
+                title:  'Name',
+                placeholder: 'Filter by Name...',
+                filterType: 'text'
+            },
+            {
+                id: 'tagQueriesFilter',
+                title:  'Tag query',
+                placeholder: 'Filter by Tag query...',
+                filterType: 'text'
+            },
+            {
+                id: 'parameterQueriesFilter',
+                title:  'Parameter query',
+                placeholder: 'Filter by Parameter query...',
+                filterType: 'text'
+            },
+            {
+                id: 'idsFilter',
+                title:  'ID',
+                placeholder: 'Filter by ID...',
+                filterType: 'number'
+            },
+            {
+                id: 'startedAfterFilter',
+                title:  'Started after',
+                placeholder: 'Filter by Started after...',
+                filterType: 'datetime-local'
+            },
+            {
+                id: 'startedBeforeFilter',
+                title:  'Started before',
+                placeholder: 'Filter by Started before...',
+                filterType: 'datetime-local'
+            },
+            {
+                id: 'testNamesFilter',
+                title:  'Test name',
+                placeholder: 'Filter by Test name...',
+                filterType: 'text'
+            },
+            {
+                id: 'testUIDsFilter',
+                title:  'Test UID',
+                placeholder: 'Filter by Test UID...',
+                filterType: 'text'
+            },
+            {
+                id: 'groupsFilter',
+                title:  'Test group',
+                placeholder: 'Filter by Test group...',
+                filterType: 'text'
+            }
+        ];
+
+        var sortFields = [
+            {
+                id: 'NAME',
+                title:  'Test name',
+                sortType: 'alpha'
+            },
+            {
+                id: 'UID',
+                title: 'Test UID',
+                sortType: 'alpha'
+            },
+            {
+                id: 'DATE',
+                title: 'Started date',
+                sortType: 'numeric'
+            }
+        ];
 
         return {
             getToolbarConfig: getToolbarConfig,
             getSearchOffset: getSearchOffset,
-            convertFiltersToCriteriaParams: convertFiltersToCriteriaParams
+            convertCriteriaParamsToSearchParams: convertCriteriaParamsToSearchParams,
+            convertSearchParamsToCriteriaParams: convertSearchParamsToCriteriaParams
         };
 
-        function getToolbarConfig(onFilterChange, onSortChange) {
+        function getToolbarConfig(onFilterChange, onSortChange, defaultSearchParams) {
             return {
-                filterConfig: prepareFilterConfig(onFilterChange),
-                sortConfig: prepareSortConfig(onSortChange)
+                filterConfig: prepareFilterConfig(onFilterChange, defaultSearchParams),
+                sortConfig: prepareSortConfig(onSortChange, defaultSearchParams)
             };
         }
 
-        function prepareSortConfig(onSortChange) {
-            var sortFields = [
-                {
-                    id: 'name',
-                    title:  'Test name',
-                    sortType: 'alpha'
-                },
-                {
-                    id: 'uid',
-                    title: 'Test UID',
-                    sortType: 'alpha'
-                },
-                {
-                    id: 'date',
-                    title: 'Started date',
-                    sortType: 'numeric'
-                }
-            ];
-
+        function prepareSortConfig(onSortChange, defaultSearchParams) {
             return  {
                 fields: sortFields,
                 onSortChange: onSortChange,
-                currentField: sortFields[0],
-                isAscending: true
+                currentField: defaultSearchParams.sortField,
+                isAscending: defaultSearchParams.isAscending
             };
         }
 
-        function prepareFilterConfig(onFilterChange) {
-            var fields = [
-                {
-                    id: 'name',
-                    title:  'Name',
-                    placeholder: 'Filter by Name...',
-                    filterType: 'text'
-                },
-                {
-                    id: 'tagQuery',
-                    title:  'Tag query',
-                    placeholder: 'Filter by Tag query...',
-                    filterType: 'text'
-                },
-                {
-                    id: 'parameterQuery',
-                    title:  'Parameter query',
-                    placeholder: 'Filter by Parameter query...',
-                    filterType: 'text'
-                },
-                {
-                    id: 'id',
-                    title:  'ID',
-                    placeholder: 'Filter by ID...',
-                    filterType: 'number'
-                },
-                {
-                    id: 'startedAfter',
-                    title:  'Started after',
-                    placeholder: 'Filter by Started after...',
-                    filterType: 'datetime-local'
-                },
-                {
-                    id: 'startedBefore',
-                    title:  'Started before',
-                    placeholder: 'Filter by Started before...',
-                    filterType: 'datetime-local'
-                },
-                {
-                    id: 'testName',
-                    title:  'Test name',
-                    placeholder: 'Filter by Test name...',
-                    filterType: 'text'
-                },
-                {
-                    id: 'testUID',
-                    title:  'Test UID',
-                    placeholder: 'Filter by Test UID...',
-                    filterType: 'text'
-                },
-                {
-                    id: 'group',
-                    title:  'Test group',
-                    placeholder: 'Filter by Test group...',
-                    filterType: 'text'
-                }
-            ];
-
+        function prepareFilterConfig(onFilterChange, defaultSearchParams) {
             return {
-                fields: fields,
-                appliedFilters: [],
+                fields: filterFields,
+                appliedFilters: defaultSearchParams.filters,
                 onFilterChange: onFilterChange
             }
         }
 
-        function getFilterParamsMapping() {
-            return {
-                id: 'idsFilter',
-                name: 'namesFilter',
-                testName: 'testNamesFilter',
-                testUID: 'testUIDsFilter',
-                group: 'groupsFilter',
-                tagQuery: 'tagQueriesFilter',
-                parameterQuery: 'parameterQueriesFilter',
-                startedAfter: 'startedAfterFilter',
-                startedBefore: 'startedBeforeFilter'
-            }
-        }
+        function convertSearchParamsToCriteriaParams(searchParams) {
+            var criteriaParams = {};
 
-        function convertFiltersToCriteriaParams(filters) {
-            var searchParams = {};
-            angular.forEach(vm.filterParamsMapping, function(filterName) {
-                searchParams[filterName] = [];
-            });
+            angular.forEach(searchParams.filters, function(filter) {
+                if (criteriaParams[filter.id] == undefined) {
+                    criteriaParams[filter.id] = [];
+                }
 
-            angular.forEach(filters, function(filter) {
-                var filterName = vm.filterParamsMapping[filter.id];
-                if (filterName == 'startedAfterFilter' || filterName == 'startedBeforeFilter') {
-                    searchParams[filterName].push(moment(filter.value).format());
+                if (filter.id == 'startedAfterFilter' || filter.id == 'startedBeforeFilter') {
+                    criteriaParams[filter.id].push(moment(filter.value).format());
                 } else {
-                    searchParams[filterName].push(filter.value);
+                    criteriaParams[filter.id].push(filter.value);
                 }
             });
+
+            criteriaParams.orderBy =  searchParams.sortField.id + (searchParams.isAscending ? '_ASC' : '_DESC');
+            criteriaParams.limit = searchParams.limit;
+            criteriaParams.offset = searchParams.offset;
+
+            return criteriaParams;
+        }
+
+        function convertCriteriaParamsToSearchParams(criteriaParams) {
+            var searchParams = {
+                filters: [],
+                limit: criteriaParams.limit,
+                offset: criteriaParams.offset
+            };
+
+            angular.forEach(filterFields, function(filter) {
+                if (criteriaParams[filter.id] != undefined) {
+                    angular.forEach(criteriaParams[filter.id], function(filterValue) {
+                        var value = filterValue;
+                        if (filter.id == 'startedAfterFilter' || filter.id == 'startedBeforeFilter') {
+                            value = moment(filterValue).format('MMM DD, YYYY HH:mm');
+                        }
+                        searchParams.filters.push({id: filter.id, title: filter.title, value: value});
+                    });
+                }
+            });
+
+            // sort
+            var sortName;
+            var orderBy = criteriaParams.orderBy;
+
+            if (orderBy.endsWith('_ASC')) {
+                searchParams.isAscending = true;
+                sortName = searchParams.sortField = orderBy.substr(0, orderBy.length - 4);
+                searchParams.sortField = $filter('getByProperty')('id', sortName,  sortFields);
+            }
+
+            if (orderBy.endsWith('_DESC')) {
+                searchParams.isAscending = false;
+                sortName = searchParams.sortField = orderBy.substr(0, orderBy.length - 5);
+                searchParams.sortField = $filter('getByProperty')('id', sortName,  sortFields);
+            }
 
             return searchParams;
         }

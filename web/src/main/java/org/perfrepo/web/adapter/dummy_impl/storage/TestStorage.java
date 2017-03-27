@@ -6,6 +6,7 @@ import org.perfrepo.dto.metric.MetricDto;
 import org.perfrepo.dto.test.TestSearchCriteria;
 import org.perfrepo.dto.test.TestDto;
 import org.perfrepo.dto.util.SearchResult;
+import org.perfrepo.enums.OrderBy;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -22,6 +23,17 @@ public class TestStorage {
 
     private Long key = 1L;
     private List<TestDto> data = new ArrayList<>();
+    private TestSearchCriteria testSearchCriteria;
+
+    public TestStorage() {
+        testSearchCriteria = new TestSearchCriteria();
+        testSearchCriteria.setLimit(20);
+        testSearchCriteria.setOrderBy(OrderBy.NAME_ASC);
+    }
+
+    public TestSearchCriteria getSearchCriteria() {
+        return testSearchCriteria;
+    }
 
     public TestDto getById(Long id) {
         Optional<TestDto> test = data.stream().filter(dto -> dto.getId().equals(id)).findFirst();
@@ -92,6 +104,7 @@ public class TestStorage {
     }
 
     public SearchResult<TestDto> search(TestSearchCriteria searchParams) {
+        testSearchCriteria = searchParams;
         Comparator<TestDto> sortComparator;
 
         switch (searchParams.getOrderBy()) {
@@ -122,18 +135,18 @@ public class TestStorage {
                         || StringUtils.containsIgnoreCase(test.getName(), searchParams.getGeneralSearch());
 
         Predicate<TestDto> nameFilterPredicate =
-                test -> searchParams.getNameFilters() == null
-                        || searchParams.getNameFilters()
+                test -> searchParams.getNamesFilter() == null
+                        || searchParams.getNamesFilter()
                                 .stream().allMatch(nameFilter -> StringUtils.containsIgnoreCase(test.getName(), nameFilter));
 
         Predicate<TestDto> uidFilterPredicate =
-                test -> searchParams.getUidFilters() == null
-                        || searchParams.getUidFilters()
+                test -> searchParams.getUIDsFilter() == null
+                        || searchParams.getUIDsFilter()
                                 .stream().allMatch(uidFilter -> StringUtils.containsIgnoreCase(test.getUid(), uidFilter));
 
         Predicate<TestDto> groupFilterPredicate =
-                test -> searchParams.getGroupFilters() == null
-                        || searchParams.getGroupFilters()
+                test -> searchParams.getGroupsFilter() == null
+                        || searchParams.getGroupsFilter()
                         .stream().allMatch(groupFilter -> StringUtils.containsIgnoreCase(test.getGroup().getName(), groupFilter));
 
         Supplier<Stream<TestDto>> testStream = () ->  data.stream()

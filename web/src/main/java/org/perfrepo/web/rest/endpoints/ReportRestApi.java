@@ -66,6 +66,14 @@ public class ReportRestApi {
               .entity(result.getData()).build();
    }
 
+   @GET
+   @Path("/search-criteria")
+   public Response getSearchCriteria() {
+      ReportSearchCriteria searchParams = reportAdapter.getSearchCriteria();
+
+      return Response.ok(searchParams).build();
+   }
+
    @DELETE
    @Path("/{id}")
    public Response delete(@PathParam("id") Long reportId) {

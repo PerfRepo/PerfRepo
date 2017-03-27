@@ -85,7 +85,7 @@
         }
 
         function showTestExecutionsAction(action, item) {
-            $state.go('app.testExecutionOverview', {initialFilters: [{id: 'testUID', value: item.uid, title: 'Test UID'}]});
+            $state.go('app.testExecutionOverview', {uidFilter: item.uid});
         }
 
         function editTestAction(action, item) {

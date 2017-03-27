@@ -5,8 +5,8 @@
         .module('org.perfrepo.testExecution.search')
         .component('searchTestExecution', {
             bindings: {
-                initialSearchResult: '=',
-                initialFilters: '='
+                initialSearchResult: '<',
+                initialSearchCriteria: '<'
             },
             controller: SearchTestExecutionController,
             controllerAs: 'vm',
@@ -15,17 +15,15 @@
 
     function SearchTestExecutionController(testExecutionService, testExecutionSearchService, $rootScope) {
         var vm = this;
-        vm.pagination = {};
-        vm.currentPage = 1;
-        vm.searchParams = testExecutionService.getDefaultSearchParams();
+        vm.searchParams = testExecutionSearchService.convertCriteriaParamsToSearchParams(vm.initialSearchCriteria);
 
-        vm.toolbarConfig = testExecutionSearchService.getToolbarConfig(filterChanged, sortChanged);
+        vm.toolbarConfig = testExecutionSearchService.getToolbarConfig(filterChanged, sortChanged, vm.searchParams);
 
         vm.paginationChanged = paginationChanged;
         vm.updateSearch = updateSearch;
 
         // apply initial search
-        applySearchInitialResult(vm.initialSearchResult, vm.initialFilters);
+        applySearchResult(vm.initialSearchResult);
 
         function paginationChanged() {
             vm.searchParams.offset = testExecutionSearchService.getSearchOffset(vm.currentPage, vm.searchParams.limit);
@@ -34,42 +32,35 @@
 
         function filterChanged(filters) {
             angular.forEach(filters, function (filter) {
-                if (filter.id == 'startedAfter' || filter.id == 'startedBefore') {
-                    // TODO
+                if (filter.id == 'startedAfterFilter' || filter.id == 'startedBeforeFilter') {
                     filter.value = moment(filter.value).format('MMM DD, YYYY HH:mm');
                 }
             });
 
-            var searchFilterParams = testExecutionSearchService.convertFiltersToCriteriaParams(filters);
-            angular.extend(vm.searchParams, searchFilterParams);
-
+            vm.searchParams.filters = filters;
             updateSearch();
         }
 
-        function sortChanged(sortFiled, isAscending) {
-            vm.searchParams.orderBy = sortFiled.id.toUpperCase() + (isAscending ? '_ASC' : '_DESC');
+        function sortChanged(sortField, isAscending) {
+            vm.searchParams.sortField = sortField;
+            vm.searchParams.isAscending = isAscending;
             updateSearch();
         }
 
         function updateSearch() {
             $rootScope.ngProgress.start();
+            var criteriaParams = testExecutionSearchService.convertSearchParamsToCriteriaParams(vm.searchParams);
 
-            testExecutionService.search(vm.searchParams).then(function(searchResult) {
+            testExecutionService.search(criteriaParams).then(function(searchResult) {
                 applySearchResult(searchResult);
                 $rootScope.ngProgress.complete();
             });
         }
 
-        function applySearchInitialResult(searchResult, initialFilters) {
-            applySearchResult(searchResult);
-            vm.toolbarConfig.filterConfig.appliedFilters = initialFilters;
-        }
-
         function applySearchResult(searchResult) {
             vm.items = searchResult.data;
             vm.toolbarConfig.filterConfig.resultsCount = searchResult.totalCount;
-            vm.pagination.pageCount = searchResult.pageCount;
-            vm.pagination.currentPage = searchResult.currentPage;
+            vm.currentPage = searchResult.currentPage;
         }
     }
 })();

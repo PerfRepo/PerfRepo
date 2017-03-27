@@ -112,6 +112,13 @@ public interface TestAdapter {
     SearchResult<TestDto> searchTests(TestSearchCriteria searchParams);
 
     /**
+     * Return saved test search params.
+     *
+     * @return Search criteria params.
+     */
+    TestSearchCriteria getSearchCriteria();
+
+    /**
      * Return true if logged user subscribes the test alerts.
      *
      * @param testId The test identifier.

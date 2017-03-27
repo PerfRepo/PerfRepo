@@ -6,85 +6,123 @@
         .service('reportSearchService', ReportSearchService);
 
     function ReportSearchService(wizardService, $filter) {
-        var vm = this;
-        vm.filterParamsMapping = getFilterParamsMapping();
+        var filterFields = [
+            {
+                id: 'namesFilter',
+                title:  'Name',
+                placeholder: 'Filter by Name...',
+                filterType: 'text'
+            },
+            {
+                id: 'typesFilter',
+                title:  'Type',
+                placeholder: 'Filter by Type...',
+                filterType: 'select',
+                filterValues: wizardService.getReportTypes().map(function(type) {return type.name;})
+            }
+        ];
+
+        var sortFields = [
+            {
+                id: 'NAME',
+                title:  'Name',
+                sortType: 'alpha'
+            },
+            {
+                id: 'REPORT_TYPE',
+                title: 'Type',
+                sortType: 'alpha'
+            }
+        ];
 
         return {
             getToolbarConfig: getToolbarConfig,
             getSearchOffset: getSearchOffset,
-            convertFiltersToCriteriaParams: convertFiltersToCriteriaParams
+            convertCriteriaParamsToSearchParams: convertCriteriaParamsToSearchParams,
+            convertSearchParamsToCriteriaParams: convertSearchParamsToCriteriaParams
         };
 
-        function getToolbarConfig(onFilterChange, onSortChange) {
+        function getToolbarConfig(onFilterChange, onSortChange, defaultSearchParams) {
             return {
-                filterConfig: prepareFilterConfig(onFilterChange),
-                sortConfig: prepareSortConfig(onSortChange)
+                filterConfig: prepareFilterConfig(onFilterChange, defaultSearchParams),
+                sortConfig: prepareSortConfig(onSortChange, defaultSearchParams)
             };
         }
 
-        function prepareSortConfig(onSortChange) {
-            var sortFields = [
-                {
-                    id: 'name',
-                    title:  'Name',
-                    sortType: 'alpha'
-                }
-            ];
-
+        function prepareSortConfig(onSortChange, defaultSearchParams) {
             return  {
                 fields: sortFields,
                 onSortChange: onSortChange,
-                currentField: sortFields[0],
-                isAscending: true
+                currentField: defaultSearchParams.sortField,
+                isAscending: defaultSearchParams.isAscending
             };
         }
 
-        function prepareFilterConfig(onFilterChange) {
-            var fields = [
-                {
-                    id: 'name',
-                    title:  'Name',
-                    placeholder: 'Filter by Name...',
-                    filterType: 'text'
-                },
-                {
-                    id: 'type',
-                    title:  'Type',
-                    placeholder: 'Filter by Type...',
-                    filterType: 'select',
-                    filterValues: wizardService.getReportTypes().map(function(type) {return type.name;})
-                }
-            ];
-
+        function prepareFilterConfig(onFilterChange, defaultSearchParams) {
             return {
-                fields: fields,
-                appliedFilters: [],
+                fields: filterFields,
+                appliedFilters: defaultSearchParams.filters,
                 onFilterChange: onFilterChange
             }
         }
 
-        function getFilterParamsMapping() {
-            return {
-                name: 'namesFilter',
-                type: 'typesFilter'
-            }
-        }
+        function convertSearchParamsToCriteriaParams(searchParams) {
+            var criteriaParams = {};
 
-        function convertFiltersToCriteriaParams(filters) {
-            var searchParams = {};
-            angular.forEach(vm.filterParamsMapping, function(filterName) {
-                searchParams[filterName] = [];
-            });
+            angular.forEach(searchParams.filters, function(filter) {
+                if (criteriaParams[filter.id] == undefined) {
+                    criteriaParams[filter.id] = [];
+                }
 
-            angular.forEach(filters, function(filter) {
-                var filterName = vm.filterParamsMapping[filter.id];
-                if (filter.id == 'type') {
-                    var type = $filter('getByProperty')('name', filter.value,  wizardService.getReportTypes());
-                    searchParams[filterName].push(type.type);
+                if (filter.id == 'typesFilter') {
+                    var reportType = $filter('getByProperty')('name', filter.value,  wizardService.getReportTypes());
+                    criteriaParams[filter.id].push(reportType.type);
                 } else {
-                    searchParams[filterName].push(filter.value);
+                    criteriaParams[filter.id].push(filter.value);
                 }
             });
+
+            criteriaParams.orderBy =  searchParams.sortField.id + (searchParams.isAscending ? '_ASC' : '_DESC');
+            criteriaParams.limit = searchParams.limit;
+            criteriaParams.offset = searchParams.offset;
+
+            return criteriaParams;
+        }
+
+        function convertCriteriaParamsToSearchParams(criteriaParams) {
+            var searchParams = {
+                filters: [],
+                limit: criteriaParams.limit,
+                offset: criteriaParams.offset
+            };
+
+            angular.forEach(filterFields, function(filter) {
+                if (criteriaParams[filter.id] != undefined) {
+                    angular.forEach(criteriaParams[filter.id], function(filterValue) {
+                        var value = filterValue;
+                        if (filter.id == 'typesFilter') {
+                            value = $filter('getByProperty')('type', filterValue,  wizardService.getReportTypes()).name;
+                        }
+                        searchParams.filters.push({id: filter.id, title: filter.title, value: value});
+                    });
+                }
+            });
+
+            // sort
+            var sortName;
+            var orderBy = criteriaParams.orderBy;
+
+            if (orderBy.endsWith('_ASC')) {
+                searchParams.isAscending = true;
+                sortName = searchParams.sortField = orderBy.substr(0, orderBy.length - 4);
+                searchParams.sortField = $filter('getByProperty')('id', sortName,  sortFields);
+            }
+
+            if (orderBy.endsWith('_DESC')) {
+                searchParams.isAscending = false;
+                sortName = searchParams.sortField = orderBy.substr(0, orderBy.length - 5);
+                searchParams.sortField = $filter('getByProperty')('id', sortName,  sortFields);
+            }
 
             return searchParams;
         }

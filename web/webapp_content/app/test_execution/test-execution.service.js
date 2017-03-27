@@ -30,18 +30,18 @@
 
         return {
             search: search,
-            defaultSearch: defaultSearch,
             getById: getById,
             save: save,
             update: update,
             remove: remove,
-            getDefaultSearchParams: getDefaultSearchParams,
             searchLastForTest: searchLastForTest,
             updateParameters: updateParameters,
             uploadAttachment: uploadAttachment,
             downloadAttachmentLink: downloadAttachmentLink,
             addExecutionValues: addExecutionValues,
-            setExecutionValues: setExecutionValues
+            setExecutionValues: setExecutionValues,
+            getSearchCriteria: getSearchCriteria,
+            searchParamsForTestUID: searchParamsForTestUID
         };
 
         function search(searchParams) {
@@ -55,34 +55,24 @@
             });
         }
 
-        function searchLastForTest(testUID) {
-             var searchParams = {
-                 limit: 3,
-                 offset: 0,
-                 orderBy: 'DATE_DESC',
-                 testUIDsFilter: [testUID]
-             };
-
-             return search(searchParams);
+        function getSearchCriteria() {
+            return $http.get(API_TEST_EXECUTION_URL + '/search-criteria').then(function(response) {
+                return response.data;
+            });
         }
 
-        function defaultSearch(defaultFilters) {
-            var defaultSearchParams =  getDefaultSearchParams();
-
-            if (defaultFilters) {
-                var filters = testExecutionSearchService.convertFiltersToCriteriaParams(defaultFilters);
-                angular.extend(defaultSearchParams, filters);
-            }
-
-            return search(defaultSearchParams);
-        }
-
-        function getDefaultSearchParams() {
+        function searchParamsForTestUID(testUID, count) {
             return {
-                limit: 10,
+                limit: count,
                 offset: 0,
-                orderBy: 'NAME_ASC'
-            };
+                orderBy: 'DATE_DESC',
+                testUIDsFilter: [testUID]
+            }
+        }
+
+        function searchLastForTest(testUID) {
+            console.log("LAST 333333");
+             return search(searchParamsForTestUID(testUID, 3));
         }
 
         function getById(id) {

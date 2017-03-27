@@ -7,6 +7,7 @@ import org.perfrepo.dto.report.ReportDto;
 import org.perfrepo.dto.report.ReportSearchCriteria;
 import org.perfrepo.dto.report.table_comparison.TableComparisonReportDto;
 import org.perfrepo.dto.util.SearchResult;
+import org.perfrepo.enums.OrderBy;
 import org.perfrepo.enums.report.ReportType;
 
 import java.util.ArrayList;
@@ -27,6 +28,13 @@ public class ReportStorage {
 
     private Long key = 1L;
     private List<ReportDto> data = new ArrayList<>();
+    private ReportSearchCriteria reportSearchCriteria;
+
+    public ReportStorage() {
+        reportSearchCriteria = new ReportSearchCriteria();
+        reportSearchCriteria.setLimit(20);
+        reportSearchCriteria.setOrderBy(OrderBy.NAME_ASC);
+    }
 
     public ReportDto getById(Long id) {
         Optional<ReportDto> report = data.stream().filter(dto -> dto.getId().equals(id)).findFirst();
@@ -42,6 +50,10 @@ public class ReportStorage {
         }
         data.add(dto);
         return dto;
+    }
+
+    public ReportSearchCriteria getSearchCriteria() {
+        return reportSearchCriteria;
     }
 
     public ReportDto update(ReportDto dto) {
@@ -69,6 +81,7 @@ public class ReportStorage {
     }
 
     public SearchResult<ReportDto> search(ReportSearchCriteria searchParams) {
+        reportSearchCriteria = searchParams;
         Comparator<ReportDto> sortComparator;
 
         switch (searchParams.getOrderBy()) {
@@ -78,11 +91,11 @@ public class ReportStorage {
             case NAME_DESC:
                 sortComparator = (report1, report2) -> report2.getName().compareToIgnoreCase(report1.getName());
                 break;
-            case UID_ASC:
-                sortComparator = (report1, report2) -> report1.getId().compareTo(report2.getId());
+            case REPORT_TYPE_ASC:
+                sortComparator = (report1, report2) -> report1.getTypeName().compareTo(report2.getTypeName());
                 break;
-            case UID_DESC:
-                sortComparator = (report1, report2) -> report2.getId().compareTo(report1.getId());
+            case REPORT_TYPE_DESC:
+                sortComparator = (report1, report2) -> report2.getTypeName().compareTo(report1.getTypeName());
                 break;
             default:
                 sortComparator = (report1, report2) -> report1.getName().compareToIgnoreCase(report2.getName());

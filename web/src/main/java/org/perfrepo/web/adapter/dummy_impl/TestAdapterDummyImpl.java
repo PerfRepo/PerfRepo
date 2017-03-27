@@ -5,6 +5,7 @@ import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.dto.test.TestDto;
 import org.perfrepo.dto.test.TestSearchCriteria;
 import org.perfrepo.dto.util.validation.ValidationErrors;
+import org.perfrepo.enums.OrderBy;
 import org.perfrepo.web.adapter.exceptions.AdapterException;
 import org.perfrepo.web.adapter.exceptions.BadRequestException;
 import org.perfrepo.web.adapter.exceptions.NotFoundException;
@@ -119,6 +120,11 @@ public class TestAdapterDummyImpl implements TestAdapter {
         }
 
         return storage.test().search(searchParams);
+    }
+
+    @Override
+    public TestSearchCriteria getSearchCriteria() {
+        return storage.test().getSearchCriteria();
     }
 
     @Override

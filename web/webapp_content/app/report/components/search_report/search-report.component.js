@@ -5,7 +5,8 @@
         .module('org.perfrepo.report.search')
         .component('searchReport', {
             bindings: {
-                initialSearchResult: '='
+                initialSearchResult: '<',
+                initialSearchCriteria: '<'
             },
             controller: SearchReportController,
             controllerAs: 'vm',
@@ -14,17 +15,15 @@
 
     function SearchReportController(reportService, reportSearchService, $rootScope) {
         var vm = this;
-        vm.pagination = {};
-        vm.currentPage = 1;
-        vm.searchParams = reportService.getDefaultSearchParams();
+        vm.searchParams = reportSearchService.convertCriteriaParamsToSearchParams(vm.initialSearchCriteria);
 
-        vm.toolbarConfig = reportSearchService.getToolbarConfig(filterChanged, sortChanged);
+        vm.toolbarConfig = reportSearchService.getToolbarConfig(filterChanged, sortChanged, vm.searchParams);
 
         vm.paginationChanged = paginationChanged;
         vm.updateSearch = updateSearch;
 
         // apply initial search
-        applySearchInitialResult(vm.initialSearchResult);
+        applySearchResult(vm.initialSearchResult);
 
         function paginationChanged() {
             vm.searchParams.offset = reportSearchService.getSearchOffset(vm.currentPage, vm.searchParams.limit);
@@ -32,35 +31,30 @@
         }
 
         function filterChanged(filters) {
-            var searchFilterParams = reportSearchService.convertFiltersToCriteriaParams(filters);
-            angular.extend(vm.searchParams, searchFilterParams);
+            vm.searchParams.filters = filters;
             updateSearch();
         }
 
-        function sortChanged(sortFiled, isAscending) {
-            vm.searchParams.orderBy = sortFiled.id.toUpperCase() + (isAscending ? '_ASC' : '_DESC');
+        function sortChanged(sortField, isAscending) {
+            vm.searchParams.sortField = sortField;
+            vm.searchParams.isAscending = isAscending;
             updateSearch();
         }
 
         function updateSearch() {
             $rootScope.ngProgress.start();
+            var criteriaParams = reportSearchService.convertSearchParamsToCriteriaParams(vm.searchParams);
 
-            reportService.search(vm.searchParams).then(function(searchResult) {
+            reportService.search(criteriaParams).then(function(searchResult) {
                 applySearchResult(searchResult);
                 $rootScope.ngProgress.complete();
             });
         }
 
-        function applySearchInitialResult(searchResult, initialFilters) {
-            applySearchResult(searchResult);
-            vm.toolbarConfig.filterConfig.appliedFilters = initialFilters;
-        }
-
         function applySearchResult(searchResult) {
             vm.items = searchResult.data;
             vm.toolbarConfig.filterConfig.resultsCount = searchResult.totalCount;
-            vm.pagination.pageCount = searchResult.pageCount;
-            vm.pagination.currentPage = searchResult.currentPage;
+            vm.currentPage = searchResult.currentPage;
         }
     }
 })();

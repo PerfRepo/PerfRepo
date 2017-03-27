@@ -5,12 +5,14 @@ import org.perfrepo.dto.test_execution.*;
 import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.dto.util.validation.ValidationErrors;
 import org.perfrepo.enums.MeasuredValueType;
+import org.perfrepo.enums.OrderBy;
 import org.perfrepo.web.adapter.TestExecutionAdapter;
 import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
 import org.perfrepo.web.adapter.exceptions.AdapterException;
 import org.perfrepo.web.adapter.exceptions.BadRequestException;
 import org.perfrepo.web.adapter.exceptions.NotFoundException;
 import org.perfrepo.web.adapter.exceptions.ValidationException;
+import org.perfrepo.web.model.TestExecution;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -118,6 +120,11 @@ public class TestExecutionAdapterDummyImpl implements TestExecutionAdapter {
         }
 
         return storage.testExecution().search(searchParams);
+    }
+
+    @Override
+    public TestExecutionSearchCriteria getSearchCriteria() {
+        return storage.testExecution().getSearchCriteria();
     }
 
     @Override

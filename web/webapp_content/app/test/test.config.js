@@ -28,8 +28,11 @@
                 controller: 'TestOverviewController',
                 controllerAs: 'vm',
                 resolve: {
-                    _initialSearchResult: function(testService) {
-                        return testService.defaultSearch();
+                    _searchCriteria: function(testService) {
+                        return testService.getSearchCriteria();
+                    },
+                    _initialSearchResult: function(testService, _searchCriteria) {
+                        return testService.search(_searchCriteria);
                     }
                 }
             });

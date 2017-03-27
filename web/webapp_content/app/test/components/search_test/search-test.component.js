@@ -5,7 +5,8 @@
         .module('org.perfrepo.test.search')
         .component('searchTest', {
             bindings: {
-                initialSearchResult: '='
+                initialSearchResult: '<',
+                initialSearchCriteria: '<'
             },
             controller: SearchTestController,
             controllerAs: 'vm',
@@ -15,11 +16,9 @@
     function SearchTestController(testService, testSearchService, $rootScope) {
         var vm = this;
 
-        vm.pagination = {};
-        vm.currentPage = 1;
-        vm.searchParams = testService.getDefaultSearchParams();
+        vm.searchParams = testSearchService.convertCriteriaParamsToSearchParams(vm.initialSearchCriteria);
 
-        vm.toolbarConfig = testSearchService.getToolbarConfig(filterChanged, sortChanged);
+        vm.toolbarConfig = testSearchService.getToolbarConfig(filterChanged, sortChanged, vm.searchParams);
 
         vm.paginationChanged = paginationChanged;
         vm.updateSearch = updateSearch;
@@ -33,31 +32,21 @@
         }
 
         function filterChanged(filters) {
-            vm.searchParams.nameFilters = [];
-            vm.searchParams.uidFilters = [];
-            vm.searchParams.groupFilters = [];
-
-            filters.forEach(function(filter) {
-                if(filter.id == 'name') {
-                    vm.searchParams.nameFilters.push(filter.value);
-                } else if(filter.id == 'uid') {
-                    vm.searchParams.uidFilters.push(filter.value);
-                } else if(filter.id == 'group') {
-                    vm.searchParams.groupFilters.push(filter.value);
-                }
-            });
+            vm.searchParams.filters = filters;
             updateSearch();
         }
 
-        function sortChanged(sortFiled, isAscending) {
-            vm.searchParams.orderBy = sortFiled.id.toUpperCase() + (isAscending ? "_ASC" : "_DESC");
+        function sortChanged(sortField, isAscending) {
+            vm.searchParams.sortField = sortField;
+            vm.searchParams.isAscending = isAscending;
             updateSearch();
         }
 
         function updateSearch() {
             $rootScope.ngProgress.start();
+            var criteriaParams = testSearchService.convertSearchParamsToCriteriaParams(vm.searchParams);
 
-            testService.search(vm.searchParams).then(function(searchResult) {
+            testService.search(criteriaParams).then(function(searchResult) {
                 applySearchResult(searchResult);
                 $rootScope.ngProgress.complete();
             });
@@ -66,8 +55,7 @@
         function applySearchResult(searchResult) {
             vm.items = searchResult.data;
             vm.toolbarConfig.filterConfig.resultsCount = searchResult.totalCount;
-            vm.pagination.pageCount = searchResult.pageCount;
-            vm.pagination.currentPage = searchResult.currentPage;
+            vm.currentPage = searchResult.currentPage;
         }
     }
 })();

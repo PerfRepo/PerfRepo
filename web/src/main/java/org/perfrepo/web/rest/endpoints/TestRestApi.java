@@ -60,6 +60,14 @@ public class TestRestApi {
    }
 
    @GET
+   @Path("/search-criteria")
+   public Response getSearchCriteria() {
+      TestSearchCriteria searchParams = testAdapter.getSearchCriteria();
+
+      return Response.ok(searchParams).build();
+   }
+
+   @GET
    @Path("/uid/{uid}")
    public Response getByUid(@PathParam("uid") String testUid) {
       TestDto test = testAdapter.getTest(testUid);

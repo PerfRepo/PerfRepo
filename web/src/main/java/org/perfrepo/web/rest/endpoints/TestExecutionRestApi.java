@@ -56,6 +56,14 @@ public class TestExecutionRestApi {
               .entity(result.getData()).build();
    }
 
+   @GET
+   @Path("/search-criteria")
+   public Response getSearchCriteria() {
+       TestExecutionSearchCriteria searchParams = testExecutionAdapter.getSearchCriteria();
+
+       return Response.ok(searchParams).build();
+   }
+
    @POST
    public Response create(TestExecutionDto testExecutionDto) {
       TestExecutionDto createdTestExecution = testExecutionAdapter.createTestExecution(testExecutionDto);

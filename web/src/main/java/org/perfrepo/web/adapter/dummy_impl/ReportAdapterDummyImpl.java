@@ -20,6 +20,7 @@ import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.dto.util.validation.ValidationErrors;
 import org.perfrepo.enums.AccessLevel;
 import org.perfrepo.enums.AccessType;
+import org.perfrepo.enums.OrderBy;
 import org.perfrepo.enums.report.ComparisonItemSelector;
 import org.perfrepo.web.adapter.ReportAdapter;
 import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
@@ -68,6 +69,11 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
     @Override
     public SearchResult<ReportDto> searchReports(ReportSearchCriteria searchParams) {
         return storage.report().search(searchParams);
+    }
+
+    @Override
+    public ReportSearchCriteria getSearchCriteria() {
+        return storage.report().getSearchCriteria();
     }
 
     @Override

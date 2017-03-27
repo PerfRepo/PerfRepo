@@ -29,10 +29,9 @@
 
         return {
             search: search,
-            defaultSearch: defaultSearch,
             getById: getById,
-            getDefaultSearchParams: getDefaultSearchParams,
             getDefaultPermissions: getDefaultPermissions,
+            getSearchCriteria: getSearchCriteria,
             create: create,
             remove: remove,
             update: update
@@ -49,16 +48,10 @@
             });
         }
 
-        function defaultSearch() {
-            return search(getDefaultSearchParams());
-        }
-
-        function getDefaultSearchParams() {
-            return {
-                limit: 10,
-                offset: 0,
-                orderBy: 'NAME_ASC'
-            };
+        function getSearchCriteria() {
+            return $http.get(API_REPORT_URL + '/search-criteria').then(function(response) {
+                return response.data;
+            });
         }
 
         function getDefaultPermissions() {

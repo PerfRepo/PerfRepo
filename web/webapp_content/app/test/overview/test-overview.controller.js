@@ -4,9 +4,10 @@
         .module('org.perfrepo.test.overview')
         .controller('TestOverviewController', TestOverviewController);
 
-    function TestOverviewController(_initialSearchResult, testModalService, $state, Page) {
+    function TestOverviewController(_initialSearchResult, _searchCriteria, testModalService, $state, Page) {
         var vm = this;
         vm.initialSearchResult = _initialSearchResult;
+        vm.initialSearchCriteria = _searchCriteria;
         vm.createTest = createTest;
         Page.setTitle("Tests search");
 

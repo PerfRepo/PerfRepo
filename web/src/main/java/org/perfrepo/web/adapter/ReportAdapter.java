@@ -84,6 +84,13 @@ public interface ReportAdapter {
     SearchResult<ReportDto> searchReports(ReportSearchCriteria searchParams);
 
     /**
+     * Return saved report search params.
+     *
+     * @return Search criteria params.
+     */
+    ReportSearchCriteria getSearchCriteria();
+
+    /**
      * Return default permissions for new report.
      *
      * @return List of access permissions.

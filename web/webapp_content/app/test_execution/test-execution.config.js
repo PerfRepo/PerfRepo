@@ -25,14 +25,18 @@
                 controller: 'TestExecutionOverviewController',
                 controllerAs: 'vm',
                 params: {
-                    initialFilters: null
+                    uidFilter: null
                 },
                 resolve: {
-                    _initialSearchResult: function(testExecutionService, $stateParams) {
-                        return testExecutionService.defaultSearch($stateParams.initialFilters);
+                    _searchCriteria: function(testExecutionService, $stateParams) {
+                        if ($stateParams.uidFilter) {
+                            return testExecutionService.searchParamsForTestUID($stateParams.uidFilter, 20);
+                        } else {
+                            return testExecutionService.getSearchCriteria();
+                        }
                     },
-                    _initialFilters: function($stateParams) {
-                        return $stateParams.initialFilters;
+                    _initialSearchResult: function(testExecutionService, _searchCriteria) {
+                        return testExecutionService.search(_searchCriteria);
                     }
                 }
             });
