@@ -91,7 +91,8 @@
         function getToolbarConfig(onFilterChange, onSortChange, defaultSearchParams) {
             return {
                 filterConfig: prepareFilterConfig(onFilterChange, defaultSearchParams),
-                sortConfig: prepareSortConfig(onSortChange, defaultSearchParams)
+                sortConfig: prepareSortConfig(onSortChange, defaultSearchParams),
+                actionsConfig: prepareActionsConfig()
             };
         }
 
@@ -110,6 +111,12 @@
                 appliedFilters: defaultSearchParams.filters,
                 onFilterChange: onFilterChange
             }
+        }
+        
+        function prepareActionsConfig() {
+            return {
+                actionsInclude: true
+            };
         }
 
         function convertSearchParamsToCriteriaParams(searchParams) {

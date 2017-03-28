@@ -5,7 +5,7 @@
         .module('org.perfrepo.testExecution')
         .service('testExecutionService', TestExecutionService);
 
-    function TestExecutionService($http, $resource, API_TEST_EXECUTION_URL, testExecutionSearchService) {
+    function TestExecutionService($http, $resource, API_TEST_EXECUTION_URL) {
 
         var testExecutionResource = $resource(API_TEST_EXECUTION_URL + '/:id',
             {

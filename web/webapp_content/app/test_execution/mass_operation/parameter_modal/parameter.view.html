@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <button ng-click="vm.cancel()" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 ng-if="vm.mode =='add'" class="modal-title">Add parameter</h3>
+    <h3 ng-if="vm.mode =='remove'" class="modal-title">Remove parameter</h3>
+</div>
+<div class="modal-body">
+    <form role="form" name="parameterFormMassOperation" ng-submit="vm.save(parameterFormMassOperation)" class="form-horizontal" novalidate>
+        <div class="form-group">
+            <label class="col-sm-2 control-label" for="parameterName">Name</label>
+            <div class="col-sm-10">
+                <input type="text" id="parameterName" name="name" ng-model="vm.parameter.name" class="form-control" pr-server-validation>
+            </div>
+        </div>
+
+        <div class="form-group" ng-if="vm.mode =='add'">
+            <label class="col-sm-2 control-label" for="parameterValue">Value</label>
+            <div class="col-sm-10">
+                <input type="text" id="parameterValue" name="value" ng-model="vm.parameter.value" class="form-control" pr-server-validation>
+            </div>
+        </div>
+
+        <div class="form-group" ng-if="vm.mode =='add'">
+            <div class="col-sm-offset-2 col-sm-10">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="favourite" ng-model="vm.parameter.favourite"  pr-server-validation> Favourite parameter
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group form-bottom">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="button" ng-click="vm.cancel()" class="btn btn-default">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>

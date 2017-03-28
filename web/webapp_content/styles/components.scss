@@ -107,6 +107,17 @@ div.toolbar-pf {
       padding-top: 10px;
       padding-bottom: 10px;
     }
+
+    div.list-view-pf-checkbox {
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+div.test-execution-list {
+  div.list-view-pf-additional-info-item div {
+    text-align: left;
   }
 }
 
@@ -188,6 +199,15 @@ div.panel-detail {
 // ################################################################################################## patternfly toolbar
 div.toolbar-pf {
   border-bottom: none;
+
+  div.toolbar-actions {
+    float: right;
+
+    label.select-executions {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
 }
 
 // ################################################################################################# bootstrap ui select

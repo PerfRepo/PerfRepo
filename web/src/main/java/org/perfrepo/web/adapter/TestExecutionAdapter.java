@@ -1,8 +1,9 @@
 package org.perfrepo.web.adapter;
 
 import org.perfrepo.dto.test_execution.*;
+import org.perfrepo.dto.test_execution.mass_operation.ParameterMassOperationDto;
+import org.perfrepo.dto.test_execution.mass_operation.TagMassOperationDto;
 import org.perfrepo.dto.util.SearchResult;
-import org.perfrepo.web.model.TestExecution;
 
 import java.util.List;
 import java.util.Set;
@@ -167,4 +168,39 @@ public interface TestExecutionAdapter {
      * @throws org.perfrepo.web.adapter.exceptions.AdapterException If anything bad happened.
      */
     AttachmentDto getTestExecutionAttachment(Long attachmentId, String hash);
+
+    /**
+     * Mass operation, add tags to test executions.
+     *
+     * @param massOperation Tags and test executions.
+     */
+    void addTags(TagMassOperationDto massOperation);
+
+    /**
+     * Mass operation, remove tags from test executions.
+     *
+     * @param massOperation Tags and test executions.
+     */
+    void removeTags(TagMassOperationDto massOperation);
+
+    /**
+     * Mass operation, add a parameter to test executions.
+     *
+     * @param massOperation Parameter and test executions.
+     */
+    void addParameter(ParameterMassOperationDto massOperation);
+
+    /**
+     * Mass operation, remove a parameter from test executions.
+     *
+     * @param massOperation Parameter and test executions.
+     */
+    void removeParameter(ParameterMassOperationDto massOperation);
+
+    /**
+     * Mass operation, remove test executions.
+     *
+     * @param testExecutionIds Test executions IDs.
+     */
+    void removeTestExecutions(Set<Long> testExecutionIds);
 }

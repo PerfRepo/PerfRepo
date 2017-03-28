@@ -10,12 +10,14 @@
             <a uib-tooltip="Name" ui-sref="app.testExecutionDetail({id: item.id})">{{item.name}}</a>
         </div>
         <div class="list-group-item-text">
-            <span uib-tooltip="Started">{{item.started | date}}</span>
+            <span uib-tooltip="Started">{{item.started | date: 'MMM d, y HH:mm:ss'}}</span>
         </div>
     </div>
     <div class="list-view-pf-additional-info">
-        <div uib-tooltip="Tags" class="list-view-pf-additional-info-item">
-            <span ng-repeat="tag in item.tags" class="label label-info tag-label">{{tag}}</span>
+        <div class="list-view-pf-additional-info-item">
+            <div uib-tooltip="Tags">
+                <span ng-repeat="tag in item.tags" class="label label-info tag-label">{{tag}}</span>
+            </div>
         </div>
     </div>
 </div>

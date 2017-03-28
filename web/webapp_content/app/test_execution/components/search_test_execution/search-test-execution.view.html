@@ -1,6 +1,42 @@
 <div class="row">
     <div class="col-md-12">
         <div pf-toolbar id="exampleToolbar" config="vm.toolbarConfig">
+            <actions>
+
+                <label class="select-executions">
+                    <input type="checkbox" ng-model="vm.selectedChecked" ng-click="vm.selectAll()"> {{(vm.selectedChecked) ? 'Deselect All' : 'Select All'}}
+                </label>
+
+                <button class="btn btn-default primary-action" type="button" ng-click="vm.addToComparison()" ng-disabled="vm.selectedItems == 0">
+                    <span class="pficon-add-circle-o"></span>
+                    Add to comparison
+                </button>
+
+                <span class="dropdown primary-action" uib-dropdown>
+                    <button class="btn btn-default dropdown-toggle" uib-dropdown-toggle type="button" ng-disabled="vm.selectedItems == 0">
+                        <span class="fa fa-cogs"></span>
+                        Mass operations
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li role="menuitem" ng-click="vm.addTags()">
+                            <a class="secondary-action">Add tags</a>
+                        </li>
+                        <li role="menuitem" ng-click="vm.removeTags()">
+                            <a class="secondary-action">Remove tags</a>
+                        </li>
+                        <li role="menuitem" ng-click="vm.addParameter()">
+                            <a class="secondary-action">Add parameter</a>
+                        </li>
+                        <li role="menuitem" ng-click="vm.removeParameter()">
+                            <a class="secondary-action">Remove parameter</a>
+                        </li>
+                        <li role="menuitem" ng-click="vm.deleteExecution()">
+                            <a class="secondary-action">Delete executions</a>
+                        </li>
+                    </ul>
+                </span>
+            </actions>
         </div>
     </div>
 

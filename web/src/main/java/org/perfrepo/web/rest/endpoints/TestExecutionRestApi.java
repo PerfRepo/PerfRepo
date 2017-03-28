@@ -4,6 +4,8 @@ import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.perfrepo.dto.test_execution.*;
+import org.perfrepo.dto.test_execution.mass_operation.ParameterMassOperationDto;
+import org.perfrepo.dto.test_execution.mass_operation.TagMassOperationDto;
 import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.web.adapter.TestExecutionAdapter;
 
@@ -182,5 +184,45 @@ public class TestExecutionRestApi {
 
         return Response.status(200)
                 .entity("uploadFile is called, Uploaded file name : ").build();
+    }
+
+    @POST
+    @Path("/mass-operation/tags-addition")
+    public Response addTagsMassOperation(TagMassOperationDto massOperation) {
+        testExecutionAdapter.addTags(massOperation);
+
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/mass-operation/tags-removal")
+    public Response removeTagsMassOperation(TagMassOperationDto massOperation) {
+        testExecutionAdapter.removeTags(massOperation);
+
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/mass-operation/parameter-addition")
+    public Response addParameterMassOperation(ParameterMassOperationDto massOperation) {
+        testExecutionAdapter.addParameter(massOperation);
+
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/mass-operation/parameter-removal")
+    public Response removeParameterMassOperation(ParameterMassOperationDto massOperation) {
+        testExecutionAdapter.removeParameter(massOperation);
+
+        return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/mass-operation/test-execution-removal")
+    public Response deleteTestExecutionsMassOperation(Set<Long> testExecutionIds) {
+        testExecutionAdapter.removeTestExecutions(testExecutionIds);
+
+        return Response.noContent().build();
     }
 }

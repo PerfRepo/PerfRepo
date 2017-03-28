@@ -5,7 +5,7 @@
         .module('org.perfrepo.testExecution.search')
         .component('testExecutionListView', {
             bindings: {
-                items: '<',
+                items: '=',
                 onUpdateList: '&'
             },
             controller: TestExecutionListViewController,
@@ -25,8 +25,8 @@
 
         function getListConfig() {
             return {
-                showSelectBox: false,
-                selectItems: true,
+                showSelectBox: true,
+                selectItems: false,
                 selectionMatchProp: 'id'
             };
         }

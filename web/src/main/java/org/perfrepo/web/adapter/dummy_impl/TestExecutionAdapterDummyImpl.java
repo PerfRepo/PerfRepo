@@ -2,17 +2,17 @@
 package org.perfrepo.web.adapter.dummy_impl;
 
 import org.perfrepo.dto.test_execution.*;
+import org.perfrepo.dto.test_execution.mass_operation.ParameterMassOperationDto;
+import org.perfrepo.dto.test_execution.mass_operation.TagMassOperationDto;
 import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.dto.util.validation.ValidationErrors;
 import org.perfrepo.enums.MeasuredValueType;
-import org.perfrepo.enums.OrderBy;
 import org.perfrepo.web.adapter.TestExecutionAdapter;
 import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
 import org.perfrepo.web.adapter.exceptions.AdapterException;
 import org.perfrepo.web.adapter.exceptions.BadRequestException;
 import org.perfrepo.web.adapter.exceptions.NotFoundException;
 import org.perfrepo.web.adapter.exceptions.ValidationException;
-import org.perfrepo.web.model.TestExecution;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -132,6 +132,80 @@ public class TestExecutionAdapterDummyImpl implements TestExecutionAdapter {
         AttachmentDto a = storage.attachment().getById(attachmentId);
 
         return a;
+    }
+
+    @Override
+    public void addTags(TagMassOperationDto massOperation) {
+        ValidationErrors validation = new ValidationErrors();
+
+        if (massOperation.getTags() == null || massOperation.getTags().size() == 0) {
+            validation.addFieldError("tags", "No tag selected.");
+        }
+
+        if (validation.hasErrors()) {
+            throw new ValidationException("Operation contains validation errors, please fix it.", validation);
+        }
+
+        massOperation.getTestExecutionIds().forEach(executionId -> {
+            if (storage.testExecution().getById(executionId).getTags() == null) {
+                storage.testExecution().getById(executionId).setTags(new HashSet<>());
+            }
+            storage.testExecution().getById(executionId).getTags().addAll(massOperation.getTags());
+        });
+    }
+
+    @Override
+    public void removeTags(TagMassOperationDto massOperation) {
+        ValidationErrors validation = new ValidationErrors();
+
+        if (massOperation.getTags() == null || massOperation.getTags().size() == 0) {
+            validation.addFieldError("tags", "No tag selected.");
+        }
+
+        if (validation.hasErrors()) {
+            throw new ValidationException("Operation contains validation errors, please fix it.", validation);
+        }
+
+        massOperation.getTestExecutionIds().forEach(executionId -> {
+            if (storage.testExecution().getById(executionId).getTags() == null) {
+                storage.testExecution().getById(executionId).setTags(new LinkedHashSet<>());
+            }
+            storage.testExecution().getById(executionId).getTags().removeAll(massOperation.getTags());
+        });
+
+    }
+
+    @Override
+    public void addParameter(ParameterMassOperationDto massOperation) {
+        // TODO validate
+
+        massOperation.getTestExecutionIds().forEach(executionId -> {
+            if (storage.testExecution().getById(executionId).getExecutionParameters() == null) {
+                storage.testExecution().getById(executionId).setExecutionParameters(new LinkedHashSet<>());
+            }
+            storage.testExecution().getById(executionId).getExecutionParameters().add(massOperation.getParameter());
+        });
+
+    }
+
+    @Override
+    public void removeParameter(ParameterMassOperationDto massOperation) {
+        // TODO validate
+
+        massOperation.getTestExecutionIds().forEach(executionId -> {
+            if (storage.testExecution().getById(executionId).getExecutionParameters() == null) {
+                storage.testExecution().getById(executionId).setExecutionParameters(new LinkedHashSet<>());
+            }
+            storage.testExecution().getById(executionId).getExecutionParameters().remove(massOperation.getParameter());
+        });
+
+    }
+
+    @Override
+    public void removeTestExecutions(Set<Long> testExecutionIds) {
+        // TODO validate
+
+        testExecutionIds.forEach(executionId -> storage.testExecution().delete(executionId));
     }
 
     @Override

@@ -13,14 +13,26 @@
             templateUrl: 'app/test_execution/components/search_test_execution/search-test-execution.view.html'
         });
 
-    function SearchTestExecutionController(testExecutionService, testExecutionSearchService, $rootScope) {
+    function SearchTestExecutionController(testExecutionService, testExecutionSearchService,
+                                           testExecutionMassOperationModalService, $rootScope, $scope) {
         var vm = this;
         vm.searchParams = testExecutionSearchService.convertCriteriaParamsToSearchParams(vm.initialSearchCriteria);
-
         vm.toolbarConfig = testExecutionSearchService.getToolbarConfig(filterChanged, sortChanged, vm.searchParams);
+        vm.selectedChecked = false;
+        vm.selectAllText = 'Select All';
+        vm.getSelected = getSelected;
 
         vm.paginationChanged = paginationChanged;
         vm.updateSearch = updateSearch;
+
+        vm.addToComparison = addToComparison;
+        vm.selectAll = selectAll;
+        vm.addTags = addTags;
+        vm.removeTags = removeTags;
+        vm.addParameter = addParameter;
+        vm.removeParameter = removeParameter;
+        vm.deleteExecution = deleteExecution;
+
 
         // apply initial search
         applySearchResult(vm.initialSearchResult);
@@ -62,5 +74,73 @@
             vm.toolbarConfig.filterConfig.resultsCount = searchResult.totalCount;
             vm.currentPage = searchResult.currentPage;
         }
+
+        function selectAll() {
+            angular.forEach(vm.items, function(item) {
+                item.selected = vm.selectedChecked;
+            });
+        }
+
+        function addToComparison() {
+
+        }
+
+        function addTags() {
+            var modalInstance = testExecutionMassOperationModalService.tagsMassOperation(getSelected(), 'add');
+
+            modalInstance.result.then(function () {
+                updateSearch();
+            });
+        }
+
+        function removeTags() {
+            var modalInstance = testExecutionMassOperationModalService.tagsMassOperation(getSelected(), 'remove');
+
+            modalInstance.result.then(function () {
+                updateSearch();
+            });
+        }
+
+        function addParameter() {
+            var modalInstance = testExecutionMassOperationModalService.parameterMassOperation(getSelected(), 'add');
+
+            modalInstance.result.then(function () {
+                updateSearch();
+            });
+        }
+
+        function removeParameter() {
+            var modalInstance = testExecutionMassOperationModalService.parameterMassOperation(getSelected(), 'remove');
+
+            modalInstance.result.then(function () {
+                updateSearch();
+            });
+        }
+
+        function deleteExecution() {
+            var modalInstance = testExecutionMassOperationModalService.testExecutionsMassOperation(getSelected());
+
+            modalInstance.result.then(function () {
+                updateSearch();
+            });
+        }
+
+        function getSelected() {
+            var selectedExecutionIds = [];
+            angular.forEach(vm.items, function(item) {
+                if (item.selected) {
+                    selectedExecutionIds.push(item.id);
+                }
+            });
+
+            return selectedExecutionIds;
+        }
+
+        $scope.$watch(function() {
+            return getSelected().length;
+        }, function(selected) {
+            vm.selectedItems = selected;
+            vm.selectedChecked = (selected == vm.items.length);
+        });
     }
 })();
