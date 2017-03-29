@@ -66,12 +66,11 @@
                 limit: count,
                 offset: 0,
                 orderBy: 'DATE_DESC',
-                testUIDsFilter: [testUID]
+                testUniqueIdsFilter: [testUID]
             }
         }
 
         function searchLastForTest(testUID) {
-            console.log("LAST 333333");
              return search(searchParamsForTestUID(testUID, 3));
         }
 
