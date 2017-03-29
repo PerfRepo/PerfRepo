@@ -14,7 +14,8 @@
         });
 
     function SearchTestExecutionController(testExecutionService, testExecutionSearchService,
-                                           testExecutionMassOperationModalService, $rootScope, $scope) {
+                                           testExecutionMassOperationModalService, comparisonSessionService,
+                                           $rootScope, $scope) {
         var vm = this;
         vm.searchParams = testExecutionSearchService.convertCriteriaParamsToSearchParams(vm.initialSearchCriteria);
         vm.toolbarConfig = testExecutionSearchService.getToolbarConfig(filterChanged, sortChanged, vm.searchParams);
@@ -82,7 +83,9 @@
         }
 
         function addToComparison() {
-
+            comparisonSessionService.addToComparison(getSelected()).then(function(testExecutions) {
+                $scope.$emit('comparisonSessionChange', testExecutions);
+            });
         }
 
         function addTags() {

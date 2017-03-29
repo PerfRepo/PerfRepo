@@ -5,9 +5,14 @@
         .module('org.perfrepo')
         .controller('AppController', AppController);
 
-    function AppController($state, authenticationService) {
+    function AppController(_comparisonSession, authenticationService, comparisonSessionService, $state, $scope) {
         var vm = this;
         vm.logout = logout;
+        vm.settings = settings;
+        vm.removeTestExecution = removeTestExecution;
+        vm.removeAllTestExecutions = removeAllTestExecutions;
+        vm.compareTestExecutions = compareTestExecutions;
+        vm.comparisonSession = _comparisonSession;
         vm.user = authenticationService.getUser();
 
         vm.navigationItems = [
@@ -34,8 +39,36 @@
             }
         ];
 
+        $scope.$on('comparisonSessionChange', function(event, testExecutions) {
+            vm.comparisonSession = testExecutions;
+        });
+
+        function removeTestExecution(id) {
+            comparisonSessionService.removeFromComparison([id]).then(function (data) {
+                vm.comparisonSession = data;
+            });
+        }
+
+        function removeAllTestExecutions() {
+            var testExecutionIds = [];
+            angular.forEach(vm.comparisonSession, function(testExecution) {
+                testExecutionIds.push(testExecution.id);
+            });
+            comparisonSessionService.removeFromComparison(testExecutionIds).then(function (data) {
+                vm.comparisonSession = data;
+            });
+        }
+
+        function compareTestExecutions() {
+            alert('Not yet implemented');
+        }
+
         function logout() {
             authenticationService.logout();
+        }
+
+        function settings() {
+            alert('Not yet implemented');
         }
     }
 })();

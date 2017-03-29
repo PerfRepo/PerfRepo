@@ -3,6 +3,34 @@
          show-badges="true" pinnable-menus="true" update-active-items-on-click="true">
         <div>
             <ul class="nav navbar-nav navbar-right navbar-iconic">
+                <li class="dropdown" uib-dropdown auto-close="outsideClick">
+                    <a class="nav-item-iconic" uib-dropdown-toggle>
+                        <span title="Test execution for comparison" class="fa fa-th">
+                            {{app.comparisonSession.length}}
+                        </span>
+
+                    </a>
+                    <div class="uib-dropdown-menu comparison-session">
+                        <div class="arrow"></div>
+                        <div class="title">Selected test executions</div>
+                        <p class="no-selected" ng-show="app.comparisonSession.length == 0">No test executions selected.</p>
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="testExecution in app.comparisonSession">
+                                <a ui-sref="app.testExecutionDetail({id: testExecution.id})">{{testExecution.name}}</a>
+                                <button class="btn btn-default pull-right btn-sm" ng-click="app.removeTestExecution(testExecution.id)"><span class="pficon-delete"></span> Remove
+                                </button>
+                            </li>
+                        </ul>
+                        <div class="footer">
+                            <button class="btn btn-primary" ng-click="app.compareTestExecutions()" ng-disabled="app.comparisonSession.length == 0">
+                                <span class="fa fa-flask"></span> Compare
+                            </button>
+                            <button class="btn btn-default" ng-click="app.removeAllTestExecutions()" ng-disabled="app.comparisonSession.length == 0">
+                                <span class="pficon-delete"></span> Clear
+                            </button>
+                        </div>
+                    </div>
+                </li>
                 <li class="dropdown">
                     <a class="dropdown-toggle nav-item-iconic" id="dropdown-menu-logout" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         <span title="{{app.user.username}}" class="fa pficon-user">
@@ -11,7 +39,8 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown-menu-logout">
-                        <li><a ng-click="app.logout()">Logout</a></li>
+                        <li><a ng-click="app.settings()"><span class="fa fa-cog"></span> Settings</a></li>
+                        <li><a ng-click="app.logout()"><span class="fa fa-sign-out"></span> Logout</a></li>
                     </ul>
                 </li>
             </ul>

@@ -18,7 +18,13 @@
                 abstract: true,
                 data: {
                     requireLogin: true
+                },
+                resolve: {
+                    _comparisonSession: function (comparisonSessionService) {
+                        return comparisonSessionService.getTestExecutions();
+                    }
                 }
+
             })
             .state('login', {
                 url: '/login',

@@ -6,6 +6,7 @@ import org.perfrepo.dto.report.metric_history.SeriesValueDto;
 import org.perfrepo.dto.report.metric_history.*;
 import org.perfrepo.dto.report.PermissionDto;
 import org.perfrepo.dto.test_execution.AttachmentDto;
+import org.perfrepo.dto.test_execution.TestExecutionDto;
 import org.perfrepo.enums.AccessLevel;
 import org.perfrepo.enums.AccessType;
 import org.perfrepo.enums.MeasuredValueType;
@@ -45,6 +46,8 @@ public class Storage {
 
     private final AttachmentStorage attachmentStorage;
 
+    private List<TestExecutionDto> comparisonSession;
+
     private String longText;
 
     public Storage() {
@@ -66,6 +69,7 @@ public class Storage {
                 "ext, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. " +
                 "Various versions have evolved over the years, sometimes by accident, sometimes on purpos" +
                 "e (injected humour and the like).";
+        comparisonSession = new ArrayList<>();
         initialize();
         initializeTests();
         initializeTestExecutions();
@@ -110,6 +114,10 @@ public class Storage {
 
     public ReportStorage report() {
         return reportStorage;
+    }
+
+    public List<TestExecutionDto> getComparisonSession() {
+        return comparisonSession;
     }
 
     private void initialize() {

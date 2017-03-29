@@ -9,7 +9,8 @@
         .module('org.perfrepo.testExecution.detail')
         .controller('DetailTestExecutionController', DetailTestExecutionController);
 
-    function DetailTestExecutionController(_testExecution, testExecutionService, testExecutionModalService, $state, Page) {
+    function DetailTestExecutionController(_testExecution, testExecutionService, comparisonSessionService,
+                                           testExecutionModalService, $state, $scope, Page) {
         var vm = this;
         vm.testExecution = _testExecution;
         vm.metricsName = [];
@@ -20,6 +21,7 @@
         vm.editTestExecution = editTestExecution;
         vm.updateDetail = updateDetail;
         vm.removeTestExecution = removeTestExecution;
+        vm.addToComparison = addToComparison;
         Page.setTitle(vm.testExecution.name + " | Test execution detail");
 
         function editTestExecution() {
@@ -41,6 +43,12 @@
         function updateDetail() {
             return testExecutionService.getById(vm.testExecution.id).then(function(response) {
                 vm.testExecution = response;
+            });
+        }
+
+        function addToComparison() {
+            comparisonSessionService.addToComparison([vm.testExecution.id]).then(function(testExecutions) {
+                $scope.$emit('comparisonSessionChange', testExecutions);
             });
         }
     }

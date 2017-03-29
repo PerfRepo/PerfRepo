@@ -450,3 +450,43 @@ div.report-wizard {
     }
   }
 }
+
+// ################################################################################################## comparison session
+div.comparison-session {
+  width: 440px;
+  background-color: #f5f5f5;
+
+  div.title {
+    font-size: larger;
+    padding: 0 15px 5px 15px
+  }
+
+  div.arrow {
+    display: block;
+    height: 0;
+    position: absolute;
+    width: 0;
+    border: 11px solid transparent;
+    border-top-width: 0;
+    border-bottom-color: #f5f5f5;
+    left: 93%;
+    margin-left: -11px;
+    top: -11px;
+  }
+
+  p.no-selected {
+    padding: 5px 15px 15px;
+    color: grey;
+  }
+
+  ul.list-group {
+    margin-bottom: 0;
+    height: auto;
+    max-height: 440px;
+    overflow-x: hidden;
+  }
+
+  div.footer {
+    padding: 8px 15px 3px 15px;
+  }
+}
