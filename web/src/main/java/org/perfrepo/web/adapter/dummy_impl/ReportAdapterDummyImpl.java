@@ -20,7 +20,6 @@ import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.dto.util.validation.ValidationErrors;
 import org.perfrepo.enums.AccessLevel;
 import org.perfrepo.enums.AccessType;
-import org.perfrepo.enums.OrderBy;
 import org.perfrepo.enums.report.ComparisonItemSelector;
 import org.perfrepo.web.adapter.ReportAdapter;
 import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
@@ -341,7 +340,7 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
                             validation.addFieldError("groups[" + groupIndex + "].tables[" + tableIndex + "].items[" + itemIndex + "].testId", "Test not found.");
                         } else {
                             TestExecutionSearchCriteria criteria = new TestExecutionSearchCriteria();
-                            criteria.setTestUIDsFilter(Sets.newHashSet(storage.test().getById(item.getTestId()).getUid()));
+                            criteria.setTestUniqueIdsFilter(Sets.newHashSet(storage.test().getById(item.getTestId()).getUid()));
                             criteria.setTagQueriesFilter(Sets.newHashSet(item.getTagQuery()));
                             if (storage.testExecution().search(criteria).getTotalCount() == 0) {
                                 validation.addFieldError("groups[" + groupIndex + "].tables[" + tableIndex + "].items[" + itemIndex + "].tagQuery", "Test execution not found.");
@@ -353,7 +352,7 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
                             validation.addFieldError("groups[" + groupIndex + "].tables[" + tableIndex + "].items[" + itemIndex + "].testId", "Test not found.");
                         } else {
                             TestExecutionSearchCriteria criteria = new TestExecutionSearchCriteria();
-                            criteria.setTestUIDsFilter(Sets.newHashSet(storage.test().getById(item.getTestId()).getUid()));
+                            criteria.setTestUniqueIdsFilter(Sets.newHashSet(storage.test().getById(item.getTestId()).getUid()));
                             criteria.setParameterQueriesFilter(Sets.newHashSet(item.getParameterQuery()));
                             if (storage.testExecution().search(criteria).getTotalCount() == 0) {
                                 validation.addFieldError("groups[" + groupIndex + "].tables[" + tableIndex + "].items[" + itemIndex + "].parameterQuery", "Test execution not found.");

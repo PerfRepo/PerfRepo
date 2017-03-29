@@ -85,8 +85,8 @@ public class TestExecutionStorage {
                         .stream().allMatch(testNameFilter -> StringUtils.containsIgnoreCase(testExecution.getTest().getName(), testNameFilter));
 
         Predicate<TestExecutionDto> testUidFilterPredicate =
-                testExecution -> searchParams.getTestUIDsFilter() == null
-                        || searchParams.getTestUIDsFilter()
+                testExecution -> searchParams.getTestUniqueIdsFilter() == null
+                        || searchParams.getTestUniqueIdsFilter()
                         .stream().allMatch(testUidFilter -> StringUtils.containsIgnoreCase(testExecution.getTest().getUid(), testUidFilter));
 
         Predicate<TestExecutionDto> tagFilterPredicate =

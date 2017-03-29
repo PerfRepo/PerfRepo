@@ -50,7 +50,7 @@
                 filterType: 'text'
             },
             {
-                id: 'testUIDsFilter',
+                id: 'testUniqueIdsFilter',
                 title:  'Test UID',
                 placeholder: 'Filter by Test UID...',
                 filterType: 'text'

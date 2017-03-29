@@ -140,8 +140,8 @@ public class TestStorage {
                                 .stream().allMatch(nameFilter -> StringUtils.containsIgnoreCase(test.getName(), nameFilter));
 
         Predicate<TestDto> uidFilterPredicate =
-                test -> searchParams.getUIDsFilter() == null
-                        || searchParams.getUIDsFilter()
+                test -> searchParams.getUniqueIdsFilter() == null
+                        || searchParams.getUniqueIdsFilter()
                                 .stream().allMatch(uidFilter -> StringUtils.containsIgnoreCase(test.getUid(), uidFilter));
 
         Predicate<TestDto> groupFilterPredicate =

@@ -18,7 +18,7 @@ public class TestExecutionSearchCriteria {
 
     private Set<String> testNamesFilter;
 
-    private Set<String> testUIDsFilter;
+    private Set<String> testUniqueIdsFilter;
 
     private Set<String> groupsFilter;
 
@@ -60,12 +60,12 @@ public class TestExecutionSearchCriteria {
         this.testNamesFilter = testNamesFilter;
     }
 
-    public Set<String> getTestUIDsFilter() {
-        return testUIDsFilter;
+    public Set<String> getTestUniqueIdsFilter() {
+        return testUniqueIdsFilter;
     }
 
-    public void setTestUIDsFilter(Set<String> testUIDsFilter) {
-        this.testUIDsFilter = testUIDsFilter;
+    public void setTestUniqueIdsFilter(Set<String> testUniqueIdsFilter) {
+        this.testUniqueIdsFilter = testUniqueIdsFilter;
     }
 
     public Set<String> getGroupsFilter() {

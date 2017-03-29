@@ -1,6 +1,5 @@
 package org.perfrepo.dto.test;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.perfrepo.enums.OrderBy;
 
 import java.util.Set;
@@ -17,8 +16,7 @@ public class TestSearchCriteria {
 
     private Set<String> namesFilter;
 
-    @JsonProperty("UIDsFilter")
-    private Set<String> UIDsFilter;
+    private Set<String> uniqueIdsFilter;
 
     private Set<String> groupsFilter;
 
@@ -59,8 +57,8 @@ public class TestSearchCriteria {
      *
      * @return {@link TestDto#getUid() Uid} filters.
      */
-    public Set<String> getUIDsFilter() {
-        return UIDsFilter;
+    public Set<String> getUniqueIdsFilter() {
+        return uniqueIdsFilter;
     }
 
     /**
@@ -69,7 +67,7 @@ public class TestSearchCriteria {
      * @param uidFilters {@link TestDto#getUid() Uid} filters.
      */
     public void setUIDsFilterX(Set<String> uidFilters) {
-        this.UIDsFilter = uidFilters;
+        this.uniqueIdsFilter = uidFilters;
     }
 
     /**

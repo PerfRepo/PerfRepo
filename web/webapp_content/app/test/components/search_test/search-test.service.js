@@ -14,9 +14,9 @@
                 filterType: 'text'
             },
             {
-                id: 'UIDsFilter',
-                title:  'Uid',
-                placeholder: 'Filter by Uid...',
+                id: 'uniqueIdsFilter',
+                title:  'UID',
+                placeholder: 'Filter by UID...',
                 filterType: 'text'
             },
             {
@@ -35,7 +35,7 @@
             },
             {
                 id: 'UID',
-                title: 'Uid',
+                title: 'UID',
                 sortType: 'alpha'
             },
             {
