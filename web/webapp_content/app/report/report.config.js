@@ -18,6 +18,18 @@
                 }
             })
 
+            .state('app.reportPreview', {
+                url: 'report/preview',
+                templateUrl: 'app/report/preview/preview-report.view.html',
+                controller: 'PreviewReportController',
+                controllerAs: 'vm',
+                resolve: {
+                    _report: function(reportService) {
+                        return reportService.getTableComparisonPreviewReport();
+                    }
+                }
+            })
+
             .state('app.editReportWizard', {
                 url: 'report/wizard/:id',
                 templateUrl: 'app/report/wizard/wizard.view.html',
@@ -27,9 +39,11 @@
                     _data: function(reportService, $stateParams) {
                         return reportService.getById($stateParams.id);
                     },
-                    _state: function () {
+                    _state: function (_data) {
                         return {
-                            changeTypeEnabled: false
+                            changeTypeEnabled: false,
+                            contentTitle: 'Report edit',
+                            pageTitle: _data.name + ' | Report wizard'
                         }
                     },
                     _users: function(userService) {
@@ -47,12 +61,20 @@
                 controller: 'WizardReportController',
                 controllerAs: 'vm',
                 resolve: {
-                    _data: function() {
-                        return {};
+                    _permissions: function (reportService) {
+                        return reportService.getDefaultPermissions();
+                    },
+                    _data: function(_permissions) {
+                        return {
+                            type: 'TABLE_COMPARISON',
+                            permissions: _permissions
+                        }
                     },
                     _state: function () {
                         return {
-                            changeTypeEnabled: true
+                            changeTypeEnabled: true,
+                            contentTitle: 'New report',
+                            pageTitle: 'Report wizard'
                         }
                     },
                     _users: function(userService) {
@@ -60,25 +82,24 @@
                     },
                     _groups: function(groupService) {
                         return groupService.getUserGroups();
-                    },
-                    _permissions: function (reportService) {
-                        return reportService.getDefaultPermissions();
                     }
                 }
             })
 
             .state('app.newPreparedReportWizard', {
-                url: 'report/wizard',
+                url: 'report/prepared-wizard',
                 templateUrl: 'app/report/wizard/wizard.view.html',
                 controller: 'WizardReportController',
                 controllerAs: 'vm',
                 resolve: {
-                    _data: function($stateParams) {
-                        return $stateParams.data;
+                    _data: function(reportService) {
+                        return reportService.getTableComparisonPreviewReport();
                     },
                     _state: function () {
                         return {
-                            changeTypeEnabled: false
+                            changeTypeEnabled: false,
+                            contentTitle: 'New prepared report',
+                            pageTitle: 'Report wizard'
                         }
                     },
                     _users: function(userService) {
@@ -86,9 +107,6 @@
                     },
                     _groups: function(groupService) {
                         return groupService.getUserGroups();
-                    },
-                    _permissions: function (reportService) {
-                        return reportService.getDefaultPermissions();
                     }
                 }
             })

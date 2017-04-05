@@ -60,7 +60,7 @@
         }
 
         function compareTestExecutions() {
-            alert('Not yet implemented');
+            $state.go('app.reportPreview');
         }
 
         function logout() {

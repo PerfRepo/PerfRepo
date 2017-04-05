@@ -31,6 +31,7 @@
             search: search,
             getById: getById,
             getDefaultPermissions: getDefaultPermissions,
+            getTableComparisonPreviewReport: getTableComparisonPreviewReport,
             getSearchCriteria: getSearchCriteria,
             create: create,
             remove: remove,
@@ -62,6 +63,12 @@
 
         function getById(id) {
             return reportResource.get({id: id}).$promise;
+        }
+
+        function getTableComparisonPreviewReport() {
+            return $http.get(API_REPORT_URL + '/table-comparison-preview').then(function(response) {
+                return response.data;
+            });
         }
 
         function create(report) {

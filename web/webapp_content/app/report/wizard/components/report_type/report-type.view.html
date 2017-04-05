@@ -6,7 +6,7 @@
                 <label class="cursor-pointer">
                     <span>
                         <input type="radio" name="type" value="{{type.type}}"
-                               ng-disabled="!vm.newReport"
+                               ng-disabled="!vm.changeTypeEnabled"
                                ng-model="vm.data.type" pr-server-validation>
                         {{type.name}}
                     </span>

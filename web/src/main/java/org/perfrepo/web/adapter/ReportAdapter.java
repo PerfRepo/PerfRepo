@@ -98,6 +98,13 @@ public interface ReportAdapter {
     List<PermissionDto> getDefaultReportPermissions();
 
     /**
+     * Return table comparison report preview. The source of selected test executions is comparison session.
+     *
+     * @return Table comparison report preview.
+     */
+    ReportDto getTableComparisonReportPreview();
+
+    /**
      * Validate report wizard step - report information (name, description...).
      *
      * @param report Parameters of the report that will be validated.

@@ -86,6 +86,11 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
     }
 
     @Override
+    public ReportDto getTableComparisonReportPreview() {
+        return storage.report().getById(3L);
+    }
+
+    @Override
     public void validateWizardReportInfoStep(ReportDto report) {
         ValidationErrors validation = new ValidationErrors();
 

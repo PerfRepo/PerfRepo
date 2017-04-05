@@ -6,7 +6,8 @@
         .component('prReportTypeStep', {
             bindings: {
                 data: '=',
-                currentStep: '='
+                currentStep: '=',
+                changeTypeEnabled: '<'
             },
             controller: ReportTypeWizardStep,
             controllerAs: 'vm',
@@ -15,7 +16,6 @@
 
     function ReportTypeWizardStep($scope, wizardService) {
         var vm = this;
-        vm.newReport = (vm.data.id == undefined);
         vm.reportTypes = wizardService.getReportTypes();
 
         $scope.$on('next-step', function(event, step) {

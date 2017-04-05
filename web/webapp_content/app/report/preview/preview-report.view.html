@@ -1,0 +1,18 @@
+<div class="row header">
+    <div class="col-sm-12 col-md-4">
+        <span class="header-title">Report preview</span>
+    </div>
+    <div class="col-sm-12 col-md-8">
+        <div class="header-controls">
+            <button class="btn btn-default" ng-click="vm.saveAsReport()">
+                <span class="pficon pficon-save" aria-hidden="true"></span> Save as report
+            </button>
+        </div>
+    </div>
+</div>
+
+<h1 class="report-title" title="Report name">{{vm.report.name}}</h1>
+<p class="report-description" ng-bind-html="vm.report.description"></p>
+
+<!-- table comparison report -->
+<table-comparison-report-detail ng-if="vm.report.type == 'TABLE_COMPARISON'" groups="vm.report.groups"></table-comparison-report-detail>

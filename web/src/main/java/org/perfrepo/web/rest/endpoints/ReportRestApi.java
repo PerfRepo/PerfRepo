@@ -97,6 +97,14 @@ public class ReportRestApi {
       return Response.ok().entity(permissions).build();
    }
 
+   @GET
+   @Path("/table-comparison-preview")
+   public Response getTableComparisonPreview() {
+      ReportDto report = reportAdapter.getTableComparisonReportPreview();
+
+      return Response.ok(report).build();
+   }
+
    @POST
    @Path("/wizard/validate/info-step")
    public Response validateReportInfoStep(ReportDto reportDto) {
