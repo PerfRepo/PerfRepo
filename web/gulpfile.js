@@ -40,6 +40,8 @@ gulp.task('copy-app', function() {
     gulp.src('webapp_content/styles/**/*.scss')
         .pipe(sass())
         .pipe(gulp.dest('src/main/webapp/styles'));
+    gulp.src('webapp_content/images/**/*')
+        .pipe(gulp.dest('src/main/webapp/images'));
 });
 
 
