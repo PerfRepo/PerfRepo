@@ -13,6 +13,8 @@ public class BaselineDto {
 
     private BaselineValueDto value;
 
+    private String color;
+
     public String getName() {
         return name;
     }
@@ -43,5 +45,13 @@ public class BaselineDto {
 
     public void setValue(BaselineValueDto value) {
         this.value = value;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

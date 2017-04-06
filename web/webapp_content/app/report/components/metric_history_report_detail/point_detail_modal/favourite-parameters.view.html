@@ -1,0 +1,17 @@
+<table class="table table-hover table-bordered pr-table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="parameter in vm.parameters | filter:{favourite:true} as results">
+            <td>{{parameter.name}}</td>
+            <td><pr-execution-parameter-value value="{{parameter.value}}"></pr-execution-parameter-value></td>
+        </tr>
+        <tr class="table-no-data" ng-show="!results || results.length == 0">
+            <td colspan="2">No favourite parameters</td>
+        </tr>
+    </tbody>
+</table>

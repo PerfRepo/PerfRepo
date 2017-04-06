@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <button ng-click="vm.close()" type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title"><span class="series-title-point" ng-style="{'background-color': vm.series.color}"></span>{{vm.series.key}} ({{vm.series.value}})</h3>
+</div>
+<div class="modal-body">
+    <div class="row detail-list series-point-detail">
+        <div class="detail-item">
+            <div class="col-md-3 item-property">Test execution</div>
+            <div class="col-md-9 item-value">
+                <a class="cursor-pointer" ng-click="vm.goToTestExecution()">{{vm.testExecution.name}}</a>
+            </div>
+        </div>
+
+        <div class="detail-item">
+            <div class="col-md-3 item-property">Test</div>
+            <div class="col-md-9 item-value">
+                <a class="cursor-pointer" ng-click="vm.goToTest()">{{vm.testExecution.test.name}}</a>
+            </div>
+        </div>
+
+        <div class="detail-item">
+            <div class="col-md-3 item-property">Started</div>
+            <div class="col-md-9 item-value">{{vm.testExecution.started | date: 'MMM dd, yyyy HH:mm'}}</div>
+        </div>
+
+        <div class="detail-item">
+            <div class="col-md-3 item-property">Tags</div>
+            <div class="col-md-9 item-value">
+                <span ng-repeat="tag in vm.testExecution.tags" class="label label-info tag-label">{{tag}}</span>
+            </div>
+        </div>
+
+        <div class="detail-item">
+            <div class="col-md-3 item-property">Comment</div>
+            <div class="col-md-9 item-value">
+                <p ng-bind-html="vm.testExecution.comment"></p>
+            </div>
+        </div>
+
+        <div class="detail-item">
+            <div class="col-md-12 item-property">Favourite parameters</div>
+            <div class="col-md-12">
+                <favourite-parameters-table parameters="vm.testExecution.executionParameters">
+                </favourite-parameters-table>
+            </div>
+        </div>
+
+        <div class="detail-item">
+            <div class="col-md-12 item-value">
+                <button class="btn btn-default" ng-click="vm.addToComparison()">
+                    <span class="pficon-add-circle-o" aria-hidden="true"></span> Add to comparison
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-default" type="button" ng-click="vm.close()">Close</button>
+</div>

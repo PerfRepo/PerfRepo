@@ -12,13 +12,13 @@
             templateUrl: 'app/report/components/metric_history_report_detail/line-chart.view.html'
         });
 
-    function MetricHistoryLineChartController() {
+    function MetricHistoryLineChartController(reportModalService) {
         var vm = this;
 
         vm.data = [];
         // series
         angular.forEach(vm.chartData.series, function(series) {
-            vm.data.push({key: series.name, values: series.values});
+            vm.data.push({key: series.name, values: series.values, color: series.color});
         });
         // baselines
         angular.forEach(vm.chartData.baselines, function(baseline) {
@@ -37,7 +37,7 @@
                     }
                 ];
 
-            vm.data.push({key: baseline.name, values: data});
+            vm.data.push({key: baseline.name, values: data, color: baseline.color});
         });
 
         vm.options = {
@@ -55,7 +55,7 @@
                 valueFormat: function(d){
                     return d3.format(',.4f')(d);
                 },
-                useInteractiveGuideline: true,
+                useInteractiveGuideline: false,
                 xAxis: {
                     axisLabel: "Test execution"
                 },
@@ -65,9 +65,20 @@
                         return d3.format('.02f')(d);
                     },
                     axisLabelDistance: -10
+                },
+                lines: {
+                    dispatch: {
+                        elementClick: function(e) {
+                            pointClicked(e);
+                        }
+                    }
                 }
             }
         };
+
+        function pointClicked(e) {
+            reportModalService.showLineChartPointDetail(e.point, e.series);
+        }
     }
 })();
 

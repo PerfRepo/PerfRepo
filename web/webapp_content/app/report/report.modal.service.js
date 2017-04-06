@@ -10,7 +10,8 @@
         return {
             removeReport: removeReport,
             showChartForMultiValueTableComparison: showChartForMultiValueTableComparison,
-            showPermissions: showPermissions
+            showPermissions: showPermissions,
+            showLineChartPointDetail: showLineChartPointDetail
         };
 
         function showPermissions(permissions) {
@@ -70,6 +71,26 @@
                         return metricName;
                     }
 
+                }
+            });
+        }
+
+        function showLineChartPointDetail(point, series) {
+            return $uibModal.open({
+                animation: true,
+                templateUrl: 'app/report/components/metric_history_report_detail/point_detail_modal/point-detail-modal.view.html',
+                controller: 'LineChartPointDetailController',
+                backdropClass: 'line-chart-point-modal',
+                windowClass: 'line-chart-point-modal',
+                controllerAs: 'vm',
+                size: 'md',
+                resolve : {
+                    _testExecution: function (testExecutionService) {
+                        return testExecutionService.getById(point.executionId);
+                    },
+                    _series: function () {
+                        return series;
+                    }
                 }
             });
         }

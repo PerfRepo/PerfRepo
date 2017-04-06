@@ -23,6 +23,8 @@ public class SeriesDto {
 
     private List<SeriesValueDto> values;
 
+    private String color;
+
     public String getName() {
         return name;
     }
@@ -77,5 +79,13 @@ public class SeriesDto {
 
     public void setValues(List<SeriesValueDto> values) {
         this.values = values;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

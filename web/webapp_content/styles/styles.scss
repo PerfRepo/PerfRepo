@@ -39,6 +39,10 @@ div.detail-list {
     }
 }
 
+div.series-point-detail {
+    margin-top: 0;
+}
+
 // ########################################################################################### form modal bottom buttons
 div.form-group.form-bottom {
     margin-top: 30px;
@@ -121,5 +125,23 @@ div.detail-tabs {
 
     div.tab-content {
         margin-top: 15px;
+    }
+}
+
+// ############################################################################################ line chart point - modal
+span.series-title-point {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+div.line-chart-point-modal {
+    &.modal-backdrop {
+        z-index: 10000 !important;
+    }
+
+    &.modal {
+        z-index: 10050 !important;
     }
 }

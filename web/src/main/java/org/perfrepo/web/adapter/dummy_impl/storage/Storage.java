@@ -374,15 +374,18 @@ public class Storage {
         SeriesDto series1 = new SeriesDto();
         series1.setName("Response time A");
         series1.setValues(prepareChartValues1());
+        series1.setColor("#0088ce");
         chart1.getSeries().add(series1);
         // series 2
         SeriesDto series2 = new SeriesDto();
         series2.setName("Response time B");
+        series2.setColor("#cc0000");
         series2.setValues(prepareChartValues2());
         chart1.getSeries().add(series2);
         // baseline 1
         BaselineDto baseline1 = new BaselineDto();
         baseline1.setName("Base response time");
+        baseline1.setColor("#ec7a08");
         baseline1.setValue(prepareBaselineValue1());
         chart1.getBaselines().add(baseline1);
         // chart 2
@@ -395,11 +398,13 @@ public class Storage {
         // series 1
         SeriesDto series21 = new SeriesDto();
         series21.setName("Throughput");
+        series21.setColor("#0088ce");
         series21.setValues(prepareThroughputValues());
         chart2.getSeries().add(series21);
         // baseline 2
         BaselineDto baseline2 = new BaselineDto();
         baseline2.setName("Baseline - average");
+        baseline2.setColor("#ec7a08");
         baseline2.setValue(prepareBaselineValue2(series21));
         chart2.getBaselines().add(baseline2);
         // permissions
