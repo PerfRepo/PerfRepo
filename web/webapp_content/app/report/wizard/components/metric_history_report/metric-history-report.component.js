@@ -103,12 +103,12 @@
         }
 
         function seriesTestSelected(test, chartIndex, seriesIndex) {
-            vm.data.charts[chartIndex].series[seriesIndex].metricId = undefined;
+            vm.data.charts[chartIndex].series[seriesIndex].metricName = undefined;
             vm.testMetrics[test.id] = test.metrics;
         }
 
         function baselineTestExecutionChanged(testExecutionId, chartIndex, baselineIndex) {
-            vm.data.charts[chartIndex].baselines[baselineIndex].metricId = undefined;
+            vm.data.charts[chartIndex].baselines[baselineIndex].metricName = undefined;
             testExecutionService.getById(testExecutionId).then(function(testExecution) {
                 vm.testExecutionMetrics[testExecution.id] = testExecution.test.metrics;
             });

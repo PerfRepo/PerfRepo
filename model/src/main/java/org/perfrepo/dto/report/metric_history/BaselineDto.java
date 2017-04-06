@@ -7,7 +7,7 @@ public class BaselineDto {
 
     private String name;
 
-    private Long metricId;
+    private String metricName;
 
     private Long executionId;
 
@@ -21,12 +21,12 @@ public class BaselineDto {
         this.name = name;
     }
 
-    public Long getMetricId() {
-        return metricId;
+    public String getMetricName() {
+        return metricName;
     }
 
-    public void setMetricId(Long metricId) {
-        this.metricId = metricId;
+    public void setMetricName(String metricName) {
+        this.metricName = metricName;
     }
 
     public Long getExecutionId() {

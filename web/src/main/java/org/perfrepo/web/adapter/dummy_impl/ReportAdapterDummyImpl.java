@@ -240,12 +240,12 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
                 validation.addFieldError("charts[" + chartIndex + "].series[" + seriesIndex + "].testId", "Test not found.");
             } else {
                 // series metric
-                MetricDto metric = storage.metric().getById(series.getMetricId());
+                MetricDto metric = storage.metric().getByName(series.getMetricName());
                 if (metric == null) {
-                    validation.addFieldError("charts[" + chartIndex + "].series[" + seriesIndex + "].metricId", "Metric not found.");
+                    validation.addFieldError("charts[" + chartIndex + "].series[" + seriesIndex + "].metricName", "Metric not found.");
                 } else {
                     if (!test.getMetrics().contains(metric)) {
-                        validation.addFieldError("charts[" + chartIndex + "].series[" + seriesIndex + "].metricId", "Metric not found.");
+                        validation.addFieldError("charts[" + chartIndex + "].series[" + seriesIndex + "].metricName", "Metric not found.");
                     }
                 }
             }
@@ -280,12 +280,12 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
                 validation.addFieldError("charts[" + chartIndex + "].baselines[" + baselineIndex + "].executionId", "Test execution not found.");
             } else {
                 // baseline metric
-                MetricDto metric = storage.metric().getById(baseline.getMetricId());
+                MetricDto metric = storage.metric().getByName(baseline.getMetricName());
                 if (metric == null) {
-                    validation.addFieldError("charts[" + chartIndex + "].baselines[" + baselineIndex + "].metricId", "Metric not found.");
+                    validation.addFieldError("charts[" + chartIndex + "].baselines[" + baselineIndex + "].metricName", "Metric not found.");
                 } else {
                     if (!testExecution.getTest().getMetrics().contains(metric)) {
-                        validation.addFieldError("charts[" + chartIndex + "].baselines[" + baselineIndex + "].metricId", "Metric not found.");
+                        validation.addFieldError("charts[" + chartIndex + "].baselines[" + baselineIndex + "].metricName", "Metric not found.");
                     }
                 }
             }

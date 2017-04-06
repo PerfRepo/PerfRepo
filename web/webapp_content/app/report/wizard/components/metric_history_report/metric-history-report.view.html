@@ -59,11 +59,11 @@
 
                         <div class="col-md-2 form-group">
                             <label>Metric</label>
-                            <ui-select ng-model="series.metricId" title="Choose a metric"
+                            <ui-select ng-model="series.metricName" title="Choose a metric"
                                        ng-disabled="series.testId == undefined"
-                                       name="charts[{{chartIndex}}].series[{{seriesIndex}}].metricId" pr-server-validation>
+                                       name="charts[{{chartIndex}}].series[{{seriesIndex}}].metricName" pr-server-validation>
                                 <ui-select-match placeholder="Select a metric...">{{$select.selected.name}}</ui-select-match>
-                                <ui-select-choices repeat="metric.id as metric in vm.testMetrics[series.testId] | filter: $select.search">
+                                <ui-select-choices repeat="metric.name as metric in vm.testMetrics[series.testId] | filter: $select.search">
                                     <span ng-bind-html="metric.name | highlight: $select.search"></span>
                                 </ui-select-choices>
                             </ui-select>
@@ -134,11 +134,11 @@
 
                         <div class="col-md-3 form-group">
                             <label>Metric</label>
-                            <ui-select ng-model="baseline.metricId" title="Choose a metric"
+                            <ui-select ng-model="baseline.metricName" title="Choose a metric"
                                        ng-disabled="baseline.executionId == undefined"
-                                       name="charts[{{chartIndex}}].baselines[{{baselineIndex}}].metricId" pr-server-validation>
+                                       name="charts[{{chartIndex}}].baselines[{{baselineIndex}}].metricName" pr-server-validation>
                                 <ui-select-match placeholder="Select a metric...">{{$select.selected.name}}</ui-select-match>
-                                <ui-select-choices repeat="metric.id as metric in vm.testExecutionMetrics[baseline.executionId] | filter: $select.search">
+                                <ui-select-choices repeat="metric.name as metric in vm.testExecutionMetrics[baseline.executionId] | filter: $select.search">
                                     <span ng-bind-html="metric.name | highlight: $select.search"></span>
                                 </ui-select-choices>
                             </ui-select>
