@@ -145,3 +145,14 @@ div.line-chart-point-modal {
         z-index: 10050 !important;
     }
 }
+
+.nvtooltip {
+    border-radius: 0;
+    border: none;
+    background: rgba(57, 63, 68, 0.9);
+    color: white;
+
+    .legend-color-guide div {
+        border: 1px solid #4d5258 !important;
+    }
+}
