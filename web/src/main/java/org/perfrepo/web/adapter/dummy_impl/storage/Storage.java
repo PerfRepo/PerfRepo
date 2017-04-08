@@ -2,6 +2,8 @@ package org.perfrepo.web.adapter.dummy_impl.storage;
 
 import org.apache.commons.lang.time.DateUtils;
 import org.perfrepo.dto.report.ReportDto;
+import org.perfrepo.dto.report.box_plot.*;
+import org.perfrepo.dto.report.metric_history.SeriesDto;
 import org.perfrepo.dto.report.metric_history.SeriesValueDto;
 import org.perfrepo.dto.report.metric_history.*;
 import org.perfrepo.dto.report.PermissionDto;
@@ -16,6 +18,8 @@ import org.perfrepo.web.adapter.dummy_impl.storage.initialize.InstanceCreator;
 import org.perfrepo.web.adapter.dummy_impl.storage.initialize.TableComparisonReportCreator;
 
 import javax.inject.Singleton;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -354,6 +358,8 @@ public class Storage {
         reportStorage.create(tableComparisonReport1);
 
         initializeMetricHistoryReport();
+
+        initializeBoxPlotReport();
     }
 
     private void initializeMetricHistoryReport() {
@@ -374,12 +380,10 @@ public class Storage {
         SeriesDto series1 = new SeriesDto();
         series1.setName("Response time A");
         series1.setValues(prepareChartValues1());
-        series1.setColor("#0088ce");
         chart1.getSeries().add(series1);
         // series 2
         SeriesDto series2 = new SeriesDto();
         series2.setName("Response time B");
-        series2.setColor("#cc0000");
         series2.setValues(prepareChartValues2());
         chart1.getSeries().add(series2);
         // baseline 1
@@ -398,7 +402,6 @@ public class Storage {
         // series 1
         SeriesDto series21 = new SeriesDto();
         series21.setName("Throughput");
-        series21.setColor("#0088ce");
         series21.setValues(prepareThroughputValues());
         chart2.getSeries().add(series21);
         // baseline 2
@@ -473,6 +476,60 @@ public class Storage {
         value.setX(x);
         value.setY(y);
         return value;
+    }
+
+    private void initializeBoxPlotReport() {
+        BoxPlotReportDto boxPlotReport = new BoxPlotReportDto();
+        reportStorage.create(boxPlotReport);
+        boxPlotReport.setName("Boxplot report WITH DATA");
+        boxPlotReport.setTypeName("Boxplot report");
+        boxPlotReport.setDescription("Description of <strong>boxplot</strong> report.");
+        boxPlotReport.setBoxPlots(new ArrayList<>());
+        BoxPlotDto box1 = new BoxPlotDto();
+        boxPlotReport.getBoxPlots().add(box1);
+        box1.setName("BoxPlot 1");
+        box1.setDescription("Description of the boxplot.");
+        BoxPlotSeriesDto series = new BoxPlotSeriesDto();
+        box1.setSeries(series);
+
+        series.setMetricName(metricStorage.getById(1L).getName());
+        series.setName(metricStorage.getById(1L).getName());
+
+        series.setValues(prepareBoxPlotSeriesValues());
+    }
+
+    private List<BoxPlotSeriesValueDto> prepareBoxPlotSeriesValues() {
+        List<BoxPlotSeriesValueDto> values = new ArrayList<>();
+
+        values.add(prepareBoxPlotSeriesValue(1L, 115.0, 180.0, 200.0, 250.0, 400.0, 50, 100, 425));
+        values.add(prepareBoxPlotSeriesValue(2L, 225.0, 300.0, 350.0, 400.0, 425.0, 174, 450, 500));
+        values.add(prepareBoxPlotSeriesValue(3L, 25.0, 100.0, 200.0, 300.0, 400.0, 450, 470));
+        values.add(prepareBoxPlotSeriesValue(4L, 50.0, 75.0, 100.0, 125.0, 300.0,  450));
+        values.add(prepareBoxPlotSeriesValue(5L, 220.0, 320.0, 400.0, 425.0, 475.0));
+
+        return values;
+    }
+
+    private BoxPlotSeriesValueDto prepareBoxPlotSeriesValue(Long executionId, double le, double q1, double q2, double q3, double ue, double... ul) {
+        DateFormat df = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.ENGLISH);
+        BoxPlotSeriesValueDto v1 = new BoxPlotSeriesValueDto();
+        v1.setExecutionId(executionId);
+        v1.setExecutionName(testExecutionStorage.getById(executionId).getName());
+        v1.setLabel(df.format(testExecutionStorage.getById(executionId).getStarted()));
+        v1.setLowerExtreme(le);
+        v1.setLowerQuartile(q1);
+        v1.setMedian(q2);
+        v1.setUpperQuartile(q3);
+        v1.setUpperExtreme(ue);
+
+        if (ul != null) {
+            v1.setOutliers(new ArrayList<>());
+            for (double anUl : ul) {
+                v1.getOutliers().add(anUl);
+            }
+        }
+
+        return v1;
     }
 }
 

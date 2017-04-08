@@ -49,6 +49,12 @@
                         data="vm.data"
                         current-step="vm.currentStep">
                 </pr-metric-history-report-configuration>
+                <!-- box plot report-->
+                <pr-box-plot-report-configuration
+                        ng-if="vm.data.type =='BOX_PLOT'"
+                        data="vm.data"
+                        current-step="vm.currentStep">
+                </pr-box-plot-report-configuration>
             </div>
 
             <!-- set permissions of report -->

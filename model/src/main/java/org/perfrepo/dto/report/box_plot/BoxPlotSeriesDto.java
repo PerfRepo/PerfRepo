@@ -1,4 +1,4 @@
-package org.perfrepo.dto.report.metric_history;
+package org.perfrepo.dto.report.box_plot;
 
 import org.perfrepo.enums.report.ComparisonItemSelector;
 
@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
-public class SeriesDto {
+public class BoxPlotSeriesDto {
 
     private String name;
 
@@ -21,7 +21,7 @@ public class SeriesDto {
 
     private ComparisonItemSelector filter;
 
-    private List<SeriesValueDto> values;
+    private List<BoxPlotSeriesValueDto> values;
 
     public String getName() {
         return name;
@@ -71,11 +71,11 @@ public class SeriesDto {
         this.filter = selector;
     }
 
-    public List<SeriesValueDto> getValues() {
+    public List<BoxPlotSeriesValueDto> getValues() {
         return values;
     }
 
-    public void setValues(List<SeriesValueDto> values) {
+    public void setValues(List<BoxPlotSeriesValueDto> values) {
         this.values = values;
     }
 }

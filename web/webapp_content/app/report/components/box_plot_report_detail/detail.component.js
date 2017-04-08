@@ -5,6 +5,7 @@
         .module('org.perfrepo.report.detail')
         .component('boxPlotReportDetail', {
             bindings: {
+                boxPlots: '<'
             },
             controller: BoxPlotReportController,
             controllerAs: 'vm',

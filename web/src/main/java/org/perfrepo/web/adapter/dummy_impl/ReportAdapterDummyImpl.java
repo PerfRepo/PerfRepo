@@ -5,6 +5,9 @@ import org.perfrepo.dto.metric.MetricDto;
 import org.perfrepo.dto.report.PermissionDto;
 import org.perfrepo.dto.report.ReportDto;
 import org.perfrepo.dto.report.ReportSearchCriteria;
+import org.perfrepo.dto.report.box_plot.BoxPlotDto;
+import org.perfrepo.dto.report.box_plot.BoxPlotReportDto;
+import org.perfrepo.dto.report.box_plot.BoxPlotSeriesDto;
 import org.perfrepo.dto.report.metric_history.BaselineDto;
 import org.perfrepo.dto.report.metric_history.ChartDto;
 import org.perfrepo.dto.report.metric_history.MetricHistoryReportDto;
@@ -20,6 +23,8 @@ import org.perfrepo.dto.util.SearchResult;
 import org.perfrepo.dto.util.validation.ValidationErrors;
 import org.perfrepo.enums.AccessLevel;
 import org.perfrepo.enums.AccessType;
+import org.perfrepo.enums.report.BoxPlotLabelType;
+import org.perfrepo.enums.report.BoxPlotSortType;
 import org.perfrepo.enums.report.ComparisonItemSelector;
 import org.perfrepo.web.adapter.ReportAdapter;
 import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
@@ -121,6 +126,9 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
             validateMetricHistoryReportConfiguration((MetricHistoryReportDto) report);
         }
 
+        if (report instanceof BoxPlotReportDto) {
+            validateBoxPlotReportConfiguration((BoxPlotReportDto) report);
+        }
     }
 
     @Override
@@ -217,6 +225,58 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
                 }
                 // validate tables
                 validateTables(validation, group, groupIndex);
+            }
+        }
+
+        if (validation.hasErrors()) {
+            throw new ValidationException("Report contains validation errors, please fix it.", validation);
+        }
+    }
+
+    private void validateBoxPlotReportConfiguration(BoxPlotReportDto report) {
+        ValidationErrors validation = new ValidationErrors();
+
+        if (report.getBoxPlots() == null || report.getBoxPlots().isEmpty()) {
+            validation.addFormError("boxPlots", "No boxplots!");
+        } else {
+            for (int boxPlotIndex = 0; boxPlotIndex < report.getBoxPlots().size(); boxPlotIndex++) {
+                BoxPlotDto boxPlot = report.getBoxPlots().get(boxPlotIndex);
+                // boxPlot name
+                if (boxPlot.getName() == null) {
+                    validation.addFieldError("boxPlots[" + boxPlotIndex + "].name", "Boxplot name is a required field.");
+                } else if (boxPlot.getName().trim().length() < 3) {
+                    validation.addFieldError("boxPlots[" + boxPlotIndex + "].name", "boxPlots name must be at least three characters.");
+                }
+                // boxPlot description
+                if (boxPlot.getDescription() != null && boxPlot.getDescription().length() > 500) {
+                    validation.addFieldError("boxPlots[" + boxPlotIndex + "].description", "Boxplots description must not be more than 500 characters.");
+                }
+                // boxPlot label
+                if (boxPlot.getLabelType() == null) {
+                    validation.addFieldError("boxPlots[" + boxPlotIndex + "].labelType", "No label selector");
+                } else if (boxPlot.getLabelType().equals(BoxPlotLabelType.PARAMETER)) {
+                    if (boxPlot.getLabelParameter() == null || boxPlot.getLabelParameter().isEmpty()) {
+                        validation.addFieldError("boxPlots[" + boxPlotIndex + "].labelParameter", "No label parameter");
+                    }
+                }
+                // boxPlot sort
+                if (boxPlot.getSortType() == null) {
+                    validation.addFieldError("boxPlots[" + boxPlotIndex + "].sortType", "No sort selector");
+                } else if (boxPlot.getSortType().equals(BoxPlotSortType.PARAMETER)) {
+                    if (boxPlot.getSortParameter() == null || boxPlot.getSortParameter().isEmpty()) {
+                        validation.addFieldError("boxPlots[" + boxPlotIndex + "].sortParameter", "No sort parameter");
+                    }
+                } else if (boxPlot.getSortType().equals(BoxPlotSortType.VERSION)) {
+                    if (boxPlot.getSortVersionParameter() == null || boxPlot.getSortVersionParameter().isEmpty()) {
+                        validation.addFieldError("boxPlots[" + boxPlotIndex + "].sortVersionParameter", "No sort version parameter");
+                    }
+                }
+                // series
+                if (boxPlot.getSeries() == null) {
+                    validation.addFormError("boxPlots[" + boxPlotIndex + "].series", "No series!");
+                } else {
+                    validateBoxPlotSeries(validation, boxPlot, boxPlotIndex);
+                }
             }
         }
 
@@ -369,6 +429,44 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
 
             if (!baselineSelected) {
                 validation.addFormError("groups[" + groupIndex + "].tables[" + tableIndex + "].baseline", "No baseline selected.");
+            }
+        }
+    }
+
+    private void validateBoxPlotSeries(ValidationErrors validation, BoxPlotDto boxPlot, int boxPlotIndex) {
+        BoxPlotSeriesDto series = boxPlot.getSeries();
+        // series name
+        if (series.getName() == null) {
+            validation.addFieldError("boxPlots[" + boxPlotIndex + "].series.name", "Series name is a required field");
+        } else if (series.getName().trim().length() < 3) {
+            validation.addFieldError("boxPlots[" + boxPlotIndex + "].series.name", "Series name must be at least three characters.");
+        }
+        // series test
+        TestDto test = storage.test().getById(series.getTestId());
+        if (test == null) {
+            validation.addFieldError("boxPlots[" + boxPlotIndex + "].series.testId", "Test not found.");
+        } else {
+            // series metric
+            MetricDto metric = storage.metric().getByName(series.getMetricName());
+            if (metric == null) {
+                validation.addFieldError("boxPlots[" + boxPlotIndex + "].series.metricName", "Metric not found.");
+            } else {
+                if (!test.getMetrics().contains(metric)) {
+                    validation.addFieldError("boxPlots[" + boxPlotIndex + "].series.metricName", "Metric not found.");
+                }
+            }
+        }
+        // series filter
+        if (series.getFilter() == null) {
+            validation.addFieldError("boxPlots[" + boxPlotIndex + "].series].filter", "Not selected.");
+        } else {
+            // series tag query
+            if (series.getFilter().equals(ComparisonItemSelector.TAG_QUERY) && (series.getTagQuery() == null || series.getTagQuery().isEmpty())) {
+                validation.addFieldError("boxPlots[" + boxPlotIndex + "].series.tagQuery", "Bad tag query.");
+            }
+            // series parameter query
+            if (series.getFilter().equals(ComparisonItemSelector.PARAMETER_QUERY) && (series.getParameterQuery() == null || series.getParameterQuery().isEmpty())) {
+                validation.addFieldError("boxPlots[" + boxPlotIndex + "].series.parameterQuery", "Bad parameter query.");
             }
         }
     }

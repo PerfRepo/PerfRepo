@@ -12,13 +12,13 @@
             templateUrl: 'app/report/components/metric_history_report_detail/line-chart.view.html'
         });
 
-    function MetricHistoryLineChartController(reportModalService) {
+    function MetricHistoryLineChartController(reportModalService, CHART_COLORS) {
         var vm = this;
 
         vm.data = [];
         // series
         angular.forEach(vm.chartData.series, function(series) {
-            vm.data.push({key: series.name, values: series.values, color: series.color});
+            vm.data.push({key: series.name, values: series.values});
         });
         // baselines
         angular.forEach(vm.chartData.baselines, function(baseline) {
@@ -37,7 +37,7 @@
                     }
                 ];
 
-            vm.data.push({key: baseline.name, values: data, color: baseline.color});
+            vm.data.push({key: baseline.name, values: data});
         });
 
         vm.options = {
@@ -50,6 +50,7 @@
                     bottom: 40,
                     left: 55
                 },
+                color: CHART_COLORS,
                 x: function(d){ return d.x; },
                 y: function(d){ return d.y; },
                 valueFormat: function(d){

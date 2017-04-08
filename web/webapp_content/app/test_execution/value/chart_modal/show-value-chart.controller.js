@@ -5,7 +5,7 @@
         .module('org.perfrepo.testExecution.detail.value')
         .controller('ShowValueChartController', ShowValueChartController);
 
-    function ShowValueChartController(_values, _parameter, _metricName, $uibModalInstance, $filter) {
+    function ShowValueChartController(_values, _parameter, _metricName, $uibModalInstance, $filter, CHART_COLORS) {
         var vm = this;
         vm.groupValues = _values;
         vm.parameter = _parameter;
@@ -63,6 +63,7 @@
                     bottom: 40,
                     left: 55
                 },
+                color: CHART_COLORS,
                 x: function(d){ return d.x; },
                 y: function(d){ return d.y; },
                 valueFormat: function(d){

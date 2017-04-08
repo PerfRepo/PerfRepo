@@ -1,1 +1,6 @@
-BOX PLOT DETAIL
+<div ng-repeat="boxPlot in vm.boxPlots">
+    <h2 class="report-title" title="Boxplot name">{{boxPlot.name}}</h2>
+    <p class="report-description" ng-bind-html="boxPlot.description"></p>
+
+    <box-plot-chart box-plot-data="boxPlot"></box-plot-chart>
+</div>

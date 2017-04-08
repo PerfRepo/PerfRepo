@@ -12,6 +12,8 @@
             getItemSelectors: getItemSelectors,
             getExecutionFilterOptions: getExecutionFilterOptions,
             getReportTypes: getReportTypes,
+            getBoxPlotLabelTypes: getBoxPlotLabelTypes,
+            getBoxPlotSortTypes: getBoxPlotSortTypes,
             getPreparedReportRequestData: getPreparedReportRequestData,
             validateReportInfoStep: validateReportInfoStep,
             validateReportConfigurationStep: validateReportConfigurationStep,
@@ -65,6 +67,21 @@
             ];
         }
 
+        function getBoxPlotLabelTypes() {
+            return [
+                {name: 'DATE', text: 'Started date'},
+                {name: 'PARAMETER', text: 'Execution parameter'}
+            ];
+        }
+
+        function getBoxPlotSortTypes() {
+            return [
+                {name: 'DATE', text: 'Started date'},
+                {name: 'PARAMETER', text: 'Execution parameter'},
+                {name: 'VERSION', text: 'Version execution parameter'}
+            ];
+        }
+
         function validateReportInfoStep(report) {
             return $http.post(API_REPORT_URL + '/wizard/validate/info-step', getPreparedReportRequestData(report)).then(function(response) {
                 return response.data;
@@ -92,10 +109,12 @@
                 permissions: report.permissions
             };
 
-            if (report.type == 'TABLE_COMPARISON') {
+            if (report.type === 'TABLE_COMPARISON') {
                 data.groups = report.groups;
-            } else if (report.type == 'METRIC_HISTORY') {
+            } else if (report.type === 'METRIC_HISTORY') {
                 data.charts = report.charts;
+            } else if (report.type === 'BOX_PLOT') {
+                data.boxPlots = report.boxPlots;
             }
 
             return data;

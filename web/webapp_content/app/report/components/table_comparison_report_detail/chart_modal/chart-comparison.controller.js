@@ -6,7 +6,7 @@
         .controller('ChartComparisonController', ChartComparisonController);
 
     function ChartComparisonController(_contentCells, _headerCells, _selectedExecutionIndex, _metricName,
-                                       $uibModalInstance) {
+                                       $uibModalInstance, CHART_COLORS) {
         var vm = this;
         vm.contentCells = _contentCells;
         vm.headerCells = _headerCells;
@@ -32,7 +32,7 @@
 
         function initialize() {
             vm.title = 'Test executions comparison - ' + vm.metricName;
-            vm.showAll = _selectedExecutionIndex == undefined;
+            vm.showAll = (_selectedExecutionIndex === undefined);
             vm.parameters = Object.keys(vm.contentCells[0].values);
             vm.xAxisParameter = vm.parameters[0];
             setChartData();
@@ -61,6 +61,7 @@
                         bottom: 40,
                         left: 55
                     },
+                    color: CHART_COLORS,
                     x: function(d){
                         return d.x;
                     },

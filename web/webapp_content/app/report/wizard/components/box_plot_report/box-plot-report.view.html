@@ -1,0 +1,152 @@
+<div class="wizard-container metric-history-report-step">
+    <h1>Configure boxplots...</h1>
+    <ng-form name="vm.wizardBoxPlotStep">
+        <!-- boxPlot accordion -->
+        <v-accordion multiple class="vAccordion--default">
+            <v-pane ng-repeat="(boxPlotIndex, boxPlot) in vm.data.boxPlots" expanded="true">
+                <!-- table header-->
+                <v-pane-header>
+                    <h3 class="item-title-pane">{{boxPlot.name}}</h3>
+                    <a class="cursor-pointer pull-right" ng-click="vm.removeBoxPlot(boxPlotIndex)">
+                        <span class="pficon-delete" aria-hidden="true"></span> Remove boxplot
+                    </a>
+                </v-pane-header>
+                <!-- table content-->
+                <v-pane-content>
+                    <div class="form-group">
+                        <label>Boxplot name</label>
+                        <input type="text" name="boxPlots[{{boxPlotIndex}}].name"
+                               ng-model="boxPlot.name" class="form-control" pr-server-validation>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Boxplot description</label>
+                        <div class="wysiwyg-editor-wrap form-control-border">
+                            <trix-editor ng-if="true" angular-trix name="boxPlots[{{boxPlotIndex}}].description"
+                                         ng-model="boxPlot.description" class="trix-content" pr-server-validation></trix-editor>
+                        </div>
+                    </div>
+
+                    <!-- boxPlot x-axis settings -->
+                    <h3 class="item-title">X-axis</h3>
+
+                    <div class="row series-item-row">
+                        <!-- x-axis label type -->
+                        <div class="col-md-2 form-group">
+                            <label>Label by</label>
+                            <select pf-select ng-model="boxPlot.labelType" class="form-control"
+                                    name="boxPlots[{{boxPlotIndex}}].labelType"
+                                    ng-options="labelTypeOption.name as labelTypeOption.text for labelTypeOption in vm.labelTypeOptions"
+                                    pr-server-validation>
+                            </select>
+                        </div>
+
+                        <div ng-if="boxPlot.labelType == 'PARAMETER'" class="col-md-3 form-group">
+                            <label>Execution parameter</label>
+                            <input type="text"
+                                   name="boxPlots[{{boxPlotIndex}}].labelParameter"
+                                   ng-model="boxPlot.labelParameter" class="form-control" pr-server-validation>
+                        </div>
+                        <!-- x-axis label sort -->
+                        <div class="col-md-2 form-group">
+                            <label>Sort by</label>
+                            <select pf-select ng-model="boxPlot.sortType" class="form-control"
+                                    name="boxPlots[{{boxPlotIndex}}].sortType"
+                                    ng-options="sortTypeOption.name as sortTypeOption.text for sortTypeOption in vm.sortTypeOptions"
+                                    pr-server-validation>
+                            </select>
+                        </div>
+
+                        <div ng-if="boxPlot.sortType == 'PARAMETER'" class="col-md-3 form-group">
+                            <label>Execution parameter</label>
+                            <input type="text"
+                                   name="boxPlots[{{boxPlotIndex}}].sortParameter"
+                                   ng-model="boxPlot.sortParameter" class="form-control" pr-server-validation>
+                        </div>
+
+                        <div ng-if="boxPlot.sortType == 'VERSION'" class="col-md-3 form-group">
+                            <label>Execution parameter
+                                <span class="pficon pficon-info" uib-tooltip="Natural sort of (version) numbers within text."></span>
+                            </label>
+                            <input type="text"
+                                   name="boxPlots[{{boxPlotIndex}}].sortVersionParameter"
+                                   ng-model="boxPlot.sortVersionParameter" class="form-control" pr-server-validation>
+                        </div>
+                    </div>
+
+                    <!-- series -->
+                    <h3 class="item-title">Series</h3>
+
+                    <div class="row series-item-row">
+                        <div class="col-md-2 form-group">
+                            <label>Series name</label>
+                            <input type="text" name="boxPlots[{{boxPlotIndex}}].series.name"
+                                   ng-model="boxPlot.series.name" class="form-control" placeholder="Series name" pr-server-validation>
+                        </div>
+
+                        <div class="col-md-3 form-group">
+                            <label>Test</label>
+                            <ui-select ng-model="boxPlot.series.testId" title="Choose a test"
+                                       ng-change="vm.seriesTestSelected($select.selected, boxPlotIndex)"
+                                       name="boxPlots[{{boxPlotIndex}}].series.testId"
+                                       pr-server-validation>
+                                <ui-select-match placeholder="Select a test...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="test.id as test in vm.testsList"
+                                                   refresh="vm.refreshTestsList($select.search)"
+                                                   refresh-delay="0">
+                                    <span ng-bind-html="test.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                        <div class="col-md-2 form-group">
+                            <label>Metric</label>
+                            <ui-select ng-model="boxPlot.series.metricName" title="Choose a metric"
+                                       ng-disabled="boxPlot.series.testId == undefined"
+                                       name="boxPlots[{{boxPlotIndex}}].series.metricName" pr-server-validation>
+                                <ui-select-match placeholder="Select a metric...">{{$select.selected.name}}</ui-select-match>
+                                <ui-select-choices repeat="metric.name as metric in vm.testMetrics[boxPlot.series.testId] | filter: $select.search">
+                                    <span ng-bind-html="metric.name | highlight: $select.search"></span>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                        <div class="col-md-2 form-group">
+                            <label>Filter by</label>
+                            <select pf-select ng-model="boxPlot.series.filter" class="form-control"
+                                    name="boxPlots[{{boxPlotIndex}}].series.filter"
+                                    ng-options="executionFilterOption.name as executionFilterOption.text for executionFilterOption in vm.executionFilterOptions"
+                                    pr-server-validation>
+                            </select>
+                        </div>
+
+                        <div ng-if="boxPlot.series.filter == 'TAG_QUERY'" class="col-md-3 form-group">
+                            <label>Tag query</label>
+                            <input type="text"
+                                   name="boxPlots[{{boxPlotIndex}}].series.tagQuery"
+                                   ng-model="boxPlot.series.tagQuery" class="form-control" pr-server-validation>
+                        </div>
+
+                        <div ng-if="boxPlot.series.filter == 'PARAMETER_QUERY'" class="col-md-3 form-group">
+                            <label>Parameter query</label>
+                            <input type="text"
+                                   name="boxPlots[{{boxPlotIndex}}].series.parameterQuery"
+                                   ng-model="boxPlot.series.parameterQuery" class="form-control" pr-server-validation>
+                        </div>
+                    </div>
+                </v-pane-content>
+            </v-pane>
+
+            <div ng-show="vm.formErrors['boxPlots'] && (vm.data.boxPlots == undefined || vm.data.boxPlots.length == 0)"
+                 class="alert alert-danger form-validation-error"><span class="pficon pficon-error-circle-o"></span>{{vm.formErrors['boxPlots']}}</div>
+
+            <p class="no-data" ng-show="vm.data.boxPlots == undefined || vm.data.boxPlots.length == 0">No boxplots</p>
+
+            <div class="add-link comparison-link">
+                <a class="cursor-pointer" ng-click="vm.addBoxPlot()">
+                    <span class="pficon pficon-add-circle-o" aria-hidden="true"> </span>Add boxplot
+                </a>
+            </div>
+        </v-accordion>
+    </ng-form>
+</div>
