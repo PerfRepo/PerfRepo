@@ -5,7 +5,8 @@
         .module('org.perfrepo')
         .controller('AppController', AppController);
 
-    function AppController(_comparisonSession, authenticationService, comparisonSessionService, $state, $scope) {
+    function AppController(_comparisonSession, authenticationService, comparisonSessionService, userModalService,
+                           $state, $scope) {
         var vm = this;
         vm.logout = logout;
         vm.settings = settings;
@@ -68,7 +69,7 @@
         }
 
         function settings() {
-            alert('Not yet implemented');
+            var modalInstance = userModalService.editUser(vm.user.id);
         }
     }
 })();

@@ -17,7 +17,13 @@ public class UserDto {
 
     private String email;
 
+    private boolean passwordChange;
+
     private String password;
+
+    private String newPassword;
+
+    private String newPasswordAgain;
 
     public Long getId() {
         return id;
@@ -59,12 +65,36 @@ public class UserDto {
         this.email = email;
     }
 
+    public boolean isPasswordChange() {
+        return passwordChange;
+    }
+
+    public void setPasswordChange(boolean passwordChange) {
+        this.passwordChange = passwordChange;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
+    }
+
+    public String getNewPasswordAgain() {
+        return newPasswordAgain;
+    }
+
+    public void setNewPasswordAgain(String newPasswordAgain) {
+        this.newPasswordAgain = newPasswordAgain;
     }
 
     @Override

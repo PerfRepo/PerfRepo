@@ -5,17 +5,36 @@
         .module('org.perfrepo.user')
         .service('userService', UserService);
 
-    function UserService($http, API_USER_URL) {
+    function UserService($resource, API_USER_URL) {
+        var UserResource = $resource(API_USER_URL + '/:id',
+            {
+                id: '@id'
+            },
+            {
+                'update': {
+                    method: 'PUT',
+                    isArray: false,
+                    url: API_USER_URL,
+                    params: {}
+                }
+            });
 
         return {
-            getAll: getAll
+            getById: getById,
+            getAll: getAll,
+            update: update
         };
 
+        function getById(id) {
+            return UserResource.get({id: id}).$promise;
+        }
+
         function getAll() {
-            return $http.get(API_USER_URL)
-                .then(function (response) {
-                    return response.data;
-                });
+            return UserResource.query().$promise;
+        }
+
+        function update(user) {
+            return UserResource.update(user).$promise;
         }
     }
 })();

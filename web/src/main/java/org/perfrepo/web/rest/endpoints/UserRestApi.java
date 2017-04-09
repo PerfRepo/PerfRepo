@@ -25,9 +25,24 @@ public class UserRestApi {
     private UserAdapter userAdapter;
 
     @GET
+    @Path("/{id}")
+    public Response get(@PathParam("id") Long userId) {
+        UserDto user = userAdapter.getUser(userId);
+
+        return Response.ok(user).build();
+    }
+
+    @GET
     public Response getAllUsers() {
         List<UserDto> allUsers = userAdapter.getAllUsers();
 
         return Response.ok().entity(allUsers).build();
+    }
+
+    @PUT
+    public Response update(UserDto userDto) {
+        userAdapter.updateUser(userDto);
+
+        return Response.noContent().build();
     }
 }

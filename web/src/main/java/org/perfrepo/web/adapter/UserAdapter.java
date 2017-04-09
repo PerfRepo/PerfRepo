@@ -16,4 +16,8 @@ public interface UserAdapter {
      * @return The list of all users.
      */
     List<UserDto> getAllUsers();
+
+    UserDto getUser(Long id);
+
+    UserDto updateUser(UserDto user);
 }
