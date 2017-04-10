@@ -17,9 +17,7 @@ public class UnauthorizedExceptionMapper implements ExceptionMapper<Unauthorized
 
     @Override
     public Response toResponse(UnauthorizedException exception) {
-        Map<String, Object> message = new HashMap<>();
-        message.put("message", exception.getMessage());
-        message.put("source", "UNAUTHORIZED EXCEPTION");
-        return Response.status(Response.Status.FORBIDDEN).entity(message).build();
+        ValidationExceptionResponse responseEntity = new ValidationExceptionResponse(exception, "UNAUTHORIZED EXCEPTION");
+        return Response.status(Response.Status.FORBIDDEN).entity(responseEntity).build();
     }
 }

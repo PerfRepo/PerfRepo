@@ -6,7 +6,8 @@
         .config(config)
         .run(run);
 
-    function config($stateProvider, $urlRouterProvider) {
+    function config($stateProvider, $urlRouterProvider, NotificationsProvider) {
+        NotificationsProvider.setDelay(3000).setPersist({'error': false});
         $urlRouterProvider.otherwise('/dashboard');
 
         $stateProvider

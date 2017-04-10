@@ -13,7 +13,15 @@
         return {
             responseError: function (response) {
                 return $injector.invoke(function () {
+                    if (response.status === 403) {
+                        Notifications.error(response.data.message);
+                    }
+
                     if (response.status === 404) {
+                        Notifications.error(response.data.message);
+                    }
+
+                    if (response.status === 422) {
                         Notifications.error(response.data.message);
                     }
 

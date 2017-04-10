@@ -3,6 +3,8 @@ package org.perfrepo.web.adapter.dummy_impl;
 import org.perfrepo.dto.util.authentication.AuthenticationResult;
 import org.perfrepo.dto.user.UserDto;
 import org.perfrepo.dto.util.authentication.LoginCredentialParams;
+import org.perfrepo.dto.util.validation.FieldError;
+import org.perfrepo.dto.util.validation.ValidationErrors;
 import org.perfrepo.web.adapter.AuthenticationAdapter;
 import org.perfrepo.web.adapter.dummy_impl.storage.Storage;
 import org.perfrepo.web.adapter.exceptions.UnauthorizedException;
@@ -23,14 +25,17 @@ public class AuthenticationAdapterDummyImpl implements AuthenticationAdapter {
 
     @Override
     public AuthenticationResult login(LoginCredentialParams credentials) {
+        ValidationErrors validationErrors = new ValidationErrors();
+
         if (credentials == null) {
-            throw new UnauthorizedException("Bad login.");
+            throw new UnauthorizedException("Bad login.", validationErrors);
         }
 
         UserDto user = storage.user().getByUsernameWithPassword(credentials.getUsername());
 
         if (user == null) {
-            throw new UnauthorizedException("Bad login.");
+            validationErrors.addFieldError("username", "The user does not exists.");
+            throw new UnauthorizedException("Bad login.", validationErrors);
         }
 
         if (user.getPassword().equals(credentials.getPassword())) {
@@ -48,9 +53,11 @@ public class AuthenticationAdapterDummyImpl implements AuthenticationAdapter {
             storage.token().saveToken(token);
 
             return authenticationDto;
+        } else {
+            validationErrors.addFieldError("password", "Bad password.");
         }
 
-        throw new UnauthorizedException("Bad password.");
+        throw new UnauthorizedException("Bad password.", validationErrors);
     }
 
     @Override
