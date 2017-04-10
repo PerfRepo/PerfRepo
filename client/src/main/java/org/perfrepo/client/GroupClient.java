@@ -2,10 +2,10 @@ package org.perfrepo.client;
 
 import org.perfrepo.dto.group.GroupDto;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
- * Created by UCTOVNIK on 10.04.2017.
+ * Created by Adam Krajcik on 10.04.2017.
  */
 public class GroupClient {
 
@@ -13,7 +13,7 @@ public class GroupClient {
 
     public GroupClient(PerfRepoClient parentClient) { this.parentClient = parentClient; }
 
-    public Collection<GroupDto> getAll() {
+    public List<GroupDto> getAll() {
         return null;
     }
 }
