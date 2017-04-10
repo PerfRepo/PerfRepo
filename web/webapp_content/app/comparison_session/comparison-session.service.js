@@ -5,7 +5,7 @@
         .module('org.perfrepo.comparisonSession')
         .service('comparisonSessionService', ComparisonSessionService);
 
-    function ComparisonSessionService($http, API_COMPARISON_SESSION_URL) {
+    function ComparisonSessionService($http, API_COMPARISON_SESSION_URL, Notifications) {
 
         return {
             getTestExecutions: getTestExecutions,
@@ -23,6 +23,7 @@
         function addToComparison(testExecutionIds) {
             return $http.post(API_COMPARISON_SESSION_URL + '/addition', testExecutionIds)
                 .then(function (response) {
+                    Notifications.success("Added to comparison.");
                     return response.data;
                 });
         }
