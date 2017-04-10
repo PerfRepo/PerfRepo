@@ -10,6 +10,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.InvalidParameterException;
 
 
 /**
@@ -75,12 +76,52 @@ public class AlertClient {
         }
     }
 
-    public void update(AlertDto alertDto) {
+    public void update(AlertDto alertDto) throws Exception {
+        if (alertDto == null) {
+            throw new NullPointerException("AlertDto is null.");
+        }
 
+        if (alertDto.getId() == null) {
+            throw new InvalidParameterException();
+        }
+
+        URL url = new URL(parentClient.getRepositoryUrl() + "api/json/alert/create");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Authentication", "Bearer " + parentClient.getToken().getToken());
+        conn.setDoOutput(true);
+        DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+
+        wr.writeBytes(objectMapper.writeValueAsString(alertDto));
+        wr.flush();
+        wr.close();
+
+        int responseCode = conn.getResponseCode();
+
+        if (responseCode == 204) {
+            // OK
+        } else {
+            // ERROR
+        }
     }
 
-    public void delete(Long AlertId) {
+    public void delete(Long alertId) throws Exception {
+        URL url = new URL(parentClient.getRepositoryUrl() + "api/json/alert/" + alertId);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
+        conn.setRequestMethod("DELETE");
+        conn.setRequestProperty("Authorization", "Bearer " + parentClient.getToken().getToken());
+
+        int responseCode = conn.getResponseCode();
+
+        if (responseCode == 204) {
+            // OK
+        } else {
+            // ERROR
+        }
     }
 
 }
