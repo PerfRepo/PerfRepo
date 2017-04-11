@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * TODO
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
 @WebFilter(filterName = "RestApiAuthenticationFilter", urlPatterns = {"/rest/json/*"})
@@ -31,10 +30,7 @@ public class RestApiAuthenticationFilter implements Filter {
       HttpServletRequest req = (HttpServletRequest) request;
       String authorization = req.getHeader("Authorization");
 
-      // TODO add support for Basic
-      // TODO remove this and exclude this url from filter
       if (((HttpServletRequest) request).getRequestURI().equals("/rest/json/authentication")) {
-
           chain.doFilter(request, response);
           return;
       }

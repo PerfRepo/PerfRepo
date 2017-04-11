@@ -6,9 +6,8 @@
         .config(config)
         .run(run);
 
-    function config($stateProvider, $urlRouterProvider, $locationProvider, NotificationsProvider) {
+    function config($stateProvider, $urlRouterProvider, NotificationsProvider) {
         NotificationsProvider.setDelay(3000).setPersist({'error': false});
-        $locationProvider.html5Mode(true);
         $urlRouterProvider.otherwise('/dashboard');
 
         $stateProvider
@@ -50,7 +49,8 @@
         ngProgress.setColor('#39a5dc');
 
         if (!authenticationService.isAuthenticated()) {
-            $state.go('login');
+            authenticationService.saveAttemptLocation();
+            authenticationService.redirectToLogin();
         }
 
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {

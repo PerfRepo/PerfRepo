@@ -3,7 +3,6 @@ package org.perfrepo.web.adapter.dummy_impl;
 import org.perfrepo.dto.util.authentication.AuthenticationResult;
 import org.perfrepo.dto.user.UserDto;
 import org.perfrepo.dto.util.authentication.LoginCredentialParams;
-import org.perfrepo.dto.util.validation.FieldError;
 import org.perfrepo.dto.util.validation.ValidationErrors;
 import org.perfrepo.web.adapter.AuthenticationAdapter;
 import org.perfrepo.web.adapter.dummy_impl.storage.Storage;

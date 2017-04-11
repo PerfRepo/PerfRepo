@@ -23,7 +23,7 @@ public class ValidationExceptionResponse {
     }
 
     ValidationExceptionResponse(ValidationException exception) {
-        this(exception,"VALIDATION EXCEPTION");
+        this(exception, "VALIDATION EXCEPTION");
     }
 
     public String getMessage() {

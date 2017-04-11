@@ -12,7 +12,8 @@
 
         function login(form) {
             authenticationService.login(vm.username, vm.password).then(function(response){
-                $state.go($state.params.toState, $state.params.toParams);
+                authenticationService.redirectToAttemptedLocation()
+                //$state.go($state.params.toState, $state.params.toParams);
             }, function(errorResponse) {
                 validationHelper.setFormErrors(errorResponse, form);
             });

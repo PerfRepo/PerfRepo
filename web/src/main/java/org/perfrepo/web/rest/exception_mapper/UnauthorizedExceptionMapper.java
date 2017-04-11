@@ -5,8 +5,6 @@ import org.perfrepo.web.adapter.exceptions.UnauthorizedException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Maps {@link UnauthorizedException} exception to HTTP response. Sets 403 status code.
