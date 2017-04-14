@@ -14,11 +14,15 @@
 
     function MetricHistoryLineChartController(reportModalService, CHART_COLORS) {
         var vm = this;
-
+        var colorIndex = 0;
         vm.data = [];
         // series
         angular.forEach(vm.chartData.series, function(series) {
-            vm.data.push({key: series.name, values: series.values});
+            vm.data.push({
+                key: series.name,
+                values: series.values,
+                color: CHART_COLORS[colorIndex++ % CHART_COLORS.length]
+            });
         });
         // baselines
         angular.forEach(vm.chartData.baselines, function(baseline) {
@@ -37,7 +41,11 @@
                     }
                 ];
 
-            vm.data.push({key: baseline.name, values: data});
+            vm.data.push({
+                key: baseline.name,
+                values: data,
+                color: CHART_COLORS[colorIndex++ % CHART_COLORS.length]
+            });
         });
 
         vm.options = {
@@ -50,7 +58,6 @@
                     bottom: 40,
                     left: 55
                 },
-                color: CHART_COLORS,
                 x: function(d){ return d.x; },
                 y: function(d){ return d.y; },
                 valueFormat: function(d){
