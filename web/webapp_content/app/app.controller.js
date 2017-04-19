@@ -5,7 +5,7 @@
         .module('org.perfrepo')
         .controller('AppController', AppController);
 
-    function AppController(_comparisonSession, authenticationService, comparisonSessionService, userModalService,
+    function AppController(_comparisonSession, _info, authenticationService, comparisonSessionService, userModalService,
                            $state, $scope) {
         var vm = this;
         vm.logout = logout;
@@ -14,6 +14,7 @@
         vm.removeAllTestExecutions = removeAllTestExecutions;
         vm.compareTestExecutions = compareTestExecutions;
         vm.comparisonSession = _comparisonSession;
+        vm.info = _info;
         vm.user = authenticationService.getUser();
 
         vm.navigationItems = [

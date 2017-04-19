@@ -21,7 +21,10 @@
                     requireLogin: true
                 },
                 resolve: {
-                    _comparisonSession: function (comparisonSessionService) {
+                    _info: function(dashboardService) {
+                        return dashboardService.getPerfRepoInfo();
+                    },
+                    _comparisonSession: function(comparisonSessionService) {
                         return comparisonSessionService.getTestExecutions();
                     }
                 }
