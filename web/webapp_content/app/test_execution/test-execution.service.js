@@ -5,7 +5,7 @@
         .module('org.perfrepo.testExecution')
         .service('testExecutionService', TestExecutionService);
 
-    function TestExecutionService($http, $resource, API_TEST_EXECUTION_URL) {
+    function TestExecutionService($http, $resource, API_TEST_EXECUTION_URL, SETTINGS) {
 
         var testExecutionResource = $resource(API_TEST_EXECUTION_URL + '/:id',
             {
@@ -71,7 +71,7 @@
         }
 
         function searchLastForTest(testUID) {
-             return search(searchParamsForTestUID(testUID, 3));
+             return search(searchParamsForTestUID(testUID, SETTINGS.LAST_EXECUTIONS_TEST_SEARCH));
         }
 
         function getById(id) {

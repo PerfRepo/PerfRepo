@@ -42,9 +42,10 @@
             });
     }
 
-    function run($rootScope, $state, authenticationService, ngProgressFactory){
+    function run($rootScope, $state, authenticationService, ngProgressFactory, SETTINGS){
         var ngProgress = ngProgressFactory.createInstance();
         $rootScope.ngProgress = ngProgress;
+        $rootScope.SETTINGS = SETTINGS;
         ngProgress.setHeight('5px');
         ngProgress.setColor('#39a5dc');
 
