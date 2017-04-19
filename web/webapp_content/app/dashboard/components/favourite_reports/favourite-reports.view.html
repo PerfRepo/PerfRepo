@@ -1,0 +1,16 @@
+<p class="no-results" ng-show="!vm.reports || vm.reports.length == 0">No favourite reports</p>
+<ul class="list-content">
+    <li ng-repeat="report in vm.reports">
+        <div class="row">
+            <div class="col-sm-4">
+                <a uib-tooltip="Name" ui-sref="app.reportDetail({id: report.id})">{{report.name}}</a>
+            </div>
+            <div class="col-sm-2">
+                <span uib-tooltip="Type">{{report.typeName}}</span>
+            </div>
+            <div class="col-sm-6">
+
+            </div>
+        </div>
+    </li>
+</ul>

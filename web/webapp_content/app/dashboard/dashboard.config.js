@@ -10,7 +10,12 @@
             url: 'dashboard',
             templateUrl: 'app/dashboard/dashboard.view.html',
             controller: 'DashboardController',
-            controllerAs: 'dashboard'
+            controllerAs: 'vm',
+            resolve: {
+                _content: function (dashboardService) {
+                    return dashboardService.getContent();
+                }
+            }
         });
     }
 })();

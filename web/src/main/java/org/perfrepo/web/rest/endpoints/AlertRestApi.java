@@ -11,7 +11,7 @@ import javax.ws.rs.core.Response;
 import java.net.URI;
 
 /**
- * Service endpoint for test alerts.
+ * Web service endpoint for test alerts.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */

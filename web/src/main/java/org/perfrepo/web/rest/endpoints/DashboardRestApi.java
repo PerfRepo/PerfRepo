@@ -1,7 +1,7 @@
 package org.perfrepo.web.rest.endpoints;
 
-import org.perfrepo.dto.group.GroupDto;
-import org.perfrepo.web.adapter.GroupAdapter;
+import org.perfrepo.dto.dashboard.DashboardContent;
+import org.perfrepo.web.adapter.DashboardAdapter;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -11,26 +11,26 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.List;
 
 /**
- * Web service endpoint for test alerts.
+ * Web service endpoint for dashboard page.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */
-@Path("/groups")
+@Path("/dashboard")
 @RequestScoped
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class GroupRestApi {
+public class DashboardRestApi {
 
     @Inject
-    private GroupAdapter groupAdapter;
+    private DashboardAdapter dashboardAdapter;
 
     @GET
-    public Response getAllGroups() {
-        List<GroupDto> groups = groupAdapter.getAllGroups();
+    @Path("/content")
+    public Response getContent() {
+        DashboardContent content = dashboardAdapter.getDashboardContent();
 
-        return Response.ok(groups).build();
+        return Response.ok().entity(content).build();
     }
 }

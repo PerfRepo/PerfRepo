@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Service endpoint for test execution comparison session.
+ * Web service endpoint for test execution comparison session.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */

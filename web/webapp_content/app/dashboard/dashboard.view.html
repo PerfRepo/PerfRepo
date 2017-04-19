@@ -4,5 +4,26 @@
     </div>
 </div>
 
-<p>Hello, here is {{dashboard.hello}}</p>
-<button ng-click="dashboard.addError()">Add error</button>
+<div class="dashboard">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Latest test executions</h3>
+        </div>
+        <div class="panel-body">
+            <latest-test-executions-dashboard
+                    executions="vm.content.latestTestExecutions">
+            </latest-test-executions-dashboard>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Favourite reports</h3>
+        </div>
+        <div class="panel-body">
+            <favourite-reports-dashboard
+                    reports="vm.content.favouriteReports">
+            </favourite-reports-dashboard>
+        </div>
+    </div>
+</div>

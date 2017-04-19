@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.List;
 
 /**
- * Service endpoint for test definitions.
+ * Web service endpoint for test definitions.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */

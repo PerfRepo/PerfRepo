@@ -1,0 +1,23 @@
+<p class="no-results" ng-show="!vm.executions || vm.executions.length == 0">No test executions exist</p>
+<ul class="list-content">
+    <li ng-repeat="execution in vm.executions">
+        <div class="row">
+            <div class="col-sm-4">
+                <a uib-tooltip="Name" ui-sref="app.testExecutionDetail({id: execution.id})">{{execution.name}}</a>
+            </div>
+            <div class="col-sm-2">
+                <span uib-tooltip="Started">{{execution.started | date: 'MMM d, y HH:mm:ss'}}</span>
+            </div>
+            <div class="col-sm-4">
+                <span uib-tooltip="Tags">
+                    <span ng-repeat="tag in execution.tags" class="label label-info tag-label">{{tag}}</span>
+                </span>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-default btn-sm" ng-click="vm.addToComparison(execution.id)">
+                    <span class="pficon-add-circle-o" aria-hidden="true"></span> Add to comparison
+                </button>
+            </div>
+        </div>
+    </li>
+</ul>

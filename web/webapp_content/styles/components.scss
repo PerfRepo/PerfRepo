@@ -490,3 +490,27 @@ div.comparison-session {
     padding: 8px 15px 3px 15px;
   }
 }
+
+// ######################################################################################## dashboard
+div.dashboard {
+  margin-top: 20px;
+
+  div.panel-body {
+    padding: 5px 15px;
+  }
+
+  ul.list-content {
+    list-style: none;
+    margin-bottom: 0;
+    padding-left: 5px;
+
+    li {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+
+    li + li {
+      border-top: 1px solid #f5f5f5;
+    }
+  }
+}

@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Service endpoint for test executions.
+ * Web service endpoint for test executions.
  *
  * @author Jiri Grunwald (grunwjir@gmail.com)
  */

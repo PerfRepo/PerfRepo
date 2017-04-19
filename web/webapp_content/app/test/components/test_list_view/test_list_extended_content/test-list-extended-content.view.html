@@ -6,16 +6,21 @@
             <ul class="list-extended-content">
                 <li ng-repeat="testExecution in vm.testExecutions.data">
                     <div class="row">
-                        <div class="col-sm-3">
+                        <div class="col-sm-4">
                             <a uib-tooltip="Name" ui-sref="app.testExecutionDetail({id: testExecution.id})">{{testExecution.name}}</a>
                         </div>
                         <div class="col-sm-2">
-                            <span uib-tooltip="Started">{{testExecution.started | date}}</span>
+                            <span uib-tooltip="Started">{{testExecution.started | date: 'MMM d, y HH:mm:ss'}}</span>
                         </div>
-                        <div class="col-sm-6">
+                        <div class="col-sm-4">
                             <span uib-tooltip="Tags">
                                 <span ng-repeat="tag in testExecution.tags" class="label label-info tag-label">{{tag}}</span>
                             </span>
+                        </div>
+                        <div class="col-sm-2">
+                            <button class="btn btn-default btn-sm" ng-click="vm.addToComparison(testExecution.id)">
+                                <span class="pficon-add-circle-o" aria-hidden="true"></span> Add to comparison
+                            </button>
                         </div>
                     </div>
                 </li>
