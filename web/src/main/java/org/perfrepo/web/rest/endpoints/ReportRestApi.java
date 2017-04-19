@@ -97,6 +97,14 @@ public class ReportRestApi {
       return Response.ok().entity(permissions).build();
    }
 
+   @POST
+   @Path("/{id}/favourite")
+   public Response markReportFavourite(@PathParam("id") Long reportId, boolean favourite) {
+      reportAdapter.markReportFavourite(reportId, favourite);
+
+      return Response.noContent().build();
+   }
+
    @GET
    @Path("/table-comparison-preview")
    public Response getTableComparisonPreview() {

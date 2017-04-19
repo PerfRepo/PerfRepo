@@ -7,7 +7,9 @@
 
     <div class="list-view-pf-description">
         <div class="list-group-item-heading">
-            <a uib-tooltip="Name" ui-sref="app.reportDetail({id: item.id})">{{item.name}}</a>
+            <a ui-sref="app.reportDetail({id: item.id})"><span uib-tooltip="Name">{{item.name}}</span>
+                <span ng-show="item.favourite" uib-tooltip="Favourite report" class="fa fa-star-o" aria-hidden="true"></span>
+            </a>
         </div>
         <div class="list-group-item-text">
             <span uib-tooltip="Type">{{item.typeName}}</span>

@@ -13,7 +13,7 @@
             templateUrl: 'app/report/components/report_list_view/report-list-view.view.html'
         });
 
-    function ReportListViewController($state,  $templateCache, reportModalService) {
+    function ReportListViewController($state,  $templateCache, reportModalService, reportService) {
         var vm = this;
         $templateCache.put('report-detail-button-template', '<span class="fa fa-th-list"></span> {{actionButton.name}}');
         $templateCache.put('report-edit-button-template', '<span class="pficon pficon-edit"></span> {{actionButton.name}}');
@@ -57,6 +57,11 @@
 
         function getMenuActions() {
             return [
+                {
+                    name: 'Mark/unmark as favourite',
+                    title: 'Mark/unmark report as favourite',
+                    actionFn: markReportFavouriteAction
+                }
             ];
         }
 
@@ -72,6 +77,12 @@
             var modalInstance = reportModalService.removeReport(item);
 
             modalInstance.result.then(function () {
+                vm.onUpdateList();
+            });
+        }
+
+        function markReportFavouriteAction(action, item) {
+            reportService.markFavourite(item.id, !item.favourite).then(function () {
                 vm.onUpdateList();
             });
         }

@@ -35,7 +35,8 @@
             getSearchCriteria: getSearchCriteria,
             create: create,
             remove: remove,
-            update: update
+            update: update,
+            markFavourite: markFavourite
         };
 
         function search(searchParams) {
@@ -81,6 +82,10 @@
 
         function update(report) {
             return reportResource.update(wizardService.getPreparedReportRequestData(report)).$promise;
+        }
+
+        function markFavourite(id, favourite) {
+            return $http.post(API_REPORT_URL + '/' + id + '/favourite', favourite);
         }
     }
 })();

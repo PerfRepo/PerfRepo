@@ -366,6 +366,7 @@ public class Storage {
         MetricHistoryReportDto metricReport2 = new MetricHistoryReportDto();
         reportStorage.create(metricReport2);
         metricReport2.setName("Metric history report WITH DATA");
+        metricReport2.setFavourite(true);
         metricReport2.setTypeName("Metric history report");
         metricReport2.setDescription("Description of <strong>metric history</strong> report.");
         metricReport2.setCharts(new ArrayList<>());
@@ -482,6 +483,7 @@ public class Storage {
         BoxPlotReportDto boxPlotReport = new BoxPlotReportDto();
         reportStorage.create(boxPlotReport);
         boxPlotReport.setName("Boxplot report WITH DATA");
+        boxPlotReport.setFavourite(true);
         boxPlotReport.setTypeName("Boxplot report");
         boxPlotReport.setDescription("Description of <strong>boxplot</strong> report.");
         boxPlotReport.setBoxPlots(new ArrayList<>());

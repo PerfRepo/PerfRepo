@@ -27,6 +27,7 @@ public class TableComparisonReportCreator {
     public static ReportDto createReport() {
         TableComparisonReportDto tableReport = new TableComparisonReportDto();
         tableReport.setName("Table comparison report WITH DATA");
+        tableReport.setFavourite(true);
         tableReport.setTypeName("Table comparison report");
         tableReport.setDescription("Description of <strong>table comparison</strong> report.");
         // group 1

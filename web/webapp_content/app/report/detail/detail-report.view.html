@@ -7,6 +7,10 @@
             <button class="btn btn-default" ng-click="vm.showPermissions()">
                 <span class="fa fa-lock" aria-hidden="true"></span> Show permissions
             </button>
+            <button ng-disabled="!vm.favouriteButtonEnabled" class="btn btn-default" ng-click="vm.markFavourite()">
+                <span ng-show="!vm.report.favourite"><span class="fa fa-star-o" aria-hidden="true"></span> Mark as favourite</span>
+                <span ng-show="vm.report.favourite"><span class="fa fa-star" aria-hidden="true"></span> Unmark as favourite</span>
+            </button>
             <button class="btn btn-default" ng-click="vm.editReport()">
                 <span class="pficon-edit" aria-hidden="true"></span> Edit
             </button>
@@ -17,7 +21,9 @@
     </div>
 </div>
 
-<h1 class="report-title" title="Report name">{{vm.report.name}}</h1>
+<h1 class="report-title" title="Report name">{{vm.report.name}}
+    <span ng-show="vm.report.favourite" uib-tooltip="Favourite report" class="fa fa-star-o" aria-hidden="true"></span>
+</h1>
 <p class="report-description" ng-bind-html="vm.report.description"></p>
 
 <!-- table comparison report -->

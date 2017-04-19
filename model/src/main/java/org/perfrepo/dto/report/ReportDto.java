@@ -31,6 +31,8 @@ public abstract class ReportDto {
 
     private List<PermissionDto> permissions;
 
+    private boolean favourite;
+
     public Long getId() {
         return id;
     }
@@ -69,5 +71,13 @@ public abstract class ReportDto {
 
     public void setPermissions(List<PermissionDto> permissions) {
         this.permissions = permissions;
+    }
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 }

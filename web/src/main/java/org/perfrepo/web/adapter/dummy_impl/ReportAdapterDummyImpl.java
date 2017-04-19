@@ -96,6 +96,15 @@ public class ReportAdapterDummyImpl implements ReportAdapter {
     }
 
     @Override
+    public void markReportFavourite(Long reportId, boolean favourite) {
+        if (storage.report().getById(reportId) == null) {
+            throw new NotFoundException("Report does not exist.");
+        }
+
+        storage.report().getById(reportId).setFavourite(favourite);
+    }
+
+    @Override
     public void validateWizardReportInfoStep(ReportDto report) {
         ValidationErrors validation = new ValidationErrors();
 

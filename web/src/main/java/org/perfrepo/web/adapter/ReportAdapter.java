@@ -104,6 +104,8 @@ public interface ReportAdapter {
      */
     ReportDto getTableComparisonReportPreview();
 
+    void markReportFavourite(Long reportId, boolean favourite);
+
     /**
      * Validate report wizard step - report information (name, description...).
      *
