@@ -608,8 +608,10 @@ public class MetricReportController extends BaseController {
 
          pointDetails.exec = testService.getFullTestExecution(pointDetails.execId);
 
-         for (FavoriteParameter fp : userService.getFavoriteParametersForTest(pointDetails.exec.getTest())) {
-            pointDetails.favParams.add(new PointDetailsFavParam(fp.getLabel(), pointDetails.exec.findParameter(fp.getParameterName())));
+         if (userService.getLoggedUser() != null) {
+            for (FavoriteParameter fp : userService.getFavoriteParametersForTest(pointDetails.exec.getTest())) {
+               pointDetails.favParams.add(new PointDetailsFavParam(fp.getLabel(), pointDetails.exec.findParameter(fp.getParameterName())));
+            }
          }
       }
 
