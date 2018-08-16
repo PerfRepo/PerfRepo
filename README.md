@@ -80,6 +80,8 @@ Following text assumes PostgreSQL installed on localhost and WildFly's `standalo
         </authentication>
     </security-domain>
 ```
+Note: [WildFly Elyton](https://docs.jboss.org/author/display/WFLY/WildFly+Elytron+Security) is a new security framework to WildFly, which is by default used since WildFly 11.
+Older JAAS/PicketLink configuration can be still used, but you have to place it under `<subsystem xmlns="urn:jboss:domain:security:2.0">` subsystem (you don't have to create it, it's alreadt present in default config).
 
 * Add SMTP server configuration for alerting
 ```xml
