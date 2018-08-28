@@ -110,6 +110,10 @@ public class EmailAlertingReporterService implements AlertingReporterService {
     * @return evaluated description
     */
    private String getEvaluatedDescription(Alert alert) {
+      if (alert.getDescription() == null || alert.getDescription().isEmpty()) {
+         return "";
+      }
+      
       ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
 
       //regex pattern for ${expression}
