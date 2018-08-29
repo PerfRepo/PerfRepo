@@ -107,7 +107,19 @@ Following text assumes PostgreSQL installed on localhost and WildFly's `standalo
 
 # Running tests
 
-PerfRepo has several tests to ensure REST client compatibility. These tests are configured to use exact copy of production database named `perfrepo_test`, so to run them, you have to set up new datasource `PerfRepoTestDS`, new security domain `perfrepo_test` pointing to the testing database.
+Integration tests uses Arquillian WildFly remote container, which means you have to have WidlFly running on your test machine and listening on default ports.
+Also you have to add test datasource `PerfRepoTestDS`into the WildFly, ideally pointing to test DB, e.g.
+```xml
+                <datasource jndi-name="java:jboss/datasources/PerfRepoTestDS" pool-name="PerfRepoTestDS" enabled="true" use-java-context="true">
+                    <connection-url>jdbc:postgresql://localhost:5432/perfrepotest</connection-url>
+                    <driver-class>org.postgresql.Driver</driver-class>
+                    <driver>postgresql</driver>
+                    <security>
+                        <user-name>perfrepo</user-name>
+                        <password>perfrepo</password>
+                    </security>
+                </datasource>
+```
 
 
 
