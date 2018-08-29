@@ -13,7 +13,7 @@ import org.perfrepo.model.to.TestExecutionSearchTO;
 import org.perfrepo.web.dao.TestExecutionDAO;
 import org.perfrepo.web.service.UserService;
 
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.ejb.TransactionManagement;
@@ -46,7 +46,7 @@ import org.perfrepo.web.util.MultiValue;
  * @author Matej Novotny (manovotn@redhat.com)
  */
 @Named
-@Stateless
+@Stateful
 @TransactionManagement(TransactionManagementType.CONTAINER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 public class ConditionCheckerImpl implements ConditionChecker {
