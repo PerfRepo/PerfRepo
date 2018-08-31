@@ -114,7 +114,7 @@
                                 <td>#{te.name}</td>
                                 <td>
                                     <ui:repeat value="#{te.tags}" var="tagLocal">
-                                        <span class="badge badge-success">#{tagLocal}</span>
+                                        <span class="badge badge-success">#{tagLocal.name}</span>
                                     </ui:repeat>
                                 </td>
                                 <td>#{te.started}</td>
@@ -159,7 +159,7 @@
                                 <td>#{te.name}</td>
                                 <td>
                                     <ui:repeat value="#{te.tags}" var="tagLocal">
-                                        <span class="badge badge-success">#{tagLocal}</span>
+                                        <span class="badge badge-success">#{tagLocal.name}</span>
                                     </ui:repeat>
                                 </td>
                                 <td>#{te.started}</td>
