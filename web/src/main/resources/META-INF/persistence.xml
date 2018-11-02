@@ -13,6 +13,9 @@
          <!-- Properties for Hibernate -->
          <property name="hibernate.hbm2ddl.auto" value="validate"/>
          <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+         <!-- see https://github.com/PerfCake/PerfRepo/issues/89 if doesn't help, we can try also
+          reduce hibernate.query.plan_parameter_metadata_max_size (default here is 128) -->
+         <property name="hibernate.query.plan_cache_max_size" value="64" /> 
 
          <!--property name="hibernate.show_sql" value="true" / -->
          <!-- please use: http://localhost:9990/console/App.html#logging and set logging for category org.hibernate.SQL to
