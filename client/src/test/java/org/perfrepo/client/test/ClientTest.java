@@ -180,6 +180,7 @@ public class ClientTest {
       client.deleteTest(testId);
    }
 
+   @Ignore("https://github.com/PerfCake/PerfRepo/issues/95")
    @org.junit.Test
    public void testUpdateTestExecution() throws Exception {
       Test test = createTest();
