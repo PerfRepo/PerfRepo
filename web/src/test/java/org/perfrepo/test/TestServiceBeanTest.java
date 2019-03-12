@@ -72,6 +72,10 @@ public class TestServiceBeanTest {
 
    @Deployment
    public static Archive<?> createDeployment() {
+
+      File testClassFolder = new File(TestServiceBeanTest.class.getResource("/.").getFile());
+      File testLibsFolder = new File(testClassFolder.getParentFile(), "test-libs");
+
       WebArchive war = ShrinkWrap.create(WebArchive.class, "test.war");
       war.addPackages(true, Alert.class.getPackage());
       war.addPackages(true, TestService.class.getPackage());
@@ -83,8 +87,8 @@ public class TestServiceBeanTest {
       war.addPackage(MultiValue.class.getPackage());
       war.addPackage(DAO.class.getPackage());
       war.addPackages(true, Alert.class.getPackage());
-      war.addAsLibrary(new File("target/test-libs/antlr-runtime.jar"));
-      war.addAsLibrary(new File("target/test-libs/maven-artifact.jar"));
+      war.addAsLibrary(new File(testLibsFolder,"antlr-runtime.jar"));
+      war.addAsLibrary(new File(testLibsFolder, "maven-artifact.jar"));
       war.addAsResource("test-persistence.xml", "META-INF/persistence.xml");
       war.addAsResource("users.properties");
       war.addAsResource("roles.properties");

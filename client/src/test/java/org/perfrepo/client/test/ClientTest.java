@@ -68,8 +68,8 @@ public class ClientTest {
       war.delete(ArchivePaths.create("WEB-INF/classes/META-INF/persistence.xml"));
       war.delete(ArchivePaths.create("WEB-INF/jboss-web.xml"));
 
-      war.add(new FileAsset(new File("target/test-classes/test-persistence.xml")), ArchivePaths.create("WEB-INF/classes/META-INF/persistence.xml"));
-      war.add(new FileAsset(new File("target/test-classes/test-jboss-web.xml")), ArchivePaths.create("WEB-INF/jboss-web.xml"));
+      war.add(new FileAsset(new File(ClientTest.class.getResource("/test-persistence.xml").getFile())), ArchivePaths.create("WEB-INF/classes/META-INF/persistence.xml"));
+      war.add(new FileAsset(new File(ClientTest.class.getResource("/test-jboss-web.xml").getFile())), ArchivePaths.create("WEB-INF/jboss-web.xml"));
 
       return war;
    }
