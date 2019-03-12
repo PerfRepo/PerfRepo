@@ -82,8 +82,10 @@ public class ClientTest {
 
    @AfterClass
    public static void destroyClient() {
-      client.shutdown();
-      client = null;
+      if (client != null) {
+         client.shutdown();
+         client = null;
+      }
    }
 
    @org.junit.Test
