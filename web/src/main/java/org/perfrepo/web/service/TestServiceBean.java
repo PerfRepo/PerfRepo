@@ -591,6 +591,7 @@ public class TestServiceBean implements TestService {
       if (value.hasParameters()) {
          for (ValueParameter valueParameter : value.getParameters()) {
             valueParameter.setValue(freshValue);
+            valueParameter.setId(null);
             newParams.add(valueParameterDAO.create(valueParameter).clone());
             newParams.get(newParams.size() - 1).setValue(freshValueClone);
          }
@@ -865,6 +866,7 @@ public class TestServiceBean implements TestService {
 
       for (Value value: updatedTestExecution.getValues()) {
          value.setTestExecution(freshTestExecution);
+         value.setId(null);
          addValue(value);
       }
    }
@@ -882,6 +884,7 @@ public class TestServiceBean implements TestService {
 
       for (TestExecutionParameter parameter: updatedTestExecution.getParameters()) {
          parameter.setTestExecution(freshTestExecution);
+         parameter.setId(null);
          updateParameter(parameter);
       }
    }
