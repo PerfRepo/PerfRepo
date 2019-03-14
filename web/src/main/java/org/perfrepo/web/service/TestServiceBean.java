@@ -860,9 +860,12 @@ public class TestServiceBean implements TestService {
     * @throws ServiceException
     */
    private void updateValues(TestExecution freshTestExecution, TestExecution updatedTestExecution) throws ServiceException {
+      freshTestExecution.getValues().stream().forEach(valueDAO::remove);
+      freshTestExecution.setValues(new ArrayList<>());
+
       for (Value value: updatedTestExecution.getValues()) {
          value.setTestExecution(freshTestExecution);
-         updateValue(value);
+         addValue(value);
       }
    }
 
