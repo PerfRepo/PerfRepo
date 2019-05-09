@@ -106,6 +106,10 @@ Older JAAS/PicketLink configuration can be still used, but you have to place it 
 	* password: `perfrepouser1.`
 
 * If you need more users, you have to add them manually into database.
+```
+insert into public.user (id, username, first_name, last_name, email, password) values (nextVal('user_sequence'), 'userName', 'first', 'last', 'email', encode(decode(md5('password'),'hex'),'base64'));
+insert into user_group (user_id, group_id) values ((select id from public.user where username='userName'), (select id from public.group where name='perfrepouser'));
+```
 
 # Running tests
 

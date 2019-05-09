@@ -374,7 +374,7 @@ ALTER TABLE ONLY test_execution
 --
 
 ALTER TABLE ONLY test_execution_tag
-    ADD CONSTRAINT test_execution_tag_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT test_execution_tag_pkey PRIMARY KEY (tag_id);
 
 
 --
@@ -382,7 +382,7 @@ ALTER TABLE ONLY test_execution_tag
 --
 
 ALTER TABLE ONLY test_metric
-    ADD CONSTRAINT test_metric_pkey PRIMARY KEY (id);
+    ADD CONSTRAINT test_metric_pkey PRIMARY KEY (metric_id);
 
 
 --
@@ -542,8 +542,8 @@ ALTER TABLE ONLY user_property
 --
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
-REVOKE ALL ON SCHEMA public FROM postgres;
-GRANT ALL ON SCHEMA public TO postgres;
+--REVOKE ALL ON SCHEMA public FROM postgres;
+--GRANT ALL ON SCHEMA public TO postgres;
 GRANT ALL ON SCHEMA public TO PUBLIC;
 
 -----------------------------------------------------------------------------------------------
