@@ -68,8 +68,8 @@ public class ClientTest {
       war.delete(ArchivePaths.create("WEB-INF/classes/META-INF/persistence.xml"));
       war.delete(ArchivePaths.create("WEB-INF/jboss-web.xml"));
 
-      war.add(new FileAsset(new File("target/test-classes/test-persistence.xml")), ArchivePaths.create("WEB-INF/classes/META-INF/persistence.xml"));
-      war.add(new FileAsset(new File("target/test-classes/test-jboss-web.xml")), ArchivePaths.create("WEB-INF/jboss-web.xml"));
+      war.add(new FileAsset(new File(ClientTest.class.getResource("/test-persistence.xml").getFile())), ArchivePaths.create("WEB-INF/classes/META-INF/persistence.xml"));
+      war.add(new FileAsset(new File(ClientTest.class.getResource("/test-jboss-web.xml").getFile())), ArchivePaths.create("WEB-INF/jboss-web.xml"));
 
       return war;
    }
@@ -82,8 +82,10 @@ public class ClientTest {
 
    @AfterClass
    public static void destroyClient() {
-      client.shutdown();
-      client = null;
+      if (client != null) {
+         client.shutdown();
+         client = null;
+      }
    }
 
    @org.junit.Test
@@ -180,6 +182,7 @@ public class ClientTest {
       client.deleteTest(testId);
    }
 
+   @Ignore("https://github.com/PerfCake/PerfRepo/issues/95")
    @org.junit.Test
    public void testUpdateTestExecution() throws Exception {
       Test test = createTest();

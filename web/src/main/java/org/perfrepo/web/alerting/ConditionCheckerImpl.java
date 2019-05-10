@@ -53,6 +53,8 @@ public class ConditionCheckerImpl implements ConditionChecker {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+    private static final ScriptEngine JAVA_SCRIPT_ENGINE = new ScriptEngineManager(null).getEngineByName("JavaScript");
+
     @Inject
     private TestExecutionDAO testExecutionDAO;
 
@@ -82,7 +84,7 @@ public class ConditionCheckerImpl implements ConditionChecker {
     public void checkConditionSyntax(String condition, Metric metric) {
         // creates dummy execution and triggers evaluation against it
         // if we had a 'perfect' grammar, we would only need to call parseTree(condition);
-        // but ATM we need script engine to evaluate CONDITION and tell us if there were any errors
+        // but ATM we need script JAVA_SCRIPT_ENGINE to evaluate CONDITION and tell us if there were any errors
         // e.g. current grammar cannot catch nonsenses such as: CONDITION x <!= 10
         TestExecution testExecution;
         TestExecutionBuilder builder = TestExecution.builder();
@@ -184,10 +186,9 @@ public class ConditionCheckerImpl implements ConditionChecker {
      * @return evaluated condition, true if it holds, false otherwise
      */
     private boolean evaluate(String expression, Map<String, Object> variables) {
-        ScriptEngine engine = new ScriptEngineManager().getEngineByName("JavaScript");
         Object result;
         try {
-            result = engine.eval(expression, new SimpleBindings(variables));
+            result = JAVA_SCRIPT_ENGINE.eval(expression, new SimpleBindings(variables));
         } catch (ScriptException e) {
             throw new IllegalArgumentException("Error occurred while evaluating the expression.", e);
         }
@@ -485,12 +486,12 @@ public class ConditionCheckerImpl implements ConditionChecker {
     private CommonTree parseTree(String string) {
         //lexer splits input into tokens
         ANTLRStringStream input = new ANTLRStringStream(string);
-        TokenStream tokens = new CommonTokenStream(new AlertingDSLLexer(input));
+        TokenStream tokens = new CommonTokenStream(new org.perfrepo.web.alerting.AlertingDSLLexer(input));
 
         //parser generates abstract syntax tree
-        AlertingDSLParser parser = new AlertingDSLParser(tokens);
+        org.perfrepo.web.alerting.AlertingDSLParser parser = new org.perfrepo.web.alerting.AlertingDSLParser(tokens);
 
-        AlertingDSLParser.expression_return ret;
+        org.perfrepo.web.alerting.AlertingDSLParser.expression_return ret;
         try {
             ret = parser.expression();
         } catch (RecognitionException ex) {

@@ -35,6 +35,7 @@ Configure Maven to use JBoss Nexus repository. Follow the steps at https://devel
 
 1. Create a database (e.g. named `perfrepo`)
 2. Script `db_schema_creation.sql` in `model/src/main/sql` creates all necessary tables and structures
+3. You should run `migration_*.sql` ignoring the errors
 
 ## Set up the application server
 
@@ -63,6 +64,27 @@ Following text assumes PostgreSQL installed on localhost and WildFly's `standalo
         </security>        
     </datasource>
     <drivers>...(described above)...</drivers>
+```
+
+```bash
+cd /path/wildfly
+mkdir -p modules/org/postgres/main
+cd modules/org/postgres/main
+wget https://jdbc.postgresql.org/download/postgresql-8.4-703.jdbc4.jar
+```
+
+```xml
+   <?xml version="1.0" ?>
+   <module xmlns="urn:jboss:module:1.1" name="org.postgres">
+       <resources>
+           <resource-root path="postgresql-8.4-703.jdbc4.jar"/>
+       </resources>
+       <dependencies>
+           <module name="javax.api"/>
+           <module name="javax.transaction.api"/>
+           <module name="javax.servlet.api" optional="true"/>
+       </dependencies>
+   </module>
 ```
 
 * Add security domain `perfrepo`, e.g.
@@ -112,25 +134,53 @@ Older JAAS/PicketLink configuration can be still used, but you have to place it 
 Integration tests uses Arquillian WildFly remote container, which means you have to have WidlFly running on your test machine and listening on default ports.
 Also you have to add test datasource `PerfRepoTestDS`into the WildFly, ideally pointing to test DB, e.g.
 ```xml
-                <datasource jndi-name="java:jboss/datasources/PerfRepoTestDS" pool-name="PerfRepoTestDS" enabled="true" use-java-context="true">
-                    <connection-url>jdbc:postgresql://localhost:5432/perfrepotest</connection-url>
-                    <driver-class>org.postgresql.Driver</driver-class>
-                    <driver>postgresql</driver>
-                    <security>
-                        <user-name>perfrepo</user-name>
-                        <password>perfrepo</password>
-                    </security>
-                </datasource>
+    <datasource jndi-name="java:jboss/datasources/PerfRepoTestDS" pool-name="PerfRepoTestDS" enabled="true" use-java-context="true">
+        <connection-url>jdbc:postgresql://localhost:5432/perfrepotest</connection-url>
+        <driver-class>org.postgresql.Driver</driver-class>
+        <driver>postgresql</driver>
+        <security>
+            <user-name>perfrepo</user-name>
+            <password>perfrepo</password>
+        </security>
+    </datasource>
 ```
 
 For testing session bean, authentication is require and thus you have to also add appropriate security domain:
 ```xml
-                <security-domain name="Arquillian-Testing" cache-type="default">
-                    <authentication>
-                        <login-module code="UsersRoles" flag="required">
-                            <module-option name="usersProperties" value="users.properties"/>
-                            <module-option name="rolesProperties" value="roles.properties"/>
-                        </login-module>
-                    </authentication>
-                </security-domain>
+    <security-domain name="Arquillian-Testing" cache-type="default">
+        <authentication>
+            <login-module code="UsersRoles" flag="required">
+                <module-option name="usersProperties" value="users.properties"/>
+                <module-option name="rolesProperties" value="roles.properties"/>
+            </login-module>
+        </authentication>
+    </security-domain>
+```
+
+# Deploy PerfRepo database with docker
+
+```bash
+mkdir -p $HOME/docker/volumes/postgres
+docker run --rm  --name perfrepo-db -e POSTGRES_PASSWORD=docker -d -p 5432:5432 -v $HOME/docker/volumes/postgres:/var/lib/postgresql/data postgres:8.4
+```
+
+```bash
+docker container ls
+```
+
+```
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
+a77fcc604dfa        postgres:8.4        "docker-entrypoint.s…"   2 minutes ago       Up 2 minutes        0.0.0.0:5432->5432/tcp   perfrepo-db
+```
+
+```bash
+docker exec -i -t a77fcc604dfa /bin/bash
+psql -h localhost -U postgres -d postgres
+
+postgres=# create database perfrepotest;
+CREATE DATABASE
+postgres=# create user perfrepo with encrypted password 'perfrepo';
+CREATE ROLE
+postgres=# grant all privileges on database perfrepotest to perfrepo;
+GRANT
 ```
